@@ -1,13 +1,14 @@
 import React from 'react'
 import Banner from '../../static/img/docusaurus-social-card.jpg'
 import Image from '@theme/IdealImage';
+import Layout from '@theme/Layout';
 
 const Hello = () => {
   return (
-    <div>Hello
+    <Layout>
      <Image img={Banner} />
 
-    </div>
+    </Layout>
   )
 }
 
