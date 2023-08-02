@@ -43,7 +43,8 @@ export const Wrapper = styled.a`
   padding: 1rem;
 
   text-decoration: none !important;
-
+  cursor: pointer;
+  
   &:hover {
     box-shadow: 0px 4px 6px -2px rgba(16, 24, 40, 0.03), 0px 12px 16px -4px rgba(16, 24, 40, 0.08);
 

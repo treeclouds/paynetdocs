@@ -36,6 +36,7 @@ export const CardText = styled.p `
 // ================================
 
 export const Wrapper = styled.a`
+  z-index: 1;
   display: grid;
   row-gap: 1.5rem;
 

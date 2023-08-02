@@ -5,7 +5,7 @@ import {Wrapper, CardHeader, CardHeaderLeft, CardHeaderRight, CardTitle, CardTex
 
 import MyButton from '../Button'
 
-import Rocket from "../../../static/img/rocket.jpg"
+import FileGray from "../../../static/img/file-gray.png"
 import ArrowRIghtBlue from "../../../static/img/arrow-right-blue.png"
 
 const Box = (props) => {
@@ -14,7 +14,7 @@ const Box = (props) => {
     <Wrapper>
       <CardHeader>
         <CardHeaderLeft>
-          <Image img={Rocket} />
+          <Image img={FileGray} />
           <CardTitle>{props.title}</CardTitle>
         </CardHeaderLeft>
         <CardHeaderRight>
@@ -25,7 +25,6 @@ const Box = (props) => {
       <CardText>
         {props.text}
       </CardText>
-      <MyButton text="Explore now"/>
     </Wrapper>
     </>
   )
