@@ -4,25 +4,26 @@ import styled from 'styled-components'
 // ========== Typography ==========
 // ================================
 
-// 0.875 --> 14px with base 100%
+// 1.3125rem --> 21px with base 100%
 export const CardTitle = styled.p `
   font-family: 'Roboto', sans-serif;
-  font-size: 0.875rem;
+  font-size: 1.3125rem;
   font-weight: 700;
   line-height: 150%;
   color: #344054;
 
   @media (min-width: 768px) {
-    font-size: 1.125rem;
+    font-size: 1.4375rem;
   }
 `
+
 export const CardText = styled.p `
   font-family: 'Roboto', sans-serif;
   font-size: 0.875rem;
   line-height: 150%;
   color: #667085;
 
-  margin-bottom: 0;
+  margin-bottom: 1.5rem;
 
   @media (min-width: 768px) {
     font-size: 1rem;
@@ -33,12 +34,14 @@ export const CardText = styled.p `
 // ================================
 // ============= Style ============
 // ================================
+
 export const Wrapper = styled.a`
   display: grid;
-  row-gap: 1rem;
+  row-gap: 1.5rem;
 
   background: #fff;
-  border-radius: 8px;
+  border: 1px solid #EAECF0;
+  border-radius: 14px;
   box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
   padding: 1rem;
 
@@ -53,28 +56,15 @@ export const Wrapper = styled.a`
   }
 `
 
-export const CardHeader = styled.div `
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+export const CardBody = styled.div `
+  display: grid;
+  row-gap: 8px;
 
   p {
     margin-bottom: 0;
   }
 `
 
-export const CardHeaderLeft = styled.div `
-  display: flex;
-  align-items: center;
-  column-gap: 12px;
-
-  p {
-    margin-bottom: 0;
-  }
-`
-
-export const CardHeaderRight = styled.div`
-  @media (min-width: 768px) {
-    display: none;
-  }
+export const IconWrapper = styled.div`
+  width: max-content;
 `

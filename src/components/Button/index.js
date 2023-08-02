@@ -3,10 +3,10 @@ import {Button, ButtonDynamic} from './element'
 
 const MyButton = (props) => {
   return (
-    <Button>
+    <ButtonDynamic>
       {props.text}
       <img src={props.buttonIcon} />
-    </Button>
+    </ButtonDynamic>
   )
 }
 

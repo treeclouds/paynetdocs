@@ -1,36 +1,31 @@
 import React from 'react'
-import {CardBody, CardHeader, CardTitle, CardTitleWrapper, Wrapper, IconWrapper} from './element'
-import MyButton from '../Button'
-import fileGray from "../../../static/img/file-gray.svg"
-import arrowRight from "../../../static/img/arrow-right-blue.svg"
+import Image from '@theme/IdealImage';
 
-const Box = () => {
+import {Wrapper, CardHeader, CardHeaderLeft, CardHeaderRight, CardTitle, CardText} from './element'
+
+import MyButton from '../Button'
+
+import Rocket from "../../../static/img/rocket.jpg"
+import ArrowRIghtBlue from "../../../static/img/arrow-right-blue.png"
+
+const Box = (props) => {
   return (
     <>
-    <Wrapper banner>
-      <CardTitleWrapper banner>
-        <p>Icon</p>
-        <CardTitle>API Reference</CardTitle>
-      </CardTitleWrapper>
-      <CardBody banner>
-        Explore our API reference page to gain a comprehensive understanding of our API
-      </CardBody>
-      <MyButton text="Explore now"/>
-    </Wrapper>
-
-    <Wrapper href='/'>
+    <Wrapper>
       <CardHeader>
-        <CardTitleWrapper>
-          <img src={fileGray} alt={fileGray}/>
-          <CardTitle>Credit Transfer</CardTitle>
-        </CardTitleWrapper>
-        <IconWrapper>
-          <p>Icon Right</p>
-        </IconWrapper>
+        <CardHeaderLeft>
+          <Image img={Rocket} />
+          <CardTitle>{props.title}</CardTitle>
+        </CardHeaderLeft>
+        <CardHeaderRight>
+          <Image img={ArrowRIghtBlue} />
+        </CardHeaderRight>
       </CardHeader>
-      <CardBody>
-        Fast and convenient payment method that allows instant transfer of funds between bank accounts using proxy (Mobile number, NRIC, passport number, etc)
-      </CardBody>
+
+      <CardText>
+        {props.text}
+      </CardText>
+      <MyButton text="Explore now"/>
     </Wrapper>
     </>
   )
