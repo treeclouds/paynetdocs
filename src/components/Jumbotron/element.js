@@ -152,14 +152,14 @@ export const CardProductWrapper = styled.div `
   }
 `
 export const MobileOnly = styled.div `
-  diplay: block;
+  display: block;
   @media (min-width: 768px) {
     display: none;
   }
 `
 
 export const DesktopOnly = styled.div `
-  diplay: none !important;
+  display: none !important;
 
   @media (min-width: 768px) {
     display: block !important;
