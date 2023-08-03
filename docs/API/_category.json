@@ -1,4 +1,12 @@
 {
-  "label":"Putri Folder",
-  "position":"1"
+  "label": "golang",
+    "position": 1,
+    "items": [
+        {
+            "type": "link",
+            "label": "test",
+            "href": "https://test.com",
+             "position": 2
+        }
+    ]
 }

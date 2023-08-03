@@ -17,21 +17,24 @@ const sidebars = {
 
   sideBarHome: [
     "home",
+    "getting-started",
     {
       type: "category",
-      label: "Manual 1",
+      label: "API",
       items: ["API/InsideAPI/Inside", "intro"],
     },
+    "fi-server",
     {
       type: "link",
-      label: "Manage Docs Versions >",
+      label: "Example link different sidebar click",
       href:"/tutorial-extras/manage-docs-versions",
     },
-    "tutorial-extras/translate-your-site",
+    "sandbox",
+    "changelog",
     {
       type: "category",
-      label: "Manual 2",
-      items: ["tutorial-basics/create-a-blog-post"],
+      label: "Products",
+      items: ["products/duidnow"],
       collapsed: false,
 
     },
