@@ -1,11 +1,32 @@
 import React from 'react'
-import {Wrapper} from './element'
+import Image from '@theme/IdealImage';
 
-const Box = () => {
+import {Wrapper, CardHeader, CardHeaderLeft, CardHeaderRight, CardTitle, CardText} from './element'
+
+import MyButton from '../Button'
+
+import FileGray from "../../../static/img/file-gray.png"
+import ArrowRIghtBlue from "../../../static/img/arrow-right-blue.png"
+
+const Box = (props) => {
   return (
+    <>
     <Wrapper>
-      Ini panggil react components
+      <CardHeader>
+        <CardHeaderLeft>
+          <Image img={FileGray} />
+          <CardTitle>{props.title}</CardTitle>
+        </CardHeaderLeft>
+        <CardHeaderRight>
+          <Image img={ArrowRIghtBlue} />
+        </CardHeaderRight>
+      </CardHeader>
+
+      <CardText>
+        {props.text}
+      </CardText>
     </Wrapper>
+    </>
   )
 }
 
