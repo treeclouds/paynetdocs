@@ -24,20 +24,21 @@ const sidebars = {
       items: ["API/InsideAPI/Inside", "intro"],
     },
     "fi-server",
-    {
-      type: "link",
-      label: "Example link different sidebar click",
-      href:"/tutorial-extras/manage-docs-versions",
-    },
+    // {
+    //   type: "link",
+    //   label: "Example link different sidebar click",
+    //   href:"/tutorial-extras/manage-docs-versions",
+    // },
     "sandbox",
     "changelog",
+    "tutorial-basics/deploy-your-site",
     {
       type: "category",
       label: "Products",
       items: ["products/duidnow"],
       collapsed: false,
 
-    },
+    }
   ],
   anotherSideBar: [
     {

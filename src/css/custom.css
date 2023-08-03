@@ -28,7 +28,23 @@
   --ifm-color-primary-lightest: #4fddbf;
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
 }
+li > a.menu__link {
+  justify-content: flex-start;
+}
+.menu__link{
+  padding: 3% 1% !important;
+}
+.home a::before {
+  margin-right: 0.5rem;
+  content: url(/img/arrow-right-blue.svg);
+}
 
-.purple-text {
-  color: rebeccapurple;
+.getting-started a::before {
+  margin-right: 0.5rem;
+  content: url(/img/arrow-right-blue.svg);
+}
+
+.api a::before {
+  margin-right: 0.5rem;
+  content: url(/img/arrow-right-blue.svg);
 }
