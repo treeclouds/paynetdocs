@@ -37,7 +37,10 @@ export const CardText = styled.p `
 
 export const Wrapper = styled.a`
   z-index: 1;
-  display: grid;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   row-gap: 1.5rem;
 
   background: #fff;
