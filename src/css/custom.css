@@ -79,6 +79,7 @@
 /* Side bar */
 .menu_node_modules-\@docusaurus-theme-classic-lib-theme-DocSidebar-Desktop-Content-styles-module {
   padding: 1.5rem 8px !important;
+  border-right♂: 1px solid EAECF0;
 }
 
 .menu__list {
@@ -86,7 +87,7 @@
   row-gap: 1rem;
 }
 
-.menu__list-item:not(:first-child) {
+.theme-doc-sidebar-item-category-level-1 {
   margin-top: 0;
 }
 
@@ -118,6 +119,10 @@ li > a.menu__link {
 
 .menu__link:hover {
   color: #2179BE;
+}
+
+.theme-doc-sidebar-item-link-level-2 .menu__list-item:not(:last-child) {
+  margin-top: 8px;
 }
 
 .theme-doc-sidebar-item-link-level-2 .menu__link {
