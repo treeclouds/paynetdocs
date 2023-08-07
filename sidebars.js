@@ -34,9 +34,17 @@ const sidebars = {
     {
       type: "category",
       label: "Products",
-      items: ["products/duitnow-transfer", "products/duitnow-online-banking", "products/duitnow-qr", "products/duitnow-bill-payment", "products/mydebit", "products/fpx", "products/jompay"],
+      items: [
+        "products/duitnow-transfer",
+        "products/duitnow-online-banking",
+        "products/duitnow-qr",
+        "products/duitnow-bill-payment",
+        "products/mydebit",
+        "products/fpx",
+        "products/jompay",
+      ],
       collapsed: false,
-    }
+    },
   ],
   anotherSideBar: [
     {
@@ -44,7 +52,22 @@ const sidebars = {
       label: "Back",
       href: "/home",
     },
-    "tutorial-extras/manage-docs-versions",
+    "products/duitnow-transfer",
+    {
+      type: "category",
+      label: "Overview",
+      items: [
+        {
+          type: "category",
+          label: "Credit Transfer",
+          items: [
+            "credit-transfer/introduction",
+            "credit-transfer/credit-transfer-reversal",
+          ],
+        },
+        "credit-transfer/nad"
+      ],
+    },
   ],
 };
 
