@@ -19,7 +19,6 @@
   --ifm-menu-color-background-hover: #E9F2F9;
   --ifm-menu-color: #344054;
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
-  --ifm-navbar-sidebar-width: 100vw;
 }
 
 /* For readability concerns, you should choose a lighter palette in dark mode. */
@@ -33,19 +32,35 @@
   --ifm-color-primary-lightest: #4fddbf;
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
 }
+/* .container {
+  padding: 2rem 0 !important;
+} */
 
-/* Breadcrumbs */
-.breadcrumbs__link {
-  padding: 0.4rem 6px;
-  
-  font-size: 0.875rem;
-  color: #475467;
+.theme-doc-breadcrumbs {
+  padding: 0 5%;
+  margin-bottom: 0;
 }
 
-@media screen and (min-width: 1024px) {
-  .breadcrumbs__link {
-    font-size: 1rem;
-  }
+.navbar__link--active {
+  font-weight: 700;
+}
+
+.breadcrumbs {
+  display: flex;
+}
+
+.breadcrumbs__link {
+  display: flex;
+  justify-content: center;
+
+  padding: 0.4rem 6px;
+  
+  font-size: 1rem;
+}
+
+.breadcrumbs__item {
+  display: flex;
+  align-items: center;
 }
 
 .breadcrumbs__item:not(:last-child):after {
@@ -61,15 +76,7 @@
   font-weight: 700;
 }
 
-.breadcrumbs__item a svg {
-  top: 3px;
-}
-
-/* Sidebar */
-.navbar__link--active {
-  font-weight: 700;
-}
-
+/* Side bar */
 .menu_node_modules-\@docusaurus-theme-classic-lib-theme-DocSidebar-Desktop-Content-styles-module {
   padding: 1.5rem 8px !important;
   border-right: 1px solid #EAECF0;
@@ -83,7 +90,25 @@
 .theme-doc-sidebar-item-category-level-1 {
   margin-top: 0;
 }
+.theme-doc-sidebar-item-link-level-1 .menu__link {
+  font-size: 1.125rem;
+}
+li > a.menu__link {
+  justify-content: flex-start;
+}
 
+/* .menu__list-item-collapsible + .menu__list .menu__list-item .menu__link--active {
+  color: white;
+}
+
+.theme-doc-sidebar-item-link-level-1 .menu__link--active {
+  color: white;
+}
+
+.theme-doc-sidebar-item-link-level-1 .menu__link--active:hover {
+  color: white;
+} 
+*/
 .menu__link {
   padding: 12px 1rem !important;
 
@@ -92,21 +117,6 @@
 
 .menu__link:hover {
   color: #2179BE;
-}
-
-.menu__link--active:not(.menu__link--sublist) {
-  background-color: #2179BE;
-}
-
-li > a.menu__link {
-  justify-content: flex-start;
-}
-
-.menu__list-item-collapsible + .menu__list .menu__list-item .menu__link--active,
-.theme-doc-sidebar-item-link-level-1 .menu__link--active,
-.theme-doc-sidebar-item-link-level-1 .menu__link--active:hover
- {
-  color: white;
 }
 
 .theme-doc-sidebar-item-link-level-2 .menu__list-item:not(:last-child) {
@@ -118,8 +128,24 @@ li > a.menu__link {
   font-weight: 400;
 }
 
-.theme-doc-sidebar-item-link-level-2 .menu__link:hover {
+.theme-doc-sidebar-item-link-level-2 .menu__link:hover, .theme-doc-sidebar-item-link-level-3 .menu__link:hover {
   color: #2179BE;
+}
+
+.theme-doc-sidebar-item-link-level-2 .menu__link--active:hover, .theme-doc-sidebar-item-link-level-3 .menu__link--active:hover {
+  color: white;
+}
+
+.theme-doc-sidebar-item-link-level-3 .menu__link {
+  font-size: 0.875rem;
+  color: #667085;
+  font-weight: 400;
+}
+
+/* Need to be at the very bottom */
+.menu__link--active:not(.menu__link--sublist) {
+  background-color: #2179BE;
+  color: white;
 }
 
 .home a::before {
@@ -136,12 +162,3 @@ li > a.menu__link {
   margin-right: 0.5rem;
   content: url(/img/arrow-right-blue.svg);
 }
-
-/* Navbar on mobile */
-.navbar-sidebar {
-  width: 100vw;
-}
-.navbar-sidebar__item {
-  width: 100%;
-}
-/* For toogle to night mode  */

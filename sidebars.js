@@ -48,9 +48,8 @@ const sidebars = {
   ],
   anotherSideBar: [
     {
-      type: "link",
-      label: "Back",
-      href: "/home",
+      type: "html",
+      value: '<a href="/home" style="display: flex; column-gap: 1rem; padding: 0 16px; color: #344054; text-decoration: none;"><img src="/img/chevron-left-black.png" alt="chevron-right" />Back</a>',      
     },
     "products/duitnow-transfer",
     {
