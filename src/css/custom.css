@@ -5,6 +5,7 @@
  */
 
 /* You can override the default Infima variables here. */
+
 :root {
   --ifm-color-primary: #2179BE;
   --ifm-color-primary-dark: #29784c;
@@ -19,6 +20,74 @@
   --ifm-menu-color-background-hover: #E9F2F9;
   --ifm-menu-color: #344054;
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
+
+  /* For typography base = 18px */
+  font-size: 112.5%;
+
+  /* variable */
+  --base-black: #000000;
+  --base-white: #FFFFFF;
+
+  --black-1: #27272E;
+  --black-2: #212121;
+
+  --neutral-900: #22231F;
+  --neutral-50: #EEEEED;
+
+  --grey-1: #D3D3D4;
+  --purple-1: "#5956E9";
+  --yellow-1: "#FFDC60";
+  --red-1: "#C75C6F";
+
+  --red-800 : #912018;
+  --red-700 : #B42318;
+  --red-500 : #F04438;
+  --red-200 : #FECDCA;
+  --red-50 : #FEF3F2;
+
+  --green-50: #F3F9ED;
+  --orange-50: #FEF8EE;
+
+
+  --blue-800: #0D304C;
+  --blue-700: #144972;
+  --blue-600: #1A6198;
+  --blue-500: #2179BE;
+  --blue-300: #7AAFD8;
+  --blue-200: #A6C9E5;
+  --blue-100: #D3E4F2;
+  --blue-50: #EAF5FB;
+  --blue-25: #F4F8FC;
+
+  --alt-blue-50: #E6F2FB;
+
+  --light-green-200: #CFE8B7;
+
+  --light-blue-800: #113F54;
+  --light-blue-300: #7FC5E4;
+  --light-blue-50: #EAF5FB;
+  --light-blue-25: #F4FAFD;
+
+  --green-600: #2D903A;
+  --green-500: #38B449;
+
+  --orange-600: #C67617;
+  --orange-500: #F7931D;
+  --orange-200: #FBE2BA;
+
+  --gray-900: #101828;
+  --gray-800: #1D2939;
+  --gray-700: #344054;
+  --gray-600: #475467;
+  --gray-500: #667085;
+  --gray-400: #98A2B3;
+  --gray-300: #D0D5DD;
+  --gray-200: #EAECF0;
+  --gray-100: #F2F4F7;
+  --gray-50: #F9FAFB;
+  --gray-25: #FCFCFD;
+
+  --neutral-900: #22231F;
 }
 
 /* For readability concerns, you should choose a lighter palette in dark mode. */
@@ -72,14 +141,14 @@
 .breadcrumbs__item--active .breadcrumbs__link {
   background: none;
 
-  color: #2179BE;
+  color: var(--blue-500);
   font-weight: 700;
 }
 
 /* Side bar */
 .menu_node_modules-\@docusaurus-theme-classic-lib-theme-DocSidebar-Desktop-Content-styles-module {
   padding: 1.5rem 8px !important;
-  border-right: 1px solid #EAECF0;
+  border-right: 1px solid var(--gray-200);
 }
 
 .menu__list {
@@ -93,22 +162,11 @@
 .theme-doc-sidebar-item-link-level-1 .menu__link {
   font-size: 1.125rem;
 }
+
 li > a.menu__link {
   justify-content: flex-start;
 }
 
-/* .menu__list-item-collapsible + .menu__list .menu__list-item .menu__link--active {
-  color: white;
-}
-
-.theme-doc-sidebar-item-link-level-1 .menu__link--active {
-  color: white;
-}
-
-.theme-doc-sidebar-item-link-level-1 .menu__link--active:hover {
-  color: white;
-} 
-*/
 .menu__link {
   padding: 12px 1rem !important;
 
@@ -116,7 +174,7 @@ li > a.menu__link {
 }
 
 .menu__link:hover {
-  color: #2179BE;
+  color: var(--blue-500);
 }
 
 .theme-doc-sidebar-item-link-level-2 .menu__list-item:not(:last-child) {
@@ -124,28 +182,28 @@ li > a.menu__link {
 }
 
 .theme-doc-sidebar-item-link-level-2 .menu__link {
-  color: #667085;
+  color: var(--gray-500);
   font-weight: 400;
 }
 
 .theme-doc-sidebar-item-link-level-2 .menu__link:hover, .theme-doc-sidebar-item-link-level-3 .menu__link:hover {
-  color: #2179BE;
+  color: var(--blue-500);
 }
 
 .theme-doc-sidebar-item-link-level-2 .menu__link--active:hover, .theme-doc-sidebar-item-link-level-3 .menu__link--active:hover {
-  color: white;
+  color: var(--base-white);
 }
 
 .theme-doc-sidebar-item-link-level-3 .menu__link {
   font-size: 0.875rem;
-  color: #667085;
+  color: var(--gray-500);
   font-weight: 400;
 }
 
 /* Need to be at the very bottom */
 .menu__link--active:not(.menu__link--sublist) {
-  background-color: #2179BE;
-  color: white;
+  background-color: var(--blue-500);
+  color: var(--base-white);
 }
 
 .home a::before {
@@ -161,4 +219,223 @@ li > a.menu__link {
 .api a::before {
   margin-right: 0.5rem;
   content: url(/img/arrow-right-blue.svg);
+}
+
+/* Typography */
+*, p, div, a, span, h2, label, table, td {
+	font-family: 'Roboto', sans-serif;
+	color: var(--gray-600);
+	font-weight: 400;
+	line-height: 150%;
+	font-size: 1rem;
+}
+
+.t32sm-t42lg {
+	font-size: 1.78rem;
+	line-height: 116%;
+}
+
+.t26sm-t42lg {
+	font-size: 1.44rem;
+	line-height: 123%;
+}
+
+.t26sm-t35lg {
+	font-size: 1.44rem;
+	line-height: 123%;
+}
+
+.t23sm-t35lg {
+	font-size: 1.278rem;
+	line-height: 130%;
+}
+
+.t23sm-t28lg {
+	font-size: 1.278rem;
+	line-height: 30px;
+}
+
+.t23sm-t26lg {
+	font-size: 1.278rem;
+	line-height: 30px;
+}
+
+.t23 {
+	font-size: 1.278rem;
+	line-height: 130%;
+}
+
+.t21sm-t26lg {
+	font-size: 1.167rem;
+	line-height: 28px;
+}
+
+.t21sm-t23lg {
+	font-size: 1.167rem;
+	line-height: 28px;
+}
+
+.t18sm-t23lg {
+	font-size: 1rem;
+	line-height: 27px;
+}
+
+.t18sm-t21lg {
+	font-size: 1rem;
+	line-height: 133%;
+}
+
+.t18 {
+	font-size: 1rem !important;
+	line-height: 150%;
+}
+
+.t16sm-t35lg {
+	font-size: 0.88rem;
+	line-height: 123%;
+}
+
+.t16sm-t18lg {
+	font-size: 0.88rem;
+	line-height: 100%;
+}
+
+.t16 {
+	font-size: 0.88rem;
+	line-height: 125%;
+}
+
+.t12sm-t14lg {
+	font-size: 0.66rem;
+	line-height: 20px;
+}
+
+.t14 {
+	font-size: 0.78rem !important;
+	line-height: 18px;
+}
+
+@media(min-width: 1024px) {
+  .t32sm-t42lg {
+    font-size: 2.33rem;
+    line-height: 105%;
+    letter-spacing: -0.01em;
+  }
+
+  .t26sm-t42lg {
+    font-size: 2.33rem;
+    line-height: 105%;
+    letter-spacing: -0.01em;
+  }
+  
+  .t26sm-t35lg {
+    font-size: 1.94rem;
+    line-height: 150%;
+    letter-spacing: 0.01em;
+  }
+  
+  .t23sm-t35lg {
+    font-size: 1.94rem;
+    line-height: 109%;
+    letter-spacing: 0.01em;
+  }
+
+  .t23sm-t28lg {
+    font-size: 1.56rem;
+    line-height: 32px;
+  }
+
+  .t23sm-t26lg {
+    font-size: 1.44rem; 
+    line-height: 123%;
+  }
+
+  .t21sm-t26lg {
+    font-size: 1.44rem;
+    line-height: 123%;
+  }
+
+  .t21sm-t23lg {
+    font-size: 1.278rem;
+    line-height: 34.5px;
+  }
+
+  .t18sm-t23lg {
+    font-size: 1.278rem;
+    line-height: 150%;
+  }
+
+  .t18sm-t21lg {
+    font-size: 1.167rem;
+    line-height: 28px;
+  }
+
+  .t16sm-t35lg {
+    font-size: 1.94rem;
+    line-height: 109%;
+    letter-spacing: 0.01em;
+  }
+
+  
+  .t16sm-t18lg {
+		font-size: 1rem;
+		line-height: 133%;
+  }
+
+  .t12sm-t14lg {
+    font-size: 0.78rem;
+  }
+  
+}
+
+.font-white { color: var(--base-white); }
+.font-black { color: var(--base-black); }
+
+.font-blue-800 { color: var(--blue-800); }
+.font-blue-700 { color: var(--blue-700); }
+.font-blue-600 { color: var(--blue-600); }
+.font-blue-500 { color: var(--blue-500); }
+
+.font-light-blue-800 { color: var(--light-blue-800); } 
+
+.font-green-600 { color: var(--green-600); }
+
+.font-gray-700 { color: var(--gray-700); }
+.font-gray-900 { color: var(--gray-900); }
+.font-gray-600 { color: var(--gray-600); }
+.font-gray-500 { color: var(--gray-500); }
+.font-gray-400 { color: var(--gray-400); }
+.font-gray-300 { color: var(--gray-300); }
+.font-gray-200 { color: var(--gray-200); }
+
+.font-neutral-900 { color: var(--neutral-900); }
+
+.font-orange-600 { color: var(--orange-600); }
+
+.font-red-800 { color: var(--red-800); }
+.font-red-700 { color: var(--red-700); }
+.font-red-500 { color: var(--red-500); }
+
+.light {
+	font-weight: 300;
+}
+
+.natural {
+	font-weight: 400;
+}
+
+.light-bold {
+	font-weight: 500;
+}
+
+.semi-bold {
+	font-weight: 600;
+}
+
+.bold {
+	font-weight: 700;
+}
+
+.extra-bold {
+	font-weight: 800;
 }
