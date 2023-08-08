@@ -20,7 +20,7 @@
   --ifm-menu-color-background-hover: #E9F2F9;
   --ifm-menu-color: #344054;
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
-
+  --ifm-navbar-sidebar-width: 100vw;
   /* For typography base = 18px */
   font-size: 112.5%;
   --ifm-heading-font-family: 'Roboto', sans-serif;
@@ -115,23 +115,31 @@
   font-weight: 700;
 }
 
-.breadcrumbs {
-  display: flex;
+/* .navbar-sidebar {
+  width: 100vw;
 }
 
-.breadcrumbs__link {
+.navbar-sidebar__item {
+  width: 100vw;
+} */
+ /* .breadcrumbs {
   display: flex;
-  justify-content: center;
+} */
 
-  padding: 0.4rem 6px;
-  
-  font-size: 1rem;
+.breadcrumbs__link {  
+  font-size: 0.78rem;
 }
 
-.breadcrumbs__item {
+@media(min-width: 1024px) {
+  .breadcrumbs__link {  
+    font-size: 0.88rem;
+  }
+}
+
+/* .breadcrumbs__item {
   display: flex;
   align-items: center;
-}
+} */
 
 .breadcrumbs__item:not(:last-child):after {
   height: 8px !important;
@@ -154,14 +162,26 @@
 
 .menu__list {
   display: grid;
-  row-gap: 1rem;
+  row-gap: 8px;
 }
 
+@media(min-width: 1024px) {
+  .menu__list {
+    row-gap: 0.88rem;
+  }
+}
 .theme-doc-sidebar-item-category-level-1 {
   margin-top: 0;
 }
+
 .theme-doc-sidebar-item-link-level-1 .menu__link {
-  font-size: 1.125rem;
+  font-size: 0.88rem;
+}
+
+@media(min-width: 1024px) {
+  .theme-doc-sidebar-item-link-level-1 .menu__link {
+    font-size: 1rem;
+  }
 }
 
 li > a.menu__link {
@@ -169,7 +189,7 @@ li > a.menu__link {
 }
 
 .menu__link {
-  padding: 12px 1rem !important;
+  padding: 12px 0.88rem;
 
   font-weight: 700;
 }
@@ -178,28 +198,39 @@ li > a.menu__link {
   color: var(--blue-500);
 }
 
+.theme-doc-sidebar-item-category-level-2.menu__list-item .menu__list-item-collapsible .menu__link {
+  font-size: 0.88rem;
+}
+
 .theme-doc-sidebar-item-link-level-2 .menu__list-item:not(:last-child) {
   margin-top: 8px;
 }
 
 .theme-doc-sidebar-item-link-level-2 .menu__link {
-  color: var(--gray-500);
+  font-size: 0.88rem; 
   font-weight: 400;
+  color: var(--gray-500);
 }
 
 .theme-doc-sidebar-item-link-level-2 .menu__link:hover, .theme-doc-sidebar-item-link-level-3 .menu__link:hover {
   color: var(--blue-500);
 }
 
+.theme-doc-sidebar-item-link-level-3 .menu__link {
+  padding: 8px 0.88rem;
+  font-size: 0.78rem;
+  line-height: 21px;
+  font-weight: 400;
+  color: var(--gray-500);
+}
+.theme-doc-sidebar-item-link-level-2 .menu__link--active, .theme-doc-sidebar-item-link-level-3 .menu__link--active {
+  font-weight: 700;
+}
+
 .theme-doc-sidebar-item-link-level-2 .menu__link--active:hover, .theme-doc-sidebar-item-link-level-3 .menu__link--active:hover {
   color: var(--base-white);
 }
 
-.theme-doc-sidebar-item-link-level-3 .menu__link {
-  font-size: 0.875rem;
-  color: var(--gray-500);
-  font-weight: 400;
-}
 
 /* Need to be at the very bottom */
 .menu__link--active:not(.menu__link--sublist) {
