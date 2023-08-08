@@ -23,6 +23,7 @@
 
   /* For typography base = 18px */
   font-size: 112.5%;
+  --ifm-heading-font-family: 'Roboto', sans-serif;
 
   /* variable */
   --base-black: #000000;

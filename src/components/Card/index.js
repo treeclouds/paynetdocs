@@ -13,7 +13,7 @@ const Box = (props) => {
       <CardHeader>
         <CardHeaderLeft>
           <Image img={FileGray} />
-          <h3 className='t16sm-t18lg bold font-gray-700'>{props.title}</h3>
+          <h4 className='t16sm-t18lg bold font-gray-700'>{props.title}</h4>
         </CardHeaderLeft>
         <CardHeaderRight>
           <Image img={ArrowRIghtBlue} />

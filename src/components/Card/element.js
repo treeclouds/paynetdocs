@@ -2,12 +2,12 @@ import styled from 'styled-components'
 
 export const Wrapper = styled.a`
   display: grid;
-  row-gap: 1rem;
+  row-gap: 0.88rem;
 
   background: #fff;
   border-radius: 8px;
   box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
-  padding: 1rem;
+  padding: 0.88rem;
 
   text-decoration: none !important;
   cursor: pointer;
@@ -18,7 +18,7 @@ export const Wrapper = styled.a`
   &:hover {
     box-shadow: 0px 4px 6px -2px rgba(16, 24, 40, 0.03), 0px 12px 16px -4px rgba(16, 24, 40, 0.08);
 
-    h3 {
+    h4 {
       color: #2179BE;
     }
   }
