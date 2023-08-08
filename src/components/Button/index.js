@@ -3,7 +3,7 @@ import {Button, ButtonDynamic} from './element'
 
 const MyButton = (props) => {
   return (
-    <ButtonDynamic>
+    <ButtonDynamic href={props.href}>
       {props.text}
       <img src={props.buttonIcon} />
     </ButtonDynamic>
