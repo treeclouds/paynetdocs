@@ -31,23 +31,42 @@ const sidebars = {
     // },
     "sandbox",
     "changelog",
-    "tutorial-basics/deploy-your-site",
     {
       type: "category",
       label: "Products",
-      items: ["products/duidnow"],
+      items: [
+        "products/duitnow-transfer",
+        "products/duitnow-online-banking",
+        "products/duitnow-qr",
+        "products/duitnow-bill-payment",
+        "products/mydebit",
+        "products/fpx",
+        "products/jompay",
+      ],
       collapsed: false,
-
-    }
+    },
   ],
   anotherSideBar: [
     {
-      type: "link",
-      label: "Back",
-      href: "/inside/inside-API",
+      type: "html",
+      value: '<a href="/home" style="display: flex; column-gap: 1rem; padding: 0 16px; color: #344054; text-decoration: none;"><img src="/img/chevron-left-black.png" alt="chevron-right" />Back</a>',      
     },
-    "tutorial-extras/manage-docs-versions",
-    "tutorial-basics/deploy-your-site",
+    "products/duitnow-transfer",
+    {
+      type: "category",
+      label: "Overview",
+      items: [
+        {
+          type: "category",
+          label: "Credit Transfer",
+          items: [
+            "credit-transfer/introduction",
+            "credit-transfer/credit-transfer-reversal",
+          ],
+        },
+        "credit-transfer/nad"
+      ],
+    },
   ],
 };
 
