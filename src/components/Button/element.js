@@ -19,13 +19,12 @@ export const Button = styled.a `
   line-height: 133%;
 
   cursor: pointer;
-
     
   &:hover {
     background: #144972;
     color: #fff !important;
+    text-decoration: none;
   }
-  
 `
 
 export const ButtonDynamic = styled(Button) `
