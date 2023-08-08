@@ -1,7 +1,7 @@
 import React from 'react'
 import Image from '@theme/IdealImage';
 
-import {CardTitle, Wrapper, IconWrapper, CardText, CardBody} from './element'
+import {Wrapper, IconWrapper, CardBody} from './element'
 import MyButton from '../Button'
 import Rocket from "../../../static/img/rocket.jpg"
 
@@ -13,10 +13,8 @@ const Box = (props) => {
         <IconWrapper>
           <Image img={Rocket} />
         </IconWrapper>
-        <CardTitle>{props.title}</CardTitle>
-        <CardText>
-          {props.text}
-        </CardText>
+        <h3 className='t21sm-t23lg bold font-gray-700'>{props.title}</h3>
+        <p className='t16 font-gray-500'>{props.text}</p>
       </CardBody>
       <MyButton text="Explore now"/>
     </Wrapper>

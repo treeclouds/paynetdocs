@@ -1,38 +1,5 @@
 import styled from 'styled-components'
 
-// ================================
-// ========== Typography ==========
-// ================================
-
-// 0.875 --> 14px with base 100%
-export const CardTitle = styled.p `
-  font-family: 'Roboto', sans-serif;
-  font-size: 0.875rem;
-  font-weight: 700;
-  line-height: 150%;
-  color: #344054;
-
-  @media (min-width: 768px) {
-    font-size: 1.125rem;
-  }
-`
-export const CardText = styled.p `
-  font-family: 'Roboto', sans-serif;
-  font-size: 0.875rem;
-  line-height: 150%;
-  color: #667085;
-
-  margin-bottom: 0;
-
-  @media (min-width: 768px) {
-    font-size: 1rem;
-    letter-spacing: 0.32px;
-  }
-`
-
-// ================================
-// ============= Style ============
-// ================================
 export const Wrapper = styled.a`
   display: grid;
   row-gap: 1rem;
@@ -44,11 +11,14 @@ export const Wrapper = styled.a`
 
   text-decoration: none !important;
   cursor: pointer;
+  * {
+    margin-bottom: 0;
+  }
   
   &:hover {
     box-shadow: 0px 4px 6px -2px rgba(16, 24, 40, 0.03), 0px 12px 16px -4px rgba(16, 24, 40, 0.08);
 
-    ${CardTitle} {
+    h3 {
       color: #2179BE;
     }
   }
@@ -58,20 +28,12 @@ export const CardHeader = styled.div `
   display: flex;
   align-items: center;
   justify-content: space-between;
-
-  p {
-    margin-bottom: 0;
-  }
 `
 
 export const CardHeaderLeft = styled.div `
   display: flex;
   align-items: center;
   column-gap: 12px;
-
-  p {
-    margin-bottom: 0;
-  }
 `
 
 export const CardHeaderRight = styled.div`

@@ -1,37 +1,6 @@
 import styled from 'styled-components'
 
 // ================================
-// ========== Typography ==========
-// ================================
-
-// 1.3125rem --> 21px with base 100%
-export const CardTitle = styled.p `
-  font-family: 'Roboto', sans-serif;
-  font-size: 1.3125rem;
-  font-weight: 700;
-  line-height: 150%;
-  color: #344054;
-
-  @media (min-width: 768px) {
-    font-size: 1.4375rem;
-  }
-`
-
-export const CardText = styled.p `
-  font-family: 'Roboto', sans-serif;
-  font-size: 0.875rem;
-  line-height: 150%;
-  color: #667085;
-
-  margin-bottom: 1.5rem;
-
-  @media (min-width: 768px) {
-    font-size: 1rem;
-    letter-spacing: 0.32px;
-  }
-`
-
-// ================================
 // ============= Style ============
 // ================================
 
@@ -51,10 +20,14 @@ export const Wrapper = styled.a`
 
   text-decoration: none !important;
 
+  * {
+    margin-bottom: 0;
+  }
+  
   &:hover {
     box-shadow: 0px 4px 6px -2px rgba(16, 24, 40, 0.03), 0px 12px 16px -4px rgba(16, 24, 40, 0.08);
 
-    ${CardTitle} {
+    h3 {
       color: #2179BE;
     }
   }

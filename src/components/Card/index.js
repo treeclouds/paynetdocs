@@ -1,9 +1,7 @@
 import React from 'react'
 import Image from '@theme/IdealImage';
 
-import {Wrapper, CardHeader, CardHeaderLeft, CardHeaderRight, CardTitle, CardText} from './element'
-
-import MyButton from '../Button'
+import {Wrapper, CardHeader, CardHeaderLeft, CardHeaderRight} from './element'
 
 import FileGray from "../../../static/img/file-gray.png"
 import ArrowRIghtBlue from "../../../static/img/arrow-right-blue.png"
@@ -15,16 +13,13 @@ const Box = (props) => {
       <CardHeader>
         <CardHeaderLeft>
           <Image img={FileGray} />
-          <CardTitle>{props.title}</CardTitle>
+          <h3 className='t16sm-t18lg bold font-gray-700'>{props.title}</h3>
         </CardHeaderLeft>
         <CardHeaderRight>
           <Image img={ArrowRIghtBlue} />
         </CardHeaderRight>
       </CardHeader>
-
-      <CardText>
-        {props.text}
-      </CardText>
+      <p className='t14sm-t16lg font-gray-500'>{props.text}</p>
     </Wrapper>
     </>
   )
