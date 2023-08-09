@@ -491,3 +491,98 @@ li > a.menu__link {
 .extra-bold {
 	font-weight: 800;
 }
+
+
+/* for sidebar icon besides link
+*/
+.icon__link .menu__link {
+  display: flex;
+  column-gap: 0.88rem;
+}
+
+.icon__link .menu__link::before {
+  width: 24px;
+  height: 24px;
+}
+
+.home__link .menu__link::before {
+  content: url(../../static/img/home-gray.svg);
+}
+
+.home__link .menu__link:hover::before {
+  content: url(../../static/img/home-blue.svg);
+}
+
+.home__link .menu__link--active::before, .home__link .menu__link--active:hover::before {
+  content: url(../../static/img/home-white.svg);
+}
+/* Getting started */
+.getting-started__link .menu__link::before {
+  content: url(../../static/img/rocket-gray.svg);
+}
+
+.getting-started__link .menu__link:hover::before {
+  content: url(../../static/img/rocket-blue.svg);
+}
+
+.getting-started__link .menu__link--active::before, .getting-started__link .menu__link--active:hover::before {
+  content: url(../../static/img/rocket-white.svg);
+}
+
+/* FI server */
+.fi-server__link .menu__link::before {
+  content: url(../../static/img/server-gray.svg);
+}
+
+.fi-server__link .menu__link:hover::before {
+  content: url(../../static/img/server-blue.svg);
+}
+
+.fi-server__link .menu__link--active::before, .fi-server__link .menu__link--active:hover::before {
+  content: url(../../static/img/server-white.svg);
+}
+
+/* Sandbox server */
+.sandbox__link .menu__link::before {
+  content: url(../../static/img/sandbox-gray.svg);
+}
+
+.sandbox__link .menu__link:hover::before {
+  content: url(../../static/img/sandbox-blue.svg);
+}
+
+.sandbox__link .menu__link--active::before, .sandbox__link .menu__link--active:hover::before {
+  content: url(../../static/img/sandbox-white.svg);
+}
+
+/* changelog server */
+.changelog__link .menu__link::before {
+  content: url(../../static/img/changelog-gray.svg);
+}
+
+.changelog__link .menu__link:hover::before {
+  content: url(../../static/img/changelog-blue.svg);
+}
+
+.changelog__link .menu__link--active::before, .changelog__link .menu__link--active:hover::before {
+  content: url(../../static/img/changelog-white.svg);
+}
+
+
+/* API */
+.api__link .menu__list-item-collapsible .menu__link::before {
+  content: url(../../static/img/api-gray.svg);
+}
+
+.api__link .menu__list-item-collapsible .menu__link:hover::before, .api__link .menu__list-item-collapsible .menu__link--active::before {
+  content: url(../../static/img/api-blue.svg);
+}
+
+/* Products */
+.products__link .menu__list-item-collapsible .menu__link::before {
+  content: url(../../static/img/products-gray.svg);
+}
+
+.products__link .menu__list-item-collapsible .menu__link:hover::before, .products__link .menu__list-item-collapsible .menu__link--active::before {
+  content: url(../../static/img/products-blue.svg);
+}

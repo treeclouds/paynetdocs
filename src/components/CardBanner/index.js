@@ -3,7 +3,7 @@ import Image from '@theme/IdealImage';
 
 import {Wrapper, IconWrapper, CardBody} from './element'
 import MyButton from '../Button'
-import Rocket from "../../../static/img/rocket.jpg"
+import Rocket from "../../../static/img/rocket-gray.png"
 
 const Box = (props) => {
   return (
