@@ -17,7 +17,7 @@ const Box = () => {
       <Wrapper>
         <BannerCaptionWrapper>
           <h1 className='t26sm-t42lg'>Documentations</h1>
-          <p className='t16sm-t23lg'>See guides, references and resources to help you build with PayNet</p>
+          <p className='t16sm-t23lg font-gray-500'>See guides, references and resources to help you build with PayNet</p>
         </BannerCaptionWrapper>
         <CardBannerWrapper>
           <CardBanner

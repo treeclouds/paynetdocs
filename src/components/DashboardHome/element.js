@@ -6,7 +6,7 @@ export const Wrapper = styled.section`
   display: grid;
   row-gap: 8px;
 
-  padding: 1rem;
+  padding: 0.88rem;
   background: linear-gradient(170deg, #fff 56%, #F9FAFB 56%);
 
   @media (min-width: 768px) {
@@ -28,7 +28,7 @@ export const BgWrapper = styled.div `
 `
 
 export const BannerCaptionWrapper = styled.div `
-  margin-bottom: 17rem;
+  min-height: 20.4rem;
   
   h1 {
     margin-bottom: 8px !important;

@@ -7,6 +7,7 @@
 /* You can override the default Infima variables here. */
 
 :root {
+  --ifm-global-spacing: 0.88rem;
   --ifm-color-primary: #2179BE;
   --ifm-color-primary-dark: #29784c;
   --ifm-color-primary-darker: #277148;
@@ -21,10 +22,10 @@
   --ifm-menu-color: #344054;
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
   --ifm-navbar-sidebar-width: 100vw;
+  --custom-section-padding: 0px;
   /* For typography base = 18px */
   font-size: 112.5%;
   --ifm-heading-font-family: 'Roboto', sans-serif;
-
   /* variable */
   --base-black: #000000;
   --base-white: #FFFFFF;
@@ -102,29 +103,73 @@
   --ifm-color-primary-lightest: #4fddbf;
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
 }
-/* .container {
-  padding: 2rem 0 !important;
-} */
 
-.theme-doc-breadcrumbs {
-  padding: 0 5%;
-  margin-bottom: 0;
+.container {
+  padding: 0 var(--custom-section-padding) !important;
 }
 
+.row {
+  margin: 0;
+}
+
+.pagination-nav {
+  display: none;
+}
+
+/* Back to top */
+.backToTopButtonShow_node_modules-\@docusaurus-theme-classic-lib-theme-BackToTopButton-styles-module {
+  position: relative;
+
+  width: 44px !important;
+  height: 44px !important;
+  box-shadow: 0px 4px 6px -2px rgba(16, 24, 40, 0.03), 0px 12px 16px -4px rgba(16, 24, 40, 0.08) !important;
+  border: 1px solid var(--gray-300) !important ;
+  background-color: var(--base-white) !important;
+  border-radius: 8px !important;
+}
+
+.backToTopButton_node_modules-\@docusaurus-theme-classic-lib-theme-BackToTopButton-styles-module::after {
+  mask: unset !important;
+  -webkit-mask: unset !important;
+  background: url(../../static/img/arrow-up.svg) no-repeat !important;
+  background-position: center center;
+  width: 20px !important;
+  height: 20px !important;
+  margin: auto;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Explicit on home */
+.docs-doc-id-home .theme-doc-breadcrumbs, .docs-doc-id-home .markdown > h1 {
+  display: none;
+}
+
+.docs-doc-id-home .row .col {
+  padding: 0 var(--custom-section-padding);
+}
+
+.docs-doc-id-home .theme-doc-footer {
+  display: none;
+}
+/* Nav bar */
+.navbar {
+  padding-left: 5%;
+  padding-right: 5%;
+}
 .navbar__link--active {
   font-weight: 700;
 }
 
-/* .navbar-sidebar {
+.navbar-sidebar__item {
   width: 100vw;
 }
 
-.navbar-sidebar__item {
-  width: 100vw;
-} */
- /* .breadcrumbs {
-  display: flex;
-} */
+/* Breadcrumbs  */
+.theme-doc-breadcrumbs {
+  margin-bottom: 0;
+}
 
 .breadcrumbs__link {  
   font-size: 0.78rem;
@@ -135,11 +180,6 @@
     font-size: 0.88rem;
   }
 }
-
-/* .breadcrumbs__item {
-  display: flex;
-  align-items: center;
-} */
 
 .breadcrumbs__item:not(:last-child):after {
   height: 8px !important;
@@ -152,6 +192,23 @@
 
   color: var(--blue-500);
   font-weight: 700;
+}
+
+.header-github-link:hover {
+  opacity: 0.6;
+}
+
+.toggle_node_modules-\@docusaurus-theme-classic-lib-theme-ColorModeToggle-styles-module {
+  display: none;
+}
+
+.header-github-link:before {
+  background: url("data:image/svg+xml;charset=utf-8,%3Csvg viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12'/%3E%3C/svg%3E")
+    no-repeat;
+  content: "";
+  display: flex;
+  height: 24px;
+  width: 24px;
 }
 
 /* Side bar */
