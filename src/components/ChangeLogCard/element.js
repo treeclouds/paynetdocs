@@ -7,7 +7,10 @@ export const Wrapper = styled.div`
 
 export const Capsule = styled.div`
   display: grid;
-  grid-template-columns: 15% 1px auto;
+
+  @media (min-width: 1024px) {
+    grid-template-columns: 15% 1px auto;
+  }
   padding: 16px;
   gap: 1rem;
   border-radius: 12px;
@@ -17,7 +20,11 @@ export const Capsule = styled.div`
 
   .horizontal-line {
     background-color: #eaecf0;
-    height: 100%;
+    height: 1px;
+
+    @media (min-width: 1024px) {
+      height: 100%;
+    }
   }
   .padding-10 {
     padding-top: 1rem;
