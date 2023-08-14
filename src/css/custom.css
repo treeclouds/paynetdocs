@@ -120,25 +120,51 @@
 .backToTopButtonShow_node_modules-\@docusaurus-theme-classic-lib-theme-BackToTopButton-styles-module {
   position: relative;
 
-  width: 44px !important;
-  height: 44px !important;
+  display: flex;
+  align-items: center;
+  column-gap: 8px;
+  
   box-shadow: 0px 4px 6px -2px rgba(16, 24, 40, 0.03), 0px 12px 16px -4px rgba(16, 24, 40, 0.08) !important;
   border: 1px solid var(--gray-300) !important ;
   background-color: var(--base-white) !important;
   border-radius: 8px !important;
+  
+  width: 44px !important;
+  height: 44px !important;
 }
 
 .backToTopButton_node_modules-\@docusaurus-theme-classic-lib-theme-BackToTopButton-styles-module::after {
-  mask: unset !important;
-  -webkit-mask: unset !important;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+
   background: url(../../static/img/arrow-up.svg) no-repeat !important;
   background-position: center center;
   width: 20px !important;
   height: 20px !important;
   margin: auto;
-  display: flex !important;
-  align-items: center;
-  justify-content: center;
+
+  mask: unset !important;
+  -webkit-mask: unset !important;
+}
+
+@media(min-width: 1024px) {
+  .backToTopButton_node_modules-\@docusaurus-theme-classic-lib-theme-BackToTopButton-styles-module, .backToTopButtonShow_node_modules-\@docusaurus-theme-classic-lib-theme-BackToTopButton-styles-module {
+    display: flex;
+    width: max-content !important;
+
+    padding: 10px 18px;
+    box-sizing: border-box;
+    border-radius: 8px !important;
+    background-color: var(--base-white) !important;
+  }
+
+  .backToTopButton_node_modules-\@docusaurus-theme-classic-lib-theme-BackToTopButton-styles-module::before {
+    content: "Back to top";
+    font-size: 1rem;
+    font-weight: 700;
+    line-height: 27px; /* 150% */
+  }
 }
 
 /* Explicit on home */
@@ -247,7 +273,7 @@ li > a.menu__link {
 
 .menu__link {
   padding: 12px 0.88rem;
-
+  border-radius: 8px;
   font-weight: 700;
 }
 

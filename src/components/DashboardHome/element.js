@@ -36,7 +36,7 @@ export const BannerCaptionWrapper = styled.div `
 
   @media (min-width: 768px) {
     width: 60%;
-    margin-bottom: 6.375rem;
+    min-height: 10rem;
 
     h1 {
       margin-bottom: 16px !important;
@@ -46,7 +46,7 @@ export const BannerCaptionWrapper = styled.div `
 
   @media (min-width: 1440px) {
     width: 50%;
-    margin-bottom: 6.375rem;
+    min-height: 11rem;
   }
 `
 export const CardBannerWrapper = styled.div `

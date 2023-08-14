@@ -24,11 +24,13 @@ const Box = () => {
             title="Getting Started"
             text="See guides, references and resources to help you build with PayNet"
             href="/getting-started"
+            cta="Quick start"
           />
           <CardBanner
             title="API Reference"
             text="Explore our API reference page to gain a comprehensive understanding of our API"
             href="/api-reference"
+            cta="Explore now"
           />
         </CardBannerWrapper>
         <BgWrapper>

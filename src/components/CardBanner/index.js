@@ -11,12 +11,12 @@ const Box = (props) => {
     <Wrapper>
       <CardBody>
         <IconWrapper>
-          <Image img={Rocket} />
+        <Image img={Rocket} />
         </IconWrapper>
         <h4 className='t21sm-t23lg bold font-gray-700'>{props.title}</h4>
         <p className='t16 font-gray-500'>{props.text}</p>
       </CardBody>
-      <MyButton text="Explore now" href={props.href}/>
+      <MyButton cta={props.cta} href={props.href}/>
     </Wrapper>
     </>
   )
