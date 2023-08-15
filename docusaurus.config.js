@@ -140,51 +140,35 @@ const config = {
       //   textColor: '#091E42',
       //   isCloseable: false,
       // },
-      // footer: {
-      //   style: 'dark',
-      //   links: [
-      //     {
-      //       title: 'Docs',
-      //       items: [
-      //         {
-      //           label: 'Tutorial',
-      //           to: '/docs/intro',
-      //         },
-      //       ],
-      //     },
-      //     {
-      //       title: 'Community',
-      //       items: [
-      //         {
-      //           label: 'Stack Overflow',
-      //           href: 'https://stackoverflow.com/questions/tagged/docusaurus',
-      //         },
-      //         {
-      //           label: 'Discord',
-      //           href: 'https://discordapp.com/invite/docusaurus',
-      //         },
-      //         {
-      //           label: 'Twitter',
-      //           href: 'https://twitter.com/docusaurus',
-      //         },
-      //       ],
-      //     },
-      //     {
-      //       title: 'More',
-      //       items: [
-      //         {
-      //           label: 'Blog',
-      //           to: '/blog',
-      //         },
-      //         {
-      //           label: 'GitHub',
-      //           href: 'https://github.com/facebook/docusaurus',
-      //         },
-      //       ],
-      //     },
-      //   ],
-      //   copyright: `Copyright © ${new Date().getFullYear()} My Project, Inc. Built with Docusaurus.`,
-      // },
+      footer: {
+        style: 'dark',
+        links: [
+          {
+            items: [
+              {
+                label: 'Home',
+                href: '#',
+              },
+              {
+                label: 'API',
+                href: '#',
+              },
+              {
+                label: 'Documentation',
+                href: '#',
+              },
+              {
+                label: 'Contact Us',
+                href: '#',
+              },
+            ],
+          },
+        ],
+        copyright:
+        `
+        © ${new Date().getFullYear()} Payments Network Malaysia Sdn Bhd (PayNet) 200801035403 (836743-D). All Rights Reserved.
+        `,
+      },
       prism: {
         theme: lightCodeTheme,
         darkTheme: darkCodeTheme,
