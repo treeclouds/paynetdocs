@@ -85,12 +85,35 @@ const config = {
         },
         items: [
           {
-            type: "docSidebar",
+            to: "/home",
             sidebarId: "sideBarHome",
             position: "left",
             label: "Documentations",
+            className: "custom-navbar__item",
           },
-          { to: "/api-reference", label: "API Reference", position: "left" },
+          {
+            to: "/api-reference",
+            label: "API Reference",
+            className: "custom-navbar__item",
+            position: "left"
+          },
+          {
+            type: 'html',
+            position: 'left',
+            value: `
+            <div class="position-relative">
+              <img src="img/search.svg"/ class="input-icon__left">
+              <input type="text" placeholder="Search documentation" class="input-with-icon__left">
+            </div>
+            `,
+          },
+          {
+            to: "#",
+            label: "Go to Sandbox",
+            className: "button button--small button--white desktop-only",
+            position: "right",
+          },
+
           // {to: '/blog', label: 'Blog', position: 'left'},
           // {
           //   href: 'https://github.com/facebook/docusaurus',
