@@ -116,6 +116,35 @@
   display: none;
 }
 
+.bg-gray-700 {
+  background-color: var(--gray-700);
+} 
+
+.bg-gray-800 {
+  background-color: var(--gray-800);
+}
+
+.section__width {
+  padding: 3rem 5%;
+}
+
+.section__width--small {
+  padding: 2rem 5%;
+}
+
+@media(min-width: 768px) {
+  .section__width {
+    max-width: 1440px;
+    width: 100%;
+    
+    margin: 0 auto;
+  }
+
+  .section__width--small {
+    padding: 2.5rem 5%;
+  }
+}
+
 /* Back to top */
 .backToTopButtonShow_node_modules-\@docusaurus-theme-classic-lib-theme-BackToTopButton-styles-module {
   position: relative;
@@ -167,6 +196,16 @@
   }
 }
 
+.breadcrumb-separator {
+  height: 16px;
+  width: 16px;
+  background: url(../../static/img/chevron-right-black.svg);
+}
+
+.breadcrumb-segment:last-child {
+  color: var(--blue-500);
+  font-weight: 700;
+}
 /* Explicit on home */
 .docs-doc-id-home .theme-doc-breadcrumbs, .docs-doc-id-home .markdown > h1 {
   display: none;
@@ -185,6 +224,11 @@
   display: flex;
   padding: 0;
 }
+@media(min-width: 1024px) {
+  .navbar__item:has( > img.navbar-search-icon__mobile) {
+    display: none;
+  }
+}
 
 .navbar-sidebar__close {
   width: 24px;
@@ -196,6 +240,7 @@
 .navbar-sidebar__close svg {
   display: none;
 }
+
 .navbar {
   padding-left: 5%;
   padding-right: 5%;
@@ -926,14 +971,7 @@ input.input-with-icon__left {
   padding-left: calc(1rem + 20px + 8px) ;
 }
 
-/* Footer */
-.bg-gray-700 {
-  background-color: var(--gray-700);
-} 
-
-.bg-gray-800 {
-  background-color: var(--gray-800);
-} 
+/* Footer */ 
 
 .links__wrapper {
   display: grid;
@@ -975,26 +1013,6 @@ input.input-with-icon__left {
   }
 }
 
-.section__width {
-  padding: 3rem 5%;
-}
-
-.section__width--small {
-  padding: 2rem 5%;
-}
-
-@media(min-width: 768px) {
-  .section__width {
-    max-width: 1440px;
-    width: 100%;
-    
-    margin: 0 auto;
-  }
-
-  .section__width--small {
-    padding: 2.5rem 5%;
-  }
-}
 .footer__wrapper p {
   margin-bottom: 0;
 }
@@ -1013,4 +1031,8 @@ input.input-with-icon__left {
 a:hover {
   text-decoration: none;
   color: inherit;
+}
+
+.mb-0 {
+  margin-bottom: 0;
 }

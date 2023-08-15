@@ -13,7 +13,6 @@ const HomeImage = () => (
   />
 );
 const Breadcrumbs = () => {
-  const separator = " > ";
   const location = useLocation();
   const url = location.pathname;
   const pathWithoutHash = url.split("#")[0]; // Remove the hash and get the path
@@ -28,19 +27,19 @@ const Breadcrumbs = () => {
         <a className="breadcrumb-segment" href="/getting-started">
         <HomeImage />
         </a>
-        {separator} ... {separator} {pathSegments[pathSegments.length - 1]}
+        <div className="breadcrumb-separator"></div> ... <div className="breadcrumb-separator"></div> <p className="t14sm-t16lg bold font-blue-500 mb-0">{pathSegments[pathSegments.length - 1]}</p> 
       </React.Fragment>
     );
 
     return <BreadCrumbWrapper>{shortBreadcrumb}</BreadCrumbWrapper>;
   } else {
     return (
-      <BreadCrumbWrapper>
+      <BreadCrumbWrapper className="">
         {pathSegments.map((segment, index) => (
           <React.Fragment key={segment}>
-            {index > 0 && <span className="breadcrumb-separator">{" > "}</span>}
+            {index > 0 && <span className="breadcrumb-separator"></span>}
             <a
-              className="breadcrumb-segment"
+              className="breadcrumb-segment t14sm-t16lg font-gray-600"
               href={segment === "home" ? "/getting-started" : null}
             >
               {segment === "home" ? <HomeImage /> : segment}

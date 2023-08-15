@@ -4,6 +4,6 @@ export const BreadCrumbWrapper = styled.div`
   display:flex;
   flex-direction:row ;
   align-items:center;
-  gap: 1rem;
+  gap: 0.66rem;
 
 `
