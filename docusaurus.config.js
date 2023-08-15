@@ -113,6 +113,11 @@ const config = {
             className: "button button--small button--white desktop-only",
             position: "right",
           },
+          {
+            type: 'html',
+            position: 'right',
+            value: '<img src="img/search.svg"/ class="navbar-search-icon__mobile"/>',
+          },
 
           // {to: '/blog', label: 'Blog', position: 'left'},
           // {

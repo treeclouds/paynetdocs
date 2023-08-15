@@ -48,7 +48,7 @@ const sidebars = {
     },
     {
       type: "link",
-      label: "changelog",
+      label: "Changelog",
       href:"/changelog",
       className: 'icon__link changelog__link',
     },
