@@ -2,8 +2,6 @@ import React from 'react';
 import Image from '@theme/IdealImage';
 
 import PaynetLogo from "@site/static/img/paynet-white.svg"
-import PaynetAlt from "@site/static/img/paynet-white.png"
-import PaynetWhite from "@site/static/img/paynet-logo-white.svg"
 
 import DocusaurusIcon from "@site/static/img/docusaurus.svg"
 import StoplightIcon from "@site/static/img/stoplight.svg"
@@ -22,13 +20,12 @@ export default function FooterLayout({style, links, logo, copyright}) {
           {(logo || copyright) && (
             <div className="footer__top">
               <PaynetLogo />
-
               {logo && <div className="">{logo}</div>}
               {copyright}
-              <a href='#' className='font-gray-400 bold'>Terms & Conditions</a>
+              <a href='#' className='t16 font-gray-400 bold'>Terms & Conditions</a>
             </div>
           )}
-          <hr className="w-100 my-0" />
+          <hr className="w-100 bg-gray-700"/>
 
           <div className="footer__bottom">
             <p className="t16 bold font-gray-200">Technology using:</p>
