@@ -7,9 +7,10 @@ import CardBanner from "../CardBanner/index.js"
 
 import BannerMobile from "../../../static/img/banner-docs-mobile.png"
 import BannerDesktop from "../../../static/img/header.png"
-import DuitNow from "../../../static/img/duitnow.png"
-import MyDebit from "../../../static/img/mydebit.png"
-import Jompay from "../../../static/img/jompay.png"
+import DuitNow from "@site/static/img/duitnow.svg"
+
+import MyDebit from "@site/static/img/mydebit.svg"
+import Jompay from "@site/static/img/jompay.svg"
 
 const Box = () => {
   return (
@@ -46,7 +47,7 @@ const Box = () => {
         <h2 className='t26sm-t35lg bold font-gray-700'>Our Products</h2>
         <CardProductListWrapper>
           <TextBesidesIcon>
-            <Image img={DuitNow} />
+            <DuitNow />
             <h3 className='t21sm-t23lg bold font-gray-700'>DuitNow Transfer</h3>
           </TextBesidesIcon>
 
@@ -68,7 +69,7 @@ const Box = () => {
 
         <CardProductListWrapper>
           <TextBesidesIcon>
-            <Image img={DuitNow} />
+            <DuitNow />
             <h3 className='t21sm-t23lg bold font-gray-700'>DuitNow Online Banking</h3>
           </TextBesidesIcon>
 
@@ -86,7 +87,7 @@ const Box = () => {
 
         <CardProductListWrapper>
           <TextBesidesIcon>
-            <Image img={DuitNow} />
+            <DuitNow />
             <h3 className='t21sm-t23lg bold font-gray-700'>DuitNow QR</h3>
           </TextBesidesIcon>
 
@@ -112,7 +113,7 @@ const Box = () => {
 
         <CardProductListWrapper>
           <TextBesidesIcon>
-            <Image img={DuitNow} />
+            <DuitNow />
             <h3 className='t21sm-t23lg bold font-gray-700'>DuitNow Bill Payment</h3>
           </TextBesidesIcon>
 
@@ -126,7 +127,7 @@ const Box = () => {
 
         <CardProductListWrapper>
           <TextBesidesIcon>
-            <Image img={MyDebit} />
+            <MyDebit />
             <h3 className='t21sm-t23lg bold font-gray-700'>MyDebit</h3>
           </TextBesidesIcon>
 
@@ -140,7 +141,7 @@ const Box = () => {
 
         <CardProductListWrapper>
           <TextBesidesIcon>
-            <Image img={MyDebit} />
+            <MyDebit />
             <h3 className='t21sm-t23lg bold font-gray-700'>FPX</h3>
           </TextBesidesIcon>
 
@@ -162,7 +163,7 @@ const Box = () => {
 
         <CardProductListWrapper>
           <TextBesidesIcon>
-            <Image img={Jompay} />
+            <Jompay />
             <h3 className='t21sm-t23lg bold font-gray-700'>JomPAY</h3>
           </TextBesidesIcon>
 

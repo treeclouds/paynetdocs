@@ -1,4 +1,15 @@
 import React from 'react';
+import Image from '@theme/IdealImage';
+
+import PaynetLogo from "@site/static/img/paynet-white.svg"
+import PaynetAlt from "@site/static/img/paynet-white.png"
+import PaynetWhite from "@site/static/img/paynet-logo-white.svg"
+
+import DocusaurusIcon from "@site/static/img/docusaurus.svg"
+import StoplightIcon from "@site/static/img/stoplight.svg"
+import TailwindIcon from "@site/static/img/tailwind.svg"
+import AwsIcon from "@site/static/img/aws.svg"
+import GitlabIcon from "@site/static/img/gitlab.svg"
 
 export default function FooterLayout({style, links, logo, copyright}) {
   return (
@@ -10,7 +21,8 @@ export default function FooterLayout({style, links, logo, copyright}) {
         <div className='section__width section__width--small footer__wrapper'>
           {(logo || copyright) && (
             <div className="footer__top">
-              <p>Logo</p>
+              <PaynetLogo />
+
               {logo && <div className="">{logo}</div>}
               {copyright}
               <a href='#' className='font-gray-400 bold'>Terms & Conditions</a>
@@ -22,23 +34,23 @@ export default function FooterLayout({style, links, logo, copyright}) {
             <p className="t16 bold font-gray-200">Technology using:</p>
             <div className="footer-tech__wrapper">
               <div className="footer-tech__item">
-                <img src="static/images/docusaurus.svg" alt="docusaurus logo" className=""/>
+                <DocusaurusIcon />
                 <p className="t16 font-gray-400">Docusaurus</p>
               </div>
               <div className="footer-tech__item">
-                <img src="static/images/stoplight.svg" alt="stoplight logo" className=""/>
+                <StoplightIcon />
                 <p className="t16 font-gray-400">Stoplight.io</p>
               </div>
               <div className="footer-tech__item">
-                <img src="static/images/tailwind.svg" alt="tailwind logo" className=""/>
+                <TailwindIcon />
                 <p className="t16 font-gray-400">tailwindcss</p>
               </div>
               <div className="footer-tech__item">
-                <img src="static/images/aws.svg" alt="aws logo" className=""/>
+                <AwsIcon />
                 <p className="t16 font-gray-400">AWS</p>
               </div>
               <div className="footer-tech__item">
-                <img src="static/images/gitlab.svg" alt="gitlab logo" className=""/>
+                <GitlabIcon />
                 <p className="t16 font-gray-400">GitLab</p>
               </div>
             </div>
