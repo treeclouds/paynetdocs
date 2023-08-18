@@ -145,6 +145,28 @@
   }
 }
 
+.mb-16px {
+  margin-bottom: 0.88rem;
+}
+
+.mb-24px {
+  margin-bottom: 1.33rem;
+}
+
+.mb-32px {
+  margin-bottom: 1.78rem;
+}
+
+/* Changelog */
+.docs-doc-id-changelog .row .col {
+  padding: 0.88rem 5% 3.1rem;
+}
+
+@media (min-width: 1024px) {
+  .docs-doc-id-changelog .row .col {
+    padding: 1.77rem;
+  }
+}
 /* Back to top */
 .backToTopButtonShow_node_modules-\@docusaurus-theme-classic-lib-theme-BackToTopButton-styles-module {
   position: relative;

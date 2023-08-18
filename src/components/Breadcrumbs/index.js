@@ -1,16 +1,10 @@
 import React from "react";
 import { useLocation } from "@docusaurus/router";
-import HomeIcon from "../../../static/img/home-icon.png";
-import Image from "@theme/IdealImage";
+import HomeIcons from "@site/static/img/home-gray-small.svg";
+;
 import {BreadCrumbWrapper} from './element'
 const HomeImage = () => (
-  <Image
-    img={HomeIcon}
-    style={{
-      width: "25px",
-      height: "25px",
-    }}
-  />
+  <HomeIcons />
 );
 const Breadcrumbs = () => {
   const location = useLocation();

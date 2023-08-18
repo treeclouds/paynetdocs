@@ -1,7 +1,6 @@
 import React from "react";
-import { Wrapper, Capsule } from "./element";
-import Image from "@theme/IdealImage";
-import Calendar from "../../../static/img/calendar.png";
+import { Wrapper, Capsule, ChangelogCardDate, ChangelogCardStatus, ChangelogPill } from "./element";
+import Calendar from "@site/static/img/calendar.svg";
 import moment from "moment";
 
 const HelloCard = () => {
@@ -36,40 +35,34 @@ const HelloCard = () => {
       {data?.map((value, index) => {
         return (
           <Capsule key={index}>
-            <div className="padding-10">
-              <Image
-                img={Calendar}
-                style={{
-                  width: "30px",
-                  height: "auto",
-                }}
-              />
-              <p>{moment(value.date, "DD-MM-YYYY").format("MMMM YYYY")}</p>
-            </div>
+            <ChangelogCardDate>
+              <Calendar />
+              <p className="t16 w-max-content">{moment(value.date, "DD-MM-YYYY").format("MMMM YYYY")}</p>
+            </ChangelogCardDate>
             <div className="horizontal-line"></div>
-            <div className="padding-10 flex-wrapper">
-              <p className="button-changelog">{value.type}</p>
-              <p>{value.description}</p>
+            <ChangelogCardStatus>
+              <ChangelogPill>{value.type}</ChangelogPill>
+              <p className="t14sm-t16lg font-gray-600">{value.description}</p>
               {value.additional.length > 0
               ? value.additional.map((additional, index2) => {
                   return (
-                    <div className="padding-10 flex-wrapper" key={index2}>
-                      <p className="button-changelog">
+                    <ChangelogCardStatus key={index2}>
+                      <ChangelogPill>
                         {additional.type_additional}
-                      </p>
+                      </ChangelogPill>
 
                       {additional.list.map((list, indexList) => {
                         return (
                           <ul key={indexList}>
-                            <li>{list}</li>
+                            <li className="t14sm-t16lg font-gray-500">{list}</li>
                           </ul>
                         );
                       })}
-                    </div>
+                    </ChangelogCardStatus>
                   );
                 })
               : null}
-            </div>
+            </ChangelogCardStatus>
 
      
           </Capsule>

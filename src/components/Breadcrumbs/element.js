@@ -6,4 +6,9 @@ export const BreadCrumbWrapper = styled.div`
   align-items:center;
   gap: 0.66rem;
 
+  margin-bottom: 1.33rem;
+
+  @media(min-width: 1024px) {
+    margin-bottom: 1.56rem;
+  }
 `
