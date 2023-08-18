@@ -14,7 +14,7 @@ import Jompay from "@site/static/img/jompay.svg"
 import Rocket from "@site/static/img/rocket-gray.svg"
 import Code from "@site/static/img/code-black.svg"
 
-const Box = () => {
+const DashboardHome = () => {
   return (
     <>
       <Wrapper>
@@ -187,4 +187,4 @@ const Box = () => {
   )
 }
 
-export default Box
+export default DashboardHome

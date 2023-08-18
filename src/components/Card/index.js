@@ -6,7 +6,7 @@ import {Wrapper, CardHeader, CardHeaderLeft, CardHeaderRight} from './element'
 import FileGray from "@site/static/img/file-gray.svg"
 import ArrowRightBlue from "@site/static/img/arrow-right-blue.svg"
 
-const Box = (props) => {
+const Card = (props) => {
   return (
     <>
     <Wrapper>
@@ -25,4 +25,4 @@ const Box = (props) => {
   )
 }
 
-export default Box
+export default Card
