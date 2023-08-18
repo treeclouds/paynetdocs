@@ -86,7 +86,7 @@ const config = {
         items: [
           {
             to: "/home",
-            sidebarId: "sideBarHome",
+            sidebarid: "sideBarHome",
             position: "left",
             label: "Documentations",
             className: "custom-navbar__item",
