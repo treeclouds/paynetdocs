@@ -224,6 +224,7 @@
   display: flex;
   padding: 0;
 }
+
 @media(min-width: 1024px) {
   .navbar__item:has( > img.navbar-search-icon__mobile) {
     display: none;
@@ -392,6 +393,12 @@ li > a.menu__link {
 .menu__link:hover {
   color: var(--blue-500);
 }
+/* Mobile nav explicitly not showing search and button */
+.menu__list-item:nth-child(4), .menu__list-item:nth-child(5) {
+  display: none;
+}
+
+/* Desktop side nav */
 
 .theme-doc-sidebar-item-category-level-2.menu__list-item .menu__list-item-collapsible .menu__link {
   font-size: 0.88rem;
@@ -873,12 +880,12 @@ li > a.menu__link {
   color: var(--blue-700) !important;
 }
 
-.button-dynamic {
+.button-dynamic, .w-max-content {
   width: 100%;
 }
 
 @media(min-width: 1024px) {
-  .button-dynamic {
+  .button-dynamic, .w-max-content {
     width: max-content;
   }
 }
