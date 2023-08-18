@@ -1,4 +1,5 @@
 import React from "react";
+import { useState, useEffect } from "react";
 import { useLocation } from "@docusaurus/router";
 import HomeIcons from "@site/static/img/home-gray-small.svg";
 ;
@@ -14,7 +15,22 @@ const Breadcrumbs = () => {
     .split("/")
     .filter((segment) => segment !== "");
   pathSegments.unshift("home");
-  const isMobileView = window.innerWidth <= 768;
+  
+  const [isMobileView, setIsMobileView] = useState(false);
+
+  useEffect(() => {
+    setIsMobileView(window.innerWidth <= 768);
+    
+    // Optional: Add an event listener to update isMobileView on window resize
+    const handleResize = () => {
+      setIsMobileView(window.innerWidth <= 768);
+    };
+    window.addEventListener('resize', handleResize);
+
+    // Cleanup the event listener on component unmount
+    return () => window.removeEventListener('resize', handleResize);
+
+  }, []);
   if (isMobileView && pathSegments.length > 2) {
     const shortBreadcrumb = (
       <React.Fragment>

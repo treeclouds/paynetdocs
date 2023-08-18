@@ -116,7 +116,7 @@ const config = {
           {
             type: 'html',
             position: 'right',
-            value: '<img src="img/search.svg"/ class="navbar-search-icon__mobile mobile__only"/>',
+            value: '<img src="img/search.svg" class="navbar-search-icon__mobile mobile__only"/>',
           },
 
           // {to: '/blog', label: 'Blog', position: 'left'},
