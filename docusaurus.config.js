@@ -102,7 +102,7 @@ const config = {
             position: 'left',
             value: `
             <div class="position-relative">
-              <img src="img/search.svg"/ class="input-icon__left">
+              <img src="img/search.svg" class="input-icon__left" />
               <input type="text" placeholder="Search documentation" class="input-with-icon__left w-max-content">
             </div>
             `,
