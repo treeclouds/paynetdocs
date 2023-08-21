@@ -67,6 +67,15 @@ const sidebars = {
       className: 'icon__link products__link',
       collapsed: false,
     },
+    {
+      type: "category",
+      label: "Example",
+      items: [
+        "example-component/resource-table",
+        "example-component/codes",
+      ],
+      className: 'icon__link api__link',
+    },
   ],
   anotherSideBar: [
     {
