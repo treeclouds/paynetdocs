@@ -37,6 +37,7 @@ export const CardHeaderLeft = styled.div `
 `
 
 export const CardHeaderRight = styled.div`
+  display: flex;
   @media (min-width: 768px) {
     display: none;
   }

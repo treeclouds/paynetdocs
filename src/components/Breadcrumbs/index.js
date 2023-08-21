@@ -1,19 +1,13 @@
 import React from "react";
+import { useState, useEffect } from "react";
 import { useLocation } from "@docusaurus/router";
-import HomeIcon from "../../../static/img/home-icon.png";
-import Image from "@theme/IdealImage";
+import HomeIcons from "@site/static/img/home-gray-small.svg";
+;
 import {BreadCrumbWrapper} from './element'
 const HomeImage = () => (
-  <Image
-    img={HomeIcon}
-    style={{
-      width: "25px",
-      height: "25px",
-    }}
-  />
+  <HomeIcons />
 );
 const Breadcrumbs = () => {
-  const separator = " > ";
   const location = useLocation();
   const url = location.pathname;
   const pathWithoutHash = url.split("#")[0]; // Remove the hash and get the path
@@ -21,26 +15,41 @@ const Breadcrumbs = () => {
     .split("/")
     .filter((segment) => segment !== "");
   pathSegments.unshift("home");
-  const isMobileView = window.innerWidth <= 768;
+  
+  const [isMobileView, setIsMobileView] = useState(false);
+
+  useEffect(() => {
+    setIsMobileView(window.innerWidth <= 768);
+    
+    // Optional: Add an event listener to update isMobileView on window resize
+    const handleResize = () => {
+      setIsMobileView(window.innerWidth <= 768);
+    };
+    window.addEventListener('resize', handleResize);
+
+    // Cleanup the event listener on component unmount
+    return () => window.removeEventListener('resize', handleResize);
+
+  }, []);
   if (isMobileView && pathSegments.length > 2) {
     const shortBreadcrumb = (
       <React.Fragment>
         <a className="breadcrumb-segment" href="/getting-started">
         <HomeImage />
         </a>
-        {separator} ... {separator} {pathSegments[pathSegments.length - 1]}
+        <div className="breadcrumb-separator"></div> ... <div className="breadcrumb-separator"></div> <p className="t14sm-t16lg bold font-blue-500 mb-0">{pathSegments[pathSegments.length - 1]}</p> 
       </React.Fragment>
     );
 
     return <BreadCrumbWrapper>{shortBreadcrumb}</BreadCrumbWrapper>;
   } else {
     return (
-      <BreadCrumbWrapper>
+      <BreadCrumbWrapper className="">
         {pathSegments.map((segment, index) => (
           <React.Fragment key={segment}>
-            {index > 0 && <span className="breadcrumb-separator">{" > "}</span>}
+            {index > 0 && <span className="breadcrumb-separator"></span>}
             <a
-              className="breadcrumb-segment"
+              className="breadcrumb-segment t14sm-t16lg font-gray-600"
               href={segment === "home" ? "/getting-started" : null}
             >
               {segment === "home" ? <HomeImage /> : segment}

@@ -7,28 +7,35 @@ import CardBanner from "../CardBanner/index.js"
 
 import BannerMobile from "../../../static/img/banner-docs-mobile.png"
 import BannerDesktop from "../../../static/img/header.png"
-import DuitNow from "../../../static/img/duitnow.png"
-import MyDebit from "../../../static/img/mydebit.png"
-import Jompay from "../../../static/img/jompay.png"
+import DuitNow from "@site/static/img/duitnow.svg"
 
-const Box = () => {
+import MyDebit from "@site/static/img/mydebit.svg"
+import Jompay from "@site/static/img/jompay.svg"
+import Rocket from "@site/static/img/rocket-gray.svg"
+import Code from "@site/static/img/code-black.svg"
+
+const DashboardHome = () => {
   return (
     <>
       <Wrapper>
         <BannerCaptionWrapper>
           <h1 className='t26sm-t42lg'>Documentations</h1>
-          <p className='t16sm-t23lg'>See guides, references and resources to help you build with PayNet</p>
+          <p className='t16sm-t23lg font-gray-500'>See guides, references and resources to help you build with PayNet</p>
         </BannerCaptionWrapper>
         <CardBannerWrapper>
           <CardBanner
+            image= {<Rocket />}
             title="Getting Started"
             text="See guides, references and resources to help you build with PayNet"
             href="/getting-started"
+            cta="Quick start"
           />
           <CardBanner
+            image= {<Code />}
             title="API Reference"
             text="Explore our API reference page to gain a comprehensive understanding of our API"
             href="/api-reference"
+            cta="Explore now"
           />
         </CardBannerWrapper>
         <BgWrapper>
@@ -44,7 +51,7 @@ const Box = () => {
         <h2 className='t26sm-t35lg bold font-gray-700'>Our Products</h2>
         <CardProductListWrapper>
           <TextBesidesIcon>
-            <Image img={DuitNow} />
+            <DuitNow />
             <h3 className='t21sm-t23lg bold font-gray-700'>DuitNow Transfer</h3>
           </TextBesidesIcon>
 
@@ -66,7 +73,7 @@ const Box = () => {
 
         <CardProductListWrapper>
           <TextBesidesIcon>
-            <Image img={DuitNow} />
+            <DuitNow />
             <h3 className='t21sm-t23lg bold font-gray-700'>DuitNow Online Banking</h3>
           </TextBesidesIcon>
 
@@ -84,7 +91,7 @@ const Box = () => {
 
         <CardProductListWrapper>
           <TextBesidesIcon>
-            <Image img={DuitNow} />
+            <DuitNow />
             <h3 className='t21sm-t23lg bold font-gray-700'>DuitNow QR</h3>
           </TextBesidesIcon>
 
@@ -110,7 +117,7 @@ const Box = () => {
 
         <CardProductListWrapper>
           <TextBesidesIcon>
-            <Image img={DuitNow} />
+            <DuitNow />
             <h3 className='t21sm-t23lg bold font-gray-700'>DuitNow Bill Payment</h3>
           </TextBesidesIcon>
 
@@ -124,7 +131,7 @@ const Box = () => {
 
         <CardProductListWrapper>
           <TextBesidesIcon>
-            <Image img={MyDebit} />
+            <MyDebit />
             <h3 className='t21sm-t23lg bold font-gray-700'>MyDebit</h3>
           </TextBesidesIcon>
 
@@ -138,7 +145,7 @@ const Box = () => {
 
         <CardProductListWrapper>
           <TextBesidesIcon>
-            <Image img={MyDebit} />
+            <MyDebit />
             <h3 className='t21sm-t23lg bold font-gray-700'>FPX</h3>
           </TextBesidesIcon>
 
@@ -160,7 +167,7 @@ const Box = () => {
 
         <CardProductListWrapper>
           <TextBesidesIcon>
-            <Image img={Jompay} />
+            <Jompay />
             <h3 className='t21sm-t23lg bold font-gray-700'>JomPAY</h3>
           </TextBesidesIcon>
 
@@ -180,4 +187,4 @@ const Box = () => {
   )
 }
 
-export default Box
+export default DashboardHome

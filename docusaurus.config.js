@@ -64,7 +64,7 @@ const config = {
     [
       '@docusaurus/plugin-ideal-image',
       {
-        quality: 70,
+        quality: 100,
         max: 1030, // max resized image's size.
         min: 640, // min resized image's size. if original is lower, use that size.
         steps: 2, // the max number of images generated between min and max (inclusive)
@@ -85,12 +85,40 @@ const config = {
         },
         items: [
           {
-            type: "docSidebar",
-            sidebarId: "sideBarHome",
+            to: "/home",
+            sidebarid: "sideBarHome",
             position: "left",
-            label: "Documentation",
+            label: "Documentations",
+            className: "custom-navbar__item",
           },
-          { to: "/api-reference", label: "API Reference", position: "left" },
+          {
+            to: "/api-reference",
+            label: "API Reference",
+            className: "custom-navbar__item",
+            position: "left"
+          },
+          {
+            type: 'html',
+            position: 'left',
+            value: `
+            <div class="position-relative">
+              <img src="img/search.svg" class="input-icon__left" />
+              <input type="text" placeholder="Search documentation" class="input-with-icon__left w-max-content">
+            </div>
+            `,
+          },
+          {
+            to: "#",
+            label: "Go to Sandbox",
+            className: "button button--small button--white desktop-only",
+            position: "right",
+          },
+          {
+            type: 'html',
+            position: 'right',
+            value: '<img src="img/search.svg" class="navbar-search-icon__mobile mobile__only"/>',
+          },
+
           // {to: '/blog', label: 'Blog', position: 'left'},
           // {
           //   href: 'https://github.com/facebook/docusaurus',
@@ -112,51 +140,35 @@ const config = {
       //   textColor: '#091E42',
       //   isCloseable: false,
       // },
-      // footer: {
-      //   style: 'dark',
-      //   links: [
-      //     {
-      //       title: 'Docs',
-      //       items: [
-      //         {
-      //           label: 'Tutorial',
-      //           to: '/docs/intro',
-      //         },
-      //       ],
-      //     },
-      //     {
-      //       title: 'Community',
-      //       items: [
-      //         {
-      //           label: 'Stack Overflow',
-      //           href: 'https://stackoverflow.com/questions/tagged/docusaurus',
-      //         },
-      //         {
-      //           label: 'Discord',
-      //           href: 'https://discordapp.com/invite/docusaurus',
-      //         },
-      //         {
-      //           label: 'Twitter',
-      //           href: 'https://twitter.com/docusaurus',
-      //         },
-      //       ],
-      //     },
-      //     {
-      //       title: 'More',
-      //       items: [
-      //         {
-      //           label: 'Blog',
-      //           to: '/blog',
-      //         },
-      //         {
-      //           label: 'GitHub',
-      //           href: 'https://github.com/facebook/docusaurus',
-      //         },
-      //       ],
-      //     },
-      //   ],
-      //   copyright: `Copyright © ${new Date().getFullYear()} My Project, Inc. Built with Docusaurus.`,
-      // },
+      footer: {
+        style: 'dark',
+        links: [
+          {
+            items: [
+              {
+                label: 'Home',
+                href: '#',
+              },
+              {
+                label: 'API',
+                href: '#',
+              },
+              {
+                label: 'Documentation',
+                href: '#',
+              },
+              {
+                label: 'Contact Us',
+                href: '#',
+              },
+            ],
+          },
+        ],
+        copyright:
+        `
+        © ${new Date().getFullYear()} Payments Network Malaysia Sdn Bhd (PayNet) 200801035403 (836743-D). All Rights Reserved.
+        `,
+      },
       prism: {
         theme: lightCodeTheme,
         darkTheme: darkCodeTheme,
