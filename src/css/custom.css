@@ -1071,5 +1071,5 @@ a:hover {
   cursor: pointer;
 }
 td:nth-child(2) {
-  width: 100%; 
+  min-width: 50%; 
 }
