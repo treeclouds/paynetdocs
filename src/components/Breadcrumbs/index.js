@@ -11,12 +11,33 @@ const Breadcrumbs = () => {
   const location = useLocation();
   const url = location.pathname;
   const pathWithoutHash = url.split("#")[0]; // Remove the hash and get the path
-  const pathSegments = pathWithoutHash
-    .split("/")
-    .filter((segment) => segment !== "");
-  pathSegments.unshift("home");
   
   const [isMobileView, setIsMobileView] = useState(false);
+
+  const BreadcrumbEllipsis = () => (
+    <span className="breadcrumb-ellipsis">...</span>
+  );
+
+  const pathSegments = pathWithoutHash
+  .split("/")
+  .filter((segment) => segment !== "");
+pathSegments.unshift("home");
+
+
+const BreadcrumbItem = ({ segment }) => (
+  <a
+    className="breadcrumb-segment t14sm-t16lg font-gray-600"
+    href={segment === "home" ? "/getting-started" : null}
+  >
+    {segment === "home" ? (
+      <span>
+        <HomeImage /> Home
+      </span>
+    ) : (
+      segment.charAt(0).toUpperCase() + segment.slice(1)
+    )}
+  </a>
+);
 
   useEffect(() => {
     setIsMobileView(window.innerWidth <= 768);
@@ -45,17 +66,27 @@ const Breadcrumbs = () => {
   } else {
     return (
       <BreadCrumbWrapper className="">
-        {pathSegments.map((segment, index) => (
-          <React.Fragment key={segment}>
-            {index > 0 && <span className="breadcrumb-separator"></span>}
-            <a
-              className="breadcrumb-segment t14sm-t16lg font-gray-600"
-              href={segment === "home" ? "/getting-started" : null}
-            >
-              {segment === "home" ? <HomeImage /> : segment}
-            </a>
-          </React.Fragment>
-        ))}
+        {
+  pathSegments.map((segment, index, array) => {
+    if (index === 0 || index >= array.length - 3) {
+      return (
+        <React.Fragment key={segment}>
+          {index > 0 && <span className="breadcrumb-separator"></span>}
+          <BreadcrumbItem segment={segment} />
+        </React.Fragment>
+      );
+    } else if (index === array.length - 4) {
+      return (
+        <React.Fragment key={index}>
+          <span className="breadcrumb-separator"></span>
+          <BreadcrumbEllipsis />
+        </React.Fragment>
+      );
+    } else {
+      return null; // Skip the in-between segments
+    }
+  })
+}
       </BreadCrumbWrapper>
     );
   }
