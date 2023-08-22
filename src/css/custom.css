@@ -616,7 +616,7 @@ h2 {
   letter-spacing: 0.32px;
 }
 
-.t14sm-t16lg, li {
+.t14sm-t16lg, li, li strong {
   font-size: 0.78rem;
 	line-height: 150%;
 }
@@ -1278,4 +1278,12 @@ code {
   background-color: var(--gray-50);
   border-radius: 6px;
   border: 1px solid var(--gray-200);
+}
+
+/* ul li */
+.docItemContainer_node_modules-\@docusaurus-theme-classic-lib-theme-DocItem-Layout-styles-module ul {
+  display: grid;
+  row-gap: 0.87rem;
+
+  padding-left: 0.87rem;
 }
