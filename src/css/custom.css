@@ -24,6 +24,7 @@
   --prism-background-color: #F4FAFD;
   --ifm-navbar-sidebar-width: 100vw;
   --custom-section-padding: 0px;
+  --ifm-table-head-background: #F2F4F7;
   /* For typography base = 18px */
   font-size: 112.5%;
   --ifm-heading-font-family: 'Roboto', sans-serif;
@@ -247,6 +248,7 @@
 
 .markdown > h3 {
   margin-bottom: 0.88rem;
+  color: var(--gray-700);
 }
 /* Explicit on home */
 .docs-doc-id-home .theme-doc-breadcrumbs, .docs-doc-id-home .markdown > h1 {
@@ -568,9 +570,6 @@ h2 {
 	line-height: 28px;
 }
 
-h3 {
-  color: var(--font-gray-700);
-}
 .t21sm-t23lg {
 	font-size: 1.167rem;
 	line-height: 28px;
@@ -606,13 +605,18 @@ h3 {
 	line-height: 150%;
 }
 
-.t16, .tabs__item {
+.t16,
+.tabs__item,
+.blue-link,
+.docItemContainer_node_modules-\@docusaurus-theme-classic-lib-theme-DocItem-Layout-styles-module th,
+.docItemContainer_node_modules-\@docusaurus-theme-classic-lib-theme-DocItem-Layout-styles-module td
+{
 	font-size: 0.88rem;
 	line-height: 150%;
   letter-spacing: 0.32px;
 }
 
-.t14sm-t16lg {
+.t14sm-t16lg, li {
   font-size: 0.78rem;
 	line-height: 150%;
 }
@@ -673,6 +677,7 @@ h3 {
     font-size: 1.94rem;
     line-height: 38px;
     letter-spacing: 0.35px;
+    color: var(--gray-700);
   }
 
   .t21sm-t26lg {
@@ -1124,14 +1129,64 @@ a:hover {
 .mb-0 {
   margin-bottom: 0;
 }
+/* Table */
 
-.blue-link{
-  color:#2179BE;
+table {
+  width: 100%;
+  display: table;
+
+  border-collapse: separate;
+  border-spacing: 0;
+  margin: 0;
+
+  overflow: hidden;
+}
+
+.table__wrapper {
+  overflow: auto;
+  border-radius: 6px;
+  border: 1px solid var(--gray-300);
+  margin-bottom: 1.78rem;
+}
+
+@media(min-width: 1024px) {
+  .table__wrapper {
+    width: fit-content;
+  }
+}
+
+table th, table td {
+  border: none;
+}
+
+table tr th {
+  text-align: left;
+}
+table tr:nth-child(2n) {
+  background: var(--gray-50);
+}
+table tr th:not(:last-child), table tr td:not(:last-child) {
+  border-right: 1px solid var(--gray-200);
+}
+
+.docItemContainer_node_modules-\@docusaurus-theme-classic-lib-theme-DocItem-Layout-styles-module th,
+.docItemContainer_node_modules-\@docusaurus-theme-classic-lib-theme-DocItem-Layout-styles-module td {
+  padding: 10px 8px 10px 12px;
+}
+
+.blue-link {
+  color: var(--blue-500);
   cursor: pointer;
 }
-td:nth-child(2) {
-  min-width: 50%; 
+
+.blue-link:hover {
+  color: var(--blue-500);
+  text-decoration: underline;
 }
+
+/* td:nth-child(2) {
+  min-width: 50%; 
+} */
 
 /* Tabs */
 .tabs {
@@ -1205,11 +1260,6 @@ button .copyButtonIcons_node_modules-\@docusaurus-theme-classic-lib-theme-CodeBl
   background: url(../../static/img/check-green.svg) no-repeat !important;
 }
 
-/* .copyButtonSuccessIcon_node_modules-\@docusaurus-theme-classic-lib-theme-CodeBlock-CopyButton-styles-module {
-  display: none !important;
-} */
-
-
 .theme-code-block:hover .buttonGroup_node_modules-\@docusaurus-theme-classic-lib-theme-CodeBlock-Content-styles-module button {
   opacity: 1 !important;
 }
@@ -1221,4 +1271,11 @@ button .copyButtonIcons_node_modules-\@docusaurus-theme-classic-lib-theme-CodeBl
 
 .copyButtonCopied_node_modules-\@docusaurus-theme-classic-lib-theme-CodeBlock-CopyButton-styles-module .copyButtonIcon_node_modules-\@docusaurus-theme-classic-lib-theme-CodeBlock-CopyButton-styles-module, .copyButtonSuccessIcon_node_modules-\@docusaurus-theme-classic-lib-theme-CodeBlock-CopyButton-styles-module {
   display: none !important;
+}
+
+/* code */
+code {
+  background-color: var(--gray-50);
+  border-radius: 6px;
+  border: 1px solid var(--gray-200);
 }
