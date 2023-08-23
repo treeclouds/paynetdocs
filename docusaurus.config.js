@@ -113,7 +113,7 @@ const config = {
             position: 'left',
             value: `
             <div class="position-relative">
-              <img src="img/search.svg" class="input-icon__left" />
+              <img src="img/search.svg" alt="search icon" class="input-icon__left" />
               <input type="text" placeholder="Search documentation" class="input-with-icon__left w-max-content">
             </div>
             `,
@@ -127,7 +127,11 @@ const config = {
           {
             type: 'html',
             position: 'right',
-            value: '<img src="img/search.svg" class="navbar-search-icon__mobile mobile__only"/>',
+            value: `
+            <div class="search__icon">
+              <img src="img/search.svg" alt="search icon" class="navbar-search-icon__mobile"/>
+            </div>
+            `,
           },
 
           // {to: '/blog', label: 'Blog', position: 'left'},
