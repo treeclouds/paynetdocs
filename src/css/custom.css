@@ -21,8 +21,10 @@
   --ifm-menu-color-background-hover: #E9F2F9;
   --ifm-menu-color: #344054;
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
+  --prism-background-color: #F4FAFD;
   --ifm-navbar-sidebar-width: 100vw;
   --custom-section-padding: 0px;
+  --ifm-table-head-background: #F2F4F7;
   /* For typography base = 18px */
   font-size: 112.5%;
   --ifm-heading-font-family: 'Roboto', sans-serif;
@@ -158,15 +160,16 @@
 }
 
 /* Changelog */
-.docs-doc-id-changelog .row .col {
+.docs-wrapper:not(.docs-doc-id-home) .row .col {
   padding: 0.88rem 5% 3.1rem;
 }
 
 @media (min-width: 1024px) {
-  .docs-doc-id-changelog .row .col {
+  .docs-wrapper:not(.docs-doc-id-home) .row .col {
     padding: 1.77rem;
   }
 }
+
 /* Back to top */
 .backToTopButtonShow_node_modules-\@docusaurus-theme-classic-lib-theme-BackToTopButton-styles-module {
   position: relative;
@@ -228,6 +231,25 @@
   color: var(--blue-500);
   font-weight: 700;
 }
+
+.markdown > h1 {
+  margin-bottom: 1.1rem;
+}
+@media (min-width: 1024px) {
+
+  .markdown > h1 {
+    margin-bottom: 1.77rem;
+  }
+}
+
+.markdown > h2 {
+  margin: 0 0 0.88rem;
+}
+
+.markdown > h3 {
+  margin-bottom: 0.88rem;
+  color: var(--gray-700);
+}
 /* Explicit on home */
 .docs-doc-id-home .theme-doc-breadcrumbs, .docs-doc-id-home .markdown > h1 {
   display: none;
@@ -242,16 +264,21 @@
 }
 
 /* Nav bar */
-.navbar__item > .navbar-search-icon__mobile {
+
+/* on mobile */
+.menu__list div.menu__list-item:last-child {
+  display: none;
+}
+.navbar__items--right div.navbar__item {
   display: flex;
-  padding: 0;
 }
 
-@media (min-width: 1024px) {
-  .navbar__item > .navbar-search-icon__mobile {
+@media(min-width: 1024px) {
+  .navbar__items--right div.navbar__item {
     display: none;
   }
 }
+
 .navbar-sidebar__close {
   width: 24px;
   height: 24px;
@@ -407,10 +434,6 @@ li > a.menu__link {
 .menu__link:hover {
   color: var(--blue-500);
 }
-/* Mobile nav explicitly not showing search and button */
-.menu__list-item:nth-child(4), .menu__list-item:nth-child(5) {
-  display: none;
-}
 
 /* Desktop side nav */
 
@@ -477,6 +500,20 @@ li > a.menu__link {
 	line-height: 150%;
 	font-size: 1rem;
 }
+h1, h2, h3, h4 {
+  margin-bottom: 0;
+}
+/* 26px */
+h1 {
+  color: var(--blue-500);
+}
+
+.heading-2, h1 {
+	font-size: 1.44rem;
+	line-height: 123%;
+  font-weight: 700;
+	/* font-family: "Gotham Rounded"; */
+}
 
 .t32sm-t42lg {
 	font-size: 1.78rem;
@@ -514,7 +551,15 @@ li > a.menu__link {
 	line-height: 130%;
 }
 
-.t21sm-t26lg {
+/* 21px */
+h2 {
+	font-size: 1.167rem;
+	line-height: 28px;
+  font-weight: 700;
+  color: var(--gray-700);
+}
+
+.t21sm-t26lg, h3 {
 	font-size: 1.167rem;
 	line-height: 28px;
 }
@@ -554,17 +599,23 @@ li > a.menu__link {
 	line-height: 150%;
 }
 
-.t16 {
+.t16,
+.tabs__item,
+.blue-link,
+.docItemContainer_node_modules-\@docusaurus-theme-classic-lib-theme-DocItem-Layout-styles-module th,
+.docItemContainer_node_modules-\@docusaurus-theme-classic-lib-theme-DocItem-Layout-styles-module td
+{
 	font-size: 0.88rem;
 	line-height: 150%;
+  letter-spacing: 0.32px;
 }
 
-.t14sm-t16lg {
+.t14sm-t16lg, li, li strong {
   font-size: 0.78rem;
 	line-height: 150%;
 }
 
-.t14 {
+.t14, .token {
   font-size: 0.78rem !important;
 	line-height: 18px;
 }
@@ -575,6 +626,13 @@ li > a.menu__link {
 }
 
 @media(min-width: 1024px) {
+  /* 48px */
+  .heading-2, h1 {
+    font-size: 2.67rem;
+    letter-spacing: -0.48px;
+    line-height: 60px;
+  }
+
   .t32sm-t42lg {
     font-size: 2.33rem;
     line-height: 105%;
@@ -607,6 +665,13 @@ li > a.menu__link {
   .t23sm-t26lg {
     font-size: 1.44rem; 
     line-height: 123%;
+  }
+  /* 35px */
+  h2 {
+    font-size: 1.94rem;
+    line-height: 38px;
+    letter-spacing: 0.35px;
+    color: var(--gray-700);
   }
 
   .t21sm-t26lg {
@@ -823,7 +888,8 @@ li > a.menu__link {
 /* To keep product for showing */
 .products__link .menu__list {
   display: block !important;
-  overflow: visible !important;
+  /* overflow: visible !important; */
+  height: max-content !important;
 }
 
 .products__link .menu__link--sublist-caret:after {
@@ -993,11 +1059,153 @@ a:hover {
 .mb-0 {
   margin-bottom: 0;
 }
+/* Table */
 
-.blue-link{
-  color:#2179BE;
+table {
+  width: 100%;
+  display: table;
+
+  border-collapse: separate;
+  border-spacing: 0;
+  margin: 0;
+
+  overflow: hidden;
+}
+
+.table__wrapper {
+  overflow: auto;
+  border-radius: 6px;
+  border: 1px solid var(--gray-300);
+  margin-bottom: 1.78rem;
+}
+
+@media(min-width: 1024px) {
+  .table__wrapper {
+    width: fit-content;
+  }
+}
+
+table th, table td {
+  border: none;
+}
+
+table tr th {
+  text-align: left;
+}
+table tr:nth-child(2n) {
+  background: var(--gray-50);
+}
+table tr th:not(:last-child), table tr td:not(:last-child) {
+  border-right: 1px solid var(--gray-200);
+}
+
+.docItemContainer_node_modules-\@docusaurus-theme-classic-lib-theme-DocItem-Layout-styles-module th,
+.docItemContainer_node_modules-\@docusaurus-theme-classic-lib-theme-DocItem-Layout-styles-module td {
+  padding: 10px 8px 10px 12px;
+}
+
+.blue-link {
+  color: var(--blue-500);
   cursor: pointer;
 }
-td:nth-child(2) {
+
+.blue-link:hover {
+  color: var(--blue-500);
+  text-decoration: underline;
+}
+
+/* td:nth-child(2) {
   min-width: 50%; 
+} */
+
+/* Tabs */
+.tabs {
+  column-gap: 8px;
+}
+
+.tabs__item {
+  padding: 10px 4px;
+
+  color: var(--gray-400);
+  font-weight: 700;
+}
+
+.tabs__item:hover {
+  color: #4D94CB;
+  background-color: transparent;
+}
+
+.tabs__item--active {
+  color: var(--blue-500);
+}
+
+/* Token */
+.token.plain, .token.maybe-class-name, .token.constant, .token.number, .token.literal-property, .token.function {
+  color: var(--gray-500) !important;
+}
+
+.token.keyword.module {
+  color: var(--blue-500) !important;
+}
+.token.string {
+  color: var(--red-500) !important;
+}
+
+.copyButtonCopied_node_modules-\@docusaurus-theme-classic-lib-theme-CodeBlock-CopyButton-styles-module::after {
+  content: "Copied";
+  color: var(--gray-700);
+  font-weight: 700;
+  margin-left: 8px;
+}
+
+.copyButtonIcons_node_modules-\@docusaurus-theme-classic-lib-theme-CodeBlock-CopyButton-styles-module svg, .wordWrapButtonIcon_node_modules-\@docusaurus-theme-classic-lib-theme-CodeBlock-WordWrapButton-styles-module {
+  display: none;
+}
+
+.buttonGroup_node_modules-\@docusaurus-theme-classic-lib-theme-CodeBlock-Content-styles-module button[aria-label="Toggle word wrap"] {
+  background: url(../../static/img/align-wrap.svg) no-repeat !important;
+  background-position: center !important;
+}
+
+.buttonGroup_node_modules-\@docusaurus-theme-classic-lib-theme-CodeBlock-Content-styles-module {
+  column-gap: 8px;
+}
+
+.buttonGroup_node_modules-\@docusaurus-theme-classic-lib-theme-CodeBlock-Content-styles-module button {
+  padding: 8px !important;
+  transition: none !important;
+  border: 1px solid transparent !important;
+}
+
+button .copyButtonIcons_node_modules-\@docusaurus-theme-classic-lib-theme-CodeBlock-CopyButton-styles-module {
+  width: 20px !important;
+  height: 20px !important;
+  background: url(../../static/img/copy.svg) no-repeat !important;
+  background-position: center !important;
+}
+
+.copyButtonCopied_node_modules-\@docusaurus-theme-classic-lib-theme-CodeBlock-CopyButton-styles-module .copyButtonIcons_node_modules-\@docusaurus-theme-classic-lib-theme-CodeBlock-CopyButton-styles-module {
+  width: 20px;
+  height: 20px;
+  background: url(../../static/img/check-green.svg) no-repeat !important;
+}
+
+.theme-code-block:hover .buttonGroup_node_modules-\@docusaurus-theme-classic-lib-theme-CodeBlock-Content-styles-module button {
+  opacity: 1 !important;
+}
+
+.copyButtonCopied_node_modules-\@docusaurus-theme-classic-lib-theme-CodeBlock-CopyButton-styles-module .copyButtonSuccessIcon_node_modules-\@docusaurus-theme-classic-lib-theme-CodeBlock-CopyButton-styles-module {
+  transition: none !important;
+  transition-delay: 0s !important;
+}
+
+.copyButtonCopied_node_modules-\@docusaurus-theme-classic-lib-theme-CodeBlock-CopyButton-styles-module .copyButtonIcon_node_modules-\@docusaurus-theme-classic-lib-theme-CodeBlock-CopyButton-styles-module, .copyButtonSuccessIcon_node_modules-\@docusaurus-theme-classic-lib-theme-CodeBlock-CopyButton-styles-module {
+  display: none !important;
+}
+
+/* code */
+code {
+  background-color: var(--gray-50);
+  border-radius: 6px;
+  border: 1px solid var(--gray-200);
 }
