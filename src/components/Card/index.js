@@ -1,5 +1,4 @@
 import React from 'react'
-import Image from '@theme/IdealImage';
 
 import {Wrapper, CardHeader, CardHeaderLeft, CardHeaderRight} from './element'
 
