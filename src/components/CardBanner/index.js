@@ -1,5 +1,4 @@
 import React from 'react'
-import Image from '@theme/IdealImage';
 
 import {Wrapper, IconWrapper, CardBody} from './element'
 import MyButton from '../Button'

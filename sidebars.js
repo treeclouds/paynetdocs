@@ -73,6 +73,7 @@ const sidebars = {
       items: [
         "example-component/resource-table",
         "example-component/codes",
+        "example-component/resource-card",
       ],
       className: 'icon__link api__link',
     },
