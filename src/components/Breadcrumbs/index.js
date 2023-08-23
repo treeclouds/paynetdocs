@@ -30,9 +30,9 @@ const BreadcrumbItem = ({ segment }) => (
     href={segment === "home" ? "/getting-started" : null}
   >
     {segment === "home" ? (
-      <span>
-        <HomeImage /> Home
-      </span>
+    <a className="breadcrumb-segment" href="/getting-started">
+    <HomeImage />
+  </a>
     ) : (
       segment.charAt(0).toUpperCase() + segment.slice(1)
     )}
