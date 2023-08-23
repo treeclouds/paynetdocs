@@ -264,16 +264,21 @@
 }
 
 /* Nav bar */
-.navbar__item > .navbar-search-icon__mobile {
+
+/* on mobile */
+.menu__list div.menu__list-item:last-child {
+  display: none;
+}
+.navbar__items--right div.navbar__item {
   display: flex;
-  padding: 0;
 }
 
-@media (min-width: 1024px) {
-  .navbar__item > .navbar-search-icon__mobile {
+@media(min-width: 1024px) {
+  .navbar__items--right div.navbar__item {
     display: none;
   }
 }
+
 .navbar-sidebar__close {
   width: 24px;
   height: 24px;
@@ -435,10 +440,6 @@ li > a.menu__link {
 
 .menu__link:hover {
   color: var(--blue-500);
-}
-/* Mobile nav explicitly not showing search and button */
-.menu__list-item:nth-child(4), .menu__list-item:nth-child(5) {
-  display: none;
 }
 
 /* Desktop side nav */
@@ -894,7 +895,8 @@ h2 {
 /* To keep product for showing */
 .products__link .menu__list {
   display: block !important;
-  overflow: visible !important;
+  /* overflow: visible !important; */
+  height: max-content !important;
 }
 
 .products__link .menu__link--sublist-caret:after {
@@ -1201,8 +1203,8 @@ table tr th:not(:last-child), table tr td:not(:last-child) {
 }
 
 .tabs__item:hover {
-  background: var(--blue-500);
-  color: var(--base-white);
+  color: #4D94CB;
+  background-color: transparent;
 }
 
 .tabs__item--active {
@@ -1278,12 +1280,4 @@ code {
   background-color: var(--gray-50);
   border-radius: 6px;
   border: 1px solid var(--gray-200);
-}
-
-/* ul li */
-.docItemContainer_node_modules-\@docusaurus-theme-classic-lib-theme-DocItem-Layout-styles-module ul {
-  display: grid;
-  row-gap: 0.87rem;
-
-  padding-left: 0.87rem;
 }
