@@ -88,6 +88,12 @@ const config = {
     ({
       // Replace with your project's social card
       image: "img/logo-paynet.svg",
+      algolia:{
+        apiKey:'d202c6e09c0827e99714d9a7d679d421',
+        indexName:'paynetvercel',
+        contextualSearch:true,
+        appId:'L8A42RG0IL'
+      },
       navbar: {
         title: "",
         logo: {
@@ -109,30 +115,11 @@ const config = {
             position: "left"
           },
           {
-            type: 'html',
-            position: 'left',
-            value: `
-            <div class="position-relative">
-              <img src="img/search.svg" alt="search icon" class="input-icon__left" />
-              <input type="text" placeholder="Search documentation" class="input-with-icon__left w-max-content">
-            </div>
-            `,
-          },
-          {
             to: "#",
             label: "Go to Sandbox",
             className: "button button--small button--white desktop-only",
-            position: "right",
-          },
-          {
-            type: 'html',
-            position: 'right',
-            value: `
-            <div class="search__icon">
-              <img src="img/search.svg" alt="search icon" class="navbar-search-icon__mobile"/>
-            </div>
-            `,
-          },
+            position: "right"
+          }
 
           // {to: '/blog', label: 'Blog', position: 'left'},
           // {
@@ -142,11 +129,11 @@ const config = {
           // },
         ],
       },
-      // colorMode: {
-      //   defaultMode: 'light',
-      //   disableSwitch: false,
-      //   respectPrefersColorScheme: false,
-      // },
+      colorMode: {
+        defaultMode: 'light',
+        disableSwitch: false,
+        respectPrefersColorScheme: false,
+      },
       // announcementBar: {
       //   id: 'support_us',
       //   content:
