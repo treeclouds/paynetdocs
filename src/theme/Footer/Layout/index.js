@@ -10,6 +10,9 @@ import AwsIcon from "@site/static/img/aws.svg"
 import GitlabIcon from "@site/static/img/gitlab.svg"
 
 export default function FooterLayout({style, links, logo, copyright}) {
+
+  const productionUrl = process.env.PRODUCTION_URL;
+
   return (
     <footer>
       <div className="bg-gray-700">
@@ -22,7 +25,7 @@ export default function FooterLayout({style, links, logo, copyright}) {
               <PaynetLogo />
               {logo && <div className="">{logo}</div>}
               {copyright}
-              <a href='#' className='t16 font-gray-400 bold'>Terms & Conditions</a>
+              <a href={productionUrl} className='t16 font-gray-400 bold'>Terms & Conditions</a>
             </div>
           )}
           <hr className="w-100 bg-gray-700"/>
