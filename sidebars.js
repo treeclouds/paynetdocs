@@ -95,6 +95,7 @@ const sidebars = {
           label: "Credit Transfer",
           items: [
             "credit-transfer/introduction",
+            "credit-transfer/introduction-2",
             "credit-transfer/credit-transfer-reversal",
             "credit-transfer/transaction-enquiry",
             "credit-transfer/repeat-handling",
