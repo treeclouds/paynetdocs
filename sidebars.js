@@ -72,6 +72,7 @@ const sidebars = {
       label: "Example",
       items: [
         "example-component/resource-table",
+        "example-component/resource-table-2",
         "example-component/codes",
         "example-component/resource-card",
       ],
