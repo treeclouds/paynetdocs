@@ -105,7 +105,38 @@
   --ifm-color-primary-lightest: #4fddbf;
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
 }
+
+/* Misscelanious */
+@media(min-width: 1024px) {
+  .w-50-desktop {
+    width: 50%;
+  }
+}
+
+a:hover {
+  text-decoration: none;
+  color: inherit;
+}
+
+.mb-0 {
+  margin-bottom: 0;
+}
+
+.ml-2 {
+  margin-left: 0.5rem;
+}
+
+.d-flex {
+  display: flex;
+}
+
+.align-items-center {
+  align-items: center;
+}
+
 .position-relative { position: relative; }
+
+/*  */
 .container {
   padding: 0 var(--custom-section-padding) !important;
 }
@@ -993,27 +1024,6 @@ h2 {
   display: flex;
   align-items: center;
   column-gap: 8px;
-}
-
-a:hover {
-  text-decoration: none;
-  color: inherit;
-}
-
-.mb-0 {
-  margin-bottom: 0;
-}
-
-.ml-2 {
-  margin-left: 0.5rem;
-}
-
-.d-flex {
-  display: flex;
-}
-
-.align-items-center {
-  align-items: center;
 }
 
 /* Table */
