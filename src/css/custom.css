@@ -130,7 +130,7 @@ a:hover {
 }
 
 .mb-0 {
-  margin-bottom: 0;
+  margin-bottom: 0 !important;
 }
 
 .ml-2 {
@@ -242,13 +242,17 @@ a:hover {
   margin-bottom: 1.78rem;
 }
 
+.col--3 {
+  padding: 0;
+}
+
+.docs-wrapper:not(.docs-doc-id-home) .row .col:not(.col--3) {
+  font-size: 14px;
+}
+
 /* Changelog */
 .docs-wrapper:not(.docs-doc-id-home) .row .col:not(.col--3) {
   padding: 0.88rem 5% 3.1rem;
-}
-
-.col--3 {
-  padding: 0;
 }
 
 @media (min-width: 1024px) {
@@ -313,15 +317,6 @@ a:hover {
   margin-bottom: 1.1rem;
 }
 
-@media (min-width: 1024px) {
-  .markdown > h1 {
-    margin-bottom: 1.77rem;
-  }
-  .markdown > h2 {
-    margin: 0 0 0.88rem;
-  }
-}
-
 .markdown > h2 {
   margin: 0 0 8px;
 }
@@ -334,8 +329,17 @@ a:hover {
   margin-bottom: 0.88rem;
 }
 
-.markdown ul {
+.markdown ul:not(.tabs) {
   padding-left: 16px;
+}
+
+@media (min-width: 1024px) {
+  .markdown > h1 {
+    margin-bottom: 1.77rem;
+  }
+  .markdown > h2,  .markdown > h3{
+    margin: 0 0 0.88rem;
+  }
 }
 
 /* Explicit on home */
@@ -730,7 +734,7 @@ h1 {
   letter-spacing: 0.32px;
 }
 
-.t14sm-t16lg, .markdown li, .markdown li strong  {
+.t14sm-t16lg, .markdown p, .markdown li, strong  {
   font-size: 0.78rem;
 	line-height: 150%;
 }
@@ -829,8 +833,8 @@ h1 {
 		line-height: 133%;
   }
 
-  .t14sm-t16lg {
-    font-size: 0.78rem;
+  .t14sm-t16lg, .markdown p, .markdown li, strong {
+    font-size: 0.88rem;
     line-height: 150%;
   }
 

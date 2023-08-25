@@ -11,7 +11,7 @@ const CardLink = (props) => {
         <p className='t16sm-t18lg font-gray-700'>See also {props.text} for Credit transfer</p>
       </CardLinkLeft>
       <CardLinkRight>
-        <p className='t14sm-t18lg bold font-blue-500'>See {props.text}</p>
+        <a href='/credit-transfer/credit-transfer-reversal' className='t14sm-t18lg bold font-blue-500'>See {props.text}</a>
         <ChevronRight/>
       </CardLinkRight>
     </Wrapper>

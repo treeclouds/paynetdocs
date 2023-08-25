@@ -55,10 +55,10 @@ const BreadcrumbItem = ({ segment }) => (
   if (isMobileView && pathSegments.length > 2) {
     const shortBreadcrumb = (
       <React.Fragment>
-        <a className="breadcrumb-segment" href="/getting-started">
+        <a className="breadcrumb-segment d-flex" href="/getting-started">
         <HomeImage />
         </a>
-        <div className="breadcrumb-separator"></div> ... <div className="breadcrumb-separator"></div> <p className="t14sm-t16lg bold font-blue-500 mb-0">{pathSegments[pathSegments.length - 1]}</p> 
+        <div className="breadcrumb-separator"></div> ... <div className="breadcrumb-separator"></div> <p className="font-blue-500 mb-0">{pathSegments[pathSegments.length - 1]}</p> 
       </React.Fragment>
     );
 
