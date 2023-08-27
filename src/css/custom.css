@@ -21,12 +21,12 @@
   --ifm-menu-color-background-hover: #E9F2F9;
   --ifm-menu-color: #344054;
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
-  --prism-background-color: #F4FAFD;
   --ifm-navbar-sidebar-width: 100vw;
   --custom-section-padding: 0px;
   --ifm-table-head-background: #F2F4F7;
   --ifm-alert-border-radius: 12px;
   --ifm-alert-background-color: #EAF5FB;
+  --prism-background-color : #F4FAFD;
   /* For typography base = 18px */
   font-size: 112.5%;
   --ifm-heading-font-family: 'Roboto', sans-serif;
@@ -52,6 +52,7 @@
   --red-50 : #FEF3F2;
 
   --green-50: #F3F9ED;
+  --green-700: #226C2C;
   --orange-50: #FEF8EE;
 
 
@@ -150,7 +151,6 @@ a:hover {
 /* Alert */
 .alert {
   border: none;
-
   margin-bottom: 1.33rem !important;
 }
 
@@ -158,12 +158,20 @@ a:hover {
   background-color: var(--blue-50);
 }
 
-.alert--info p, .alert--info div {
-  color: var(--blue-600);
+.alert--success {
+  background: var(--green-50) !important;
 }
 
 .alert--secondary {
   background-color: var(--gray-100);
+}
+
+.alert--info p, .alert--info div {
+  color: var(--blue-600);
+}
+
+.alert--success p, .alert--success div {
+  color: var(--green-700);
 }
 
 .alert--secondary p, .alert--secondary div {
@@ -179,6 +187,7 @@ a:hover {
   line-height: 24px; /* 150% */
   letter-spacing: 0.32px;
 }
+
 .alert span {
   width: 20px;
   height: 20px;
@@ -192,8 +201,22 @@ a:hover {
   background: url(../../static/img/note-gray.svg) no-repeat !important;
 }
 
+.alert--success span {
+  background: url(../../static/img/info-green.svg) no-repeat !important;
+}
+
 .alert span svg {
   display: none !important;
+}
+
+/* Badge */
+.badge {
+  border-radius: 16px;
+}
+.badge--success {
+  background-color: var(--green-50);
+  color: var(--green-700);
+  border: 1px solid var(--green-50);
 }
 /*  */
 .container {

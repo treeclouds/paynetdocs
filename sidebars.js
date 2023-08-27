@@ -96,6 +96,7 @@ const sidebars = {
           items: [
             "credit-transfer/introduction",
             "credit-transfer/introduction-2",
+            "credit-transfer/introduction-3",
             "credit-transfer/credit-transfer-reversal",
             "credit-transfer/transaction-enquiry",
             "credit-transfer/repeat-handling",
@@ -122,6 +123,9 @@ const sidebars = {
     "duitnow-transfer/response-codes",
     "duitnow-transfer/connectivity-requirements",
   ],
+  // creditTransferSideBar : [
+    
+  // ]
 };
 
 module.exports = sidebars;

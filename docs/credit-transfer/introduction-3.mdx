@@ -1,0 +1,60 @@
+---
+title: Introduction-3
+hide_title: true
+description: Introduction-3
+slug: /credit-transfer/introduction-3
+custom_edit_url: null
+---
+import Breadcrumbs from '@site/src/components/Breadcrumbs'; 
+import CardLink from '@site/src/components/CardLink'; 
+import FileGray from "@site/static/img/file-gray.svg"
+<Breadcrumbs/>
+
+# Credit transfer [txt img] 3
+
+<CardLink
+  image= {<FileGray />}
+  text= "documentation"
+/>
+
+<p className="badge badge--success t14">v 2.0</p>
+
+<div className="code__transparent">
+
+  
+</div>
+
+  ```js
+
+  API Base URL live server
+  
+  `ssh-copy-id -i ~/.ssh/id_ecdsa.pub username@reports.uat.inet.paynet.my`
+
+  ```
+<div className="table__wrapper">
+
+| Security                                                                    |
+| --------------------------------------------------------------------------- |
+| Barrier Auth <br/> <br/> **This API supports JWS for authenticating all API requests.** For more information, please read our JWS specification. <br/> <br/>Provide your bearer token in the Authorization header when making requests to protected resources <br/> <br/> **Example: ** `Authorization: bearer 123` |
+
+</div>
+
+:::success Attention
+
+These APIs are still in the beta stage and are not yet available to the general public. Stay tuned for updates on when they will be ready for everyone to explore!
+
+:::
+
+## Before Getting Started
+
+- Participant acts as the Originating Financial Institution (OFI) which is the sender of the payment instruction. OFI is expected to manage their customer’s account balances and be able to debit the fund from their customer’s account. In such scenario, Participant needs to make API request to RPP host to initiate the payment instruction.
+- Participant acts as the Receiving Financial Institution (RFI) which is the receiver of the payment instruction. RFI is expected to be able to receive the instruction from RPP host and be able to credit the fund to their customer’s account. In such scenario, Participant needs to be able to receive API request from RPP host to process the payment instruction.
+- Participant acts as both the Originating Financial Institution (OFI) and Receiving Financial Institution (RFI). In such scenario, Participant needs to implement both payment instruction's sending and receiving legs.
+
+## V2 API
+
+This API version is only made available in JSON format and request can only be called using HTTP API call.
+
+### Endpoints
+
+The APIs listed under Webhook are using the same specifications under the prior section. Participant is expected to expose an endpoint to act as the RFI to receive the API from RPP host.

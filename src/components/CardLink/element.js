@@ -6,7 +6,7 @@ import styled from 'styled-components'
 
 export const Wrapper = styled.div`
   display: grid;
-  row-gap: 0.88rem;
+  row-gap: 0.67rem;
 
   border-radius: 12px;
   border: 1px solid var(--gray-200);
@@ -43,7 +43,6 @@ export const CardLinkLeft = styled.div `
 export const CardLinkRight = styled.div `
   display: flex;
   align-items: center;
-  justify-content: space-between;
   column-gap: 8px;
 
   cursor: pointer;
