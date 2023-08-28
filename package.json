@@ -28,7 +28,8 @@
     "styled-components": "^6.0.5"
   },
   "devDependencies": {
-    "@docusaurus/module-type-aliases": "2.4.1"
+    "@docusaurus/module-type-aliases": "2.4.1",
+    "babel-plugin-styled-components": "^2.1.4"
   },
   "browserslist": {
     "production": [

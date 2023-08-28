@@ -118,8 +118,9 @@ const config = {
             to: "#",
             label: "Go to Sandbox",
             className: "button button--small button--white desktop-only",
-            position: "right",
+            position: "right"
           }
+
           // {to: '/blog', label: 'Blog', position: 'left'},
           // {
           //   href: 'https://github.com/facebook/docusaurus',

@@ -1,16 +1,26 @@
 ---
-title: Codes
+title: Resources
+hide_title: true
 description: Example of codes
 slug: /example/codes
 sidebar_class_name: home
 displayed_sidebar: sideBarHome
 sidebar_position: 2
+custom_edit_url: null
 ---
 
+import Breadcrumbs from '@site/src/components/Breadcrumbs'; 
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
+<Breadcrumbs/>
 
+# Resources
+## Sample apps
+
+<p className="t14sm-t16lg font-gray-600">
+  At this section, you may find resources or sample apps, that able to help you kickstart your project faster.
+</p>
 <Tabs
   defaultValue="java"
   values={[
@@ -34,7 +44,12 @@ import time
 private_key_path = b'<path to private key file>'
 private_key_content = open (private_key_path,'rt').read)
 ```
-Lorem ipsum dolor sit amet consectetur. Diam nunc donec turpis nulla vitae sit at id nunc. In dolor neque justo sed. Tellus nascetur semper imperdiet tellus amet. 
+
+<p className="t16 font-gray-600">
+Lorem ipsum dolor sit amet consectetur. Diam nunc donec turpis nulla vitae sit at id nunc. In dolor neque justo sed. Tellus nascetur semper imperdiet tellus amet.
+</p>
+
+
 ```js
 HTTP/1.1 429 Too Many Requests
 Date: Thu, 07 Apr 2022 14:12:16 GMT
@@ -46,7 +61,7 @@ Expect-CT: max-age=604800, report-uri="https://report-uri.cloudflare.com/cdn-cgi
 Server: cloudflare
 CF-RAY: 6f835674fd08756c-KUL
 {
-"error"'. "Ouota has been exceeded"
+"error". "Quota has been exceeded"
 }
 
 ```
