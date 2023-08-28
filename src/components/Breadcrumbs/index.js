@@ -26,11 +26,11 @@ pathSegments.unshift("home");
 
 const BreadcrumbItem = ({ segment }) => (
   <a
-    className="breadcrumb-segment t14sm-t16lg font-gray-600"
+    className="breadcrumb-segment d-flex t14sm-t16lg font-gray-600"
     href={segment === "home" ? "/getting-started" : null}
   >
     {segment === "home" ? (
-    <a className="breadcrumb-segment" href="/getting-started">
+    <a className="breadcrumb-segment d-flex" href="/getting-started">
     <HomeImage />
   </a>
     ) : (
@@ -58,7 +58,7 @@ const BreadcrumbItem = ({ segment }) => (
         <a className="breadcrumb-segment d-flex" href="/getting-started">
         <HomeImage />
         </a>
-        <div className="breadcrumb-separator"></div> ... <div className="breadcrumb-separator"></div> <p className="font-blue-500 mb-0">{pathSegments[pathSegments.length - 1]}</p> 
+        <div className="breadcrumb-separator"></div> ... <div className="breadcrumb-separator"></div> <p className="font-blue-500 bold mb-0">{pathSegments[pathSegments.length - 1]}</p> 
       </React.Fragment>
     );
 
