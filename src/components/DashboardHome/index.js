@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useRef, useEffect} from 'react'
 import Image from '@theme/IdealImage';
 
 import { Wrapper, BannerTitle, CardBannerWrapper, BannerText, BannerCaptionWrapper, BgWrapper, CardProductSection, CardProductWrapper, MobileOnly, DesktopOnly, h2, TextBesidesIcon, h3, CardProductListWrapper } from './element';
@@ -7,14 +7,27 @@ import CardBanner from "../CardBanner/index.js"
 
 import BannerMobile from "../../../static/img/banner-docs-mobile.png"
 import BannerDesktop from "../../../static/img/header.png"
+
 import DuitNow from "@site/static/img/duitnow.svg"
 
 import MyDebit from "@site/static/img/mydebit.svg"
 import Jompay from "@site/static/img/jompay.svg"
 import Rocket from "@site/static/img/rocket-gray.svg"
 import Code from "@site/static/img/code-black.svg"
-
 const DashboardHome = () => {
+  const rive = require("@rive-app/canvas");
+  const canvasRef = useRef(null);
+  useEffect(() => {
+    if (canvasRef.current) {
+      const r = new rive.Rive({
+        src: 'img/paynet_docs.riv',
+        canvas: canvasRef.current,
+        stateMachines: 'State Machine 1',
+        autoplay: true,
+      });
+    }
+  }, []);
+
   return (
     <>
       <Wrapper>
@@ -43,7 +56,10 @@ const DashboardHome = () => {
             <Image img={BannerMobile} />
           </MobileOnly>
           <DesktopOnly>
-            <Image img={BannerDesktop} />
+            {/* <Image img={BannerDesktop} /> */}
+            <div className='canvas-container'>
+                <canvas ref={canvasRef} width={300} height={300}></canvas>
+            </div>
           </DesktopOnly>
         </BgWrapper>
       </Wrapper>
