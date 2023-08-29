@@ -72,6 +72,7 @@ const sidebars = {
       label: "Example",
       items: [
         "example-component/resource-table",
+        "example-component/resource-table-2",
         "example-component/codes",
         "example-component/resource-card",
       ],
@@ -83,8 +84,13 @@ const sidebars = {
       type: "link",
       label: "Back",
       href: "/home",
+      className: "menu__back",
     },
-    "products/duitnow-transfer",
+    {
+      type: "html",
+      value: "DuitNow Transfer",
+      className: "menu__link-title t16sm-t23lg bold font-gray-700",
+    },
     {
       type: "category",
       label: "Overview",
@@ -94,6 +100,8 @@ const sidebars = {
           label: "Credit Transfer",
           items: [
             "credit-transfer/introduction",
+            "credit-transfer/introduction-2",
+            "credit-transfer/introduction-3",
             "credit-transfer/credit-transfer-reversal",
             "credit-transfer/transaction-enquiry",
             "credit-transfer/repeat-handling",
@@ -120,6 +128,9 @@ const sidebars = {
     "duitnow-transfer/response-codes",
     "duitnow-transfer/connectivity-requirements",
   ],
+  // creditTransferSideBar : [
+    
+  // ]
 };
 
 module.exports = sidebars;

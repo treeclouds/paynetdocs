@@ -1,0 +1,68 @@
+---
+title: Introduction-2
+hide_title: true
+description: Introduction-2
+slug: /credit-transfer/introduction-2
+custom_edit_url: null
+---
+import Breadcrumbs from '@site/src/components/Breadcrumbs'; 
+import CardLink from '@site/src/components/CardLink'; 
+import FileGray from "@site/static/img/file-gray.svg"
+<Breadcrumbs/>
+
+# Credit transfer [txt img] 2
+
+<CardLink
+  image= {<FileGray />}
+  text= "API reference"
+/>
+
+## Introduction
+
+:::info
+
+The terminology Phase 1 is being used interchangeably to refer to services that are originally built for DuitNow Transfer i.e. Account Enquiry, Credit Transfer and National Addressing Database (NAD) related. QR, P2P, JomPAY and etc are built as overlay services on top of Phase 1. Hence these overlay services will adopt similar architecture and user will be asked to refer to Phase 1 sections throughout our documentations
+
+:::
+
+Instant Transfer is a Credit Transfer service in which the customer sends the payment request and confirms the recipient's name before the actual credit transfer is performed. This payment request is a two-step process where an account enquiry request is sent to the Receiving Participant to request for the recipient's name, and upon successful retrieval of the Account Name, displays it to the customer for confirmation. Once confirmation is received, the Originating Participant then debits customer account and sends the actual Credit Transfer request to the Receiving Participant for processing
+
+DuitNow Transfer will be marketed for use by the Participants' Retail and Corporate customers and invoked from the Participants' Internet and Mobile Banking channels
+
+## Account Enquiry
+
+:::note
+
+Account resolution enquiry is used to determine if particular beneficiary account is valid and ready to receive payment. There are many situations in which you may need to know if a beneficiary account provided by customer is valid before accepting payment request. Examples include:
+
+<div className="w-50-desktop">
+
+  ![An image from the static](/img/example-image.png)
+  
+</div>
+
+:::
+
+## Heading 2
+
+Introduction of section before bullet point contents:
+
+
+- **Adding title if needed**. Sample content using bullet point. <a href="/fi-server" className="t14sm-t16lg blue-link bold">This is example if link hovered</a>  
+- **Adding title if needed**. Sample content using bullet point. <a href="/fi-server" className="t14sm-t16lg blue-link bold">This is example if link hovered</a>  
+- **Adding title if needed**. Sample content using bullet point. <a href="/fi-server" className="t14sm-t16lg blue-link bold">This is example if link hovered</a>
+
+### Heading 3
+
+<p>
+  Lorem ipsum dolor sit amet consectetur. Diam nunc donec turpis nulla vitae sit at id nunc. In dolor neque justo sed. Tellus nascetur semper imperdiet tellus amet. Habitant ipsum gravida euismod enim elementum. Iaculis gravida pellentesque nulla massa condimentum nunc. Gravida neque eu neque dui tellus nisi purus in. Dictum congue viverra venenatis elementum nulla feugiat maecenas. Odio sed dolor aliquam lacinia libero sit ut fames. Vulputate ac aliquam faucibus in arcu.  This is example if link needed. 
+  <a href="/fi-server" className="t14sm-t16lg blue-link bold">This is example if link hovered</a>
+</p>
+
+### Heading 3
+
+ See also:
+
+- <span className="t14sm-t16lg font-blue-500 bold"> Adding title if needed. </span>
+- <span className="t14sm-t16lg font-blue-500 bold"> Adding title if needed. </span>
+- <span className="t14sm-t16lg font-blue-500 bold"> Adding title if needed. </span>
