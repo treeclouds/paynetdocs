@@ -12,7 +12,7 @@ import DuitNow from "@site/static/img/duitnow.svg"
 import MyDebit from "@site/static/img/mydebit.svg"
 import Jompay from "@site/static/img/jompay.svg"
 import Rocket from "@site/static/img/rocket-gray.svg"
-import Code from "@site/static/img/code-black.svg"
+import Code from "@site/static/img/api-gray.svg"
 
 const DashboardHome = () => {
   return (

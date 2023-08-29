@@ -7,11 +7,9 @@ export const Wrapper = styled.section`
   row-gap: 8px;
 
   padding: 0.88rem;
-  background: linear-gradient(170deg, #fff 56%, #F9FAFB 56%);
 
   @media (min-width: 768px) {
     padding: 6.75rem 5% 0;
-    background: linear-gradient(170deg, #fff 73%, #F9FAFB 73%);
   }
 
   @media (min-width: 1440px) {

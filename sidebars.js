@@ -84,8 +84,13 @@ const sidebars = {
       type: "link",
       label: "Back",
       href: "/home",
+      className: "menu__back",
     },
-    "products/duitnow-transfer",
+    {
+      type: "html",
+      value: "DuitNow Transfer",
+      className: "menu__link-title t16sm-t23lg bold font-gray-700",
+    },
     {
       type: "category",
       label: "Overview",
