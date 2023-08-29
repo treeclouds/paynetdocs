@@ -109,6 +109,11 @@ export const DesktopOnly = styled.div `
   @media (min-width: 768px) {
     display: block !important;
   }
+  .canvas-container{
+    display:flex;
+    width:70vw;
+    flex-direction: row-reverse;
+  }
 `
 export const TextBesidesIcon = styled.div `
   display: flex;
