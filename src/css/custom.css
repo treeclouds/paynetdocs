@@ -27,6 +27,7 @@
   --ifm-alert-border-radius: 12px;
   --ifm-alert-background-color: #EAF5FB;
   --prism-background-color : #F4FAFD;
+  --ifm-toc-padding-horizontal: 1.33rem; /* 24px */
   --docsearch-hit-active-color: #475467 !important;
   /* For typography base = 18px */
   font-size: 112.5%;
@@ -130,7 +131,10 @@ a:hover {
   text-decoration: none;
   color: inherit;
 }
-
+.mx-auto {
+  margin-left: auto;
+  margin-right: auto;
+}
 .mb-0 {
   margin-bottom: 0 !important;
 }
@@ -214,10 +218,17 @@ a:hover {
 .badge {
   border-radius: 16px;
 }
+
 .badge--success {
   background-color: var(--green-50);
   color: var(--green-700);
   border: 1px solid var(--green-50);
+}
+
+.badge--info {
+  background-color: var(--blue-50);
+  color: var(--blue-600);
+  border: 1px solid var(--blue-50);
 }
 
 .container {
@@ -343,7 +354,7 @@ a:hover {
 }
 
 .markdown > h3 {
-  margin: 0 0 8px;
+  margin: 0 0 0.88px;
 }
 
 .markdown p {
@@ -365,12 +376,18 @@ a:hover {
 
 /* Explicit on home */
 .docs-doc-id-home .docMainContainer_node_modules-\@docusaurus-theme-classic-lib-theme-DocPage-Layout-Main-styles-module{
-  background: linear-gradient(170deg, #fff 11%, #F9FAFB 11%);
+  background: linear-gradient(175deg, #fff 11%, #F9FAFB 11%);
 }
 
 @media (min-width: 1024px) {
   .docs-doc-id-home .docMainContainer_node_modules-\@docusaurus-theme-classic-lib-theme-DocPage-Layout-Main-styles-module{
-    background: linear-gradient(170deg, #fff 15%, #F9FAFB 15%);
+    background: linear-gradient(175deg, #fff 15%, #F9FAFB 15%);
+  }
+}
+
+@media (min-width: 1024px) {
+  .docs-doc-id-home .docMainContainer_node_modules-\@docusaurus-theme-classic-lib-theme-DocPage-Layout-Main-styles-module{
+    background: linear-gradient(175deg, #fff 18.5%, #F9FAFB 18.5%);
   }
 }
 
@@ -769,20 +786,61 @@ li > a.menu__link {
 }
 
 /* Table of content - Right navbar */
-.table-of-contents li {
-  margin: 0;
+.table-of-contents {
+  padding: 8px 0;
+}
+
+
+.table-of-contents> ul {
+  padding: 8px 0 !important;
+}
+
+.tocCollapsibleContent_node_modules-\@docusaurus-theme-classic-lib-theme-TOCCollapsible-styles-module ul li {
+  margin: 0 !important;
+}
+
+.table-of-contents li a {
+  line-height: 24px; /* 150% */
+}
+
+.table-of-contents > li > a {
+  font-size: 0.88rem;
+  letter-spacing: 0.32px;
+  
+  color: var(--gray-600);
+}
+
+.table-of-contents > li > ul > li > a,
+.table-of-contents > li > ul > li > ul > li > a,
+.table-of-contents > li > ul > li > ul > li > ul > li > a  {
+  font-size: 0.78rem;
+  color: var(--gray-500);
 }
 
 .table-of-contents__link {
-  padding: 8px;
-  font-size: 0.88rem;
-  line-height: 24px; /* 150% */
-  letter-spacing: 0.32px;
+  padding: 8px 0.88rem;
 }
 
 .table-of-contents__link--active {
-  color: var(--blue-500);
+  color: var(--blue-500) !important;
   font-weight: 700 !important;
+}
+
+@media(min-width: 768px) {
+  .table-of-contents {
+    padding: 1.33rem 8px 0 0;
+  }
+
+  .table-of-contents ul {
+    padding-left: 0 !important;
+  }
+
+  .table-of-contents li {
+    margin: 4px 0 4px var(--ifm-toc-padding-horizontal);
+  }
+  .table-of-contents__link {
+    padding: 8px;
+  }
 }
 
 /* Typography */
@@ -794,8 +852,7 @@ li > a.menu__link {
 	font-size: 1rem;
 }
 
-h1, h2, h3, h4 {
-  margin-bottom: 0;
+h1, h2, h4 {
   font-weight: 700;
   color: var(--gray-700);
 }
@@ -901,7 +958,7 @@ h1 {
   letter-spacing: 0.32px;
 }
 
-.t14sm-t16lg, .markdown p, .markdown li, strong  {
+.t14sm-t16lg, .docs-wrapper:not(.docs-doc-id-home) .markdown p, .markdown li, strong  {
   font-size: 0.78rem;
 	line-height: 150%;
 }
@@ -1000,7 +1057,7 @@ h1 {
 		line-height: 133% !important;
   }
 
-  .t14sm-t16lg, .markdown p, .markdown li, strong {
+  .t14sm-t16lg, .docs-wrapper:not(.docs-doc-id-home) .markdown p, .markdown li, strong {
     font-size: 0.88rem;
     line-height: 150%;
   }
@@ -1442,6 +1499,38 @@ code {
   padding: 2px 6px;
 }
 
+.markdown ul:not(.tabs) {
+  display: flex;
+  flex-direction: column;
+  row-gap: 0.88rem;
+}
+
+.ul__wrapper li::before {
+  content:"•";
+}
+
+.ul__wrapper ul {
+  padding-left: 0 !important;
+}
+
+.ul__wrapper li {
+  display: flex;
+  align-items: center;
+  column-gap: 8px;
+}
+
+li code {
+  flex: 1;
+
+  white-space: nowrap;
+  overflow: auto;
+}
+
+@media(min-width: 1024px) {
+  li code {
+    flex: unset;
+  }
+}
 /* card-resource */
 .card-resource__wrapper {
   display: grid;

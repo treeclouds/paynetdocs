@@ -102,6 +102,7 @@ const sidebars = {
             "credit-transfer/introduction",
             "credit-transfer/introduction-2",
             "credit-transfer/introduction-3",
+            "credit-transfer/introduction-toc",
             "credit-transfer/credit-transfer-reversal",
             "credit-transfer/transaction-enquiry",
             "credit-transfer/repeat-handling",

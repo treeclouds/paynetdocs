@@ -1,7 +1,7 @@
 import React, {useRef, useEffect} from 'react'
 import Image from '@theme/IdealImage';
 
-import { Wrapper, BannerTitle, CardBannerWrapper, BannerText, BannerCaptionWrapper, BgWrapper, CardProductSection, CardProductWrapper, MobileOnly, DesktopOnly, h2, TextBesidesIcon, h3, CardProductListWrapper } from './element';
+import { Wrapper, BannerTitle, CardBannerWrapper, BannerText, BannerCaptionWrapper, CardProductSection, CardProductWrapper, MobileOnly, DesktopOnly, h2, TextBesidesIcon, h3, CardProductListWrapper, HeaderBannerWrapper } from './element';
 import Card from "../Card/index.js"
 import CardBanner from "../CardBanner/index.js"
 
@@ -9,6 +9,8 @@ import BannerMobile from "../../../static/img/banner-docs-mobile.png"
 import BannerDesktop from "../../../static/img/header.png"
 
 import DuitNow from "@site/static/img/duitnow.svg"
+import AccentLeft from "@site/static/img/accent-left.svg"
+import AccentRight from "@site/static/img/accent-right.svg"
 
 import MyDebit from "@site/static/img/mydebit.svg"
 import Jompay from "@site/static/img/jompay.svg"
@@ -24,6 +26,9 @@ const DashboardHome = () => {
         canvas: canvasRef.current,
         stateMachines: 'State Machine 1',
         autoplay: true,
+        onLoad: () => {
+          r.resizeDrawingSurfaceToCanvas();
+        },
       });
     }
   }, []);
@@ -31,10 +36,15 @@ const DashboardHome = () => {
   return (
     <>
       <Wrapper>
-        <BannerCaptionWrapper>
-          <h1 className='t26sm-t42lg'>Documentations</h1>
-          <p className='t16sm-t23lg font-gray-500'>See guides, references and resources to help you build with PayNet</p>
-        </BannerCaptionWrapper>
+        <HeaderBannerWrapper>
+          <BannerCaptionWrapper>
+            <h1 className='t26sm-t42lg'>Documentations</h1>
+            <p className='t16sm-t23lg font-gray-500'>See guides, references and resources to help you build with PayNet</p>
+          </BannerCaptionWrapper>
+          <canvas className='d-flex' ref={canvasRef} width={500} height={500}></canvas>
+          <AccentLeft className='accent accent-left'/>
+          <AccentRight className='accent accent-right'/>
+        </HeaderBannerWrapper>
         <CardBannerWrapper>
           <CardBanner
             image= {<Rocket />}
@@ -51,17 +61,6 @@ const DashboardHome = () => {
             cta="Explore now"
           />
         </CardBannerWrapper>
-        <BgWrapper>
-          <MobileOnly>
-            <Image img={BannerMobile} />
-          </MobileOnly>
-          <DesktopOnly>
-            {/* <Image img={BannerDesktop} /> */}
-            <div className='canvas-container'>
-                <canvas ref={canvasRef} width={300} height={300}></canvas>
-            </div>
-          </DesktopOnly>
-        </BgWrapper>
       </Wrapper>
       <CardProductSection>
         <h2 className='t26sm-t35lg bold font-gray-700'>Our Products</h2>
