@@ -27,7 +27,7 @@
   --ifm-alert-border-radius: 12px;
   --ifm-alert-background-color: #EAF5FB;
   --prism-background-color : #F4FAFD;
-  --ifm-toc-padding-horizontal: 1.33rem; /* 24px */
+  --ifm-toc-padding-horizontal: 24px; /* 24px */
   --docsearch-hit-active-color: #475467 !important;
   /* For typography base = 18px */
   font-size: 112.5%;
@@ -839,7 +839,7 @@ li > a.menu__link {
     margin: 4px 0 4px var(--ifm-toc-padding-horizontal);
   }
   .table-of-contents__link {
-    padding: 8px;
+    padding: 8px 0;
   }
 }
 
