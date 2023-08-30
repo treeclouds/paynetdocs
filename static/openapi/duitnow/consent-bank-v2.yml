@@ -1,0 +1,1073 @@
+openapi: 3.1.0
+info:
+  title: DuitNow AutoDebit (Bank)
+  description: |
+    > **Attention!** These APIs are still in the beta stage and are not yet available to the general public. Stay tuned for updates on when they will be ready for everyone to explore!
+    ### Who Should Use
+    This API should only be used by bank as the Issuer.
+  version: v2
+servers:
+  - url: https://mock.developer.paynet.my/banks/consent/v2/
+paths:
+  /terminate/{id}:
+    put:
+      summary: Consent Deregistration (Termination)
+      description: This API is used by Bank to deregister/terminate an existing consent.
+      operationId: consent_maintenance_terminate
+      parameters:
+        - name: id
+          in: path
+          description: Consent identification value to be terminated
+          required: true
+          schema:
+            type: string
+            maxLength: 35
+        - name: X-Business-Message-Id
+          in: header
+          description: <b>Business Message Identification</b><br></br> Unique message identification. Format YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS
+            where <li>YYYYMMDD – Current Date</li>
+            <li>BBBBBBBB – BIC Code</li>
+            <li>XXX – Transaction Code. Set to <b>763</b>. Refer to <a href="https://docs.developer.paynet.my/docs/duitnowqr/transactiontype/index.html" target="_blank"> <b style="color:blue;">Transaction Code</b> </a> </li>
+            <li>O – Originator. Refer to <a href="https://docs.developer.paynet.my/docs/duitnow/mappingtable#originator-code" target="_blank"> <b style="color:blue;">Originator</b> </a> </li>
+            <li>CC – Channel Code. Refer to <a href="https://docs.developer.paynet.my/docs/duitnow/mappingtable#channel-code" target="_blank"> <b style="color:blue;">Channel Code</b> </a> </li>
+            <li>SSSSSSSS – Sequence Number</li>
+            <br>Originator can be any of the following:</b>
+            <li>O – OFI</li>
+            <li>H – RPP</li>
+            <li>R – RFI</li>
+            <br>Channel code can be any of the following:</b>
+            <li>BA – Mobile Application</li>
+            <li>BW – Web Browser</li>
+            <li>RB – Retail Internet Banking</li>
+          required: true
+          schema:
+            type: string
+            maxLength: 35
+            format: "YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS"
+          example: "20230630DMMMYKL4763ORB00000000"
+        - $ref: "./base.yml#/components/parameters/X-Client-Id"
+        - $ref: "./base.yml#/components/parameters/X-Ip-Address"
+        - $ref: "./base.yml#/components/parameters/X-Gps-Coordinates"
+
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/consentTerminateRequest"
+
+      responses:
+        200:
+          description: ""
+          headers:
+            Authorization:
+              required: true
+              $ref: "./base.yml#/components/headers/Authorization"
+            X-Business-Message-Id:
+              required: true
+              $ref: "./base.yml#/components/headers/X-Business-Message-Id"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/consentTerminateResponse"
+              example:
+                data:
+                  businessMessageId: "20230630DMMMYKL4763ORB00000001"
+                  code: "ACTC"
+                  reason: "U000"
+                  endToEndId: "20230630DMMMYKL4763ORB00000001"
+        400:
+          description: ""
+          headers:
+            X-Business-Message-Id:
+              required: true
+              $ref: "./base.yml#/components/headers/X-Business-Message-Id"
+          content:
+            application/json:
+              schema:
+                $ref: "./base.yml#/components/schemas/errorResponse"
+              example:
+                data:
+                  businessMessageId: "20230630DMMMYKL4763ORB00000002"
+                  code: "API.002"
+                  reason: "data.businessMessageId - Invalid format"
+        401:
+          description: ""
+          headers:
+            X-Business-Message-Id:
+              required: true
+              $ref: "./base.yml#/components/headers/X-Business-Message-Id"
+          content:
+            application/json:
+              schema:
+                $ref: "./base.yml#/components/schemas/errorResponse"
+              example:
+                data:
+                  businessMessageId: "20230630DMMMYKL4763ORB00000003"
+                  code: "API.007"
+                  reason: "Unauthorized request"
+        500:
+          description: ""
+          headers:
+            X-Business-Message-Id:
+              required: true
+              $ref: "./base.yml#/components/headers/X-Business-Message-Id"
+          content:
+            application/json:
+              schema:
+                $ref: "./base.yml#/components/schemas/errorResponse"
+              example:
+                data:
+                  businessMessageId: "20230630DMMMYKL4763ORB00000004"
+                  code: "API.500"
+                  reason: "Internal Server Error"
+
+      security:
+        - bearerAuth: []
+      x-codegen-request-body-name: generated
+
+  /enquiry-by-secondary-id/{secondaryIdType}/{secondaryId}:
+    get:
+      summary: Consent Enquiry (via Crediting/Debiting Agent) Secondary ID
+      description: This API is used by Bank to enquiry an existing consent by Secondary ID.
+      operationId: consent_maintenance_enquirebysecondaryid
+      parameters:
+        - name: id
+          in: path
+          description: Consent identification value for enquiry
+          required: true
+          schema:
+            type: string
+            maxLength: 35
+        - name: secondaryIdType
+          in: path
+          description: Secondary identification type. 
+            <br> 01 = NRIC
+            <br> 02 = Army No/Police No
+            <br> 03 = Passport No
+            <br> 04 = Business Registration No.
+          required: true
+          schema:
+            type: string
+            maxLength: 4
+        - name: secondaryId
+          in: path
+          description: Secondary identification value for enquiry
+          required: true
+          schema:
+            type: string
+            maxLength: 35
+        - name: X-Business-Message-Id
+          in: header
+          description: <b>Business Message Identification</b><br></br> Unique message identification. Format YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS
+            where <li>YYYYMMDD – Current Date</li>
+            <li>BBBBBBBB – BIC Code</li>
+            <li>XXX – Transaction Code. Set to <b>751</b>. Refer to <a href="https://docs.developer.paynet.my/docs/duitnowqr/transactiontype/index.html" target="_blank"> <b style="color:blue;">Transaction Code</b> </a> </li>
+            <li>O – Originator. Refer to <a href="https://docs.developer.paynet.my/docs/duitnow/mappingtable#originator-code" target="_blank"> <b style="color:blue;">Originator</b> </a> </li>
+            <li>CC – Channel Code. Refer to <a href="https://docs.developer.paynet.my/docs/duitnow/mappingtable#channel-code" target="_blank"> <b style="color:blue;">Channel Code</b> </a> </li>
+            <li>SSSSSSSS – Sequence Number</li>
+            <br>Originator can be any of the following:</b>
+            <li>O – OFI</li>
+            <li>H – RPP</li>
+            <li>R – RFI</li>
+            <br>Channel code can be any of the following:</b>
+            <li>BA – Mobile Application</li>
+            <li>BW – Web Browser</li>
+            <li>RB – Retail Internet Banking</li>
+          required: true
+          schema:
+            type: string
+            maxLength: 35
+            format: "YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS"
+          example: "20230630DMMMYKL4751ORB00000000"
+        - $ref: "./base.yml#/components/parameters/X-Client-Id"
+        - $ref: "./base.yml#/components/parameters/X-Ip-Address"
+        - $ref: "./base.yml#/components/parameters/X-Gps-Coordinates"
+
+      responses:
+        200:
+          description: ""
+          headers:
+            Authorization:
+              required: true
+              $ref: "./base.yml#/components/headers/Authorization"
+            X-Business-Message-Id:
+              required: true
+              $ref: "./base.yml#/components/headers/X-Business-Message-Id"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/consentEnquiryBySecondaryIdResponse"
+              example:
+                data:
+                  businessMessageId: "20230630DMMMYKL4751ORB00000001"
+                  createdDateTime: ""
+                  code: "ACTC"
+                  reason: "U000"
+                  consents: 
+                    - consentId: ""
+                      consentType: "ABAL"
+                      consentStatus: "ACTV"
+                      effectiveDate: ""
+                      expiryDate: ""
+                      canBeTerminatedByDebtor: "True"
+                      maxAmount: "1000"
+                      currency: "MYR"
+                      frequencyMode: "01"
+                      reference1: ""
+                      reference2: ""
+                      firstPartyPaymentValidation: "00"
+                      reserverField1: ""
+                      merchant:
+                        - id: ""
+                          name: ""
+                      debtor:
+                        - name: ""
+                          id: ""
+                          idType: "01"
+                          secondaryId: ""
+                          secondaryIdType: "01"
+                      debtorAccount:
+                        - id: ""
+                          type: "CACC"
+                          residentStatus: "1"
+                          productType: "I"
+                          shariaComplaint: "Y"
+                          details: "1"
+                      debtorAgent:
+                        - id: ""
+
+        400:
+          description: ""
+          headers:
+            X-Business-Message-Id:
+              required: true
+              $ref: "./base.yml#/components/headers/X-Business-Message-Id"
+          content:
+            application/json:
+              schema:
+                $ref: "./base.yml#/components/schemas/errorResponse"
+              example:
+                data:
+                  businessMessageId: "20230630DMMMYKL4751ORB00000002"
+                  code: "API.002"
+                  reason: "data.businessMessageId - Invalid format"
+        401:
+          description: ""
+          headers:
+            X-Business-Message-Id:
+              required: true
+              $ref: "./base.yml#/components/headers/X-Business-Message-Id"
+          content:
+            application/json:
+              schema:
+                $ref: "./base.yml#/components/schemas/errorResponse"
+              example:
+                data:
+                  businessMessageId: "20230630DMMMYKL4751ORB00000003"
+                  code: "API.007"
+                  reason: "Unauthorized request"
+        500:
+          description: ""
+          headers:
+            X-Business-Message-Id:
+              required: true
+              $ref: "./base.yml#/components/headers/X-Business-Message-Id"
+          content:
+            application/json:
+              schema:
+                $ref: "./base.yml#/components/schemas/errorResponse"
+              example:
+                data:
+                  businessMessageId: "20230630DMMMYKL4751ORB00000004"
+                  code: "API.500"
+                  reason: "Internal Server Error"
+
+      security:
+        - bearerAuth: []
+      x-codegen-request-body-name: generated
+
+  /lists/merchant/{pageKey}:
+    get:
+      summary: Retrieve Merchant List
+      description: This API allows the Bank to retrieve the list of merchants
+      operationId: retrieve_merchant_list
+      parameters:
+        - name: pageKey
+          in: path
+          description: <b>merchants.code</b> of the last element in the previous page, used
+            to fetch next page. If blank or not present, indicates to fetch first page
+          schema:
+            type: string
+            maxLength: 35
+          example: "M0000472"
+        - name: X-Business-Message-Id
+          in: header
+          description: <b>Business Message Identification</b><br></br> Unique message identification. Format YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS
+            where <li>YYYYMMDD – Current Date</li>
+            <li>BBBBBBBB – BIC Code</li>
+            <li>XXX – Transaction Code. Set to <b>660</b>. Refer to <a href="https://docs.developer.paynet.my/docs/duitnowqr/transactiontype/index.html" target="_blank"> <b style="color:blue;">Transaction Code</b> </a> </li>
+            <li>O – Originator. Refer to <a href="https://docs.developer.paynet.my/docs/duitnow/mappingtable#originator-code" target="_blank"> <b style="color:blue;">Originator</b> </a> </li>
+            <li>CC – Channel Code. Refer to <a href="https://docs.developer.paynet.my/docs/duitnow/mappingtable#channel-code" target="_blank"> <b style="color:blue;">Channel Code</b> </a> </li>
+            <li>SSSSSSSS – Sequence Number</li>
+            <br>Originator can be any of the following:</b>
+            <li>O – OFI</li>
+            <li>H – RPP</li>
+            <li>R – RFI</li>
+            <br>Channel code can be any of the following:</b>
+            <li>BA – Mobile Application</li>
+            <li>BW – Web Browser</li>
+            <li>RB – Retail Internet Banking</li>
+          required: true
+          schema:
+            type: string
+            maxLength: 35
+          example: "2023063RPPEMYKL660HBW00000000"
+        - $ref: "./base.yml#/components/parameters/X-Client-Id"
+        - $ref: "./base.yml#/components/parameters/X-Ip-Address"
+        - $ref: "./base.yml#/components/parameters/X-Gps-Coordinates"
+
+      responses:
+        200:
+          description: ""
+          headers:
+            Authorization:
+              required: true
+              $ref: "./base.yml#/components/headers/Authorization"
+            X-Business-Message-Id:
+              required: true
+              $ref: "./base.yml#/components/headers/X-Business-Message-Id"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/retrieveMerchantListResponse"
+              example:
+                data:
+                  businessMessageId: "2023063RPPEMYKL660HBW00000001"
+                  code: "ACTC"
+                  reason: "U000"
+                  pageKey: "M0000621"
+                  merchants:
+                    - code: M0000472
+                      name: q/a d.li2go'(f&b)
+                      active: false
+                      browser: Firefox 68+, Microsoft Edge 80+, Chrome 80+, Safari 13+
+                      iosApplicationId: IOS6
+                      androidApplicationId: AND10
+                      redirectUrls:
+                        - type: RET
+                          url: www.banka.com.my
+                        - type: COR
+                          url: www.banka.com.my
+                    - code: M0000485
+                      name: TEST MERCHANT MAN
+                      active: true
+                      browser: Firefox 68+, Microsoft Edge 80+, Chrome 80+, Safari 13+
+                      iosApplicationId: IOS6
+                      androidApplicationId: AND10
+                      redirectUrls:
+                        - type: RET
+                          url: www.banka.com.my
+                        - type: COR
+                          url: www.banka.com.my
+                    - code: M0000621
+                      name: SOLE PROP NAME ONE
+                      active: false
+                      redirectUrls:
+                        - type: RET
+                          url: www.banka.com.my
+                        - type: COR
+                          url: www.banka.com.my
+        400:
+          description: ""
+          headers:
+            X-Business-Message-Id:
+              required: true
+              $ref: "./base.yml#/components/headers/X-Business-Message-Id"
+          content:
+            application/json:
+              schema:
+                $ref: "./base.yml#/components/schemas/errorResponse"
+              example:
+                data:
+                  businessMessageId: "2023063RPPEMYKL660HBW00000002"
+                  code: "API.002"
+                  reason: "X-Business-Message-Id - Invalid format"
+        401:
+          description: ""
+          headers:
+            X-Business-Message-Id:
+              required: true
+              $ref: "./base.yml#/components/headers/X-Business-Message-Id"
+          content:
+            application/json:
+              schema:
+                $ref: "./base.yml#/components/schemas/errorResponse"
+              example:
+                data:
+                  businessMessageId: "2023063RPPEMYKL660HBW00000003"
+                  code: "API.007"
+                  reason: "Unauthorized request"
+        500:
+          description: ""
+          headers:
+            X-Business-Message-Id:
+              required: true
+              $ref: "./base.yml#/components/headers/X-Business-Message-Id"
+          content:
+            application/json:
+              schema:
+                $ref: "./base.yml#/components/schemas/errorResponse"
+              example:
+                data:
+                  businessMessageId: "2023063RPPEMYKL660HBW00000004"
+                  code: "API.500"
+                  reason: "Internal Server Error"
+
+      security:
+        - bearerAuth: []
+      x-codegen-request-body-name: generated
+
+  /lists/product/{merchantId}/{pageKey}:
+    get:
+      summary: Retrieve Merchant Product List
+      description: This API allows the Bank to retrieve the list of merchants products
+      operationId: retrieve_product_list
+      parameters:
+        - name: merchantId
+          in: path
+          description: Merchant Identification to be enquired.
+          required: true
+          schema:
+            type: string
+            maxLength: 35
+          example: "M0000781"
+        - name: pageKey
+          in: path
+          description: <b>products.code</b> of the last element in the previous page, used
+            to fetch next page. If blank or not present, indicates to fetch first page
+          schema:
+            type: string
+            maxLength: 35
+          example: "P00000827"
+        - name: X-Business-Message-Id
+          in: header
+          description: <b>Business Message Identification</b><br></br> Unique message identification. Format YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS
+            where <li>YYYYMMDD – Current Date</li>
+            <li>BBBBBBBB – BIC Code</li>
+            <li>XXX – Transaction Code. Set to <b>670</b>. Refer to <a href="https://docs.developer.paynet.my/docs/duitnowqr/transactiontype/index.html" target="_blank"> <b style="color:blue;">Transaction Code</b> </a> </li>
+            <li>O – Originator. Refer to <a href="https://docs.developer.paynet.my/docs/duitnow/mappingtable#originator-code" target="_blank"> <b style="color:blue;">Originator</b> </a> </li>
+            <li>CC – Channel Code. Refer to <a href="https://docs.developer.paynet.my/docs/duitnow/mappingtable#channel-code" target="_blank"> <b style="color:blue;">Channel Code</b> </a> </li>
+            <li>SSSSSSSS – Sequence Number</li>
+            <br>Originator can be any of the following:</b>
+            <li>O – OFI</li>
+            <li>H – RPP</li>
+            <li>R – RFI</li>
+            <br>Channel code can be any of the following:</b>
+            <li>BA – Mobile Application</li>
+            <li>BW – Web Browser</li>
+            <li>RB – Retail Internet Banking</li>
+          required: true
+          schema:
+            type: string
+            maxLength: 35
+          example: "20230630RPPEMYKL670HBW00000000"
+        - $ref: "./base.yml#/components/parameters/X-Client-Id"
+        - $ref: "./base.yml#/components/parameters/X-Ip-Address"
+        - $ref: "./base.yml#/components/parameters/X-Gps-Coordinates"
+
+      responses:
+        200:
+          description: ""
+          headers:
+            Authorization:
+              required: true
+              $ref: "./base.yml#/components/headers/Authorization"
+            X-Business-Message-Id:
+              required: true
+              $ref: "./base.yml#/components/headers/X-Business-Message-Id"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/retrieveProductListResponse"
+              example:
+                data:
+                  businessMessageId: "20230630RPPEMYKL670HBW00000001"
+                  code: "ACTC"
+                  reason: "U000"
+                  pageKey: "P00000827"
+                  products:
+                    - code: P00000821
+                      name: SEED
+                      active: true
+                      browser: Firefox 68+, Microsoft Edge 80+, Chrome 80+, Safari 13+
+                      iosApplicationId: IOS6
+                      androidApplicationId: AND10
+                      redirectUrls:
+                        - type: RET
+                          url: www.banka.com.my
+                        - type: COR
+                          url: www.banka.com.my
+                    - code: P00000824
+                      name: vege
+                      active: true
+                      browser: Firefox 68+, Microsoft Edge 80+, Chrome 80+, Safari 13+
+                      iosApplicationId: IOS6
+                      androidApplicationId: AND10
+                      redirectUrls:
+                        - type: RET
+                          url: www.banka.com.my
+                        - type: COR
+                          url: www.banka.com.my
+                    - code: P00000827
+                      name: banana
+                      active: false
+                      redirectUrls:
+                        - type: RET
+                          url: www.banka.com.my
+                        - type: COR
+                          url: www.banka.com.my
+        400:
+          description: ""
+          headers:
+            X-Business-Message-Id:
+              required: true
+              $ref: "./base.yml#/components/headers/X-Business-Message-Id"
+          content:
+            application/json:
+              schema:
+                $ref: "./base.yml#/components/schemas/errorResponse"
+              example:
+                data:
+                  businessMessageId: "20230630RPPEMYKL670HBW00000002"
+                  code: "API.002"
+                  reason: "X-Business-Message-Id - Invalid format"
+        401:
+          description: ""
+          headers:
+            X-Business-Message-Id:
+              required: true
+              $ref: "./base.yml#/components/headers/X-Business-Message-Id"
+          content:
+            application/json:
+              schema:
+                $ref: "./base.yml#/components/schemas/errorResponse"
+              example:
+                data:
+                  businessMessageId: "20230630RPPEMYKL670HBW00000003"
+                  code: "API.007"
+                  reason: "Unauthorized request"
+        500:
+          description: ""
+          headers:
+            X-Business-Message-Id:
+              required: true
+              $ref: "./base.yml#/components/headers/X-Business-Message-Id"
+          content:
+            application/json:
+              schema:
+                $ref: "./base.yml#/components/schemas/errorResponse"
+              example:
+                data:
+                  businessMessageId: "20230630RPPEMYKL670HBW00000004"
+                  code: "API.500"
+                  reason: "Internal Server Error"
+
+      security:
+        - bearerAuth: []
+      x-codegen-request-body-name: generated
+
+components:
+  schemas:
+    consentTerminateRequest:
+      type: object
+      required:
+        -  data
+      properties:
+        data:
+          required:
+            - reason
+          properties:
+            reason:
+              maxLength: 35
+              type: string
+              description: "Termination Reason"
+
+    consentTerminateResponse:
+      type: object
+      required:
+        -  data
+      properties:
+        data:
+          type: object
+          required:
+              - businessMessageId
+              - code
+              - reason
+          properties:
+            businessMessageId:
+              type: string
+              maxLength: 35
+              format: YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS
+              description: <b>Business Message Identification</b><br></br> Unique message identification. Format YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS
+                where <li>YYYYMMDD – Current Date</li>
+                <li>BBBBBBBB – BIC Code</li>
+                <li>XXX – Transaction Code. Refer to <a href="https://docs.developer.paynet.my/docs/duitnowqr/transactiontype/index.html" target="_blank"> <b style="color:blue;">Transaction Code</b> </a> </li>
+                <li>O – Originator. Refer to <a href="https://docs.developer.paynet.my/docs/duitnow/mappingtable#originator-code" target="_blank"> <b style="color:blue;">Originator</b> </a> </li>
+                <li>CC – Channel Code. Refer to <a href="https://docs.developer.paynet.my/docs/duitnow/mappingtable#channel-code" target="_blank"> <b style="color:blue;">Channel Code</b> </a> </li>
+                <li>SSSSSSSS – Sequence Number</li>
+            code:
+              maxLength: 4
+              type: string
+              description: |
+                Status code
+                <li>ACSP – Accepted</li>
+                <li>ACTC – Accepted with Completion of Technical Validation</li>
+                <li>RJCT – Rejected</li>
+            reason:
+              maxLength: 35
+              type: string
+              description: Reason code
+            endToEndId:
+              type: string
+              maxLength: 35
+              description: endToEndId
+
+    consentEnquiryBySecondaryIdResponse:
+      type: object
+      required:
+        -  data
+      properties:
+        data:
+          type: object
+          required:
+              - businessMessageId
+              - code
+              - reason
+          properties:
+            businessMessageId:
+              type: string
+              maxLength: 35
+              format: YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS
+              description: <b>Business Message Identification</b><br></br> Unique message identification. Format YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS
+                where <li>YYYYMMDD – Current Date</li>
+                <li>BBBBBBBB – BIC Code</li>
+                <li>XXX – Transaction Code. Refer to <a href="https://docs.developer.paynet.my/docs/duitnowqr/transactiontype/index.html" target="_blank"> <b style="color:blue;">Transaction Code</b> </a> </li>
+                <li>O – Originator. Refer to <a href="https://docs.developer.paynet.my/docs/duitnow/mappingtable#originator-code" target="_blank"> <b style="color:blue;">Originator</b> </a> </li>
+                <li>CC – Channel Code. Refer to <a href="https://docs.developer.paynet.my/docs/duitnow/mappingtable#channel-code" target="_blank"> <b style="color:blue;">Channel Code</b> </a> </li>
+                <li>SSSSSSSS – Sequence Number</li>
+            createdDateTime:
+              type: string
+              description: Date and Time the message was created.
+            code:
+              maxLength: 4
+              type: string
+              description: |
+                Status code
+                <li>ACSP – Accepted</li>
+                <li>ACTC – Accepted with Completion of Technical Validation</li>
+                <li>RJCT – Rejected</li>
+            reason:
+              maxLength: 35
+              type: string
+              description: Reason code
+            consents:
+              type: array
+              allOf:
+                - $ref: "#/components/schemas/consents"
+
+    retrieveMerchantListResponse:
+      type: object
+      required:
+        - data
+      properties:
+        data:
+          type: object
+          required:
+            - businessMessageId
+            - code
+            - reason
+            - pageKey
+            - merchants
+          properties:
+            businessMessageId:
+              type: string
+              maxLength: 35
+              format: YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS
+              description: <b>Business Message Identification</b><br></br> Unique message identification. Format YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS
+                where <li>YYYYMMDD – Current Date</li>
+                <li>BBBBBBBB – BIC Code</li>
+                <li>XXX – Transaction Code. Refer to <a href="https://docs.developer.paynet.my/docs/duitnowqr/transactiontype/index.html" target="_blank"> <b style="color:blue;">Transaction Code</b> </a> </li>
+                <li>O – Originator. Refer to <a href="https://docs.developer.paynet.my/docs/duitnow/mappingtable#originator-code" target="_blank"> <b style="color:blue;">Originator</b> </a> </li>
+                <li>CC – Channel Code. Refer to <a href="https://docs.developer.paynet.my/docs/duitnow/mappingtable#channel-code" target="_blank"> <b style="color:blue;">Channel Code</b> </a> </li>
+                <li>SSSSSSSS – Sequence Number</li>
+            code:
+              maxLength: 4
+              type: string
+              description: |
+                Status code
+                <li>ACSP – Accepted</li>
+                <li>ACTC – Accepted with Completion of Technical Validation</li>
+                <li>RJCT – Rejected</li>
+            reason:
+              maxLength: 35
+              type: string
+              description: Reason code
+            pageKey:
+              title: Pagination Key
+              maxLength: 35
+              type: string
+              description: |
+                <b>Conditional</b><br />
+                If present, is the same as <b>merchants.code</b> of last entry returned in results list. Used to retrieve next page of results. If absent, it means this is the last page.
+            merchants:
+              type: array
+              allOf:
+                - $ref: "#/components/schemas/merchant"
+
+    retrieveProductListResponse:
+      type: object
+      required:
+        - data
+      properties:
+        data:
+          type: object
+          required:
+            - businessMessageId
+            - code
+            - reason
+            - pageKey
+            - products
+          properties:
+            businessMessageId:
+              type: string
+              maxLength: 35
+              format: YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS
+              description: <b>Business Message Identification</b><br></br> Unique message identification. Format YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS
+                where <li>YYYYMMDD – Current Date</li>
+                <li>BBBBBBBB – BIC Code</li>
+                <li>XXX – Transaction Code. Refer to <a href="https://docs.developer.paynet.my/docs/duitnowqr/transactiontype/index.html" target="_blank"> <b style="color:blue;">Transaction Code</b> </a> </li>
+                <li>O – Originator. Refer to <a href="https://docs.developer.paynet.my/docs/duitnow/mappingtable#originator-code" target="_blank"> <b style="color:blue;">Originator</b> </a> </li>
+                <li>CC – Channel Code. Refer to <a href="https://docs.developer.paynet.my/docs/duitnow/mappingtable#channel-code" target="_blank"> <b style="color:blue;">Channel Code</b> </a> </li>
+                <li>SSSSSSSS – Sequence Number</li>
+            code:
+              maxLength: 4
+              type: string
+              description: |
+                Status code
+                <li>ACSP – Accepted</li>
+                <li>ACTC – Accepted with Completion of Technical Validation</li>
+                <li>RJCT – Rejected</li>
+            reason:
+              maxLength: 35
+              type: string
+              description: Reason code
+            pageKey:
+              title: Pagination Key
+              maxLength: 35
+              type: string
+              description: |
+                <b>Conditional</b><br />
+                If present, is same as <b>products.code</b> of last entry returned in results list. Used to retrieve next page of results. If absent, means this is the last page
+            products:
+              type: array
+              allOf:
+                - $ref: "#/components/schemas/product"
+
+    consents:
+      type: object
+      description: "Consents"
+      properties:
+        consentId:
+          type: string
+          maxLength: 35
+          description: Consent Id.
+        consentType:
+          type: string
+          maxLength: 4
+          description: "Consent Type.
+            <br>ABAL=Account Balance Enquiry
+            <br>DDPT=Direct Debit Payment"
+        consentStatus:
+          type: string
+          maxLength: 4
+          description: "Consent status. 
+            <br>ACTV = Active
+            <br>ICTV = Inactive
+            <br>SUSP = Suspended by Customer
+            <br>SUSB = Suspended by Bank
+            <br>ACTB = Activated by Bank
+            <br>PNDG = Pending 
+            <br>PDAU = Pending Authorization 
+            <br>CANC = Cancelled 
+            <br>EXPI = Expired
+            <br>RJCT = Rejected"
+        effectiveDate:
+          type: string
+          maxLength: 10
+          description: Consent Effective date.
+        expiryDate:
+          type: string
+          maxLength: 10
+          description: Consent Expiry date.
+        canBeTerminatedByDebtor:
+          type: string
+          maxLength: 10
+          description: "Allows or prevents customer from editing/terminating consent. However, customer will still be able to transfer consent.
+            <br>True
+            <br>False"
+        maxAmount:
+          type: number
+          minimum: 0.01
+          maximum: 9999999999999.99
+          description: Maximum amount.
+        currency:
+          type: string
+          maxLength: 10
+          description: Currency code.
+        frequencyMode:
+          type: string
+          maxLength: 2
+          description: "Frequency mode to be permitted by this Consent: 
+            <br>01="Unlimited"
+            <br>02="Daily"
+            <br>03="Weekly"
+            <br>04="Monthly"
+            <br>05="Quarterly"
+            <br>06="Yearly"
+        reference1:
+          type: string
+          maxLength: 140
+          description: Recipient Reference for 070.
+        reference2:
+          type: string
+          maxLength: 140
+          description: Payment Description for 070.
+        firstPartyPaymentValidation:
+          type: string
+          maxLength: 10
+          description: "Indicates if Debiting Agent should perform validation on Debtor information.
+            <br>00 - No Check Required
+            <br>01 - Debtor Name Check
+            <br>02 - Deb tor Identification Check (NRIC, Passport etc…)
+            <br>03 - Debtor Name and Identification Check
+            "
+        reserverField1:
+          type: string
+          maxLength: 140
+          description: ""
+        merchant:
+          type: array
+          allOf:
+            - $ref: "#/components/schemas/enquiry_merchant"
+        debtor:
+          type: array
+          allOf:
+            - $ref: "#/components/schemas/enquiry_debtor"
+        debtorAccount:
+          type: array
+          allOf:
+            - $ref: "#/components/schemas/enquiry_debtorAccount"
+        debtorAgent:
+          type: array
+          allOf:
+            - $ref: "#/components/schemas/enquiry_debtorAgent"
+
+    enquiry_merchant:
+      type: object
+      description: "Merchant"
+      properties:
+        id:
+          type: string
+          maxLength: 35
+          description: Merchant Id.
+        name:
+          type: string
+          maxLength: 140
+          description: Merchant name.
+
+    enquiry_debtor:
+      type: object
+      description: "Debtor"
+      properties:
+        name:
+          type: string
+          maxLength: 140
+          description: Debtor name.
+        id:
+          type: string
+          maxLength: 140
+          description: Debtor Id.
+        idType:
+          type: string
+          maxLength: 2
+          description: Debtor Id type.
+            <br> 01 = NRIC
+            <br> 02 = Army No/Police No
+            <br> 03 = Passport No
+            <br> 04 = Business Registration No.
+        secondaryId:
+          type: string
+          maxLength: 140
+          description: Debtor Secondary Id.
+        secondaryIdType:
+          type: string
+          maxLength: 2
+          description: Debtor Secondary Id type. 
+            <br> 01 = NRIC
+            <br> 02 = Army No/Police No
+            <br> 03 = Passport No
+            <br> 04 = Business Registration No.
+          
+    enquiry_debtorAccount:
+      type: object
+      description: "Debtor Account"
+      properties:
+        id:
+          type: string
+          maxLength: 34
+          description: Debtor Account Id.
+        type:
+          type: string
+          maxLength: 4
+          description: Debtor Account type.
+            <br>CACC=Current
+            <br>SVGS=Savings
+            <br>CCRD=Credit Card
+            <br>WALL= e-Wallet
+        residentStatus:
+          type: string
+          maxLength: 1
+          description: Resident status.
+            <br>1 = Resident
+            <br>2 = Non-Resident
+            <br>3 = Unavailable
+        productType:
+          type: string
+          maxLength: 1
+          description: Product type.
+            <br>I = Islamic
+            <br>C = Conventional
+        shariaComplaint:
+          type: string
+          maxLength: 1
+          description: Sharia compliant status.
+            <br>Y = Yes
+            <br>N = No
+            <br>U = Unknown
+        details:
+          type: string
+          maxLength: 1
+          description: Debtor Account details.
+            <br>1 = Single
+            <br>2 = Joint
+            <br>3 = Government
+            <br>4 = Corporate
+            <br>5 = NGO
+          
+    enquiry_debtorAgent:
+      type: object
+      description: "Debtor Agent"
+      properties:
+        id:
+          type: string
+          maxLength: 34
+          description: Debtor Agent Id.
+
+    merchant:
+      type: object
+      description: "Merchant"
+      required:
+        - code
+        - name
+      properties:
+        code:
+          type: string
+          maxLength: 35
+          description: Bank/Merchant Id (BIC code)
+        name:
+          type: string
+          maxLength: 35
+          description: Bank/Merchant Name
+        active:
+          type: boolean
+          description: |
+            DuitNow services status
+            <li>True – Bank is online</li>
+            <li>False – Bank is offline</li>
+        browser:
+          type: string
+          maxLength: 140
+          description: Bank Browser Info/Version
+        iosApplicationId:
+          type: string
+          maxLength: 140
+          description: Participant Android App Id
+        androidApplicationId:
+          type: string
+          maxLength: 140
+          description: Participant iOS App Id
+        redirectUrls:
+          type: array
+          allOf:
+            - $ref: "#/components/schemas/redirectUrls"
+
+    product:
+      type: object
+      description: "Product"
+      required:
+        - code
+        - name
+      properties:
+        code:
+          type: string
+          maxLength: 35
+          description: Product ID
+        name:
+          type: string
+          maxLength: 35
+          description: Product Name
+        active:
+          type: boolean
+          description: |
+            DuitNow services status
+            <li>True – Bank is online</li>
+            <li>False – Bank is offline</li>
+        browser:
+          type: string
+          maxLength: 140
+          description: Bank Browser Info/Version
+        iosApplicationId:
+          type: string
+          maxLength: 140
+          description: Participant Android App Id
+        androidApplicationId:
+          type: string
+          maxLength: 140
+          description: Participant iOS App Id
+        redirectUrls:
+          type: array
+          allOf:
+            - $ref: "#/components/schemas/redirectUrls"
+
+    redirectUrls:
+      type: object
+      description: "Redirect Urls"
+      required:
+        - type
+        - url
+      properties:
+        type:
+          maxLength: 3
+          type: string
+          description: |
+            Redirection URL type
+            <li>RET – Retail channel</li>
+            <li>COR – Corporate channel</li>
+        url:
+          maxLength: 140
+          type: string
+          description: Bank URL to be redirected to
+
+  securitySchemes:
+    bearerAuth:
+      $ref: './base.yml#/components/securitySchemes/bearerAuth'

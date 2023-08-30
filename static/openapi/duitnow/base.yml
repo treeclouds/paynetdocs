@@ -1,0 +1,226 @@
+components:
+  securitySchemes:
+    bearerAuth: 
+      type: http
+      scheme: bearer
+      bearerFormat: JWT  
+      description: |
+        <b>This API supports JWS for authenticating all API requests.</b> For more information, please read our <a href="https://docs.developer.paynet.my/docs/general/jws"><b style="color:blue;">JWS</b></a> specification.
+      example: Bearer eyJhbGciOiJSUzUxMiIsInR5cCI6IkpXVCIsImtpZCI6IlJQUF9QVksyMDIxIn0.eyJpc3MiOiJCT0VFTVlLMSIsImV4cCI6MTY4MTM4NTc4NywianRpIjoiMjAyMzA0MTJCT0VFTVlLMTAwME9SQjAwMDAwMDAxIiwiZHMiOiJkOWE5NTJkODgzMzhkYzQ4Mzk1MjljNzg4YmQ2N2M2MjlkNDc5NGE5NTZiMzdjODA2ZWU4NGI3OWU4YWE4OTU3OWI5Mzc0ZjVkMTk3ZGNhZTQ4NGQ0OGMyOThmZGVkNjg3YWVhMWU4Yjk3NzMyMTcwZGRmNmM1YzhhYzIwZmNhMCJ9.WAjEQpSsafFfT9WsH4QRTVrvEeU3wD6Ou67WzCF1d7UN2AIJvAASSb0zsAhdRxmvSbdus6UwZBPiSy0VszdpRon8A43olcTvyD4MO2OB9kSC6CYwL6by0rH3Y8U-2txGaO7lcN_ZgtBpus9p2QMO73ZgT3Bhg0t2w80L1NKhG7WHFWxy3h1q9aMAHH8AQLzXtVsHz_xWAw3Lemcuf6Q7gosaVCHm_xB1cTLretGlvXRniyk908afwOtoXJ3hfS5VIGc7-3EVil04UirN-kpQbXKfx35CN9mgsuAuydDCzj6HgEMn3k-mNLhof9ZZaDSziLimETXPN0Y6hnN5h0-54w
+
+  parameters:
+    Authorization:
+      name: Authorization
+      in: header
+      description: Bearer &lt;access_token&gt;
+      required: true
+      schema:
+        type: string
+
+    X-Signature-Key:
+      name: X-Signature-Key
+      in: header
+      description: Certificate serial number used to sign the message signature
+      required: true
+      schema:
+        maxLength: 40
+        pattern: ^[a-zA-Z0-9]*$
+        type: string
+        
+    X-Signature:
+      name: X-Signature
+      in: header
+      required: true
+      schema:
+        maxLength: 1024
+        type: string
+      description: "Message signature signed using the certificate defined in **X-Signature-Key**."
+
+    X-Ip-Address:
+      name: X-Ip-Address
+      in: header
+      description: IP address where the transaction originated from
+      required: true
+      schema:
+        maxLength: 100
+        pattern: ^(\d{1,2}|(0|1)\d{2}|2[0-4]\d|25[0-5])\.(\d{1,2}|(0|1)\d{2}|2[0-4]\d|25[0-5])\.(\d{1,2}|(0|1)\d{2}|2[0-4]\d|25[0-5])\.(\d{1,2}|(0|1)\d{2}|2[0-4]\d|25[0-5])$
+        type: string
+      example: "192.168.100.8"
+
+    X-Gps-Coordinates:
+      name: X-Gps-Coordinates
+      in: header
+      description: Location of the sender in decimal degree coordinate
+      required: true
+      schema:
+        maxLength: 35
+        type: string
+      example: "40.689263,74.044505"
+
+    X-Client-Id:
+      name: X-Client-Id
+      in: header
+      required: true
+      schema:
+        maxLength: 50
+        type: string
+      description: "Participant Identification"
+
+    X-Business-Message-Id:
+      name: X-Business-Message-Id
+      in: header
+      required: true
+      schema: 
+        maxLength: 35
+        type: string
+        format: "YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS"
+        description : "**Business Message Identification** \n\nSimilar with businessMessageId in payload body (if any)"
+
+    
+
+  headers:
+    Authorization:
+      name: Authorization
+      in: header
+      description: Bearer &lt;access_token&gt;
+      required: true
+      schema:
+        type: string
+
+    X-Signature-Key:
+      description: Certificate serial number used to sign the message signature
+      schema:
+        maxLength: 40
+        pattern: ^[a-zA-Z0-9]*$
+        type: string
+        
+    X-Signature:
+      schema:
+        maxLength: 1024
+        type: string
+      description: "Message signature signed using the certificate defined in **X-Signature-Key**."
+
+    X-Client-Id:
+      schema:
+        maxLength: 50
+        type: string
+      description: "Participant Identification"
+
+    X-Business-Message-Id:
+      schema:
+        type: string
+        maxLength: 35
+        format: YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS
+        description : "**Business Message Identification** \n\nSimilar with businessMessageId in payload body (if any)"
+      
+    
+
+  schemas:
+    baseDataResponse:
+      type: object
+      required: 
+        - businessMessageId
+      properties: 
+        businessMessageId:
+          type: string
+          maxLength: 35
+          format: YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS
+          description: <b>Business Message Identification</b><br></br> Unique message identification. Format YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS
+                where <li>YYYYMMDD – Current Date</li>
+                <li>BBBBBBBB – BIC Code</li>
+                <li>XXX – Transaction Code. Refer to <a href="https://docs.developer.paynet.my/docs/duitnowqr/transactiontype/index.html" target="_blank"> <b style="color:blue;">Transaction Code</b> </a> </li>
+                <li>O – Originator. Refer to <a href="https://docs.developer.paynet.my/docs/duitnow/mappingtable#originator-code" target="_blank"> <b style="color:blue;">Originator</b> </a> </li>
+                <li>CC – Channel Code. Refer to <a href="https://docs.developer.paynet.my/docs/duitnow/mappingtable#channel-code" target="_blank"> <b style="color:blue;">Channel Code</b> </a> </li>
+                <li>SSSSSSSS – Sequence Number</li>
+        createdDateTime :
+          type: string
+          description: <b>Creation Date Time </b> <br></br> Must be in Malaysia Standard Time format of message creation date and time.
+          format : yyyy-MM-ddTHH:mm:ss.SSS
+        code:
+          type: string
+          description: Status code
+        reason:
+          type: string
+          description: Reason code
+    baseErrorDataResponse:
+      type: object
+      required: 
+        - businessMessageId
+      properties: 
+        businessMessageId:
+          type: string
+          maxLength: 35
+          format: YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS
+          description: <b>Business Message Identification</b><br></br> Unique message identification. Format YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS
+                where <li>YYYYMMDD – Current Date</li>
+                <li>BBBBBBBB – BIC Code</li>
+                <li>XXX – Transaction Code. Refer to <a href="https://docs.developer.paynet.my/docs/duitnowqr/transactiontype/index.html" target="_blank"> <b style="color:blue;">Transaction Code</b> </a> </li>
+                <li>O – Originator. Refer to <a href="https://docs.developer.paynet.my/docs/duitnow/mappingtable#originator-code" target="_blank"> <b style="color:blue;">Originator</b> </a> </li>
+                <li>CC – Channel Code. Refer to <a href="https://docs.developer.paynet.my/docs/duitnow/mappingtable#channel-code" target="_blank"> <b style="color:blue;">Channel Code</b> </a> </li>
+                <li>SSSSSSSS – Sequence Number</li>
+        code:
+          type: string
+          description: Status code
+        reason:
+          type: string
+          description: Reason code
+
+    errorResponse:
+      type: object
+      required: 
+        - data
+      properties: 
+        data:
+          allOf: 
+            - $ref: "#/components/schemas/baseErrorDataResponse"
+            - type: object
+              required: 
+                - code
+              properties:
+                businessMessageId:
+                  description: "**Business Message Identification** \n\n
+                    Unique message identification. Format YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS where: \n\n
+                    - YYYYMMDD – Current Date \n\n
+                    - BBBBBBBB – BIC Code \n\n
+                    - XXX - Transaction Code \n\n
+                    - O – Originator. \n\n
+                    - CC – Channel Code \n\n
+                    - SSSSSSSS – Sequence Number \n\n
+                    
+                    Transaction code can be refered to <a href=\"https://docs.developer.paynet.my/docs/duitnowqr/transactiontype/index.html\" traget=\"_blank\"><b style=\"color:blue;\">Transaction Code</b></a> \n\n
+
+                    Originator can be refered to <a href=\"https://docs.developer.paynet.my/docs/duitnow/mappingtable/index.html#originator-code\" traget=\"_blank\"><b style=\"color:blue;\">Originator</b></a> \n\n
+                    
+                    Channel code can be refered to <a href=\"https://docs.developer.paynet.my/docs/duitnow/mappingtable/index.html#channel-code\" traget=\"_blank\"><b style=\"color:blue;\">Channel Code</b></a>"
+
+    unauthorizedResponse:
+      type: object
+      required:
+        - error
+      properties:
+        error:
+          type: string
+
+    account:
+      type: object
+      properties: 
+        id:
+          type: string
+          maxLength: 34
+        type:
+          type: string
+          maxLength: 35
+
+    actor: 
+      type: object
+      properties: 
+        name:
+          type: string
+          maxLength: 140
+
+    agent:
+      type: object
+      properties: 
+        id:
+          type: string
+          maxLength: 8
