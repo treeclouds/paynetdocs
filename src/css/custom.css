@@ -488,7 +488,7 @@ border: 1px solid blue !important;
   display: grid;
   grid-template-columns: max-content max-content max-content minmax(auto, 370px);
 
-  column-gap: 1.33rem;
+  column-gap: 0.75rem;
 }
 
 .navbar__brand {
@@ -498,6 +498,10 @@ border: 1px solid blue !important;
 @media(min-width: 1440px) {
   .navbar__brand {
     margin-right: 4.8rem;
+  }
+
+  .navbar__items:not(.navbar__items--right) {
+    column-gap: 1.33rem;
   }
 }
 
@@ -543,8 +547,81 @@ border: 1px solid blue !important;
 }
 
 /* Search */
+
 /* On navbar */
+
+.DocSearch-Help {
+  display: flex;
+  flex-direction: column;
+
+  color: var(--gray-700) !important;
+  font-weight: 700 !important;
+}
+
+.DocSearch-Help::after {
+  content: "Recent searches items will be shown here";
+  font-size: 0.78rem;
+  font-weight: 400;
+	line-height: 150%;
+  color: var(--gray-600) !important;
+}
+
+.DocSearch-NoResults .DocSearch-Screen-Icon svg {
+  display: none;
+}
+
+.DocSearch-Help::before, .DocSearch-NoResults .DocSearch-Screen-Icon {
+  content: "";
+
+  display: flex;
+
+  margin: 0 auto 0.88rem;
+  width: 36px;
+  height: 36px;
+  background: url(../../static/img/search-gray.svg) no-repeat;
+  background-position: center;
+  background-size: cover;
+}
+
+.DocSearch-Modal {
+  background-color: var(--base-white) !important;
+}
+
+.DocSearch-Cancel {
+  display: inline-block !important;
+
+  border: none;
+  background: transparent;
+  
+  cursor: pointer;
+
+  margin-left: 0.88rem !important;
+  color: var(--blue-500) !important;
+  font-weight: 700 !important;
+}
+
+.DocSearch-Cancel, .DocSearch-Input {
+  font-size: 0.78rem !important;
+	line-height: 150%;
+}
+
 @media(min-width: 1024px) {
+  .DocSearch-Cancel {
+    font-size: 1rem;
+    line-height: 133%;
+  }
+}
+
+.DocSearch-NoResults-Prefill-List {
+  display: none !important;
+}
+
+@media(min-width: 1024px) {
+  .DocSearch-Container {
+    background: rgba(208, 213, 221, 0.70) !important  ;
+    backdrop-filter: blur(4px);
+  }
+
   .searchBox_node_modules-\@docusaurus-theme-classic-lib-theme-Navbar-Search-styles-module {
     display: flex;
     align-items: center;
@@ -558,6 +635,7 @@ border: 1px solid blue !important;
 
   .DocSearch-Button {
     padding: 0 !important;
+    width: 100%;
   }
   
   .DocSearch-Button:active, .DocSearch-Button:focus, .DocSearch-Button:hover {
@@ -579,11 +657,40 @@ border: 1px solid blue !important;
     font-size: 1rem !important;
     line-height: 150%;
    }
+
+   .DocSearch-Help::before, .DocSearch-NoResults .DocSearch-Screen-Icon {
+    content: "";
+
+    width: 48px;
+    height: 48px;
+    background-position: center;
+    background-size: cover;
+  }
+
+   .DocSearch-Help::after {
+    margin-top: 8px;
+
+    font-size: 0.88rem;
+  }
+
+  .DocSearch-Cancel {
+    font-size: 1rem !important;
+  }
+
+  .DocSearch-Modal {
+    background-color: transparent !important;
+    box-shadow: none !important;
+  }
+  
+  .DocSearch-Dropdown {
+    background-color: var(--base-white) !important;
+    border-radius: 12px;
+  }
 }
 
-/* On modal */
-.DocSearch-Modal {
-  background-color: var(--base-white) !important;
+.DocSearch-Footer {
+  display: none !important;
+  box-shadow: none;
 }
 
 .DocSearch-Hit-source {
@@ -592,6 +699,7 @@ border: 1px solid blue !important;
   font-weight: 400 !important;
   color: var(--gray-500) !important;
 }
+
 .DocSearch-Hit {
   padding-bottom: 8px !important;
 }
@@ -599,6 +707,7 @@ border: 1px solid blue !important;
 .DocSearch-Hit[aria-selected=true] {
   color: var(--gray-600) !important;
 }
+
 /* .DocSearch-Hit-icon svg {
   display: none;
 } */
@@ -607,6 +716,7 @@ border: 1px solid blue !important;
   height: 20px;
   background: url(../../static/img/file-gray.svg);
 } */
+
 .DocSearch-Hit a {
   background: var(--gray-50) !important;
   box-shadow: none !important;
@@ -643,26 +753,14 @@ border: 1px solid blue !important;
   padding: 1.33rem 0.88rem !important;
 }
 
+@media(min-width: 1024px) {
+  .DocSearch-SearchBar {
+    padding: 0 0 0.88rem !important;
+  }
+}
+
 .DocSearch-Button {
   background-color: transparent !important;
-}
-
-.DocSearch-Cancel, .DocSearch-Input {
-  font-size: 0.78rem !important;
-	line-height: 150%;
-}
-
-.DocSearch-Cancel {
-  margin-left: 0.88rem !important;
-  color: var(--blue-500) !important;
-  font-weight: 700 !important;
-}
-
-@media(min-width: 1024px) {
-  .DocSearch-Cancel {
-    font-size: 1rem;
-    line-height: 133%;
-  }
 }
 
 /* Breadcrumbs  */
@@ -720,6 +818,11 @@ border: 1px solid blue !important;
 
 
 /* Side bar Left */
+.navbar-sidebar__brand {
+  flex-direction: row-reverse;
+  justify-content: start;
+  column-gap: 0.88rem;
+}
 
 .navbar-sidebar__back {
   display: none; /* To hide: <-- Back to main menu */
@@ -1006,7 +1109,7 @@ h1 {
 	line-height: 150%;
 }
 
-.t16sm-t18lg, .DocSearch-Hit-source {
+.t16sm-t18lg, .DocSearch-Hit-source, .DocSearch-Help {
 	font-size: 0.88rem !important;
 	line-height: 150% !important;
 }
@@ -1116,7 +1219,7 @@ h1 {
     line-height: 150%;
   }
   
-  .t16sm-t18lg, .DocSearch-Hit-source {
+  .t16sm-t18lg, .DocSearch-Hit-source, .DocSearch-Help {
 		font-size: 1rem !important;
 		line-height: 133% !important;
   }
