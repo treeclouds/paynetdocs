@@ -569,6 +569,28 @@ border: 1px solid blue !important;
 .DocSearch-NoResults .DocSearch-Screen-Icon svg {
   display: none;
 }
+.DocSearch-NoResults p, .DocSearch-NoResults p strong {
+  font-size: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.DocSearch-NoResults p::before {
+  content: "Result not found";
+  margin-bottom: 8px;
+
+  font-size: 0.88rem;
+  line-height: 150%;
+  color: var(--gray-700);
+  font-weight: 700;
+}
+
+.DocSearch-NoResults p::after {
+  content: "Recent searches items will be shown here";
+  font-size: 0.78rem;
+  line-height: 150%;
+  color: var(--gray-600);
+}
 
 .DocSearch-Help::before, .DocSearch-NoResults .DocSearch-Screen-Icon {
   content: "";
@@ -665,6 +687,14 @@ border: 1px solid blue !important;
     height: 48px;
     background-position: center;
     background-size: cover;
+  }
+
+  .DocSearch-NoResults p::before {
+    font-size: 1rem;
+  }
+  
+  .DocSearch-NoResults p::after {
+    font-size: 0.88rem;
   }
 
    .DocSearch-Help::after {
