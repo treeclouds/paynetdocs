@@ -132,11 +132,11 @@ const config = {
         },
         items: [
           {
-            to: "/home",
+            to: "/documentation",
             sidebarid: "sideBarHome",
             activeBaseRoute: 'home',
             position: "left",
-            label: "Documentations",
+            label: "Documentation",
           },
           {
             to: "/api-reference",

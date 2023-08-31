@@ -19,37 +19,41 @@ const sidebars = {
     {
       type: "link",
       label: "Home",
-      href:"/home",
+      href:"/documentation",
       className: 'icon__link home__link',
     },
     {
       type: "link",
+      href:"/documentation/getting-started",
       label: "Getting Started",
-      href:"/getting-started",
       className: 'icon__link getting-started__link',
     },
     {
       type: "category",
       label: "API",
-      items: ["API/InsideAPI/Inside", "intro"],
+      items: [
+      "API/InsideAPI/Inside",
+      "intro",
+      "API/rate-limit",
+      ],
       className: 'icon__link api__link',
     },
     {
       type: "link",
       label: "FI Server",
-      href:"/fi-server",
+      href:"/documentation/fi-server",
       className: 'icon__link fi-server__link',
     },
     {
       type: "link",
       label: "Sandbox",
-      href:"/sandbox",
+      href:"/documentation/sandbox",
       className: 'icon__link sandbox__link',
     },
     {
       type: "link",
       label: "Changelog",
-      href:"/changelog",
+      href:"/documentation/changelog",
       className: 'icon__link changelog__link',
     },
     {
@@ -84,7 +88,7 @@ const sidebars = {
     {
       type: "link",
       label: "Back",
-      href: "/home",
+      href: "/documentation",
       className: "menu__back",
     },
     {
