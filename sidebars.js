@@ -78,6 +78,13 @@ const sidebars = {
       ],
       className: 'icon__link api__link',
     },
+    {
+      type: "category",
+      label: "stop-light",
+      items: [
+        "stop-light/stoplight"
+      ]
+    }
   ],
   anotherSideBar: [
     {
