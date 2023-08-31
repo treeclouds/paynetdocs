@@ -1,0 +1,1424 @@
+openapi: 3.1.0
+info:
+  title: Credit Transfer
+  description: |
+    ### Before Getting Started
+    Participant needs to identify the role it plans to participate as before deciding which API to build. The roles include:
+      - Participant acts as the Originating Financial Institution (OFI) which is the sender of the payment instruction. OFI is expected to manage their customer’s account balances and be able to debit the fund from their customer’s account. In such scenario, Participant needs to make API request to RPP host to initiate the payment instruction.
+      - Participant acts as the Receiving Financial Institution (RFI) which is the receiver of the payment instruction. RFI is expected to be able to receive the instruction from RPP host and be able to credit the fund to their customer’s account. In such scenario, Participant needs to be able to receive API request from RPP host to process the payment instruction.
+      - Participant acts as both the Originating Financial Institution (OFI) and Receiving Financial Institution (RFI). In such scenario, Participant needs to implement both payment instruction's sending and receiving legs.
+
+    ### V1 API
+    This API version is only made available in JSON format and request can only be called using HTTP API call.
+
+    ### Endpoints
+    The APIs listed under Webhook are using the same specifications under the prior section. Participant is expected to expose an endpoint to act as the RFI to receive the API from RPP host.
+  version: v1
+servers:
+- url: https://mock.developer.paynet.my/credittransfer/v1
+paths: 
+  /accountLookup:
+    post:
+      summary: Account Enquiry
+      description: This API is used to perform lookup on the beneficiary account so that the beneficiary account name can be returned and displayed to customer prior to payment confirmation
+      operationId: credit_transfer_enquiry
+      parameters: 
+      - $ref: "./base.yml#/components/parameters/Authorization"
+      - $ref: "./base.yml#/components/parameters/X-Ip-Address"
+      - $ref: "./base.yml#/components/parameters/X-Gps-Coordinates"
+      - $ref: "./base.yml#/components/parameters/X-Signature-Key"
+      - $ref: "./base.yml#/components/parameters/X-Signature"
+          
+      requestBody: 
+        content: 
+          application/json:
+            schema: 
+              $ref: "#/components/schemas/accountEnquiryRequest"
+            example: 
+              data:
+                businessMessageId: "20230104DMMMYKL4510ORB00000001"
+                interbankSettlementAmount: 1.00
+                debtor:
+                  name: "Debtor Name"
+                  id: "0123456789"
+                debtorAccount:
+                  id: "0123456789"
+                  type: "CACC"
+                creditorAgent:
+                  id: "DMMMYKL4"
+                creditorAccount:
+                  id: "99999999999"
+                  type: "DFLT"
+                recipientReference: "Payment Reference"
+                instructionForDebtorAccount:
+                  residentStatus: "1"
+                  productType: "I"
+                  shariaCompliant: "Y"
+                  details: "1"
+
+      responses: 
+        200:
+          description: ""
+          headers: 
+            X-Signature-Key:
+              required: true
+              $ref: "./base.yml#/components/headers/X-Signature-Key"
+            X-Signature:
+              required: true
+              $ref: "./base.yml#/components/headers/X-Signature"
+          content: 
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/accountEnquiryResponse"
+              example: 
+                data:
+                  businessMessageId: "20221208RPPEMYKL630HQR73010643"
+                  code: "ACSP"
+                  reason: "U000"
+                  settlementCycleNumber: "001"
+                  interbankSettlementDate: "2023-01-04"
+                  creditor: 
+                    name: "DUMMY"
+                  creditorAccount:
+                    id: "1234567890"
+                    type: "SVGS"
+                  instructionForCreditorAccount: 
+                    residentStatus: "1"
+                    productType: "I"
+                    shariaCompliant: "Y"
+                    details: "1"
+                  customerCategory: "RET"
+
+        400:
+          description: ""
+          content: 
+            application/json:
+              schema: 
+                $ref: "./base.yml#/components/schemas/errorResponse"
+              example: 
+                data:
+                  businessMessageId: "20230120DMMMYKL4510ORB00495923"
+                  code: "API.002"
+                  reason: "data.businessMessageId - Invalid format"
+        401:
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "./base.yml#/components/schemas/unauthorizedResponse"
+              example: 
+                error: "Access token was not provided"
+        500:
+          description: ""
+          content: 
+            application/json:
+              schema: 
+                $ref: "./base.yml#/components/schemas/errorResponse"
+              example: 
+                data:
+                  businessMessageId: "20230120DMMMYKL4510ORB00495923"
+                  code: "API.500"
+                  reason: "Internal Server Error"
+
+      security:
+        - OAuth2.0: []
+      x-codegen-request-body-name: generated
+      
+  /initiate:
+    post:
+      summary: Credit Transfer
+      description: This API is used to initiate fund transfer from one financial institution to another financial institution
+      operationId: credit_transfer_initiate
+      parameters: 
+      - $ref: "./base.yml#/components/parameters/Authorization"
+      - $ref: "./base.yml#/components/parameters/X-Ip-Address"
+      - $ref: "./base.yml#/components/parameters/X-Gps-Coordinates"
+      - $ref: "./base.yml#/components/parameters/X-Signature-Key"
+      - $ref: "./base.yml#/components/parameters/X-Signature"
+          
+      requestBody: 
+        content: 
+          application/json:
+            schema: 
+              $ref: "#/components/schemas/creditTransferRequest"
+            example: 
+              data:
+                businessMessageId: "20230104DMMMYKL4010ORB00000001"
+                interbankSettlementAmount: 120.30
+                debtor:
+                  name: "Debtor Name"
+                  id: "0123456789"
+                debtorAccount:
+                  id: "0123456789"
+                  type: "CACC"
+                creditorAgent:
+                  id: "BIMBMYKL"
+                creditorAccount:
+                  id: "0123456789"
+                  type: "SVGS"
+                creditor:
+                  name: "Creditor Name"
+                  id: "0123456789"
+                  idType: "01"
+                recipientReference: "Payment Reference"
+                paymentDescription: "Payment Description"
+                secondaryValidationIndicator: "N"
+                instructionForDebtorAccount:
+                  residentStatus: "1"
+                  productType: "I"
+                  shariaCompliant: "Y"
+                  details: "1"
+
+      responses: 
+        200:
+          description: ""
+          headers: 
+            X-Signature-Key:
+              required: true
+              $ref: "./base.yml#/components/headers/X-Signature-Key"
+            X-Signature:
+              required: true
+              $ref: "./base.yml#/components/headers/X-Signature"
+          content: 
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/creditTransferResponse"
+              example: 
+                data:
+                  businessMessageId: "20221208RPPEMYKL010HQR73010643"
+                  code: "ACSP"
+                  reason: "U000"
+                  transactionId: "20230104DMMMYKL4010ORB00000001"
+                  settlementCycleNumber: "001"
+                  interbankSettlementDate: "2021-01-05"
+                  creditor:
+                    name: "Test"
+                  creditorAccount:
+                    id: "0123456789"
+                    type: "SVGS"
+                  customerCategory: "RET"
+        400:
+          description: ""
+          content: 
+            application/json:
+              schema: 
+                $ref: "./base.yml#/components/schemas/errorResponse"
+              example: 
+                data:
+                  businessMessageId: "20230104DMMMYKL4010ORB00000001"
+                  code: "API.002"
+                  reason: "data.businessMessageId - Invalid format"
+        401:
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "./base.yml#/components/schemas/unauthorizedResponse"
+              example: 
+                error: "Access token was not provided"
+        500:
+          description: ""
+          content: 
+            application/json:
+              schema: 
+                $ref: "./base.yml#/components/schemas/errorResponse"
+              example: 
+                data:
+                  businessMessageId: "20230104DMMMYKL4010ORB00000001"
+                  code: "API.500"
+                  reason: "Internal Server Error"
+
+      security:
+        - OAuth2.0: []
+      x-codegen-request-body-name: generated
+  
+  /reversal:
+    post:
+      summary: Credit Transfer Reversal
+      description: This API is used to reverse a Credit Transfer request done previously. Participant can use this to reverse out a successful payment, or for a payment that the status that was unknown
+      operationId: credit_transfer_reversal
+      parameters: 
+      - $ref: "./base.yml#/components/parameters/Authorization"
+      - $ref: "./base.yml#/components/parameters/X-Ip-Address"
+      - $ref: "./base.yml#/components/parameters/X-Gps-Coordinates"
+      - $ref: "./base.yml#/components/parameters/X-Signature-Key"
+      - $ref: "./base.yml#/components/parameters/X-Signature"
+          
+      requestBody: 
+        content: 
+          application/json:
+            schema: 
+              $ref: "#/components/schemas/creditTransferReversalRequest"
+            example: 
+              data:
+                businessMessageId: "20230104DMMMYKL4011ORB00000001"
+                transactionId: "20230104DMMMYKL4010ORB00000001"
+                interbankSettlementAmount: 120.30
+                debtor:
+                  name: "Debtor Name"
+                  id: "0123456789"
+                debtorAccount:
+                  id: "0123456789"
+                  type: "CACC"
+                creditorAgent:
+                  id: "BIMBMYKL"
+                creditorAccount:
+                  id: "0123456789"
+                  type: "SVGS"
+                creditor:
+                  name: "Creditor Name"
+
+      responses: 
+        200:
+          description: ""
+          headers: 
+            X-Signature-Key:
+              required: true
+              $ref: "./base.yml#/components/headers/X-Signature-Key"
+            X-Signature:
+              required: true
+              $ref: "./base.yml#/components/headers/X-Signature"
+          content: 
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/creditTransferReversalResponse"
+              example: 
+                data:
+                  businessMessageId: "20221208RPPEMYKL011HQR73010643"
+                  code: "ACSP"
+                  reason: "U000"
+                  originalTransactionId: "20230104DMMMYKL4010ORB00000001"
+                  settlementCycleNumber: "001"
+                  interbankSettlementDate: "2021-01-05"
+                  creditor:
+                    name: "Test"
+                  creditorAccount:
+                    id: "0123456789"
+                    type: "SVGS"
+                  customerCategory: "RET"
+        400:
+          description: ""
+          content: 
+            application/json:
+              schema: 
+                $ref: "./base.yml#/components/schemas/errorResponse"
+              example: 
+                data:
+                  businessMessageId: "20230104DMMMYKL4011ORB00000001"
+                  code: "API.002"
+                  reason: "data.businessMessageId - Invalid format"
+        401:
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "./base.yml#/components/schemas/unauthorizedResponse"
+              example: 
+                error: "Access token was not provided"
+        500:
+          description: ""
+          content: 
+            application/json:
+              schema: 
+                $ref: "./base.yml#/components/schemas/errorResponse"
+              example: 
+                data:
+                  businessMessageId: "20230104DMMMYKL4011ORB00000001"
+                  code: "API.500"
+                  reason: "Internal Server Error"
+
+      security:
+        - OAuth2.0: []
+      x-codegen-request-body-name: generated
+
+  /accountLookupIncoming:
+    post:
+      summary: Account Enquiry Webhook
+      description: For Receiving Participant, it is expected to publish an API based on this specification that allow the participant to return the beneficiary account information to RPP
+      operationId: credit_transfer_enquiry_webhook
+      servers:
+        - url: https://test.sandbox1.nonprod.c0.paynet.my/duitnowPayment
+          description: Override base path for all operations with the webhook path
+      tags: 
+        -  Webhook
+        
+      requestBody: 
+        content: 
+          application/json:
+            schema: 
+              $ref: "#/components/schemas/accountEnquiryRequest"
+            example: 
+              data:
+                businessMessageId: "20230104DMMMYKL4510ORB00000001"
+                interbankSettlementAmount: 1.00
+                debtor:
+                  name: "Debtor Name"
+                  id: "0123456789"
+                debtorAccount:
+                  id: "0123456789"
+                  type: "CACC"
+                creditorAgent:
+                  id: "DMMMYKL4"
+                creditorAccount:
+                  id: "99999999999"
+                  type: "DFLT"
+                recipientReference: "Payment Reference"
+                instructionForDebtorAccount:
+                  residentStatus: "1"
+                  productType: "I"
+                  shariaCompliant: "Y"
+                  details: "1"
+
+      responses: 
+        200:
+          content: 
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/accountEnquiryResponse"
+              example: 
+                data:
+                  businessMessageId: "20230104DMMMYKL4510ORB00000001"
+                  code: "ACSP"
+                  reason: "U000"
+                  settlementCycleNumber: "002"
+                  interbankSettlementDate: "2023-01-04"
+                  creditor: 
+                    name: "DUMMY"
+                  creditorAccount:
+                    id: "1234567890"
+                    type: "SVGS"
+                  instructionForCreditorAccount: 
+                    residentStatus: "1"
+                    productType: "I"
+                    shariaCompliant: "Y"
+                    details: "1"
+                  customerCategory: "RET"
+        400:
+          description: "Failed response"
+          content: {}
+        
+      security:
+        - {}
+      x-codegen-request-body-name: generated
+      
+  /initiateIncoming:
+    post:
+      summary: Credit Transfer Webhook
+      description: For Receiving Participant, it is expected to publish an API based on this specification that allow the participant to receive a Credit Transfer request from RPP
+      operationId: credit_transfer_initiate_webhook
+      servers:
+        - url: https://test.sandbox1.nonprod.c0.paynet.my/duitnowPayment
+          description: Override base path for all operations with the webhook path
+      tags: 
+        -  Webhook
+      requestBody: 
+        content: 
+          application/json:
+            schema: 
+              $ref: "#/components/schemas/creditTransferRequest"
+            example: 
+              data:
+                businessMessageId: "20230104DMMMYKL4010ORB00000001"
+                interbankSettlementAmount: 120.30
+                debtor:
+                  name: "Debtor Name"
+                  id: "0123456789"
+                debtorAccount:
+                  id: "0123456789"
+                  type: "CACC"
+                creditorAgent:
+                  id: "BIMBMYKL"
+                creditorAccount:
+                  id: "0123456789"
+                  type: "SVGS"
+                creditor:
+                  name: "Creditor Name"
+                  id: "0123456789"
+                  idType: "01"
+                recipientReference: "Payment Reference"
+                paymentDescription: "Payment Description"
+                secondaryValidationIndicator: "N"
+                instructionForDebtorAccount:
+                  residentStatus: "1"
+                  productType: "I"
+                  shariaCompliant: "Y"
+                  details: "1"
+
+      responses: 
+        200:
+          content: 
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/creditTransferResponse"
+              example: 
+                data:
+                  businessMessageId: "20230104DMMMYKL4010ORB00000001"
+                  code: "ACSP"
+                  reason: "U000"
+                  transactionId: "20230104DMMMYKL4010ORB00000001"
+                  settlementCycleNumber: "002"
+                  interbankSettlementDate: "2021-01-05"
+                  creditor:
+                    name: "Test"
+                  creditorAccount:
+                    id: "0123456789"
+                    type: "SVGS"
+                  customerCategory: "RET"
+        400:
+          description: "Failed response"
+          content: {}
+      security:
+        - {}
+      x-codegen-request-body-name: generated
+  /enquiry/{enquiryType}/{endToEndId}:
+    get:
+      summary: Transaction Enquiry
+      description : This API is used to retrieve the status of the Credit Transfer payment using the Business Message Identifier
+      operationId: duitnow_transaction_enquiry
+      servers:
+        - url: https://mock.developer.paynet.my/transaction/v1
+      parameters: 
+        - name: enquiryType
+          in: path
+          description: "Supported values are: \n\n
+            - endToEndId"
+          required: true
+          schema: 
+            type: string
+            enum: ["endToEndId"]
+          example: endToEndId
+        - name: endToEndId
+          in: path
+          description: Transaction identification to be enquired
+          required: true
+          schema: 
+            type: string
+            maxLength: 35
+          example: 20230126DMMMYKL4030OQR07661308
+        - $ref: "./base.yml#/components/parameters/Authorization"
+        - $ref: "./base.yml#/components/parameters/X-Signature-Key"
+        - name: X-Signature
+          in: header
+          description: "Message signature signed using the certificate defined in **X-Signature-Key**. \n\n
+            The payload for signature can be refered to specific transaction below: \n\n
+            - <a href=\"https://docs.developer.paynet.my/docs/duitnow/signature2/index.html#status-inquiry\" target=\"_blank\">DuitNow Transaction Enquiry</a> \n\n
+            - <a href=\"https://docs.developer.paynet.my/docs/duitnow/signature2/index.html#consent-status-inquiry\" target=\"_blank\">Consent Transaction Enquiry</a> \n\n
+            - <a href=\"https://docs.developer.paynet.my/docs/duitnowqr/authentication/index.html#camt00500108\" target=\"_blank\">DuitNow QR Transaction Enquiry</a> \n\n"
+          required: true
+          schema:
+            maxLength: 1024
+            type: string  
+        - name: X-Business-Message-Id
+          in: header
+          description: <b>Business Message Identification</b><br></br> Unique message identification. Format YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS
+                where <li>YYYYMMDD – Current Date</li>
+                <li>BBBBBBBB – BIC Code</li>
+                <li>XXX – Transaction Code. Set to <b>630</b>. Refer to <a href="https://docs.developer.paynet.my/docs/duitnowqr/transactiontype/index.html" target="_blank"> <b style="color:blue;">Transaction Code</b> </a> </li>
+                <li>O – Originator. Refer to <a href="https://docs.developer.paynet.my/docs/duitnow/mappingtable#originator-code" target="_blank"> <b style="color:blue;">Originator</b> </a> </li>
+                <li>CC – Channel Code. Refer to <a href="https://docs.developer.paynet.my/docs/duitnow/mappingtable#channel-code" target="_blank"> <b style="color:blue;">Channel Code</b> </a> </li>
+                <li>SSSSSSSS – Sequence Number</li>
+          required: true
+          schema: 
+            type: string
+            maxLength: 35
+            format: YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS
+          example: 20230126DMMMYKL4031OQR91201026
+      responses: 
+        200:
+          description: ""
+          headers: 
+            X-Signature-Key:
+              required: true
+              $ref: "./base.yml#/components/headers/X-Signature-Key"
+            X-Signature:
+              required: true
+              $ref: "./base.yml#/components/headers/X-Signature"
+            X-Business-Message-Id:
+              required: true
+              $ref: "./base.yml#/components/headers/X-Business-Message-Id"
+          content: 
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/enquiryResponse"
+              example: 
+                data: 
+                  businessMessageId: "20230126RPPEMYKL630HQR73101320"
+                  code: "ACSP"
+                  reason: "U000"
+                  endToEndId: "20230126DMMMYKL4030OQR07661308"
+                  dateTime: "2023-01-26T01:13:10Z"
+                  payerName: "JEAN CHEONG"
+                  settlementAmount: 10
+                  settlementAmountCurrency: "MYR"
+                  settlementDate: "2023-01-26"
+        400:
+          description: ""
+          content: 
+            application/json:
+              schema: 
+                $ref: './base.yml#/components/schemas/errorResponse'
+              example: 
+                data:
+                  businessMessageId: "20230126DMMMYKL4031OQR91201026"
+                  code: "API.004"
+                  reason: "X-Business-Message-Id - Invalid format"
+        401:
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "./base.yml#/components/schemas/unauthorizedResponse"
+              example: 
+                error: "Access token was not provided"
+        500:
+          description: ""
+          content: 
+            application/json:
+              schema: 
+                $ref: './base.yml#/components/schemas/errorResponse'
+              example: 
+                data:
+                  businessMessageId: "20230126M0001597865OBW05822030"
+                  code: "API.500"
+                  reason: "Internal Server Error"
+      security:
+        - OAuth 2.0: []
+      x-codegen-request-body-name: generated
+
+  /cancel/{enquiryType}/{endToEndId}:
+    put:
+      summary: Transaction Cancellation
+      description : This API is used to cancel a prior payment request. However, this could only be used for transaction that has not been completed yet.
+      operationId: duitnow_transaction_cancel
+      servers:
+        - url: https://mock.developer.paynet.my/transaction/v1
+      parameters: 
+        - name: enquiryType
+          in: path
+          description: "Supported values are: \n\n
+            - endToEndId"
+          required: true
+          schema: 
+            type: string
+            enum: ["endToEndId"]
+          example: "endToEndId"
+        - name: endToEndId
+          in: path
+          description: Transaction identification to be cancelled
+          required: true
+          schema: 
+            type: string
+            maxLength: 35
+          example: "20230126M0001597861OBW06202029"
+        - $ref: "./base.yml#/components/parameters/Authorization"
+        - $ref: "./base.yml#/components/parameters/X-Signature-Key"
+        - name: X-Signature
+          in: header
+          description: "Message signature signed using the certificate defined in **X-Signature-Key**. \n\n
+            The payload for signature can be refered to specific transaction below: \n\n
+            - <a href=\"https://docs.developer.paynet.my/docs/duitnow/signature2/index.html#cancel-payment\" target=\"_blank\">DuitNow Payment Cancellation</a> \n\n
+            - <a href=\"https://docs.developer.paynet.my/docs/duitnow/signature2/index.html#cancel-consent\" target=\"_blank\">Consent Cancellation</a>"
+          required: true
+          schema:
+            maxLength: 1024
+            type: string 
+        - name: X-Business-Message-Id
+          in: header
+          description: <b>Business Message Identification</b><br></br> Unique message identification. Format YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS
+                where <li>YYYYMMDD – Current Date</li>
+                <li>BBBBBBBB – BIC Code</li>
+                <li>XXX – Transaction Code. Set to <b>865</b>. Refer to <a href="https://docs.developer.paynet.my/docs/duitnowqr/transactiontype/index.html" target="_blank"> <b style="color:blue;">Transaction Code</b> </a> </li>
+                <li>O – Originator. Refer to <a href="https://docs.developer.paynet.my/docs/duitnow/mappingtable#originator-code" target="_blank"> <b style="color:blue;">Originator</b> </a> </li>
+                <li>CC – Channel Code. Refer to <a href="https://docs.developer.paynet.my/docs/duitnow/mappingtable#channel-code" target="_blank"> <b style="color:blue;">Channel Code</b> </a> </li>
+                <li>SSSSSSSS – Sequence Number</li>
+          required: true
+          schema: 
+            type: string
+            maxLength: 35
+            format: YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS
+          example: "20230126M0001597865OBW05822030"
+            
+      requestBody: 
+        content: 
+          application/json:
+            schema: 
+              $ref: "#/components/schemas/cancelRequest"
+            example: 
+              data:
+                productId: "P00001369"
+         
+      responses: 
+        200:
+          description: ""
+          headers: 
+            X-Signature-Key:
+              required: true
+              $ref: "./base.yml#/components/headers/X-Signature-Key"
+            X-Signature:
+              required: true
+              $ref: "./base.yml#/components/headers/X-Signature"
+            X-Business-Message-Id:
+              required: true
+              $ref: "./base.yml#/components/headers/X-Business-Message-Id"
+          content: 
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/cancelResponse"
+              example:
+                data: 
+                  businessMessageId: "20230126RPPEMYKL865HBW66617411"
+                  code: "ACSP"
+                  reason: "U000"
+                  endToEndId: "20230126M0001597861OBW06202029"
+        400:
+          description: ""
+          content: 
+            application/json:
+              schema: 
+                $ref: "./base.yml#/components/schemas/errorResponse"
+              example: 
+                data:
+                  businessMessageId: "20230126M0001597865OBW05822030"
+                  code: "API.004"
+                  reason: "X-Business-Message-Id - Invalid format"
+        401:
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "./base.yml#/components/schemas/unauthorizedResponse"
+              example: 
+                error: "Access token was not provided"
+        500:
+          description: ""
+          content: 
+            application/json:
+              schema: 
+                $ref: './base.yml#/components/schemas/errorResponse'
+              example: 
+                data:
+                  businessMessageId: "20230126M0001597865OBW05822030"
+                  code: "API.500"
+                  reason: "Internal Server Error"
+      security:
+        - OAuth 2.0: []
+      x-codegen-request-body-name: generated
+
+components:
+  schemas:
+    accountEnquiryRequest:
+      type: object
+      properties: 
+        data:
+          type: object
+          allOf: 
+            - $ref: "#/components/schemas/accountEnquiryRequestData"
+            - type: object
+              properties: 
+                recipientReference:
+                  $ref: "#/components/schemas/recipientReference" 
+                paymentDescription:
+                  $ref: "#/components/schemas/paymentDescription"
+                instructionForDebtorAccount:
+                  description: "Instruction for Debtor's Account"
+                  allOf: 
+                    - $ref: "#/components/schemas/instructionForActorAccount"
+
+    accountEnquiryResponse:
+      type: object
+      required: 
+        - data
+      properties: 
+        data:
+          required: 
+            - code
+          allOf: 
+            - $ref: "./base.yml#/components/schemas/baseDataResponse"
+            - type: object
+              properties:
+                code:
+                  enum: ["ACSP", "ACTC", "RJCT"]
+                settlementCycleNumber:
+                  $ref: "#/components/schemas/settlementCycleNumber"
+                interbankSettlementDate:
+                  $ref: "#/components/schemas/interbankSettlementDate"
+                creditor:
+                  description: "Creditor"
+                  required:
+                    - name
+                  allOf: 
+                    - $ref: "./base.yml#/components/schemas/actor"
+                    - type: object
+                      properties:
+                        name:
+                          description: "Creditor's name \n\n
+                            RFI to return the Creditor name for Account Enquiry \n\n
+                            During **Account Enquiry** response, if **data.code == RJCT** then this field will be displaying the result from request"
+                creditorAccount:
+                  description: "Creditor's Account"
+                  required: 
+                    - id
+                    - type
+                  allOf: 
+                    - $ref: "./base.yml#/components/schemas/account"
+                    - type: object
+                      properties: 
+                        id: 
+                          description: "Creditor's account number \n\nRFI to return the Creditor account number"
+                        type:
+                          enum: ['CACC', 'SVGS', 'CCRD', 'WALL', 'DFLT']
+                          description: "Creditor's Account Type \n\n"
+                instructionForCreditorAccount:
+                  description: "Instruction for Creditor's Account"
+                  allOf: 
+                    - $ref: "#/components/schemas/instructionForActorAccount"
+                customerCategory:
+                  $ref: "#/components/schemas/customerCategory"
+
+    creditTransferRequest:
+      type: object
+      required: 
+        - data
+      properties: 
+        data:
+          type: object
+          required: 
+            - creditor
+            - recipientReference
+            - secondaryValidationIndicator
+          allOf: 
+            - $ref: "#/components/schemas/creditTransferRequestData"
+            - type: object
+              properties: 
+                creditor:
+                  allOf: 
+                    - $ref: "./base.yml#/components/schemas/actor"
+                    - type: object
+                      properties: 
+                        name:
+                          description: "Creditor's name \n\n
+                            - For **Credit Transfer**, propagate with the actual name returned from Account Enquiry response \n\n
+                            - For **P2P (including Cross Border)**, default to **RPP** instead"
+                        id:
+                          type: string
+                          maxLength: 20
+                          description: "Identification\n\n
+                            Creditor identificaton value **idType** type\n\n
+                            Field is mandatory if **secondaryValidationIndicator** is set to Y"
+                        type:
+                          type: string
+                          enum: ["01", "02", "03", "04"]
+                          description: "Identification Type\n\n
+                            Supported values are: \n\n
+                            - 01 – New IC No \n\n
+                            - 02 – Army No/Police No \n\n
+                            - 03 – Passport No \n\n
+                            - 04 – Registration No \n\n
+                            
+                            Field is mandatory if **secondaryValidationIndicator** is set to Y"
+                recipientReference:
+                  $ref: "#/components/schemas/recipientReference" 
+                paymentDescription:
+                  $ref: "#/components/schemas/paymentDescription"
+                secondaryValidationIndicator:
+                  allOf: 
+                    -  $ref: "#/components/schemas/secondaryValidationIndicator"
+                  description: "Creditor Identification Validation Required \n\n
+                    Supported values are:\n\n
+                    - Y - Yes \n\n
+                    - N - No \n\n
+                    
+                    If set to **Y**, Crediting Agent has to verify that `data::creditor::idType` and `data::creditor::id` must match with the Creditor's Id in their internal record"
+                instructionForDebtorAccount:
+                  description: "Instruction for Debtor's Account"
+                  allOf: 
+                    - $ref: "#/components/schemas/instructionForActorAccount"
+                        
+    creditTransferRequestData:
+      type: object
+      required: 
+        - businessMessageId
+        - interbankSettlementAmount
+        - debtor
+        - debtorAccount
+        - creditorAgent
+        - creditorAccount
+      properties:
+        businessMessageId:
+          maxLength: 35
+          type: string
+          format: "YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS"
+          description: <b>Business Message Identification</b><br></br> Unique message identification. Format YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS
+                where <li>YYYYMMDD – Current Date</li>
+                <li>BBBBBBBB – BIC Code</li>
+                <li>XXX – Transaction Code. Set to <b>010</b>. Refer to <a href="https://docs.developer.paynet.my/docs/duitnowqr/transactiontype/index.html" target="_blank"> <b style="color:blue;">Transaction Code</b> </a> </li>
+                <li>O – Originator. Refer to <a href="https://docs.developer.paynet.my/docs/duitnow/mappingtable#originator-code" target="_blank"> <b style="color:blue;">Originator</b> </a> </li>
+                <li>CC – Channel Code. Refer to <a href="https://docs.developer.paynet.my/docs/duitnow/mappingtable#channel-code" target="_blank"> <b style="color:blue;">Channel Code</b> </a> </li>
+                <li>SSSSSSSS – Sequence Number</li>
+                <br></br>Channel code set to RB
+        interbankSettlementAmount:
+          type: number
+          format: "#,###.00"
+          description: "Interbank Settlement Amount \n\n
+            - For **Account Enquiry**, default to **1.00** as dummy value \n\n
+            - For **Credit Transfer**, transaction amount shall exclude any fee or charges"  
+        debtor:
+          description: "Debtor"
+          required:
+            - name
+            - id
+          allOf: 
+            - $ref: "./base.yml#/components/schemas/actor"
+            - type: object  
+              properties:
+                name:
+                  description: "Debtor's name"
+                id:
+                  type: string
+                  maxLength: 35
+                  description: "Debtor's identification"
+        debtorAccount:
+          description: "Debtor's Account"
+          required: 
+            - id
+            - type
+          allOf: 
+            - $ref: "./base.yml#/components/schemas/account"
+            - type: object
+              properties: 
+                id: 
+                  description: "Debtor's account number"
+                type:
+                  enum: ['CACC', 'SVGS', 'CCRD', 'WALL', 'DFLT']
+                  description: "Debtor's Account Type \n\n"
+        creditorAgent:
+          description: "Creditor Agent"
+          required: 
+            - id
+          allOf: 
+            - $ref: "./base.yml#/components/schemas/agent"
+            - type: object
+              properties: 
+                id:
+                  description: "Identification \n\n
+                  BIC of RFI \n\n
+                  - For **P2P (including Cross Border)**, default to **RPPEMYKL** instead"
+        creditorAccount:
+          description: "Creditor's Account"
+          required: 
+            - id
+            - type
+          allOf: 
+            - $ref: "./base.yml#/components/schemas/account"
+            - type: object
+              properties: 
+                id: 
+                  description: "Creditor's account number \n\n
+                  - For **Account Enquiry**, default to **99999999999** \n\n
+                  - For **Credit Transfer**, propagate with the actual value returned from Account Enquiry response \n\n
+                  - For **P2P (including Cross Border)**, OFI to send the Registration Id from Proxy Resolution response"
+                type:
+                  enum: ['CACC', 'SVGS', 'CCRD', 'WALL', 'DFLT']
+                  description: "Debtor's Account Type \n\n
+                    Additional value: \n\n
+                    - For **P2P (including Cross Border)**, default to **PRXY** instead" 
+
+    accountEnquiryRequestData:
+      type: object
+      required: 
+        - businessMessageId
+        - interbankSettlementAmount
+        - debtor
+        - debtorAccount
+        - creditorAgent
+        - creditorAccount
+      properties:
+        businessMessageId:
+          maxLength: 35
+          type: string
+          format: "YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS"
+          description: <b>Business Message Identification</b><br></br> Unique message identification. Format YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS
+                where <li>YYYYMMDD – Current Date</li>
+                <li>BBBBBBBB – BIC Code</li>
+                <li>XXX – Transaction Code. Set to <b>510</b>. Refer to <a href="https://docs.developer.paynet.my/docs/duitnowqr/transactiontype/index.html" target="_blank"> <b style="color:blue;">Transaction Code</b> </a> </li>
+                <li>O – Originator. Refer to <a href="https://docs.developer.paynet.my/docs/duitnow/mappingtable#originator-code" target="_blank"> <b style="color:blue;">Originator</b> </a> </li>
+                <li>CC – Channel Code. Refer to <a href="https://docs.developer.paynet.my/docs/duitnow/mappingtable#channel-code" target="_blank"> <b style="color:blue;">Channel Code</b> </a> </li>
+                <li>SSSSSSSS – Sequence Number</li>
+                <br></br>Channel code set to RB
+        interbankSettlementAmount:
+          type: number
+          format: "#,###.00"
+          description: "Interbank Settlement Amount \n\n
+            - For **Account Enquiry**, default to **1.00** as dummy value \n\n
+            - For **Credit Transfer**, transaction amount shall exclude any fee or charges"  
+        debtor:
+          description: "Debtor"
+          required:
+            - name
+            - id
+          allOf: 
+            - $ref: "./base.yml#/components/schemas/actor"
+            - type: object  
+              properties:
+                name:
+                  description: "Debtor's name"
+                id:
+                  type: string
+                  maxLength: 35
+                  description: "Debtor's identification"
+        debtorAccount:
+          description: "Debtor's Account"
+          required: 
+            - id
+            - type
+          allOf: 
+            - $ref: "./base.yml#/components/schemas/account"
+            - type: object
+              properties: 
+                id: 
+                  description: "Debtor's account number"
+                type:
+                  enum: ['CACC', 'SVGS', 'CCRD', 'WALL', 'DFLT']
+                  description: "Debtor's Account Type \n\n"
+        creditorAgent:
+          description: "Creditor Agent"
+          required: 
+            - id
+          allOf: 
+            - $ref: "./base.yml#/components/schemas/agent"
+            - type: object
+              properties: 
+                id:
+                  description: "Identification \n\n
+                  BIC of RFI \n\n
+                  - For **P2P (including Cross Border)**, default to **RPPEMYKL** instead"
+        creditorAccount:
+          description: "Creditor's Account"
+          required: 
+            - id
+            - type
+          allOf: 
+            - $ref: "./base.yml#/components/schemas/account"
+            - type: object
+              properties: 
+                id: 
+                  description: "Creditor's account number \n\n
+                  - For **Account Enquiry**, default to **99999999999** \n\n
+                  - For **Credit Transfer**, propagate with the actual value returned from Account Enquiry response \n\n
+                  - For **P2P (including Cross Border)**, OFI to send the Registration Id from Proxy Resolution response"
+                type:
+                  enum: ['CACC', 'SVGS', 'CCRD', 'WALL', 'DFLT']
+                  description: "Debtor's Account Type \n\n
+                    Additional value: \n\n
+                    - For **P2P (including Cross Border)**, default to **PRXY** instead"
+
+    creditTransferResponse:
+      type: object
+      required: 
+        - data
+      properties: 
+        data:
+          required: 
+            - code
+          allOf: 
+            - $ref: "./base.yml#/components/schemas/baseDataResponse"
+            - type: object
+              properties:
+                code:
+                  enum: ["ACSP", "ACTC", "RJCT"]
+                transactionId:
+                  type: string
+                  maxLength: 35
+                  description: "Original Transaction Identification\n\n
+                    `data::businessMessageId` from request"
+                settlementCycleNumber:
+                  $ref: "#/components/schemas/settlementCycleNumber"
+                interbankSettlementDate:
+                  $ref: "#/components/schemas/interbankSettlementDate"
+                creditor:
+                  description: "Creditor"
+                  required:
+                    - name
+                  allOf: 
+                    - $ref: "./base.yml#/components/schemas/actor"
+                    - type: object
+                      properties:
+                        name:
+                          description: "Creditor's name \n\n
+                            RFI to return the Creditor name for Account Enquiry \n\n
+                            During **Account Enquiry** response, if **data.code == RJCT** then this field will be displaying the result from request"
+                creditorAccount:
+                  description: "Creditor's Account"
+                  required: 
+                    - id
+                    - type
+                  allOf: 
+                    - $ref: "./base.yml#/components/schemas/account"
+                    - type: object
+                      properties: 
+                        id: 
+                          description: "Creditor's account number \n\nRFI to return the Creditor account number"
+                        type:
+                          enum: ['CACC', 'SVGS', 'CCRD', 'WALL', 'DFLT']
+                          description: "Creditor's Account Type \n\n"
+                instructionForCreditorAccount:
+                  description: "Instruction for Creditor's Account"
+                  allOf: 
+                    - $ref: "#/components/schemas/instructionForActorAccount"
+                customerCategory:
+                  $ref: "#/components/schemas/customerCategory"
+
+    creditTransferReversalRequest:
+      type: object
+      required: 
+        - data
+      properties: 
+        data:
+          required: 
+            - businessMessageId
+            - transactionId
+            - interbankSettlementAmount
+            - debtor
+            - debtorAccount
+            - creditorAgent
+            - creditorAccount
+            - creditor
+          type: object
+          properties:
+            businessMessageId:
+              maxLength: 35
+              type: string
+              format: "YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS"
+              description: <b>Business Message Identification</b><br></br> Unique message identification. Format YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS
+                where <li>YYYYMMDD – Current Date</li>
+                <li>BBBBBBBB – BIC Code</li>
+                <li>XXX – Transaction Code. Set to <b>011</b>. Refer to <a href="https://docs.developer.paynet.my/docs/duitnowqr/transactiontype/index.html" target="_blank"> <b style="color:blue;">Transaction Code</b> </a> </li>
+                <li>O – Originator. Refer to <a href="https://docs.developer.paynet.my/docs/duitnow/mappingtable#originator-code" target="_blank"> <b style="color:blue;">Originator</b> </a> </li>
+                <li>CC – Channel Code. Refer to <a href="https://docs.developer.paynet.my/docs/duitnow/mappingtable#channel-code" target="_blank"> <b style="color:blue;">Channel Code</b> </a> </li>
+                <li>SSSSSSSS – Sequence Number</li>
+                <br> </br>Channel code set to RB
+            transactionId: 
+              type: string
+              maxLength: 35
+              description: "Transaction identification to be performed reversal"
+            interbankSettlementAmount:
+              type: number
+              format: "#,###.00"
+              description: "Interbank Settlement Amount \n\n
+                - For **Account Enquiry**, default to **1.00** as dummy value \n\n
+                - For **Credit Transfer**, transaction amount shall exclude any fee or charges"  
+            debtor:
+              description: "Debtor"
+              required:
+                - name
+                - id
+              allOf: 
+                - $ref: "./base.yml#/components/schemas/actor"
+                - type: object
+                  properties:
+                    name:
+                      description: "Debtor's name"
+                    id:
+                      type: string
+                      maxLength: 35
+                      description: "Debtor's identification"
+            debtorAccount:
+              description: "Debtor's Account"
+              required: 
+                - id
+                - type
+              allOf: 
+                - $ref: "./base.yml#/components/schemas/account"
+                - type: object
+                  properties: 
+                    id: 
+                      description: "Debtor's account number"
+                    type:
+                      enum: ['CACC', 'SVGS', 'CCRD', 'WALL', 'DFLT']
+                      description: "Debtor's Account Type \n\n"
+            creditorAgent:
+              description: "Creditor Agent"
+              required: 
+                - id
+              allOf: 
+                - $ref: "./base.yml#/components/schemas/agent"
+                - type: object
+                  properties: 
+                    id:
+                      description: "Identification \n\n
+                      BIC of RFI \n\n
+                      - For **P2P (including Cross Border)**, default to **RPPEMYKL** instead"
+            creditorAccount:
+              description: "Creditor's Account"
+              required: 
+                - id
+                - type
+              allOf: 
+                - $ref: "./base.yml#/components/schemas/account"
+                - type: object
+                  properties: 
+                    id: 
+                      description: "Creditor's account number \n\n
+                      - For **Account Enquiry**, default to **99999999999** \n\n
+                      - For **Credit Transfer**, propagate with the actual value returned from Account Enquiry response \n\n
+                      - For **P2P (including Cross Border)**, OFI to send the Registration Id from Proxy Resolution response"
+                    type:
+                      enum: ['CACC', 'SVGS', 'CCRD', 'WALL', 'DFLT']
+                      description: "Debtor's Account Type \n\n
+                        Additional value: \n\n
+                        - For **P2P (including Cross Border)**, default to **PRXY** instead"
+            creditor:
+              description: "Creditor"
+              allOf: 
+                - $ref: "./base.yml#/components/schemas/actor"
+                - type: object
+                  properties: 
+                    name:
+                      description: "Creditor's name \n\n
+                        - For **Credit Transfer**, propagate with the actual name returned from Account Enquiry response \n\n
+                        - For **P2P (including Cross Border)**, default to **RPP** instead"
+            recipientReference:
+              $ref: "#/components/schemas/recipientReference" 
+            paymentDescription:
+              $ref: "#/components/schemas/paymentDescription"
+            instructionForDebtorAccount:
+              description: "Instruction for Debtor's Account"
+              allOf: 
+                - $ref: "#/components/schemas/instructionForActorAccount"
+
+    creditTransferReversalResponse:
+      type: object
+      required: 
+        - data
+      properties: 
+        data:
+          required: 
+            - code
+            - originalTransactionId
+          allOf: 
+            - $ref: "./base.yml#/components/schemas/baseDataResponse"
+            - type: object
+              properties:
+                code:
+                  enum: ["ACSP", "ACTC", "RJCT"]
+                orginalTransactionId:
+                  type: string
+                  maxLength: 35
+                  description: "Original Transaction Identification\n\n
+                    `data::transationId` from request"
+                settlementCycleNumber:
+                  $ref: "#/components/schemas/settlementCycleNumber"
+                interbankSettlementDate:
+                  $ref: "#/components/schemas/interbankSettlementDate"
+                creditor:
+                  description: "Creditor"
+                  required:
+                    - name
+                  allOf: 
+                    - $ref: "./base.yml#/components/schemas/actor"
+                    - type: object
+                      properties:
+                        name:
+                          description: "Creditor's name \n\n
+                            RFI to return the Creditor name for Account Enquiry \n\n
+                            During **Account Enquiry** response, if **data.code == RJCT** then this field will be displaying the result from request"
+                creditorAccount:
+                  description: "Creditor's Account"
+                  required: 
+                    - id
+                    - type
+                  allOf: 
+                    - $ref: "./base.yml#/components/schemas/account"
+                    - type: object
+                      properties: 
+                        id: 
+                          description: "Creditor's account number \n\nRFI to return the Creditor account number"
+                        type:
+                          enum: ['CACC', 'SVGS', 'CCRD', 'WALL', 'DFLT']
+                          description: "Creditor's Account Type \n\n"
+                instructionForCreditorAccount:
+                  description: "Instruction for Creditor's Account"
+                  allOf: 
+                    - $ref: "#/components/schemas/instructionForActorAccount"
+                customerCategory:
+                  $ref: "#/components/schemas/customerCategory"
+    cancelRequest:
+      type: object
+      required: 
+        - data
+      properties: 
+        data:
+          type: object
+          properties: 
+            productId:
+              type: string
+              maxLength: 35
+              description: Product identification is required for merchant to cancel transaction
+
+    cancelResponse:
+      type: object
+      required: 
+        - data
+      properties: 
+        data:
+          allOf: 
+            - $ref: "./base.yml#/components/schemas/baseDataResponse"
+            - required: 
+              - code
+            - type: object
+              properties:
+                endToEndId:
+                  type: string
+                  maxLength: 35
+                  description: The transaction identification 
+
+    enquiryResponse:
+      type: object
+      required: 
+        - data
+      properties: 
+        data:
+          allOf: 
+            - $ref: "./base.yml#/components/schemas/baseDataResponse"
+            - required: 
+              - code
+            - type: object
+              properties: 
+                endToEndId:
+                  type: string
+                  maxLength: 35
+                  description: Transaction identification which was enquired
+                dateTime:
+                  type: string
+                  format: "yyyy-MM-dd'T'HH:mi:ssZ"
+                  description: Transaction date time occured
+                payerName:
+                  type: string
+                  maxLength: 100
+                  description: The name of payer of transaction
+                settlementAmount:
+                  type: number
+                  description: Settlement amount
+                settlementAmountCurrency:
+                  type: string
+                  maxLength: 3
+                  description: Settlement currency. Default <b>MYR</b>
+                settlementDate:
+                  type: string
+                  format: "yyyy-MM-dd"
+                  description: Settlement date
+
+    customerCategory:
+      type: string
+      enum: ["RET", "COR", "OTH"]
+      description: "Customer Category \n\n
+        Supported values are: \n\n
+        - RET – Retail Customer \n\n
+        - COR – Corporate Customer \n\n
+        - OTH – Others  \n\n
+        
+        RFI must return the category of the customer, either as retail or corporate"
+
+    instructionForActorAccount:
+      type: object
+      properties: 
+        residentStatus:
+          type: string
+          enum: ["1", "2", "3"]
+          description: "Resident Status \n\n
+            Supported values are: \n\n
+            - 1 – Resident \n\n
+            - 2 – Non-Resident\n\n
+            - 3 – Unavailable"
+        productType:
+          type: string
+          enum: ["I", "C"]
+          description: "Product Type\n\n
+            Supported values are: \n\n
+            - I – Islamic \n\n
+            - C – Conventional"
+        shariaCompliant:
+          type: string
+          enum: ["Y", "N", "U"]
+          description: "Sharia Compliant\n\n
+            Supported values are: \n\n
+            - Y – Yes \n\n
+            - N – No \n\n
+            - U – Unknown"
+        details:
+          type: string
+          enum: ["1", "2", "3", "4", "5"]
+          description: "Details\n\n
+            Account holder type: \n\n
+            - 1 – Single \n\n
+            - 2 – Joint \n\n
+            - 3 – Government \n\n
+            - 4 – Corporate \n\n
+            - 5 – NGO"
+
+    interbankSettlementDate:
+      type: string
+      format: "YYYY-MM-DD"
+      description: "Interbank Settlement Date \n\n
+        *Mandatory for Credit Transfer*"
+
+    recipientReference:
+      type: string
+      maxLength: 140
+      description: "Recipient Reference \n\n
+        - For **Credit Transfer**, propagate with customer input \n\n
+        - For **Credit Transfer Reversal**, default to **REVERSE CT**"
+
+    paymentDescription:
+      type: string
+      maxLength: 140
+      description: "Payment Description"
+
+    secondaryValidationIndicator:
+      type: string
+      enum: ["Y", "N"]
+      
+    settlementCycleNumber:
+      type: string
+      maxLength: 100
+      description: "Settlement Cycle Number \n\n
+        Settlement cycle on when the payment will be settled e.g. 001, 002 or etc. This will be set by RPP"
+        
+  securitySchemes:
+    OAuth2.0:
+      type: oauth2
+      description: |
+        This API supports OAuth2.0 for authenticating all API requests. For more information, please read our <a href="https://docs.developer.paynet.my/api-oauth#/"><b>OAuth2.0 API</b></a> specification.
+      flows:
+        clientCredentials :   # <---- OAuth flow(authorizationCode, implicit, password or clientCredentials)
+          tokenUrl: https://sandbox.api.paynet.my/auth/token
+          scopes:
+            rpp:bank: Banks Access Rights
+      x-amf-describedBy:
+        headers:
+          authorization:
+            description: |
+              Used to send a valid OAuth 2 access token. Do not use with the "access_token" query
+              string parameter.
+            type: string
+        queryParameters:
+          access_token:
+            description: |
+              Used to send a valid OAuth 2 access token. Do not use together with the "Authorization"
+              header
+            type: string
+        responses:
+          400:
+            description: Invalid token.
+          401:
+            description: |
+              Unauthorized or Connection error when connecting to the authorization server.
+          403:
+            description: |
+              Forbidden, invalid client application credentials.
+          500:
+            description: |
+              Bad response from authorization server, or WSDL SOAP Fault error.
+      x-amf-settings:
+        authorizationGrants:
+        - client_credentials

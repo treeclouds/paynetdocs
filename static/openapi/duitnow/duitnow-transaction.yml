@@ -1,0 +1,360 @@
+openapi: 3.1.0
+info:
+  title: DuitNow Transaction
+  version: v1
+servers:
+- url: https://mock.developer.paynet.my/transaction/v1
+paths: 
+  /enquiry/{enquiryType}/{id}:
+    get:
+      summary: Transaction Enquiry
+      operationId: duitnow_transaction_enquiry
+      parameters: 
+        - name: enquiryType
+          in: path
+          description: "Supported values are: \n\n
+            - endToEndId  \n\n
+            - paymentId \n\n
+            - id \n\n
+            Default value is **id**"
+          required: true
+          schema: 
+            type: string
+            enum: ["endToEndId", "paymentId", "id"]
+          example: endToEndId
+        - name: id
+          in: path
+          description: Transaction identification to be enquired
+          required: true
+          schema: 
+            type: string
+            maxLength: 35
+          example: 20230126DMMMYKL4030OQR07661308
+        - $ref: "./base.yml#/components/parameters/Authorization"
+        - $ref: "./base.yml#/components/parameters/X-Signature-Key"
+        - name: X-Signature
+          in: header
+          description: "Message signature signed using the certificate defined in **X-Signature-Key**. \n\n
+            The payload for signature can be refered to specific transaction below: \n\n
+            - <a href=\"https://docs.developer.paynet.my/docs/duitnow/signature2/index.html#status-inquiry\" target=\"_blank\">DuitNow Transaction Enquiry</a> \n\n
+            - <a href=\"https://docs.developer.paynet.my/docs/duitnow/signature2/index.html#consent-status-inquiry\" target=\"_blank\">Consent Transaction Enquiry</a> \n\n
+            - <a href=\"https://docs.developer.paynet.my/docs/duitnowqr/authentication/index.html#camt00500108\" target=\"_blank\">DuitNow QR Transaction Enquiry</a> \n\n"
+          required: true
+          schema:
+            maxLength: 1024
+            type: string  
+        - name: X-Business-Message-Id
+          in: header
+          description: "Unique business message identification. \n\n
+          Format YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS where: \n\n
+          - YYYYMMDD – Current Date \n\n
+          - BBBBBBBB – BIC Code \n\n
+          - XXX – Transaction Type. Set to <b>630</b> \n\n
+          - O – Originator. Set to <b>O</b> \n\n
+          - CC – Channel Code \n\n
+          - SSSSSSSS – Sequence Number \n\n
+
+          Channel code can be any of the following:\n\n
+          - RB – Retail Banking \n\n
+          - BA – Mobile Application \n\n
+          - BW – Web Browser"
+          required: true
+          schema: 
+            type: string
+            maxLength: 35
+            format: YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS
+          example: 20230126DMMMYKL4031OQR91201026
+      responses: 
+        200:
+          description: ""
+          headers: 
+            X-Signature-Key:
+              required: true
+              $ref: "./base.yml#/components/headers/X-Signature-Key"
+            X-Signature:
+              required: true
+              $ref: "./base.yml#/components/headers/X-Signature"
+            X-Business-Message-Id:
+              required: true
+              $ref: "./base.yml#/components/headers/X-Business-Message-Id"
+          content: 
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/enquiryResponse"
+              example: 
+                data: 
+                  businessMessageId: "20230126RPPEMYKL630HQR73101320"
+                  code: "ACSP"
+                  reason: "U000"
+                  endToEndId: "20230126DMMMYKL4030OQR07661308"
+                  dateTime: "2023-01-26T01:13:10Z"
+                  payerName: "JEAN CHEONG"
+                  settlementAmount: 10
+                  settlementAmountCurrency: "MYR"
+                  settlementDate: "2023-01-26"
+        400:
+          description: ""
+          content: 
+            application/json:
+              schema: 
+                $ref: './base.yml#/components/schemas/errorResponse'
+              example: 
+                data:
+                  businessMessageId: "20230126DMMMYKL4031OQR91201026"
+                  code: "API.004"
+                  reason: "X-Business-Message-Id - Invalid format"
+        401:
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "./base.yml#/components/schemas/unauthorizedResponse"
+              example: 
+                error: "Access token was not provided"
+        500:
+          description: ""
+          content: 
+            application/json:
+              schema: 
+                $ref: './base.yml#/components/schemas/errorResponse'
+              example: 
+                data:
+                  businessMessageId: "20230126M0001597865OBW05822030"
+                  code: "API.500"
+                  reason: "Internal Server Error"
+      security:
+        - OAuth 2.0: []
+      x-codegen-request-body-name: generated
+
+  /cancel/{enquiryType}/{id}:
+    put:
+      summary: Transaction Cancellation
+      operationId: duitnow_transaction_cancel
+      parameters: 
+        - name: enquiryType
+          in: path
+          description: "Supported values are: \n\n
+            - endToEndId  \n\n
+            - paymentId \n\n
+            - id \n\n
+            Default value is **id**"
+          required: true
+          schema: 
+            type: string
+            enum: ["endToEndId", "paymentId", "id"]
+          example: "endToEndId"
+        - name: id
+          in: path
+          description: Transaction identification to be cancelled
+          required: true
+          schema: 
+            type: string
+            maxLength: 35
+          example: "20230126M0001597861OBW06202029"
+        - $ref: "./base.yml#/components/parameters/Authorization"
+        - $ref: "./base.yml#/components/parameters/X-Signature-Key"
+        - name: X-Signature
+          in: header
+          description: "Message signature signed using the certificate defined in **X-Signature-Key**. \n\n
+            The payload for signature can be refered to specific transaction below: \n\n
+            - <a href=\"https://docs.developer.paynet.my/docs/duitnow/signature2/index.html#cancel-payment\" target=\"_blank\">DuitNow Payment Cancellation</a> \n\n
+            - <a href=\"https://docs.developer.paynet.my/docs/duitnow/signature2/index.html#cancel-consent\" target=\"_blank\">Consent Cancellation</a>"
+          required: true
+          schema:
+            maxLength: 1024
+            type: string 
+        - name: X-Business-Message-Id
+          in: header
+          description: "Unique business message identification. \n\n
+          Format YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS where: \n\n
+          - YYYYMMDD – Current Date \n\n
+          - BBBBBBBB – BIC Code \n\n
+          - XXX – Transaction Type. Set to <b>865</b> \n\n
+          - O – Originator. Set to <b>O</b> \n\n
+          - CC – Channel Code \n\n
+          - SSSSSSSS – Sequence Number \n\n
+
+          Channel code can be any of the following:\n\n
+          - RB – Retail Banking \n\n
+          - BA – Mobile Application \n\n
+          - BW – Web Browser"
+          required: true
+          schema: 
+            type: string
+            maxLength: 35
+            format: YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS
+          example: "20230126M0001597865OBW05822030"
+            
+      requestBody: 
+        content: 
+          application/json:
+            schema: 
+              $ref: "#/components/schemas/cancelRequest"
+            example: 
+              data:
+                productId: "P00001369"
+         
+      responses: 
+        200:
+          description: ""
+          headers: 
+            X-Signature-Key:
+              required: true
+              $ref: "./base.yml#/components/headers/X-Signature-Key"
+            X-Signature:
+              required: true
+              $ref: "./base.yml#/components/headers/X-Signature"
+            X-Business-Message-Id:
+              required: true
+              $ref: "./base.yml#/components/headers/X-Business-Message-Id"
+          content: 
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/cancelResponse"
+              example:
+                data: 
+                  businessMessageId: "20230126RPPEMYKL865HBW66617411"
+                  code: "ACSP"
+                  reason: "U000"
+                  endToEndId: "20230126M0001597861OBW06202029"
+        400:
+          description: ""
+          content: 
+            application/json:
+              schema: 
+                $ref: "./base.yml#/components/schemas/errorResponse"
+              example: 
+                data:
+                  businessMessageId: "20230126M0001597865OBW05822030"
+                  code: "API.004"
+                  reason: "X-Business-Message-Id - Invalid format"
+        401:
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "./base.yml#/components/schemas/unauthorizedResponse"
+              example: 
+                error: "Access token was not provided"
+        500:
+          description: ""
+          content: 
+            application/json:
+              schema: 
+                $ref: './base.yml#/components/schemas/errorResponse'
+              example: 
+                data:
+                  businessMessageId: "20230126M0001597865OBW05822030"
+                  code: "API.500"
+                  reason: "Internal Server Error"
+      security:
+        - OAuth 2.0: []
+      x-codegen-request-body-name: generated
+
+components: 
+  schemas: 
+    cancelRequest:
+      type: object
+      required: 
+        - data
+      properties: 
+        data:
+          type: object
+          properties: 
+            productId:
+              type: string
+              maxLength: 35
+              description: Product identification is required for merchant to cancel transaction
+
+    cancelResponse:
+      type: object
+      required: 
+        - data
+      properties: 
+        data:
+          allOf: 
+            - $ref: "./base.yml#/components/schemas/baseDataResponse"
+            - required: 
+              - code
+            - type: object
+              properties:
+                endToEndId:
+                  type: string
+                  maxLength: 35
+                  description: The transaction identification 
+
+    enquiryResponse:
+      type: object
+      required: 
+        - data
+      properties: 
+        data:
+          allOf: 
+            - $ref: "./base.yml#/components/schemas/baseDataResponse"
+            - required: 
+              - code
+            - type: object
+              properties: 
+                endToEndId:
+                  type: string
+                  maxLength: 35
+                  description: Transaction identification which was enquired
+                dateTime:
+                  type: string
+                  format: "yyyy-MM-dd'T'HH:mi:ssZ"
+                  description: Transaction date time occured
+                payerName:
+                  type: string
+                  maxLength: 100
+                  description: The name of payer of transaction
+                settlementAmount:
+                  type: number
+                  description: Settlement amount
+                settlementAmountCurrency:
+                  type: string
+                  maxLength: 3
+                  description: Settlement currency. Default <b>MYR</b>
+                settlementDate:
+                  type: string
+                  format: "yyyy-MM-dd"
+                  description: Settlement date
+
+  securitySchemes:
+    OAuth 2.0:
+      type: oauth2
+      description: |
+        This API supports OAuth 2.0 for authenticating all API requests. For more information, please read our <a href="https://docs.developer.paynet.my/api-oauth#/"><b>OAuth 2.0 API</b></a> specification.
+      flows:
+        clientCredentials :   # <---- OAuth flow(authorizationCode, implicit, password or clientCredentials)
+          tokenUrl: https://sandbox.api.paynet.my/auth/token
+          scopes:
+            rpp:merchant: Merchants Access Rights
+            rpp:bank: Banks Access Rights
+      x-amf-describedBy:
+        headers:
+          authorization:
+            description: |
+              Used to send a valid OAuth 2 access token. Do not use with the "access_token" query
+              string parameter.
+            type: string
+        queryParameters:
+          access_token:
+            description: |
+              Used to send a valid OAuth 2 access token. Do not use together with the "Authorization"
+              header
+            type: string
+        responses:
+          400:
+            description: Invalid token.
+          401:
+            description: |
+              Unauthorized or Connection error when connecting to the authorization server.
+          403:
+            description: |
+              Forbidden, invalid client application credentials.
+          500:
+            description: |
+              Bad response from authorization server, or WSDL SOAP Fault error.
+      x-amf-settings:
+        authorizationGrants:
+        - client_credentials

@@ -1,0 +1,1436 @@
+openapi: 3.1.0
+info:
+  title: Bank Webview Services
+  description: |
+    FPX facilitates Buyers to securely perform real-time payments from any FPX Buyer Bank's internet banking to FPX Acquiring Bank.
+
+    ### Who Should Use
+    This API should only be used by banks.
+  version: v1
+servers:
+- url: https://sandbox.api.paynet.my/fpx/banks/v1
+paths:
+  /downtime: {}
+  /downtime/banks/{bankId}: {}
+  /downtime/banks/{bankId}/schedulers/{schedulerId}:
+    delete:
+      description: This API is used to perform cancellation on an existing downtime
+        request.
+      operationId: Downtime Cancel
+      parameters:
+      - name: bankId
+        in: path
+        description: Bank identification code of the Participant
+        required: true
+        schema:
+          type: string
+      - name: schedulerId
+        in: path
+        description: Unique scheduler identification of the requested downtime
+        required: true
+        schema:
+          type: string
+      - name: Authorization
+        in: header
+        description: Bearer &lt;access_token&gt;
+        required: true
+        schema:
+          type: string
+      - name: X-Signature
+        in: header
+        description: Message signature (bankId + schedulerId)
+        required: true
+        schema:
+          maxLength: 1024
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/type'
+        required: false
+      responses:
+        200:
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/type_1'
+          x-amf-mediaType: application/json
+        400:
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error400'
+          x-amf-mediaType: application/json
+        401:
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: object
+          x-amf-mediaType: application/json
+        429:
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: object
+          x-amf-mediaType: application/json
+        500:
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: object
+          x-amf-mediaType: application/json
+      security:
+      - OAuth 2.0: []
+      x-codegen-request-body-name: generated
+  /downtime/banks/{bankId}/model: {}
+  /downtime/banks/{bankId}/model/{model}:
+    get:
+      description: This API is used to retrieve list of scheduled downtime request.
+      operationId: Downtime Inquiry
+      parameters:
+      - name: messageId
+        in: query
+        description: |
+          Unique message identification. Format YYYYMMDDBBBBBBBBTTTCCCSSSSSSSS where:
+          <li>YYYYMMDD – Current Date</li>
+          <li>BBBBBBBB – Bank Code</li>
+          <li>TTT – Transaction Type. Default to <b>316</b></li>
+          <li>CCC – Channel Code. Default to <b>FPX</b></li>
+          <li>SSSSSSSS – Sequence Number</li>
+        required: true
+        schema:
+          maxLength: 35
+          pattern: ^[a-zA-Z0-9]*$
+          type: string
+      - name: page
+        in: query
+        description: Page number to view the list of transactions. Default is 1
+        schema:
+          type: integer
+      - name: size
+        in: query
+        description: Total number of records returned in each page. Default is 25
+          and maximum is 1000
+        schema:
+          type: integer
+      - name: bankId
+        in: path
+        description: Bank identification code of the Participant
+        required: true
+        schema:
+          type: string
+      - name: model
+        in: path
+        description: |
+          Business model
+          <li>B2C</li>
+          <li>B2B1</li>
+          <li>B2B2</li>
+        required: true
+        schema:
+          type: string
+      - name: Authorization
+        in: header
+        description: Bearer &lt;access_token&gt;
+        required: true
+        schema:
+          type: string
+      - name: X-Signature
+        in: header
+        description: Message signature (bankId + model)
+        required: true
+        schema:
+          maxLength: 1024
+          type: string
+      responses:
+        200:
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/type_2'
+          x-amf-mediaType: application/json
+        400:
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error400'
+          x-amf-mediaType: application/json
+        401:
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: object
+          x-amf-mediaType: application/json
+        429:
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: object
+          x-amf-mediaType: application/json
+        500:
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: object
+          x-amf-mediaType: application/json
+      security:
+      - OAuth 2.0: []
+    post:
+      description: This API is used to schedule new downtime request.
+      operationId: Downtime Submit
+      parameters:
+      - name: bankId
+        in: path
+        description: Bank identification code of the Participant
+        required: true
+        schema:
+          type: string
+      - name: model
+        in: path
+        description: |
+          Business model
+          <li>B2C</li>
+          <li>B2B1</li>
+          <li>B2B2</li>
+        required: true
+        schema:
+          type: string
+      - name: Authorization
+        in: header
+        description: Bearer &lt;access_token&gt;
+        required: true
+        schema:
+          type: string
+      - name: X-Signature
+        in: header
+        description: Message signature (bankId + model + periodType + startDate +
+          startTime + endDate + endTime)
+        required: true
+        schema:
+          maxLength: 1024
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/type_3'
+        required: false
+      responses:
+        200:
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/type_4'
+          x-amf-mediaType: application/json
+        400:
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error400'
+          x-amf-mediaType: application/json
+        401:
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: object
+          x-amf-mediaType: application/json
+        429:
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: object
+          x-amf-mediaType: application/json
+        500:
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: object
+          x-amf-mediaType: application/json
+      security:
+      - OAuth 2.0: []
+      x-codegen-request-body-name: generated
+  
+  /pending/banks/{bankId}: {}
+  /pending/banks/{bankId}/ccl:
+    get:
+      description: This API is used to retrieve list of Credit Confirmation Log (CCL)
+        transactions.
+      operationId: CCL Inquiry
+      parameters:
+      - name: messageId
+        in: query
+        description: |
+          Unique message identification. Format YYYYMMDDBBBBBBBBTTTCCCSSSSSSSS where:
+          <li>YYYYMMDD – Current Date</li>
+          <li>BBBBBBBB – Bank Code</li>
+          <li>TTT – Transaction Type. Default to <b>313</b></li>
+          <li>CCC – Channel Code. Default to <b>FPX</b></li>
+          <li>SSSSSSSS – Sequence Number</li>
+        required: true
+        schema:
+          maxLength: 35
+          pattern: ^[a-zA-Z0-9]*$
+          type: string
+      - name: page
+        in: query
+        description: Page number to view the list of transactions. Default is 1
+        schema:
+          type: integer
+      - name: size
+        in: query
+        description: Total number of records returned in each page. Default is 25
+          and maximum is 1000
+        schema:
+          type: integer
+      - name: bankId
+        in: path
+        description: Bank identification code of the Participant
+        required: true
+        schema:
+          type: string
+      - name: Authorization
+        in: header
+        description: Bearer &lt;access_token&gt;
+        required: true
+        schema:
+          type: string
+      - name: X-Signature
+        in: header
+        description: Message signature (bankId)
+        required: true
+        schema:
+          maxLength: 1024
+          type: string
+      responses:
+        200:
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/type_6'
+          x-amf-mediaType: application/json
+        400:
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error400'
+          x-amf-mediaType: application/json
+        401:
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: object
+          x-amf-mediaType: application/json
+        429:
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: object
+          x-amf-mediaType: application/json
+        500:
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: object
+          x-amf-mediaType: application/json
+      security:
+      - OAuth 2.0: []
+  /pending/banks/{bankId}/ccl/model/{model}:
+    get:
+      description: This API is used to retrieve list of Credit Confirmation Log (CCL)
+        transactions for the specific business model.
+      operationId: CCL Inquiry By Model
+      parameters:
+      - name: messageId
+        in: query
+        description: |
+          Unique message identification. Format YYYYMMDDBBBBBBBBTTTCCCSSSSSSSS where:
+          <li>YYYYMMDD – Current Date</li>
+          <li>BBBBBBBB – Bank Code</li>
+          <li>TTT – Transaction Type. Default to <b>313</b></li>
+          <li>CCC – Channel Code. Default to <b>FPX</b></li>
+          <li>SSSSSSSS – Sequence Number</li>
+        required: true
+        schema:
+          maxLength: 35
+          pattern: ^[a-zA-Z0-9]*$
+          type: string
+      - name: page
+        in: query
+        description: Page number to view the list of transactions. Default is 1
+        schema:
+          type: integer
+      - name: size
+        in: query
+        description: Total number of records returned in each page. Default is 25
+          and maximum is 1000
+        schema:
+          type: integer
+      - name: bankId
+        in: path
+        description: Bank identification code of the Participant
+        required: true
+        schema:
+          type: string
+      - name: model
+        in: path
+        description: |
+          Business model
+          <li>B2C</li>
+          <li>B2B1</li>
+          <li>B2B2</li>
+        required: true
+        schema:
+          type: string
+      - name: Authorization
+        in: header
+        description: Bearer &lt;access_token&gt;
+        required: true
+        schema:
+          type: string
+      - name: X-Signature
+        in: header
+        description: Message signature (bankId)
+        required: true
+        schema:
+          maxLength: 1024
+          type: string
+      responses:
+        200:
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/type_6'
+          x-amf-mediaType: application/json
+        400:
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error400'
+          x-amf-mediaType: application/json
+        401:
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: object
+          x-amf-mediaType: application/json
+        429:
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: object
+          x-amf-mediaType: application/json
+        500:
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: object
+          x-amf-mediaType: application/json
+      security:
+      - OAuth 2.0: []
+  /pending/banks/{bankId}/dcl:
+    get:
+      description: This API is used to retrieve list of Debit Confirmation Log (DCL)
+        transactions.
+      operationId: DCL Inquiry
+      parameters:
+      - name: messageId
+        in: query
+        description: |
+          Unique message identification. Format YYYYMMDDBBBBBBBBTTTCCCSSSSSSSS where:
+          <li>YYYYMMDD – Current Date</li>
+          <li>BBBBBBBB – Bank Code</li>
+          <li>TTT – Transaction Type. Default to <b>311</b></li>
+          <li>CCC – Channel Code. Default to <b>FPX</b></li>
+          <li>SSSSSSSS – Sequence Number</li>
+        required: true
+        schema:
+          maxLength: 35
+          pattern: ^[a-zA-Z0-9]*$
+          type: string
+      - name: page
+        in: query
+        description: Page number to view the list of transactions. Default is 1
+        schema:
+          type: integer
+      - name: size
+        in: query
+        description: Total number of records returned in each page. Default is 25
+          and maximum is 1000
+        schema:
+          type: integer
+      - name: bankId
+        in: path
+        description: Bank identification code of the Participant
+        required: true
+        schema:
+          type: string
+      - name: Authorization
+        in: header
+        description: Bearer &lt;access_token&gt;
+        required: true
+        schema:
+          type: string
+      - name: X-Signature
+        in: header
+        description: Message signature (bankId)
+        required: true
+        schema:
+          maxLength: 1024
+          type: string
+      responses:
+        200:
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/type_6'
+          x-amf-mediaType: application/json
+        400:
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error400'
+          x-amf-mediaType: application/json
+        401:
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: object
+          x-amf-mediaType: application/json
+        429:
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: object
+          x-amf-mediaType: application/json
+        500:
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: object
+          x-amf-mediaType: application/json
+      security:
+      - OAuth 2.0: []
+  /pending/banks/{bankId}/dcl/model/{model}:
+    get:
+      description: This API is used to retrieve list of Debit Confirmation Log (DCL)
+        transactions based on specific business model.
+      operationId: DCL Inquiry By Model
+      parameters:
+      - name: messageId
+        in: query
+        description: |
+          Unique message identification. Format YYYYMMDDBBBBBBBBTTTCCCSSSSSSSS where:
+          <li>YYYYMMDD – Current Date</li>
+          <li>BBBBBBBB – Bank Code</li>
+          <li>TTT – Transaction Type. Default to <b>311</b></li>
+          <li>CCC – Channel Code. Default to <b>FPX</b></li>
+          <li>SSSSSSSS – Sequence Number</li>
+        required: true
+        schema:
+          maxLength: 35
+          pattern: ^[a-zA-Z0-9]*$
+          type: string
+      - name: page
+        in: query
+        description: Page number to view the list of transactions. Default is 1
+        schema:
+          type: integer
+      - name: size
+        in: query
+        description: Total number of records returned in each page. Default is 25
+          and maximum is 1000
+        schema:
+          type: integer
+      - name: bankId
+        in: path
+        description: Bank identification code of the Participant
+        required: true
+        schema:
+          type: string
+      - name: model
+        in: path
+        description: |
+          Business model
+          <li>B2C</li>
+          <li>B2B1</li>
+          <li>B2B2</li>
+        required: true
+        schema:
+          type: string
+      - name: Authorization
+        in: header
+        description: Bearer &lt;access_token&gt;
+        required: true
+        schema:
+          type: string
+      - name: X-Signature
+        in: header
+        description: Message signature (bankId)
+        required: true
+        schema:
+          maxLength: 1024
+          type: string
+      responses:
+        200:
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/type_6'
+          x-amf-mediaType: application/json
+        400:
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error400'
+          x-amf-mediaType: application/json
+        401:
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: object
+          x-amf-mediaType: application/json
+        429:
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: object
+          x-amf-mediaType: application/json
+        500:
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: object
+          x-amf-mediaType: application/json
+      security:
+      - OAuth 2.0: []
+  /pending/banks/{bankId}/transactions/{transactionId}: {}
+  /pending/banks/{bankId}/transactions/{transactionId}/actions/{action}: {}
+  /pending/banks/{bankId}/transactions/{transactionId}/actions/{action}/dcl:
+    post:
+      description: This API is used to authorize a pending DCL transaction.
+      operationId: DCL Authorize
+      parameters:
+      - name: bankId
+        in: path
+        description: Bank identification code of the Participant
+        required: true
+        schema:
+          type: string
+      - name: transactionId
+        in: path
+        description: Unique transaction identification generated by FPX for each payment
+          request received from Merchant
+        required: true
+        schema:
+          type: string
+      - name: action
+        in: path
+        description: |
+          Action code. Different actions could be initiated according to the transaction status
+          <br /><br /><b>Debit Confirmation Log</b>
+          <br />Timeout Transaction (OF) for B2C, B2B1, and B2B2
+          <li>confirm – Confirming the status</li>
+          <li>resend – Resend Debit Reversal (DR)</li>
+          <br />Pending Transaction for B2B1 and B2B2
+          <li>success – Change status to Successful</li>
+          <li>failed – Change status to Unsuccessful</li>
+          <li>pending – Change status to Pending Authorization</li>
+          <br /><b>Credit Confirmation Log</b>
+          <br />Timeout Transaction (OF) for B2C, B2B1, and B2B2
+          <li>confirm – Manual Credit Confirmation</li>
+          <li>resend – Resend Credit Message (RR)</li>
+        required: true
+        schema:
+          type: string
+      - name: Authorization
+        in: header
+        description: Bearer &lt;access_token&gt;
+        required: true
+        schema:
+          type: string
+      - name: X-Signature
+        in: header
+        description: Message signature (bankId + transactionId + action)
+        required: true
+        schema:
+          maxLength: 1024
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/type_7'
+        required: false
+      responses:
+        200:
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/type_8'
+          x-amf-mediaType: application/json
+        400:
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error400'
+          x-amf-mediaType: application/json
+        401:
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: object
+          x-amf-mediaType: application/json
+        429:
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: object
+          x-amf-mediaType: application/json
+        500:
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: object
+          x-amf-mediaType: application/json
+      security:
+      - OAuth 2.0: []
+      x-codegen-request-body-name: generated
+  /pending/banks/{bankId}/transactions/{transactionId}/actions/{action}/ccl:
+    post:
+      description: This API is used to authorize a pending CCL transaction.
+      operationId: CCL Authorize
+      parameters:
+      - name: bankId
+        in: path
+        description: Bank identification code of the Participant
+        required: true
+        schema:
+          type: string
+      - name: transactionId
+        in: path
+        description: Unique transaction identification generated by FPX for each payment
+          request received from Merchant
+        required: true
+        schema:
+          type: string
+      - name: action
+        in: path
+        description: |
+          Action code. Different actions could be initiated according to the transaction status
+          <br /><br /><b>Debit Confirmation Log</b>
+          <br />Timeout Transaction (OF) for B2C, B2B1, and B2B2
+          <li>confirm – Confirming the status</li>
+          <li>resend – Resend Debit Reversal (DR)</li>
+          <br />Pending Transaction for B2B1 and B2B2
+          <li>success – Change status to Successful</li>
+          <li>failed – Change status to Unsuccessful</li>
+          <li>pending – Change status to Pending Authorization</li>
+          <br /><b>Credit Confirmation Log</b>
+          <br />Timeout Transaction (OF) for B2C, B2B1, and B2B2
+          <li>confirm – Manual Credit Confirmation</li>
+          <li>resend – Resend Credit Message (RR)</li>
+        required: true
+        schema:
+          type: string
+      - name: Authorization
+        in: header
+        description: Bearer &lt;access_token&gt;
+        required: true
+        schema:
+          type: string
+      - name: X-Signature
+        in: header
+        description: Message signature (bankId + transactionId + action)
+        required: true
+        schema:
+          maxLength: 1024
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/type_9'
+        required: false
+      responses:
+        200:
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/type_8'
+          x-amf-mediaType: application/json
+        400:
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error400'
+          x-amf-mediaType: application/json
+        401:
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: object
+          x-amf-mediaType: application/json
+        429:
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: object
+          x-amf-mediaType: application/json
+        500:
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: object
+          x-amf-mediaType: application/json
+      security:
+      - OAuth 2.0: []
+      x-codegen-request-body-name: generated
+      
+  /notifications/downtime:
+    post:
+      description: Participant is required to publish a callback endpoint to receive
+        notification from FPX on new maintenance request.
+      operationId: Downtime Notification
+      tags:
+        - Webhook
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/type_5'
+        required: false
+      responses:
+        200:
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: object
+          x-amf-mediaType: application/json
+      x-outbound: true
+      x-outboundUrl: https://<domain>
+      x-codegen-request-body-name: generated      
+
+webhooks:
+  Downtime Notification:
+    post:
+      description: Participant is required to publish a callback endpoint to receive
+        notification from FPX on new maintenance request.
+      operationId: Downtime Notification
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/type_5'
+        required: false
+      responses:
+        200:
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: object
+          x-amf-mediaType: application/json
+      x-outbound: true
+      x-outboundUrl: https://<domain>
+      x-codegen-request-body-name: generated
+
+components:
+  schemas:
+    type:
+      required:
+      - messageId
+      type: object
+      properties:
+        messageId:
+          maxLength: 35
+          type: string
+          description: |
+            Unique message identification. Format YYYYMMDDBBBBBBBBTTTCCCSSSSSSSS where:
+            <li>YYYYMMDD – Current Date</li>
+            <li>BBBBBBBB – Bank Code</li>
+            <li>TTT – Transaction Type. Default to <b>317</b></li>
+            <li>CCC – Channel Code. Default to <b>FPX</b></li>
+            <li>SSSSSSSS – Sequence Number</li>
+        reason:
+          maxLength: 250
+          type: string
+          description: Cancellation reason
+      example:
+        messageId: 20211023APGWMYKL317FPX00000005
+        reason: Request is rescheduled
+    type_1:
+      required:
+      - code
+      - messageId
+      - schedulerId
+      - status
+      type: object
+      properties:
+        messageId:
+          maxLength: 35
+          type: string
+          description: |
+            Unique message identification. Format YYYYMMDDBBBBBBBBTTTCCCSSSSSSSS where:
+            <li>YYYYMMDD – Current Date</li>
+            <li>BBBBBBBB – Bank Code</li>
+            <li>TTT – Transaction Type. Default to <b>317</b></li>
+            <li>CCC – Channel Code. Default to <b>FPX</b></li>
+            <li>SSSSSSSS – Sequence Number</li>
+        code:
+          maxLength: 7
+          type: string
+          description: Status code
+        description:
+          maxLength: 140
+          type: string
+          description: Reason code description
+        schedulerId:
+          type: string
+          description: Scheduler identification that is being cancelled
+        status:
+          type: string
+          description: Status of the submitted request
+      example:
+        messageId: 20211023APGWMYKL317FPX00000005
+        code: FPX-201
+        description: Success / Transaction Accepted
+        schedulerId: "00000216"
+        status: cancelled
+    error400:
+      required:
+      - code
+      - messageId
+      type: object
+      properties:
+        messageId:
+          maxLength: 35
+          type: string
+          description: |
+            Unique message identification. Format YYYYMMDDBBBBBBBBTTTCCCSSSSSSSS where:
+            <li>YYYYMMDD – Current Date</li>
+            <li>BBBBBBBB – Bank Code</li>
+            <li>TTT – Transaction Type</li>
+            <li>CCC – Channel Code. Default to <b>FPX</b></li>
+            <li>SSSSSSSS – Sequence Number</li>
+        code:
+          maxLength: 35
+          type: string
+          description: Reason code
+        description:
+          maxLength: 140
+          type: string
+          description: Reason code description
+      example:
+        messageId: 20211023APGWMYKL317FPX00000005
+        code: API.002
+        description: messageId - invalid format
+    type_2:
+      required:
+      - code
+      - currentPage
+      - messageId
+      - schedules
+      - totalPages
+      type: object
+      properties:
+        messageId:
+          maxLength: 35
+          type: string
+          description: |
+            Unique message identification. Format YYYYMMDDBBBBBBBBTTTCCCSSSSSSSS where:
+            <li>YYYYMMDD – Current Date</li>
+            <li>BBBBBBBB – Bank Code</li>
+            <li>TTT – Transaction Type. Default to <b>316</b></li>
+            <li>CCC – Channel Code. Default to <b>FPX</b></li>
+            <li>SSSSSSSS – Sequence Number</li>
+        code:
+          maxLength: 7
+          type: string
+          description: Status code
+        description:
+          maxLength: 140
+          type: string
+          description: Reason code description
+        schedules:
+          type: array
+          items:
+            required:
+            - endDate
+            - endTime
+            - model
+            - periodType
+            - schedulerId
+            - startDate
+            - startTime
+            type: object
+            properties:
+              schedulerId:
+                type: string
+                description: Unique identification number assigned to the downtime
+                  request
+              model:
+                type: string
+                description: Business model
+              periodType:
+                type: string
+                description: |
+                  Frequency type
+                  <li>ONCE – One-time</li>
+              startDate:
+                type: string
+                description: Downtime start date in DD/MM/YYYY format
+              endDate:
+                type: string
+                description: Downtime end date in DD/MM/YYYY format
+              startTime:
+                type: string
+                description: Downtime start time in 24-hour format until minute (HH:mi)
+              endTime:
+                type: string
+                description: Downtime end time in 24-hour format until minute (HH:mi)
+        currentPage:
+          type: string
+          description: Current page that is being returned
+        totalPages:
+          type: string
+          description: Total number of pages expected to be returned
+      example:
+        messageId: 20211202TEST0021316FPX00000005
+        code: API.000
+        description: Success / Transaction Accepted
+        schedules:
+        - schedulerId: "00000244"
+          model: B2C
+          periodType: Once
+          startDate: 30/07/2021
+          endDate: 30/07/2021
+          startTime: 16:50
+          endTime: 17:00
+        currentPage: "1"
+        totalPages: "1"
+    type_3:
+      required:
+      - endDate
+      - endTime
+      - messageId
+      - periodType
+      - startDate
+      - startTime
+      type: object
+      properties:
+        messageId:
+          maxLength: 35
+          type: string
+          description: |
+            Unique message identification. Format YYYYMMDDBBBBBBBBTTTCCCSSSSSSSS where:
+            <li>YYYYMMDD – Current Date</li>
+            <li>BBBBBBBB – Bank Code</li>
+            <li>TTT – Transaction Type. Default to <b>315</b></li>
+            <li>CCC – Channel Code. Default to <b>FPX</b></li>
+            <li>SSSSSSSS – Sequence Number</li>
+        periodType:
+          type: string
+          description: |
+            Frequency type
+            <li>ONCE – One-time</li>
+        startDate:
+          type: string
+          description: Downtime start date in DD/MM/YYYY format
+        endDate:
+          type: string
+          description: Downtime end date in DD/MM/YYYY format
+        startTime:
+          type: string
+          description: Downtime start time in 24-hour format until minute (HH:mi)
+        endTime:
+          type: string
+          description: Downtime end time in 24-hour format until minute (HH:mi)
+      example:
+        messageId: 20211023APGWMYKL315FPX00000005
+        periodType: ONCE
+        startDate: 31/07/2021
+        endDate: 31/07/2021
+        startTime: 09:00
+        endTime: 09:30
+    type_4:
+      required:
+      - code
+      - messageId
+      - schedulerId
+      - status
+      type: object
+      properties:
+        messageId:
+          maxLength: 35
+          type: string
+          description: |
+            Unique message identification. Format YYYYMMDDBBBBBBBBTTTCCCSSSSSSSS where:
+            <li>YYYYMMDD – Current Date</li>
+            <li>BBBBBBBB – Bank Code</li>
+            <li>TTT – Transaction Type. Default to <b>315</b></li>
+            <li>CCC – Channel Code. Default to <b>FPX</b></li>
+            <li>SSSSSSSS – Sequence Number</li>
+        code:
+          maxLength: 7
+          type: string
+          description: Status code
+        description:
+          maxLength: 140
+          type: string
+          description: Reason code description
+        schedulerId:
+          type: string
+          description: Unique scheduling identification assigned by FPX
+        status:
+          type: string
+          description: Status of the submitted request
+      example:
+        messageId: 20211023APGWMYKL315FPX00000005
+        code: API.000
+        description: Success / Transaction Accepted
+        schedulerId: "00000216"
+        status: created
+    type_5:
+      required:
+      - bankId
+      - date
+      - endDate
+      - endTime
+      - interval
+      - model
+      - schedulerId
+      - startDate
+      - startTime
+      - type
+      type: object
+      properties:
+        date:
+          type: string
+          description: Downtime start date in DD/MM/YYYY hh:mm:ss format
+        schedulerId:
+          type: string
+          description: Unique scheduler identification
+        bankId:
+          type: string
+          description: Bank identification code of the Participant
+        model:
+          type: string
+          description: |
+            Business model
+            <li>B2C</li>
+            <li>B2B1</li>
+            <li>B2B2</li>
+        type:
+          type: string
+          description: Request type
+        reason:
+          type: string
+          description: Reason for the downtime request
+        startDate:
+          type: string
+          description: Downtime start date in DD/MM/YYYY format
+        endDate:
+          type: string
+          description: Downtime end date in DD/MM/YYYY format
+        startTime:
+          type: string
+          description: Downtime start time in 24-hour format until minute (HH:mi)
+        endTime:
+          type: string
+          description: Downtime end time in 24-hour format until minute (HH:mi)
+        interval:
+          type: string
+          description: |-
+            Frequency type
+            <li>ONCE – One-time</li>
+      example:
+        date: 22/09/2021 03:02:42
+        schedulerId: "00000275"
+        bankId: TEST0021
+        model: B2C
+        type: NEW
+        reason: System maintenance
+        startDate: 22/09/2021
+        startTime: 17:30
+        endDate: 22/09/2021
+        endTime: 19:00
+        interval: ONCE
+    type_6:
+      required:
+      - code
+      - currentPage
+      - messageId
+      - totalPages
+      - transactions
+      type: object
+      properties:
+        messageId:
+          maxLength: 35
+          type: string
+          description: |
+            Unique message identification. Format YYYYMMDDBBBBBBBBTTTCCCSSSSSSSS where:
+            <li>YYYYMMDD – Current Date</li>
+            <li>BBBBBBBB – Bank Code</li>
+            <li>TTT – Transaction Type. Default to <b>312</b></li>
+            <li>CCC – Channel Code. Default to <b>FPX</b></li>
+            <li>SSSSSSSS – Sequence Number</li>
+        code:
+          maxLength: 7
+          type: string
+          description: Status code
+        description:
+          maxLength: 140
+          type: string
+          description: Reason code description
+        transactions:
+          type: array
+          items:
+            required:
+            - amount
+            - buyerAccountNumber
+            - buyerBank
+            - buyerName
+            - debitAuthorizationCode
+            - debitAuthorizationNumber
+            - model
+            - sellerBank
+            - sellerName
+            - transactionDate
+            - transactionId
+            type: object
+            properties:
+              transactionDate:
+                type: string
+                description: Transaction date and time in MYT using YYYY-MM-DDTHH:MM:SS
+                  format
+              transactionId:
+                type: string
+                description: Transaction identification
+              model:
+                type: string
+                description: Business model
+              buyerName:
+                type: string
+                description: Buyer name
+              buyerAccountNumber:
+                type: string
+                description: Buyer account number
+              buyerBank:
+                type: string
+                description: Buyer bank name
+              sellerName:
+                type: string
+                description: Seller name
+              sellerBank:
+                type: string
+                description: Seller bank name
+              amount:
+                type: number
+                description: Transaction amount in MYR
+              debitAuthorizationCode:
+                type: string
+                description: Debit authorization code from Buyer Bank
+              debitAuthorizationNumber:
+                type: string
+                description: Debit authorization number from Buyer Bank
+        currentPage:
+          type: string
+          description: Current page that is being returned
+        totalPages:
+          type: string
+          description: Total number of pages expected to be returned
+      example:
+        messageId: 20211023APGWMYKL312FPX00000005
+        code: API.000
+        description: Success / Transaction Accepted
+        transactions:
+        - transactionDate: 23/10/2021
+          transactionId: "2110231718370893"
+          model: B2B1
+          buyerName: '-'
+          buyerAccountNumber: '-'
+          buyerBank: SBI BANK A BERHAD
+          sellerName: MERC INC
+          sellerBank: SBI BANK A BERHAD
+          amount: 11
+          debitAuthorizationCode: OF
+          debitAuthorizationNumber: "1703271820"
+        - transactionDate: 23/10/2021
+          transactionId: "2110231718370894"
+          model: B2B1
+          buyerName: '-'
+          buyerAccountNumber: '-'
+          buyerBank: SBI BANK B BERHAD
+          sellerName: SELLER B INC
+          sellerBank: SBI BANK C BERHAD
+          amount: 11
+          debitAuthorizationCode: OF
+          debitAuthorizationNumber: "1703271899"
+        currentPage: "1"
+        totalPages: "1"
+    type_7:
+      required:
+      - comment
+      - messageId
+      type: object
+      properties:
+        messageId:
+          maxLength: 35
+          type: string
+          description: |
+            Unique message identification. Format YYYYMMDDBBBBBBBBTTTCCCSSSSSSSS where:
+            <li>YYYYMMDD – Current Date</li>
+            <li>BBBBBBBB – Bank Code</li>
+            <li>TTT – Transaction Type. Default to <b>312</b></li>
+            <li>CCC – Channel Code. Default to <b>FPX</b></li>
+            <li>SSSSSSSS – Sequence Number</li>
+        comment:
+          type: string
+          description: User comment
+      example:
+        messageId: 20211023APGWMYKL312FPX00000005
+        comment: submit status for timeout transaction
+    type_8:
+      required:
+      - code
+      - messageId
+      - status
+      - transactionId
+      type: object
+      properties:
+        messageId:
+          maxLength: 35
+          type: string
+          description: |
+            Unique message identification. Format YYYYMMDDBBBBBBBBTTTCCCSSSSSSSS where:
+            <li>YYYYMMDD – Current Date</li>
+            <li>BBBBBBBB – Bank Code</li>
+            <li>TTT – Transaction Type. Default to <b>314</b></li>
+            <li>CCC – Channel Code. Default to <b>FPX</b></li>
+            <li>SSSSSSSS – Sequence Number</li>
+        code:
+          maxLength: 7
+          type: string
+          description: Status code
+        description:
+          maxLength: 140
+          type: string
+          description: Reason code description
+        transactionId:
+          type: string
+          description: Transaction identification
+        status:
+          type: string
+          description: Status of the submitted request
+      example:
+        messageId: 20211023APGWMYKL314FPX00000001
+        code: API.000
+        description: Success / Transaction Accepted
+        transactionId: "2110231442570521"
+        status: submitted
+    type_9:
+      required:
+      - comment
+      - messageId
+      type: object
+      properties:
+        messageId:
+          maxLength: 35
+          type: string
+          description: |
+            Unique message identification. Format YYYYMMDDBBBBBBBBTTTCCCSSSSSSSS where:
+            <li>YYYYMMDD – Current Date</li>
+            <li>BBBBBBBB – Bank Code</li>
+            <li>TTT – Transaction Type. Default to <b>314</b></li>
+            <li>CCC – Channel Code. Default to <b>FPX</b></li>
+            <li>SSSSSSSS – Sequence Number</li>
+        comment:
+          type: string
+          description: User comment
+        authorizationNumber:
+          type: string
+          description: Authorization number
+      example:
+        messageId: 20211023APGWMYKL314FPX00000001
+        comment: Resubmit due to transaction timeout
+        authorizationNumber: "12345"
+  securitySchemes:
+    OAuth 2.0:
+      type: oauth2
+      description: |
+        This API supports OAuth 2.0 for authenticating all API requests.
+      flows:
+        clientCredentials :   # <---- OAuth flow(authorizationCode, implicit, password or clientCredentials)
+          tokenUrl: https://sandbox.api.paynet.my/auth/token
+          scopes:
+            fpx:bank: Banks Access Rights
+      x-amf-describedBy:
+        headers:
+          authorization:
+            description: |
+              Used to send a valid OAuth 2 access token. Do not use with the "access_token" query
+              string parameter.
+            type: string
+        responses:
+          400:
+            description: Invalid token.
+          401:
+            description: |
+              Unauthorized or Connection error when connecting to the authorization server.
+          403:
+            description: |
+              Forbidden, invalid client application credentials.
+          500:
+            description: |
+              Bad response from authorization server, or WSDL SOAP Fault error.
+      x-amf-settings:
+        authorizationGrants:
+        - authorization_code
+        - client_credentials

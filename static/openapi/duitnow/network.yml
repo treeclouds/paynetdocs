@@ -1,0 +1,501 @@
+openapi: 3.0.0
+info:
+  title: Network Administration
+  description: |
+
+    ### Who Should Use
+    This API should only be used by banks to ensure connectivity is healthy between Banks and RPP.
+  version: v2
+servers:
+- url: https://mock.developer.paynet.my/network/v1
+paths:
+  /echo:
+    post:
+      summary: Echo
+      description: This API is used to perform handshake to either RPP or Participant to ensure message exchanges and connectivity can be established successfully
+      operationId: Echo
+      parameters:
+      - name: Authorization
+        in: header
+        description: Bearer &lt;access_token&gt;
+        required: true
+        schema:
+          type: string
+      - name: X-Business-Message-Id
+        in: header
+        required: true
+        schema: 
+          maxLength: 35
+          type: string
+          format: "YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS"
+          description : Business Message Id. Similar with businessMessageId in payload body.
+      - name: X-Signature-Key
+        in: header
+        description: Certificate serial number used to sign the message signature
+        required: true
+        schema:
+          maxLength: 40
+          pattern: ^[a-zA-Z0-9]*$
+          type: string
+      - name: X-Signature
+        in: header
+        description: |
+          Message signature signed using the certificate defined in <b>X-Signature-Key</b>. 
+        required: true
+        schema:
+          maxLength: 1024
+          type: string
+      requestBody: 
+        content: 
+          application/json:
+            schema: 
+              $ref: "#/components/schemas/echoRequest"
+    
+          
+
+      responses: 
+        200:
+          description: ""
+          headers:
+            X-Business-Message-Id:
+              description: Business Message Id. Similar with businessMessageId in payload body.
+              schema:
+                title: Key Number
+                maxLength: 35
+                format : "YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS"
+                type: string
+                x-amf-required: true
+            X-Signature-Key:
+              description: Certificate serial number used to sign the message signature
+              schema:
+                title: Key Number
+                maxLength: 40
+                pattern: ^[a-zA-Z0-9]*$
+                type: string
+                x-amf-required: true
+            X-Signature:
+              description: Message signature signed using the certificate defined in <b>X-Signature-Key</b>.
+              schema:
+                title: Digital Signature signed
+                maxLength: 1024
+                type: string
+                x-amf-required: true
+          content: 
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/echoResponse"
+        400:
+          description: ""
+          content: 
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/errorResponse"
+        401:
+          description: ""
+          content: 
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/errorResponse"
+        500:
+          description: ""
+          content: 
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/errorResponse"
+
+      security:
+        - OAuth 2.0: []
+      x-codegen-request-body-name: generated
+      
+      
+  /signon:
+    post:
+      summary: Sign-On
+      description: This API is used to sign-on to RPP network. Once a Participant is sign-on, then Participant is considered online and will be able to receive payment to it
+      operationId: Sign-On
+      parameters:
+      - name: Authorization
+        in: header
+        description: Bearer &lt;access_token&gt;
+        required: true
+        schema:
+          type: string
+      - name: X-Business-Message-Id
+        in: header
+        required: true
+        schema: 
+          maxLength: 35
+          type: string
+          format: "YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS"
+          description : Business Message Id. Similar with businessMessageId in payload body.
+      - name: X-Signature-Key
+        in: header
+        description: Certificate serial number used to sign the message signature
+        required: true
+        schema:
+          maxLength: 40
+          pattern: ^[a-zA-Z0-9]*$
+          type: string
+      - name: X-Signature
+        in: header
+        description: |
+          Message signature signed using the certificate defined in <b>X-Signature-Key</b>. 
+        required: true
+        schema:
+          maxLength: 1024
+          type: string
+          
+
+      responses: 
+        200:
+          description: ""
+          headers:
+            X-Business-Message-Id:
+              description: Business Message Id. Similar with businessMessageId in payload body.
+              schema:
+                title: Key Number
+                maxLength: 35
+                format : "YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS"
+                type: string
+                x-amf-required: true
+            X-Signature-Key:
+              description: Certificate serial number used to sign the message signature
+              schema:
+                title: Key Number
+                maxLength: 40
+                pattern: ^[a-zA-Z0-9]*$
+                type: string
+                x-amf-required: true
+            X-Signature:
+              description: Message signature signed using the certificate defined in <b>X-Signature-Key</b>.
+              schema:
+                title: Digital Signature signed
+                maxLength: 1024
+                type: string
+                x-amf-required: true
+          content: 
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/signonResponse"
+        400:
+          description: ""
+          content: 
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/errorResponse"
+        401:
+          description: ""
+          content: 
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/errorResponse"
+        500:
+          description: ""
+          content: 
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/errorResponse"
+
+      security:
+        - OAuth 2.0: []
+      x-codegen-request-body-name: generated
+      
+  /signoff:
+    post:
+      summary: Sign-Off
+      description: This API is used to sign-off from RPP network. Once a Participant is sign-off, then Participant is considered offline and will no longer be able to receive payment
+      operationId: Sign-Off
+      parameters:
+      - name: Authorization
+        in: header
+        description: Bearer &lt;access_token&gt;
+        required: true
+        schema:
+          type: string
+      - name: X-Business-Message-Id
+        in: header
+        required: true
+        schema: 
+          maxLength: 35
+          type: string
+          format: "YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS"
+          description : Business Message Id. Similar with businessMessageId in payload body.
+      - name: X-Signature-Key
+        in: header
+        description: Certificate serial number used to sign the message signature
+        required: true
+        schema:
+          maxLength: 40
+          pattern: ^[a-zA-Z0-9]*$
+          type: string
+      - name: X-Signature
+        in: header
+        description: |
+          Message signature signed using the certificate defined in <b>X-Signature-Key</b>. 
+        required: true
+        schema:
+          maxLength: 1024
+          type: string
+          
+
+      responses: 
+        200:
+          description: ""
+          headers:
+            X-Business-Message-Id:
+              description: Business Message Id. Similar with businessMessageId in payload body.
+              schema:
+                title: Key Number
+                maxLength: 35
+                format : "YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS"
+                type: string
+                x-amf-required: true
+            X-Signature-Key:
+              description: Certificate serial number used to sign the message signature
+              schema:
+                title: Key Number
+                maxLength: 40
+                pattern: ^[a-zA-Z0-9]*$
+                type: string
+                x-amf-required: true
+            X-Signature:
+              description: Message signature signed using the certificate defined in <b>X-Signature-Key</b>.
+              schema:
+                title: Digital Signature signed
+                maxLength: 1024
+                type: string
+                x-amf-required: true
+          content: 
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/signonResponse"
+        400:
+          description: ""
+          content: 
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/errorResponse"
+        401:
+          description: ""
+          content: 
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/errorResponse"
+        500:
+          description: ""
+          content: 
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/errorResponse"
+
+      security:
+        - OAuth 2.0: []
+      x-codegen-request-body-name: generated
+      
+ 
+
+  
+  
+components:
+  schemas:  
+
+    signonRequest:
+      type: object
+      required: 
+        -  data
+      properties: 
+        data:
+          required: 
+            - businessMessageId
+          properties: 
+            businessMessageId:
+              maxLength: 35
+              type: string
+              description: <b>Business Message Identification</b><br></br> Unique message identification. Format YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS
+                where <li>YYYYMMDD – Current Date</li>
+                <li>BBBBBBBB – BIC Code</li>
+                <li>XXX – Transaction Code. Set to <b>000</b>. Refer to <a href="https://docs.developer.paynet.my/docs/duitnowqr/transactiontype/index.html" target="_blank"> <b style="color:blue;">Transaction Code</b> </a> </li>
+                <li>O – Originator. Refer to <a href="https://docs.developer.paynet.my/docs/duitnow/mappingtable#originator-code" target="_blank"> <b style="color:blue;">Originator</b> </a> </li>
+                <li>CC – Channel Code. Refer to <a href="https://docs.developer.paynet.my/docs/duitnow/mappingtable#channel-code" target="_blank"> <b style="color:blue;">Channel Code</b> </a> </li>
+                <li>SSSSSSSS – Sequence Number</li>
+            
+      example :
+        data:
+          businessMessageId: 20230120RPPEMYKL000ORB73101243
+
+    signonResponse:
+      type: object
+      required: 
+        -  data
+      properties: 
+        data:
+          required: 
+            - businessMessageId
+            - code
+            - reason
+          properties: 
+            businessMessageId:
+              maxLength: 35
+              type: string
+              description: <b>Business Message Identification</b><br></br> Unique message identification. Format YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS
+                where <li>YYYYMMDD – Current Date</li>
+                <li>BBBBBBBB – BIC Code</li>
+                <li>XXX – Transaction Code. Set to <b>000</b>. Refer to <a href="https://docs.developer.paynet.my/docs/duitnowqr/transactiontype/index.html" target="_blank"> <b style="color:blue;">Transaction Code</b> </a> </li>
+                <li>O – Originator. Refer to <a href="https://docs.developer.paynet.my/docs/duitnow/mappingtable#originator-code" target="_blank"> <b style="color:blue;">Originator</b> </a> </li>
+                <li>CC – Channel Code. Refer to <a href="https://docs.developer.paynet.my/docs/duitnow/mappingtable#channel-code" target="_blank"> <b style="color:blue;">Channel Code</b> </a> </li>
+                <li>SSSSSSSS – Sequence Number</li>
+            code:
+              type: string
+              description: <b>Transaction Status</b><br></br> Refer to <a style="color:blue;" href="https://docs.developer.paynet.my/docs/duitnow/mappingtable/index.html##externalpaymenttransactionstatus1code-txsts" target="_blank"><b style="color:blue;">External Payment Transaction Status Code</b></a>
+            reason:
+              type: string
+              description: <b>Reason Code</b><br></br> Refer to <a style="color:blue;" href="https://docs.developer.paynet.my/docs/duitnow/responsecodes/index.html#reason-codes" target="_blank"><b style="color:blue;">Reason Code</b></a>
+      example :
+        data:
+          businessMessageId: 20230120RPPEMYKL000ORB73101243
+          code: ACSP
+          reason: U000
+    
+    echoRequest:
+      type: object
+      required: 
+        -  data
+      properties: 
+        data:
+          required: 
+            - businessMessageId
+            - clientMessage
+          properties: 
+            businessMessageId:
+              maxLength: 35
+              type: string
+              description: <b>Business Message Identification</b><br></br> Unique message identification. Format YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS
+                where <li>YYYYMMDD – Current Date</li>
+                <li>BBBBBBBB – BIC Code</li>
+                <li>XXX – Transaction Code. Set to <b>000</b>. Refer to <a href="https://docs.developer.paynet.my/docs/duitnowqr/transactiontype/index.html" target="_blank"> <b style="color:blue;">Transaction Code</b> </a> </li>
+                <li>O – Originator. Refer to <a href="https://docs.developer.paynet.my/docs/duitnow/mappingtable#originator-code" target="_blank"> <b style="color:blue;">Originator</b> </a> </li>
+                <li>CC – Channel Code. Refer to <a href="https://docs.developer.paynet.my/docs/duitnow/mappingtable#channel-code" target="_blank"> <b style="color:blue;">Channel Code</b> </a> </li>
+                <li>SSSSSSSS – Sequence Number</li>
+                
+            clientMessage:
+              type: string
+              description: Message to echo in the response.
+            
+      example :
+        data:
+          businessMessageId: 20230120RPPEMYKL000ORB73101243
+          clientMessage: client message
+          
+        
+    echoResponse:
+      type: object
+      required: 
+        -  data
+      properties: 
+        data:
+          required: 
+            - businessMessageId
+            - code
+            - reason
+            - clientMessage
+          properties: 
+            businessMessageId:
+              maxLength: 35
+              type: string
+              description: <b>Business Message Identification</b><br></br> Unique message identification. Format YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS
+                where <li>YYYYMMDD – Current Date</li>
+                <li>BBBBBBBB – BIC Code</li>
+                <li>XXX – Transaction Code. Set to <b>000</b>. Refer to <a href="https://docs.developer.paynet.my/docs/duitnowqr/transactiontype/index.html" target="_blank"> <b style="color:blue;">Transaction Code</b> </a> </li>
+                <li>O – Originator. Refer to <a href="https://docs.developer.paynet.my/docs/duitnow/mappingtable#originator-code" target="_blank"> <b style="color:blue;">Originator</b> </a> </li>
+                <li>CC – Channel Code. Refer to <a href="https://docs.developer.paynet.my/docs/duitnow/mappingtable#channel-code" target="_blank"> <b style="color:blue;">Channel Code</b> </a> </li>
+                <li>SSSSSSSS – Sequence Number</li>
+            clientMessage:
+              type: string
+              description: Message received in the request.
+            serverMessage:
+              type: string
+              description: Server message, independent of the <b>clientMessage</b> being echoed.
+            code:
+              type: string
+              description: <b>Transaction Status</b><br></br> Refer to <a style="color:blue;" href="https://docs.developer.paynet.my/docs/duitnow/mappingtable/index.html##externalpaymenttransactionstatus1code-txsts" target="_blank"><b style="color:blue;">External Payment Transaction Status Code</b></a>
+            reason:
+              type: string
+              description: <b>Reason Code</b><br></br> Refer to <a style="color:blue;" href="https://docs.developer.paynet.my/docs/duitnow/responsecodes/index.html#reason-codes" target="_blank"><b style="color:blue;">Reason Code</b></a>
+      example :
+        data:
+          businessMessageId: 20230120RPPEMYKL000ORB73101243
+          clientMessage : client message
+          serverMessage : server message
+          code: ACSP
+          reason: U000
+            
+    
+
+    
+          
+    errorResponse:
+      type: object
+      required: 
+        - data
+      properties: 
+        data:
+          allOf: 
+            - $ref: "#/components/schemas/baseDataResponse"
+            - type: object
+              required: 
+                - code
+              
+    baseDataResponse:
+      type: object
+      required: 
+        - businessMessageId
+      properties: 
+        businessMessageId:
+          type: string
+          maxLength: 35
+          description: Unique business message identification.
+        code:
+          type: string
+          description: response code identification
+        reason:
+          type: string
+          description: response status information
+          
+  securitySchemes:
+    OAuth 2.0:
+      type: oauth2
+      description: |
+        This API supports OAuth 2.0 for authenticating all API requests <b>except for Webhook APIs.</b> For more information, please read our <a href="https://docs.developer.paynet.my/api-oauth#/"><b style="color:blue;">OAuth 2.0 API</b></a> specification.
+      flows:
+        clientCredentials :   # <---- OAuth flow(authorizationCode, implicit, password or clientCredentials)
+          tokenUrl: https://sandbox.api.paynet.my/auth/token
+          scopes:
+            rpp:bank: Banks Access Rights
+      x-amf-describedBy:
+        headers:
+          authorization:
+            description: |
+              Used to send a valid OAuth 2 access token. Do not use with the "access_token" query
+              string parameter.
+            type: string
+        queryParameters:
+          access_token:
+            description: |
+              Used to send a valid OAuth 2 access token. Do not use together with the "Authorization"
+              header
+            type: string
+        responses:
+          400:
+            description: Invalid token.
+          401:
+            description: |
+              Unauthorized or Connection error when connecting to the authorization server.
+          403:
+            description: |
+              Forbidden, invalid client application credentials.
+          500:
+            description: |
+              Bad response from authorization server, or WSDL SOAP Fault error.
+      x-amf-settings:
+        authorizationGrants:
+        - client_credentials

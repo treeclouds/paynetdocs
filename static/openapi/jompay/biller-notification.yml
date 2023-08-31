@@ -1,0 +1,237 @@
+openapi: 3.0.3
+info:
+  title: Biller Notification Services
+  description: |
+    Biller Notifications are a form of electronic message sent to the Biller via BNS once the Payer has successfully completed a bill payment transaction at their Bank. NBPS will facilitate the sending of the notification from the Payer’s Bank to the Biller. The notification serves the purpose of informing the Biller that the Payer has successfully completed the bill payment and payment to the Biller will follow. Merchant is required to publish an API based on the standard set by PayNet in order to be able to receive the bill payment status notification
+  
+    ### Who Should Use
+    This API should only be used by merchants.
+  version: v1
+servers:
+- url: https://yourendpointurl/JomPAY/{version}
+paths:
+  /JomPAY/MY/Notification: {}
+  /JomPAY/MY/Notification/BillNotification:
+    post:
+      description: Biller to publish an API based on below specifications so that
+        BNS can invoke particular API to update Biller on the payment notification
+      operationId: Biller Notification
+      tags:
+        - Webhook
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/requestBillerNotifications'
+        required: false
+      responses:
+        200:
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/responseBillerNotifications'
+          x-amf-mediaType: application/json
+      x-outbound: true
+      x-outboundUrl: https://<domain>
+      x-codegen-request-body-name: generated
+     
+webhooks: 
+  Biller Payment Notification:
+    post:
+      description: Biller to publish an API based on below specifications so that
+        BNS can invoke particular API to update Biller on the payment notification. Biller are required to publish the API following this path /JomPAY/MY/Notification/BillNotification.
+      operationId: Biller Notification
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/requestBillerNotifications'
+        required: false
+      responses:
+        200:
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/responseBillerNotifications'
+          x-amf-mediaType: application/json
+      x-outbound: true
+      x-outboundUrl: https://<domain>
+      x-codegen-request-body-name: generated
+
+components:
+  schemas:
+    requestBillerNotifications:
+      required:
+      - body
+      - header
+      type: object
+      properties:
+        header:
+          required:
+          - sig
+          - timestamp
+          type: object
+          properties:
+            sig:
+              maxLength: 100
+              type: string
+              description: |
+                Message signature<br /><br />
+                Refer to <a style="color:blue;" href="https://developer.paynet.my/jompay-authentication-n-encryption#signature/" target="_blank"><b>Web Service Message Signature Generation</b></a>
+            timestamp:
+              type: string
+              description: |
+                String representation of the UTC time of the operation in ISO 8601 format. If this time differs from the current time by more than 15 minutes, the Biller should ignore the request
+        body:
+          required:
+          - accounttype
+          - amount
+          - billerbankname
+          - billerbanknum
+          - billercode
+          - billercodename
+          - channel
+          - currencycode
+          - debittimestamp
+          - nbpsref
+          - payerbankname
+          - payerbanknum
+          - rrn
+          type: object
+          properties:
+            payerbanknum:
+              maxLength: 10
+              type: string
+              description: |
+                Bank number/code of the Payer Bank<br /><br />
+                Refer to <a style="color:blue;" href="https://developer.paynet.my/jompay-request-response-mapping-codes#data/bankNumber" target="_blank"><b>Bank Routing Number</b></a>
+            payerbankname:
+              maxLength: 20
+              type: string
+              description: Name of the Payer Bank
+            billerbanknum:
+              maxLength: 10
+              type: string
+              description: |
+                Bank number/code assigned of the Biller Bank<br /><br />
+                Refer to <a style="color:blue;" href="https://developer.paynet.my/jompay-request-response-mapping-codes#data/bankNumber" target="_blank"><b>Bank Number</b></a>
+            billerbankname:
+              maxLength: 20
+              type: string
+              description: Name of the Biller Bank
+            accounttype:
+              maxLength: 5
+              type: string
+              description: |
+                Payer's account type<br /><br />
+                Refer to <a style="color:blue;" href="https://developer.paynet.my/jompay-request-response-mapping-codes#data/accountType" target="_blank"><b>Account Type</b></a>
+            billercode:
+              maxLength: 10
+              type: string
+              description: Biller code
+            billercodename:
+              maxLength: 50
+              type: string
+              description: Service description of the Biller Code e.g. "TM Unifi"
+            nbpsref:
+              maxLength: 20
+              type: string
+              description: JomPAY transaction reference number. This is the reference
+                number that is displayed to the Payer and passed to Biller
+            channel:
+              maxLength: 5
+              type: string
+              description: |
+                Channel code used by the Payer to perform the transaction <br /><br />
+                Refer to <a style="color:blue;" href="https://developer.paynet.my/jompay-request-response-mapping-codes#data/paymentChannel" target="_blank"><b>Channel Code</b></a>
+            debittimestamp:
+              maxLength: 50
+              type: string
+              description: String representation of the UTC time of the debiting.
+                This is the date and time the payment was made by the Customer
+            repeatmsg:
+              maxLength: 1
+              type: string
+              description: |
+                If this request has been sent before
+                <li>Y – Repeat message</li>
+                <li>N - First time sent</li>
+            rrn:
+              maxLength: 50
+              type: string
+              description: Recipient reference number (RRN) entered by the Customer
+            rrn2:
+              maxLength: 50
+              type: string
+              description: Additional reference information (RRN2) entered by the
+                Customer
+            currencycode:
+              maxLength: 3
+              type: string
+              description: Currency code in ISO 4217 format
+            amount:
+              type: number
+              description: Payment amount in cents
+            extdata:
+              maxLength: 250
+              type: string
+              description: Reserved for future expansion
+      example:
+        header:
+          sig: EFddam1Y/dvhBh2Nvytw2XvZMQHB3sONuWeEMzP9CuA=
+          timestamp: 2016-05-09T08:07:05.2199272Z
+        body:
+          payerbanknum: "100033061"
+          payerbankname: BANK ABC
+          billerbanknum: "100002144"
+          billerbankname: BANK XYZ
+          accounttype: "1"
+          billercode: "1123"
+          billercodename: Maxis
+          nbpsref: 3598D772
+          channel: "3"
+          debittimestamp: 2016-05-09T08:07:39.0000000+00:00
+          repeatmsg: N
+          rrn: "1230"
+          rrn2: ""
+          currencycode: MYR
+          amount: 4550
+          extdata: null
+    responseBillerNotifications:
+      required:
+      - body
+      type: object
+      properties:
+        body:
+          required:
+          - result
+          type: object
+          properties:
+            result:
+              maxLength: 1
+              type: string
+              description: |
+                Response code
+                <li>Y – Successful</li>
+                <li>N – Unsuccessful. Biller needs to send <b>resend</b> field</li>
+            errorcode:
+              maxLength: 20
+              type: string
+              description: Error code
+            errormessage:
+              maxLength: 200
+              type: string
+              description: Error message
+            resend:
+              maxLength: 1
+              type: string
+              description: If both <b>result</b> and <b>resend</b> are 'Y', BNS will
+                resend the notification
+      example:
+        body:
+          result: Y
+          errorcode: ""
+          errormessage: ""
+          resend: ""

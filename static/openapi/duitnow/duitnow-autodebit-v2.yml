@@ -1,0 +1,1360 @@
+openapi: 3.1.0
+info:
+  title: DuitNow AutoDebit (Merchant)
+  description: |
+    > **Attention!** These APIs are still in the beta stage and are not yet available to the general public. Stay tuned for updates on when they will be ready for everyone to explore!
+    Biller can request on-demand or periodic charges consent from their customer, and subsequently initiate fund collection.
+
+    ### Who Should Use
+    This API should only be used by merchants.
+  version: v2
+servers:
+- url: https://mock.developer.paynet.my/merchants/v2/consents
+paths:
+  /consents: {}
+  /redirect:
+    post:
+      summary: Initiate Consent
+      description: Merchant uses this API to create a Consent Registration request
+        to PayNet. The Consent Registration request that Merchant creates shall contain
+        all the necessary information for the consent. However, the Consent shall
+        only be deemed as completed if customer has login to their internet banking
+        to complete the registration process.
+      operationId: consent_initiate
+      parameters:
+        - name: X-Business-Message-Id
+          in: header
+          description: <b>Business Message Identification</b><br></br> Unique message identification. Format YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS
+            where <li>YYYYMMDD – Current Date</li>
+            <li>BBBBBBBB – BIC Code</li>
+            <li>XXX – Transaction Code. Set to <b>811</b>. Refer to <a href="https://docs.developer.paynet.my/docs/duitnowqr/transactiontype/index.html" target="_blank"> <b style="color:blue;">Transaction Code</b> </a> </li>
+            <li>O – Originator. Set to <b>O</b>. Refer to <a href="https://docs.developer.paynet.my/docs/duitnow/mappingtable#originator-code" target="_blank"> <b style="color:blue;">Originator</b> </a> </li>
+            <li>CC – Channel Code. Refer to <a href="https://docs.developer.paynet.my/docs/duitnow/mappingtable#channel-code" target="_blank"> <b style="color:blue;">Channel Code</b> </a> </li>
+            <li>SSSSSSSS – Sequence Number</li>
+            <br>Channel Code can be any of the following:<li>BA – Mobile Application</li><li>BW – Web Browser</li>
+          required: true
+          schema:
+            type: string
+            maxLength: 35
+            format: "YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS"
+          example: "20210101RPPEMYKL811OBA10000321"
+        - $ref: "./base.yml#/components/parameters/X-Ip-Address"
+        - $ref: "./base.yml#/components/parameters/X-Gps-Coordinates"
+      
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/requestInitiateConsent'
+            example:
+              data:
+                businessMessageId: 20210101RPPEMYKL811OBA10000321
+                mandateId: 20210101M0000221811OBW00000001
+                customer:
+                  name: Bimmy
+                merchant:
+                  name: Yelekom Malaysia
+                  identificationType: "04"
+                  identification: 1234567A
+                sourceOfFunds:
+                  - "01"
+                type: DDPT
+                effectiveDate: 2021-01-01
+                expiryDate: 2021-12-31
+                allowTerminatedByDebtor: true
+                maximumPaymentCurrency: MYR
+                maximumPaymentAmount: 1000.99
+                frequency: "03"
+                productId: P00000381
+                recipientReference: Policy No. 897541
+        required: false
+      
+      responses:
+        200:
+          description: ""
+          headers:
+            Authorization:
+              required: true
+              $ref: "./base.yml#/components/headers/Authorization"
+            X-Business-Message-Id:
+              required: true
+              $ref: "./base.yml#/components/headers/X-Business-Message-Id"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/responseInitiateConsent'
+              example:
+                data:
+                  businessMessageId: "20210101RPPEMYKL811OBA10000012"
+                  date: 2021-01-01T09:30:47Z
+                  code: "ACTC"
+                  reason: "U000"
+                  mandateId: 20210101M000022181100000001
+                  consentId: M00002210000000001
+        400:
+          description: ""
+          headers:
+            X-Business-Message-Id:
+              required: true
+              $ref: "./base.yml#/components/headers/X-Business-Message-Id"
+          content:
+            application/json:
+              schema:
+                $ref: "./base.yml#/components/schemas/errorResponse"
+              example:
+                data:
+                  businessMessageId: "20230120DMMMYKL4763ORB01162512"
+                  code: "API.002"
+                  reason: "data.businessMessageId - Invalid format"
+        401:
+          description: ""
+          headers:
+            X-Business-Message-Id:
+              required: true
+              $ref: "./base.yml#/components/headers/X-Business-Message-Id"
+          content:
+            application/json:
+              schema:
+                $ref: "./base.yml#/components/schemas/errorResponse"
+              example:
+                data:
+                  businessMessageId: "20230120DMMMYKL4763ORB01162512"
+                  code: "API.007"
+                  reason: "Unauthorized request"
+        429:
+          description: ""
+          headers:
+            X-Business-Message-Id:
+              required: true
+              $ref: "./base.yml#/components/headers/X-Business-Message-Id"
+          content:
+            application/json:
+              schema:
+                $ref: "./base.yml#/components/schemas/errorResponse"
+        500:
+          description: ""
+          headers:
+            X-Business-Message-Id:
+              required: true
+              $ref: "./base.yml#/components/headers/X-Business-Message-Id"
+          content:
+            application/json:
+              schema:
+                $ref: "./base.yml#/components/schemas/errorResponse"
+              example:
+                data:
+                  businessMessageId: "20230120DMMMYKL4763ORB01162512"
+                  code: "API.500"
+                  reason: "Internal Server Error"
+
+      security:
+        - bearerAuth: []
+      x-codegen-request-body-name: generated
+
+  /consent/enquiry/{consentId}:
+    get:
+      summary: Consent Enquiry
+      description: Merchant may use this API to inquire the details of their registered
+        consent.
+      operationId: consent_enquiry
+      parameters:
+        - name: consentId
+          in: path
+          description: <b>consentId</b> from Initiate Consent Registration
+          required: true
+          schema:
+            type: string
+            maxLength: 35
+        - name: productId
+          in: query
+          description: Product identification assigned by PayNet during registration
+          required: true
+          schema:
+            maxLength: 35
+            pattern: ^[a-zA-Z0-9]*$
+            type: string
+        - name: X-Business-Message-Id
+          in: header
+          description: <b>Business Message Identification</b><br></br> Unique message identification. Format YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS
+            where <li>YYYYMMDD – Current Date</li>
+            <li>BBBBBBBB – BIC Code</li>
+            <li>XXX – Transaction Code. Set to <b>752</b>. Refer to <a href="https://docs.developer.paynet.my/docs/duitnowqr/transactiontype/index.html" target="_blank"> <b style="color:blue;">Transaction Code</b> </a> </li>
+            <li>O – Originator. Set to <b>O</b>. Refer to <a href="https://docs.developer.paynet.my/docs/duitnow/mappingtable#originator-code" target="_blank"> <b style="color:blue;">Originator</b> </a> </li>
+            <li>CC – Channel Code. Refer to <a href="https://docs.developer.paynet.my/docs/duitnow/mappingtable#channel-code" target="_blank"> <b style="color:blue;">Channel Code</b> </a> </li>
+            <li>SSSSSSSS – Sequence Number</li>
+            <br>Channel Code can be any of the following:<li>BA – Mobile Application</li><li>BW – Web Browser</li>
+          required: true
+          schema:
+            type: string
+            maxLength: 35
+            format: "YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS"
+          example: "20210101RPPEMYKL752OBA10000012"
+        - $ref: "./base.yml#/components/parameters/X-Ip-Address"
+        - $ref: "./base.yml#/components/parameters/X-Gps-Coordinates"
+
+      responses:
+        200:
+          description: ""
+          headers:
+            Authorization:
+              required: true
+              $ref: "./base.yml#/components/headers/Authorization"
+            X-Business-Message-Id:
+              required: true
+              $ref: "./base.yml#/components/headers/X-Business-Message-Id"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/responseRetrieveConsentInfo'
+              example:
+                data:
+                  businessMessageId: 20210101RPPEMYKL752ORB10000012
+                  date: 2021-01-01T09:30:47Z
+                  code: ACTC
+                  reason: U000
+                  consentId: M00002210000000001
+                  type: DDPT
+                  consentStatus: ACTV
+                  effectiveDate: 2021-01-01
+                  expiryDate: 2021-12-31
+                  allowTerminatedByDebtor: true
+                  maximumPaymentAmount: 1000.99
+                  maximumPaymentCurrency: MYR
+                  sourceOfFunds: "01"
+                  frequency: "01"
+        400:
+          description: ""
+          headers:
+            X-Business-Message-Id:
+              required: true
+              $ref: "./base.yml#/components/headers/X-Business-Message-Id"
+          content:
+            application/json:
+              schema:
+                $ref: "./base.yml#/components/schemas/errorResponse"
+              example:
+                data:
+                  businessMessageId: "20230120DMMMYKL4763ORB01162512"
+                  code: "API.002"
+                  reason: "data.businessMessageId - Invalid format"
+        401:
+          description: ""
+          headers:
+            X-Business-Message-Id:
+              required: true
+              $ref: "./base.yml#/components/headers/X-Business-Message-Id"
+          content:
+            application/json:
+              schema:
+                $ref: "./base.yml#/components/schemas/errorResponse"
+              example:
+                data:
+                  businessMessageId: "20230120DMMMYKL4763ORB01162512"
+                  code: "API.007"
+                  reason: "Unauthorized request"
+        429:
+          description: ""
+          headers:
+            X-Business-Message-Id:
+              required: true
+              $ref: "./base.yml#/components/headers/X-Business-Message-Id"
+          content:
+            application/json:
+              schema:
+                $ref: "./base.yml#/components/schemas/errorResponse"
+        500:
+          description: ""
+          headers:
+            X-Business-Message-Id:
+              required: true
+              $ref: "./base.yml#/components/headers/X-Business-Message-Id"
+          content:
+            application/json:
+              schema:
+                $ref: "./base.yml#/components/schemas/errorResponse"
+              example:
+                data:
+                  businessMessageId: "20230120DMMMYKL4763ORB01162512"
+                  code: "API.500"
+                  reason: "Internal Server Error"
+      security:
+        - bearerAuth: []
+      x-codegen-request-body-name: generated
+
+  /consent/cancel:
+    put:
+      summary: Cancel Consent
+      description: In the event where the request to register consent is no longer
+        required due to timeout, request has expired or etc, Merchant can use this
+        API to cancel the request. Though, cancellation request for Consent that has
+        been registered successfully will be rejected.
+      operationId: consent_cancel
+      parameters:
+        - name: X-Business-Message-Id
+          in: header
+          description: <b>Business Message Identification</b><br></br> Unique message identification. Format YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS
+            where <li>YYYYMMDD – Current Date</li>
+            <li>BBBBBBBB – BIC Code</li>
+            <li>XXX – Transaction Code. Set to <b>815</b>. Refer to <a href="https://docs.developer.paynet.my/docs/duitnowqr/transactiontype/index.html" target="_blank"> <b style="color:blue;">Transaction Code</b> </a> </li>
+            <li>O – Originator. Set to <b>O</b>. Refer to <a href="https://docs.developer.paynet.my/docs/duitnow/mappingtable#originator-code" target="_blank"> <b style="color:blue;">Originator</b> </a> </li>
+            <li>CC – Channel Code. Refer to <a href="https://docs.developer.paynet.my/docs/duitnow/mappingtable#channel-code" target="_blank"> <b style="color:blue;">Channel Code</b> </a> </li>
+            <li>SSSSSSSS – Sequence Number</li>
+            <br>Channel Code can be any of the following:<li>BA – Mobile Application</li><li>BW – Web Browser</li>
+          required: true
+          schema:
+            type: string
+            maxLength: 35
+            format: "YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS"
+          example: "20210101RPPEMYKL815OBA10004421"
+        - $ref: "./base.yml#/components/parameters/X-Ip-Address"
+        - $ref: "./base.yml#/components/parameters/X-Gps-Coordinates"
+
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/requestCancelConsent'
+            example:
+              data:
+                businessMessageId: 20210101RPPEMYKL815OBA10004421
+                mandateId: 20210101M0000221815OBA10000002
+                productId: P00000381
+        required: false
+      
+      responses:
+        200:
+          description: ""
+          headers:
+            Authorization:
+              required: true
+              $ref: "./base.yml#/components/headers/Authorization"
+            X-Business-Message-Id:
+              required: true
+              $ref: "./base.yml#/components/headers/X-Business-Message-Id"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/responseCancelConsent'
+              example:
+                data:
+                  businessMessageId: 20210101RPPEMYKL815OBA10000012
+                  date: 2021-01-01T09:30:47Z
+                  code: ACTC
+                  reason: Success/ Transaction Accepted Stored in SAF
+                  mandateId: 20210101M0000221811OBW00000001
+        400:
+          description: ""
+          headers:
+            X-Business-Message-Id:
+              required: true
+              $ref: "./base.yml#/components/headers/X-Business-Message-Id"
+          content:
+            application/json:
+              schema:
+                $ref: "./base.yml#/components/schemas/errorResponse"
+              example:
+                data:
+                  businessMessageId: "20230120DMMMYKL4763ORB01162512"
+                  code: "API.002"
+                  reason: "data.businessMessageId - Invalid format"
+        401:
+          description: ""
+          headers:
+            X-Business-Message-Id:
+              required: true
+              $ref: "./base.yml#/components/headers/X-Business-Message-Id"
+          content:
+            application/json:
+              schema:
+                $ref: "./base.yml#/components/schemas/errorResponse"
+              example:
+                data:
+                  businessMessageId: "20230120DMMMYKL4763ORB01162512"
+                  code: "API.007"
+                  reason: "Unauthorized request"
+        429:
+          description: ""
+          headers:
+            X-Business-Message-Id:
+              required: true
+              $ref: "./base.yml#/components/headers/X-Business-Message-Id"
+          content:
+            application/json:
+              schema:
+                $ref: "./base.yml#/components/schemas/errorResponse"
+        500:
+          description: ""
+          headers:
+            X-Business-Message-Id:
+              required: true
+              $ref: "./base.yml#/components/headers/X-Business-Message-Id"
+          content:
+            application/json:
+              schema:
+                $ref: "./base.yml#/components/schemas/errorResponse"
+              example:
+                data:
+                  businessMessageId: "20230120DMMMYKL4763ORB01162512"
+                  code: "API.500"
+                  reason: "Internal Server Error"
+
+      security:
+        - bearerAuth: []
+      x-codegen-request-body-name: generated
+
+  /consent/status/{mandateId}:
+    get:
+      summary: Status Inquiry
+      description: In the event where Merchant did not receive the status of Consent
+        Registration request, Merchant can use this API to inquire the status of the
+        registration from time to time. Though, Merchant is advised to use this sparingly
+        as PayNet may rate limit and throttle the request. Default is for the same
+        mandateId, can only be query per 30 seconds gap, else timeout will be thrown.
+      operationId: consent_status_inquiry
+      parameters:
+        - name: mandateId
+          in: query
+          description: <b>mandateId</b> from Initiate Consent request
+          schema:
+            maxLength: 35
+            type: string
+        - name: X-Business-Message-Id
+          in: header
+          description: <b>Business Message Identification</b><br></br> Unique message identification. Format YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS
+            where <li>YYYYMMDD – Current Date</li>
+            <li>BBBBBBBB – BIC Code</li>
+            <li>XXX – Transaction Code. Set to <b>814</b>. Refer to <a href="https://docs.developer.paynet.my/docs/duitnowqr/transactiontype/index.html" target="_blank"> <b style="color:blue;">Transaction Code</b> </a> </li>
+            <li>O – Originator. Set to <b>O</b>. Refer to <a href="https://docs.developer.paynet.my/docs/duitnow/mappingtable#originator-code" target="_blank"> <b style="color:blue;">Originator</b> </a> </li>
+            <li>CC – Channel Code. Refer to <a href="https://docs.developer.paynet.my/docs/duitnow/mappingtable#channel-code" target="_blank"> <b style="color:blue;">Channel Code</b> </a> </li>
+            <li>SSSSSSSS – Sequence Number</li>
+            <br>Channel Code can be any of the following:<li>BA – Mobile Application</li><li>BW – Web Browser</li>
+          required: true
+          schema:
+            type: string
+            maxLength: 35
+            format: "YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS"
+          example: "20210101RPPEMYKL814OBA10004421"
+        - $ref: "./base.yml#/components/parameters/X-Ip-Address"
+        - $ref: "./base.yml#/components/parameters/X-Gps-Coordinates"
+
+      responses:
+        200:
+          description: ""
+          headers:
+            Authorization:
+              required: true
+              $ref: "./base.yml#/components/headers/Authorization"
+            X-Business-Message-Id:
+              required: true
+              $ref: "./base.yml#/components/headers/X-Business-Message-Id"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/responseRetrieveConsentStatus'
+              example:
+                data:
+                  businessMessageId: 20210101RPPEMYKL814ORB10000012
+                  date: 2021-01-01T09:30:47Z
+                  code: ACTC
+                  reason: U000
+                  transactionStatus: PENDING
+        400:
+          description: ""
+          headers:
+            X-Business-Message-Id:
+              required: true
+              $ref: "./base.yml#/components/headers/X-Business-Message-Id"
+          content:
+            application/json:
+              schema:
+                $ref: "./base.yml#/components/schemas/errorResponse"
+              example:
+                data:
+                  businessMessageId: "20230120DMMMYKL4763ORB01162512"
+                  code: "API.002"
+                  reason: "data.businessMessageId - Invalid format"
+        401:
+          description: ""
+          headers:
+            X-Business-Message-Id:
+              required: true
+              $ref: "./base.yml#/components/headers/X-Business-Message-Id"
+          content:
+            application/json:
+              schema:
+                $ref: "./base.yml#/components/schemas/errorResponse"
+              example:
+                data:
+                  businessMessageId: "20230120DMMMYKL4763ORB01162512"
+                  code: "API.007"
+                  reason: "Unauthorized request"
+        429:
+          description: ""
+          headers:
+            X-Business-Message-Id:
+              required: true
+              $ref: "./base.yml#/components/headers/X-Business-Message-Id"
+          content:
+            application/json:
+              schema:
+                $ref: "./base.yml#/components/schemas/errorResponse"
+        500:
+          description: ""
+          headers:
+            X-Business-Message-Id:
+              required: true
+              $ref: "./base.yml#/components/headers/X-Business-Message-Id"
+          content:
+            application/json:
+              schema:
+                $ref: "./base.yml#/components/schemas/errorResponse"
+              example:
+                data:
+                  businessMessageId: "20230120DMMMYKL4763ORB01162512"
+                  code: "API.500"
+                  reason: "Internal Server Error"
+      security:
+        - bearerAuth: []
+      x-codegen-request-body-name: generated
+
+  /consent/terminate:
+    put:
+      summary: Terminate Consent
+      description: Merchant may use this API to terminate a registered Consent. Only
+        Consent that is registered successfully is allowed to be terminated. For Consent
+        that is not registered yet, the request will be rejected.
+      operationId: consent_terminate
+      parameters:
+        - name: X-Business-Message-Id
+          in: header
+          description: <b>Business Message Identification</b><br></br> Unique message identification. Format YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS
+            where <li>YYYYMMDD – Current Date</li>
+            <li>BBBBBBBB – BIC Code</li>
+            <li>XXX – Transaction Code. Set to <b>764</b>. Refer to <a href="https://docs.developer.paynet.my/docs/duitnowqr/transactiontype/index.html" target="_blank"> <b style="color:blue;">Transaction Code</b> </a> </li>
+            <li>O – Originator. Set to <b>O</b>. Refer to <a href="https://docs.developer.paynet.my/docs/duitnow/mappingtable#originator-code" target="_blank"> <b style="color:blue;">Originator</b> </a> </li>
+            <li>CC – Channel Code. Refer to <a href="https://docs.developer.paynet.my/docs/duitnow/mappingtable#channel-code" target="_blank"> <b style="color:blue;">Channel Code</b> </a> </li>
+            <li>SSSSSSSS – Sequence Number</li>
+            <br>Channel Code can be any of the following:<li>BA – Mobile Application</li><li>BW – Web Browser</li>
+          required: true
+          schema:
+            type: string
+            maxLength: 35
+            format: "YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS"
+          example: "20210101M0000221764OBW10000032"
+        - $ref: "./base.yml#/components/parameters/X-Ip-Address"
+        - $ref: "./base.yml#/components/parameters/X-Gps-Coordinates"
+      
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/requestTerminateConsent'
+            example:
+              data:
+                businessMessageId: 20210101M0000221764OBW10000032
+                consentId: M00002210001590561
+                reason: Changing service provider
+                productId: P00000381
+        required: false
+
+      responses:
+        200:
+          description: ""
+          headers:
+            Authorization:
+              required: true
+              $ref: "./base.yml#/components/headers/Authorization"
+            X-Business-Message-Id:
+              required: true
+              $ref: "./base.yml#/components/headers/X-Business-Message-Id"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/responseTerminateConsent'
+              example:
+                data:
+                  businessMessageId: 20210101RPPEMYKL764OBA10000012
+                  date: 2021-01-01T09:30:47Z
+                  code: ACTC
+                  reason: U000
+                  consentId: M00002210001590561
+        400:
+          description: ""
+          headers:
+            X-Business-Message-Id:
+              required: true
+              $ref: "./base.yml#/components/headers/X-Business-Message-Id"
+          content:
+            application/json:
+              schema:
+                $ref: "./base.yml#/components/schemas/errorResponse"
+              example:
+                data:
+                  businessMessageId: "20230120DMMMYKL4763ORB01162512"
+                  code: "API.002"
+                  reason: "data.businessMessageId - Invalid format"
+        401:
+          description: ""
+          headers:
+            X-Business-Message-Id:
+              required: true
+              $ref: "./base.yml#/components/headers/X-Business-Message-Id"
+          content:
+            application/json:
+              schema:
+                $ref: "./base.yml#/components/schemas/errorResponse"
+              example:
+                data:
+                  businessMessageId: "20230120DMMMYKL4763ORB01162512"
+                  code: "API.007"
+                  reason: "Unauthorized request"
+        429:
+          description: ""
+          headers:
+            X-Business-Message-Id:
+              required: true
+              $ref: "./base.yml#/components/headers/X-Business-Message-Id"
+          content:
+            application/json:
+              schema:
+                $ref: "./base.yml#/components/schemas/errorResponse"
+        500:
+          description: ""
+          headers:
+            X-Business-Message-Id:
+              required: true
+              $ref: "./base.yml#/components/headers/X-Business-Message-Id"
+          content:
+            application/json:
+              schema:
+                $ref: "./base.yml#/components/schemas/errorResponse"
+              example:
+                data:
+                  businessMessageId: "20230120DMMMYKL4763ORB01162512"
+                  code: "API.500"
+                  reason: "Internal Server Error"
+
+      security:
+        - bearerAuth: []
+      x-codegen-request-body-name: generated
+
+  /consent/directdebit:
+    post:
+      summary: Real-Time Debit
+      description: Merchant uses this API to initiate a debit request from Customer.
+        This is a service used by Merchant to collect payment from Customer’s account
+        based on registered consent under them.
+      operationId: consent_directdebit
+      parameters:
+        - name: X-Business-Message-Id
+          in: header
+          description: <b>Business Message Identification</b><br></br> Unique message identification. Format YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS
+            where <li>YYYYMMDD – Current Date</li>
+            <li>BBBBBBBB – BIC Code</li>
+            <li>XXX – Transaction Code. Set to <b>220</b>. Refer to <a href="https://docs.developer.paynet.my/docs/duitnowqr/transactiontype/index.html" target="_blank"> <b style="color:blue;">Transaction Code</b> </a> </li>
+            <li>O – Originator. Set to <b>O</b>. Refer to <a href="https://docs.developer.paynet.my/docs/duitnow/mappingtable#originator-code" target="_blank"> <b style="color:blue;">Originator</b> </a> </li>
+            <li>CC – Channel Code. Refer to <a href="https://docs.developer.paynet.my/docs/duitnow/mappingtable#channel-code" target="_blank"> <b style="color:blue;">Channel Code</b> </a> </li>
+            <li>SSSSSSSS – Sequence Number</li>
+            <br>Channel Code can be any of the following:<li>BA – Mobile Application</li><li>BW – Web Browser</li>
+          required: true
+          schema:
+            type: string
+            maxLength: 35
+            format: "YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS"
+          example: "20210101M0000221220OBW00000053"
+        - $ref: "./base.yml#/components/parameters/X-Ip-Address"
+        - $ref: "./base.yml#/components/parameters/X-Gps-Coordinates"
+
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/requestRealTimeDebit'
+            example:
+              data:
+                businessMessageId: 20210101M0000221220OBW00000053
+                consentId: M00002210001590561
+                currency: MYR
+                amount: 10.99
+                merchantName: Telecom XYZ
+                recipientReference: Policy No. 897541
+                productId: P00000381
+        required: false
+
+      responses:
+        200:
+          description: ""
+          headers:
+            Authorization:
+              required: true
+              $ref: "./base.yml#/components/headers/Authorization"
+            X-Business-Message-Id:
+              required: true
+              $ref: "./base.yml#/components/headers/X-Business-Message-Id"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/responseRealTimeDebit'
+              example:
+                data:
+                  businessMessageId: 20210101RPPEMYKL220ORB10000012
+                  date: 2021-01-01T09:30:47Z
+                  code: ACTC
+                  reason: U000
+                  endToEndId: 20210101M0000221220OBW00000053
+        400:
+          description: ""
+          headers:
+            X-Business-Message-Id:
+              required: true
+              $ref: "./base.yml#/components/headers/X-Business-Message-Id"
+          content:
+            application/json:
+              schema:
+                $ref: "./base.yml#/components/schemas/errorResponse"
+              example:
+                data:
+                  businessMessageId: "20230120DMMMYKL4763ORB01162512"
+                  code: "API.002"
+                  reason: "data.businessMessageId - Invalid format"
+        401:
+          description: ""
+          headers:
+            X-Business-Message-Id:
+              required: true
+              $ref: "./base.yml#/components/headers/X-Business-Message-Id"
+          content:
+            application/json:
+              schema:
+                $ref: "./base.yml#/components/schemas/errorResponse"
+              example:
+                data:
+                  businessMessageId: "20230120DMMMYKL4763ORB01162512"
+                  code: "API.007"
+                  reason: "Unauthorized request"
+        429:
+          description: ""
+          headers:
+            X-Business-Message-Id:
+              required: true
+              $ref: "./base.yml#/components/headers/X-Business-Message-Id"
+          content:
+            application/json:
+              schema:
+                $ref: "./base.yml#/components/schemas/errorResponse"
+        500:
+          description: ""
+          headers:
+            X-Business-Message-Id:
+              required: true
+              $ref: "./base.yml#/components/headers/X-Business-Message-Id"
+          content:
+            application/json:
+              schema:
+                $ref: "./base.yml#/components/schemas/errorResponse"
+              example:
+                data:
+                  businessMessageId: "20230120DMMMYKL4763ORB01162512"
+                  code: "API.500"
+                  reason: "Internal Server Error"
+
+      security:
+        - bearerAuth: []
+      x-codegen-request-body-name: generated
+      
+
+components:
+  schemas:
+    requestInitiateConsent:
+      type: object
+      required:
+        - data
+      properties:
+        data:
+          required:
+            - allowTerminatedByDebtor
+            - businessMessageId
+            - customer
+            - effectiveDate
+            - expiryDate
+            - frequency
+            - mandateId
+            - maximumPaymentAmount
+            - maximumPaymentCurrency
+            - merchant
+            - productId
+            - recipientReference
+            - sourceOfFunds
+            - type
+          properties:
+            businessMessageId: 
+              maxLength: 35
+              type: string
+              description: "Unique message identification. Format YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS
+                <br> where: 
+                <li>YYYYMMDD - Current Date</li>
+                <li>BBBBBBBB - BIC Code</li>
+                <li>XXX - Transaction Type. Set to <b>811</b></li>
+                <li>O - Originator. Set to <b>O</b></li>
+                <li>CC - Channel Code</li>
+                <li>SSSSSSSS - Sequence Number</li>
+                <br/>
+                <br>Originator can be any of the following:
+                <li>O - OFI</li>
+                <li>H - RPP</li>
+                <li>R - RFI</li>
+                <br/>
+                <br>Channel code can be any of the following:
+                <li>BA - Mobile Application</li>
+                <li>BW -  Web Browser</li>"
+            date: 
+              type: string
+              description: Transaction date and time in yyyy-MM-ddTHH:mm:ss.SSS format using
+                MYT<br /><br /> System to default to current date and time if field is
+                not sent
+            mandateId: 
+              type: string,
+              maxLength: 35
+              description: |
+                Set to the same value as <b>messageId</b><br />
+                This value is used as unique reference for subsequent consent details retrieval or consent status inquiry
+            requestExpiryDate: 
+              type: string,
+              maxLength: 35
+              description: Date and time in MYT the request shall expire if no action
+                is taken by customer<br /><br />System to default appropriately if field
+                is not sent
+            customer: 
+              required:
+              - name
+              type: object
+              properties:
+                name:
+                  maxLength: 140
+                  type: string
+                  description: Name of originating party
+                identificationType:
+                  maxLength: 2
+                  type: string
+                  description: |
+                    Field is currently not used<br /><br />
+                    Identification type. When field is sent, Debiting Bank to ensure the <b>identification</b> field match with their internal record before allow to debit from the account<br /><br />
+                    Refer to <a style="color:blue;" href="https://docs.developer.paynet.my/docs/duitnow/mappingtable/index.html#identification-type" target="_blank"><b>Identification Type</b></a>
+                identification:
+                  maxLength: 140
+                  type: string
+                  description: |
+                    Field is currently not used<br /><br />
+                    Identification value
+                identityValidation:
+                  maxLength: 2
+                  type: string
+                  description: |
+                    Indicates if Debiting Bank should perform validation on customer information<br /><br />
+                    Refer to <a style="color:blue;" href="https://docs.developer.paynet.my/docs/duitnow/mappingtable/index.html#identity-validation" target="_blank"><b>Identity Validation</b></a>
+            merchant:
+              required:
+              - identification
+              - identificationType
+              - name
+              type: object
+              properties:
+                name:
+                  maxLength: 140
+                  type: string
+                  description: Merchant name
+                identificationType:
+                  maxLength: 2
+                  type: string
+                  description: |
+                    Identification type. Only supports <b>04</b> for Business Registration Number<br /><br />
+                    When field is sent, Crediting Bank to ensure the <b>identification</b> field matches with their internal record before allowing to credit into the account
+                identification:
+                  maxLength: 140
+                  type: string
+                  description: Identification value
+            sourceOfFunds: 
+              type: array
+              description: "Acceptable source of funds by Merchant\n<li>01 – CASA</li>\
+                \ \n<li>02 – Credit Card</li> \n<li>03 – eWallet</li>\n"
+            type:
+              maxLength: 4
+              type: string
+              description: Consent type. Default to <b>DDPT</b>
+            effectiveDate:
+              type: string
+              description: Consent effective date in YYYY-MM-DD format
+            expiryDate:
+              type: string
+              description: Consent expiry date in YYYY-MM-DD format
+            allowTerminatedByDebtor:
+              type: boolean
+              description: Allows customer from editing or terminating consent
+            maximumPaymentCurrency:
+              maxLength: 3
+              type: string
+              description: |
+                Set currency code to <b>MYR</b>
+            maximumPaymentAmount:
+              type: number
+              description: Maximum payment amount
+              format: double
+            frequency: 
+              maxLength: 2
+              type: string
+              description: |
+                Frequency mode<br /><br />
+                Refer to <a style="color:blue;" href="https://docs.developer.paynet.my/docs/duitnow/mappingtable/index.html#frequency-mode" target="_blank"><b>Frequency Mode</b></a>
+            productId: 
+              maxLength: 35
+              type: string
+              description: Product identification assigned by PayNet during registration
+            recipientReference:
+              maxLength: 140
+              type: string
+              description: Payment reference to recipient
+            paymentDescription:
+              maxLength: 140
+              type: string
+              description: Additional payment description
+
+    responseInitiateConsent:
+      type: object
+      required:
+        - data
+      properties:
+        data:
+          required:
+          - businessMessageId
+          - date
+          - code
+          - reason
+          - mandateId
+          - consentId
+          type: object
+          properties:
+            businessMessageId:
+              type: string
+              maxLength: 35
+              format: YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS
+              description: <b>Business Message Identification</b><br></br> Unique message identification. Format YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS
+                where <li>YYYYMMDD – Current Date</li>
+                <li>BBBBBBBB – BIC Code</li>
+                <li>XXX – Transaction Code. Refer to <a href="https://docs.developer.paynet.my/docs/duitnowqr/transactiontype/index.html" target="_blank"> <b style="color:blue;">Transaction Code</b> </a> </li>
+                <li>O – Originator. Refer to <a href="https://docs.developer.paynet.my/docs/duitnow/mappingtable#originator-code" target="_blank"> <b style="color:blue;">Originator</b> </a> </li>
+                <li>CC – Channel Code. Refer to <a href="https://docs.developer.paynet.my/docs/duitnow/mappingtable#channel-code" target="_blank"> <b style="color:blue;">Channel Code</b> </a> </li>
+                <li>SSSSSSSS – Sequence Number</li>
+            date:
+              type: string
+              description: Message date and time in MYT using yyyy-MM-ddTHH:mm:ss.SSS
+                format
+            code:
+              type: string
+              description: Status code
+            reason:
+              type: string
+              description: Reason code
+            mandateId:
+              maxLength: 35
+              type: string
+              description: <b>mandateId</b> from request message
+            consentId:
+              maxLength: 35
+              type: string
+              description: Unique consent identification assigned by PayNet
+
+    responseRetrieveConsentInfo:
+      type: object
+      required:
+        - data
+      properties:
+        data:
+          required:
+          - businessMessageId
+          - date
+          - code
+          - reason
+          - allowTerminatedByDebtor
+          - consentId
+          - consentStatus
+          - effectiveDate
+          - expiryDate
+          - frequency
+          - maximumPaymentAmount
+          - maximumPaymentCurrency
+          - sourceOfFunds
+          - type
+          type: object
+          properties:
+            businessMessageId:
+              type: string
+              maxLength: 35
+              format: YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS
+              description: <b>Business Message Identification</b><br></br> Unique message identification. Format YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS
+                where <li>YYYYMMDD – Current Date</li>
+                <li>BBBBBBBB – BIC Code</li>
+                <li>XXX – Transaction Code. Refer to <a href="https://docs.developer.paynet.my/docs/duitnowqr/transactiontype/index.html" target="_blank"> <b style="color:blue;">Transaction Code</b> </a> </li>
+                <li>O – Originator. Refer to <a href="https://docs.developer.paynet.my/docs/duitnow/mappingtable#originator-code" target="_blank"> <b style="color:blue;">Originator</b> </a> </li>
+                <li>CC – Channel Code. Refer to <a href="https://docs.developer.paynet.my/docs/duitnow/mappingtable#channel-code" target="_blank"> <b style="color:blue;">Channel Code</b> </a> </li>
+                <li>SSSSSSSS – Sequence Number</li>
+            date:
+              type: string
+              description: Message date and time in MYT using yyyy-MM-ddTHH:mm:ss.SSS
+                format
+            code:
+              maxLength: 4
+              type: string
+              description: |
+                Status code. <br /><br />Refer to <a style="color:blue;" href="https://docs.developer.paynet.my/docs/duitnow/mappingtable#payment-transaction-status-code-externalpaymenttransactionstatus1code" target="_blank"><b>Mapping Table</b></a>
+            reason:
+              maxLength: 35
+              type: string
+              description: Reason code
+            consentId:
+              maxLength: 35
+              type: string
+              description: <b>consentId</b> from Initiate Consent response message
+            type:
+              maxLength: 4
+              type: string
+              description: Consent type. Default to <b>DDPT</b>
+            consentStatus:
+              maxLength: 4
+              type: string
+              description: |
+                Consent status
+                <br /><br />Refer to <a style="color:blue;" href="https://docs.developer.paynet.my/docs/duitnow/mappingtable#consent-status" target="_blank"><b>Mapping Table</b></a>
+            effectiveDate:
+              type: string
+              description: Consent effective date in YYYY-MM-DD format
+            expiryDate:
+              type: string
+              description: Consent expiry date in YYYY-MM-DD format
+            allowTerminatedByDebtor:
+              type: boolean
+              description: Consent is allowed to be terminated by customer
+            maximumPaymentAmount:
+              type: number
+              description: Maximum payment amount
+              format: double
+            maximumPaymentCurrency:
+              maxLength: 3
+              type: string
+              description: Payment currency code
+            sourceOfFunds:
+              maxLength: 2
+              type: string
+              description: |
+                Acceptable source of funds by Merchant
+                <li>01 – CASA</li>
+                <li>02 – Credit Card</li>
+                <li>03 – eWallet</li>
+                <li>04 – DFLT</li>
+            frequency:
+              maxLength: 2
+              type: string
+              description: |-
+                Frequency mode<br /><br />
+                Refer to <a style="color:blue;" href="https://docs.developer.paynet.my/docs/duitnow/mappingtable/index.html#frequency-mode" target="_blank"><b>Frequency Mode</b></a>
+
+    requestCancelConsent:
+      type: object
+      required:
+        - data
+      properties:
+        data:
+          required:
+          - businessMessageId
+          - mandateId
+          - productId
+          type: object
+          properties:
+            businessMessageId: 
+              maxLength: 35
+              type: string
+              description: "Unique message identification. Format YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS
+                <br> where: 
+                <li>YYYYMMDD - Current Date</li>
+                <li>BBBBBBBB - BIC Code</li>
+                <li>XXX - Transaction Type. Set to <b>815</b></li>
+                <li>O - Originator. Set to <b>O</b></li>
+                <li>CC - Channel Code</li>
+                <li>SSSSSSSS - Sequence Number</li>
+                <br/>
+                <br>Originator can be any of the following:
+                <li>O - OFI</li>
+                <li>H - RPP</li>
+                <li>R - RFI</li>
+                <br/>
+                <br>Channel code can be any of the following:
+                <li>BA - Mobile Application</li>
+                <li>BW -  Web Browser</li>"
+            productId:
+              maxLength: 35
+              type: string
+              description: Product identification assigned by PayNet during registration
+            mandateId:
+              maxLength: 35
+              type: string
+              description: <b>mandateId</b> from Initiate Consent request
+
+    responseCancelConsent:
+      type: object
+      required:
+        - data
+      properties:
+        data:
+          required:
+            - businessMessageId
+            - date
+            - code
+            - reason
+            - mandateId
+          type: object
+          properties:
+            businessMessageId:
+              type: string
+              maxLength: 35
+              format: YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS
+              description: <b>Business Message Identification</b><br></br> Unique message identification. Format YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS
+                where <li>YYYYMMDD – Current Date</li>
+                <li>BBBBBBBB – BIC Code</li>
+                <li>XXX – Transaction Code. Refer to <a href="https://docs.developer.paynet.my/docs/duitnowqr/transactiontype/index.html" target="_blank"> <b style="color:blue;">Transaction Code</b> </a> </li>
+                <li>O – Originator. Refer to <a href="https://docs.developer.paynet.my/docs/duitnow/mappingtable#originator-code" target="_blank"> <b style="color:blue;">Originator</b> </a> </li>
+                <li>CC – Channel Code. Refer to <a href="https://docs.developer.paynet.my/docs/duitnow/mappingtable#channel-code" target="_blank"> <b style="color:blue;">Channel Code</b> </a> </li>
+                <li>SSSSSSSS – Sequence Number</li>
+            date:
+              type: string
+              description: Message date and time in MYT using yyyy-MM-ddTHH:mm:ss.SSS
+                format
+            code:
+              maxLength: 4
+              type: string
+              description: |
+                Status code. <br /><br />Refer to <a style="color:blue;" href="https://docs.developer.paynet.my/docs/duitnow/mappingtable#payment-transaction-status-code-externalpaymenttransactionstatus1code" target="_blank"><b>Mapping Table</b></a>
+            reason:
+              maxLength: 35
+              type: string
+              description: Reason code
+            mandateId:
+              maxLength: 35
+              type: string
+              description: <b>messageId</b> from Cancel Consent request
+
+    responseRetrieveConsentStatus:
+      type: object
+      required:
+        - data
+      properties:
+        data:
+          required:
+            - businessMessageId
+            - date
+            - code
+            - reason
+            - transactionStatus
+          type: object
+          properties:
+            businessMessageId:
+              type: string
+              maxLength: 35
+              format: YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS
+              description: <b>Business Message Identification</b><br></br> Unique message identification. Format YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS
+                where <li>YYYYMMDD – Current Date</li>
+                <li>BBBBBBBB – BIC Code</li>
+                <li>XXX – Transaction Code. Refer to <a href="https://docs.developer.paynet.my/docs/duitnowqr/transactiontype/index.html" target="_blank"> <b style="color:blue;">Transaction Code</b> </a> </li>
+                <li>O – Originator. Refer to <a href="https://docs.developer.paynet.my/docs/duitnow/mappingtable#originator-code" target="_blank"> <b style="color:blue;">Originator</b> </a> </li>
+                <li>CC – Channel Code. Refer to <a href="https://docs.developer.paynet.my/docs/duitnow/mappingtable#channel-code" target="_blank"> <b style="color:blue;">Channel Code</b> </a> </li>
+                <li>SSSSSSSS – Sequence Number</li>
+            date:
+              type: string
+              description: Message date and time in MYT using yyyy-MM-ddTHH:mm:ss.SSS
+                format
+            code:
+              maxLength: 4
+              type: string
+              description: |
+                Status code. <br /><br />Refer to <a style="color:blue;" href="https://docs.developer.paynet.my/docs/duitnow/mappingtable#payment-transaction-status-code-externalpaymenttransactionstatus1code" target="_blank"><b>Mapping Table</b></a>
+            reason:
+              maxLength: 35
+              type: string
+              description: Reason code
+            transactionStatus:
+              maxLength: 35
+              type: string
+              description: Transaction status
+
+    requestTerminateConsent:
+      type: object
+      required:
+        - data
+      properties:
+        data:
+          required:
+          - businessMessageId
+          - consentId
+          - reason
+          - productId
+          type: object
+          properties:
+            businessMessageId: 
+              maxLength: 35
+              type: string
+              description: <b>Business Message Identification</b><br></br> Unique message identification. Format YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS
+                where <li>YYYYMMDD – Current Date</li>
+                <li>BBBBBBBB – BIC Code</li>
+                <li>XXX – Transaction Code. Refer to <a href="https://docs.developer.paynet.my/docs/duitnowqr/transactiontype/index.html" target="_blank"> <b style="color:blue;">Transaction Code</b> </a> </li>
+                <li>O – Originator. Refer to <a href="https://docs.developer.paynet.my/docs/duitnow/mappingtable#originator-code" target="_blank"> <b style="color:blue;">Originator</b> </a> </li>
+                <li>CC – Channel Code. Refer to <a href="https://docs.developer.paynet.my/docs/duitnow/mappingtable#channel-code" target="_blank"> <b style="color:blue;">Channel Code</b> </a> </li>
+                <li>SSSSSSSS – Sequence Number</li>
+            consentId:
+              maxLength: 35
+              type: string
+              description: <b>consentId</b> from Initiate Consent response message
+            reason:
+              maxLength: 256
+              type: string
+              description: Cancellation reason
+            productId:
+              maxLength: 35
+              type: string
+              description: Product identification assigned by PayNet during registration
+
+    responseTerminateConsent:
+      type: object
+      required:
+        - data
+      properties:
+        data:
+          required:
+          - businessMessageId
+          - date
+          - code
+          - consentId
+          - reason
+          type: object
+          properties:
+            businessMessageId: 
+              maxLength: 35
+              type: string
+              description: <b>Business Message Identification</b><br></br> Unique message identification. Format YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS
+                where <li>YYYYMMDD – Current Date</li>
+                <li>BBBBBBBB – BIC Code</li>
+                <li>XXX – Transaction Code. Refer to <a href="https://docs.developer.paynet.my/docs/duitnowqr/transactiontype/index.html" target="_blank"> <b style="color:blue;">Transaction Code</b> </a> </li>
+                <li>O – Originator. Refer to <a href="https://docs.developer.paynet.my/docs/duitnow/mappingtable#originator-code" target="_blank"> <b style="color:blue;">Originator</b> </a> </li>
+                <li>CC – Channel Code. Refer to <a href="https://docs.developer.paynet.my/docs/duitnow/mappingtable#channel-code" target="_blank"> <b style="color:blue;">Channel Code</b> </a> </li>
+                <li>SSSSSSSS – Sequence Number</li>
+            date:
+              type: string
+              description: Message date and time in MYT using yyyy-MM-ddTHH:mm:ss.SSS
+                format
+            code:
+              maxLength: 4
+              type: string
+              description: |
+                Status code. <br /><br />Refer to <a style="color:blue;" href="https://docs.developer.paynet.my/docs/duitnow/mappingtable#payment-transaction-status-code-externalpaymenttransactionstatus1code" target="_blank"><b>Mapping Table</b></a>
+            consentId:
+              maxLength: 35
+              type: string
+              description: <b>consentId</b> from Initiate Consent response message
+            reason:
+              maxLength: 256
+              type: string
+              description: Cancellation reason
+
+    requestRealTimeDebit:
+      type: object
+      required:
+        - data
+      properties:
+        data:
+          required:
+          - businessMessageId
+          - consentId
+          - currency
+          - amount
+          - merchantName
+          - recipientReference
+          - productId
+          type: object
+          properties:
+            businessMessageId: 
+              maxLength: 35
+              type: string
+              description: <b>Business Message Identification</b><br></br> Unique message identification. Format YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS
+                where <li>YYYYMMDD – Current Date</li>
+                <li>BBBBBBBB – BIC Code</li>
+                <li>XXX – Transaction Code. Refer to <a href="https://docs.developer.paynet.my/docs/duitnowqr/transactiontype/index.html" target="_blank"> <b style="color:blue;">Transaction Code</b> </a> </li>
+                <li>O – Originator. Refer to <a href="https://docs.developer.paynet.my/docs/duitnow/mappingtable#originator-code" target="_blank"> <b style="color:blue;">Originator</b> </a> </li>
+                <li>CC – Channel Code. Refer to <a href="https://docs.developer.paynet.my/docs/duitnow/mappingtable#channel-code" target="_blank"> <b style="color:blue;">Channel Code</b> </a> </li>
+                <li>SSSSSSSS – Sequence Number</li>
+            consentId:
+              maxLength: 35
+              type: string
+              description: <b>consentId</b> from Initiate Consent response message
+            currency:
+              maxLength: 3
+              type: string
+              description: Set currency code to <b>MYR</b>
+            amount:
+              type: number
+              description: Transaction amount
+              format: double
+            merchantName:
+              maxLength: 140
+              type: string
+              description: Merchant name
+            recipientReference:
+              maxLength: 140
+              type: string
+              description: Payment reference to recipient
+            productId:
+              maxLength: 35
+              type: string
+              description: Product identification assigned by PayNet during registration
+
+    responseRealTimeDebit:
+      type: object
+      required:
+        - data
+      properties:
+        data:
+          required:
+          - businessMessageId
+          - date
+          - code
+          - endToEndId
+          - reason
+          type: object
+          properties:
+            businessMessageId: 
+              maxLength: 35
+              type: string
+              description: <b>Business Message Identification</b><br></br> Unique message identification. Format YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS
+                where <li>YYYYMMDD – Current Date</li>
+                <li>BBBBBBBB – BIC Code</li>
+                <li>XXX – Transaction Code. Refer to <a href="https://docs.developer.paynet.my/docs/duitnowqr/transactiontype/index.html" target="_blank"> <b style="color:blue;">Transaction Code</b> </a> </li>
+                <li>O – Originator. Refer to <a href="https://docs.developer.paynet.my/docs/duitnow/mappingtable#originator-code" target="_blank"> <b style="color:blue;">Originator</b> </a> </li>
+                <li>CC – Channel Code. Refer to <a href="https://docs.developer.paynet.my/docs/duitnow/mappingtable#channel-code" target="_blank"> <b style="color:blue;">Channel Code</b> </a> </li>
+                <li>SSSSSSSS – Sequence Number</li>
+            date:
+              type: string
+              description: Message date and time in MYT using yyyy-MM-ddTHH:mm:ss.SSS
+                format
+            code:
+              maxLength: 4
+              type: string
+              description: |
+                Status code. <br /><br />Refer to <a style="color:blue;" href="https://docs.developer.paynet.my/docs/duitnow/mappingtable#payment-transaction-status-code-externalpaymenttransactionstatus1code" target="_blank"><b>Mapping Table</b></a>
+            endToEndId:
+              maxLength: 35
+              type: string
+              description: <b>businessMessageId</b> from request message
+            reason:
+              maxLength: 256
+              type: string
+              description: Cancellation reason
+
+  securitySchemes:
+    bearerAuth:
+      $ref: './base.yml#/components/securitySchemes/bearerAuth'

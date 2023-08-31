@@ -1,0 +1,3134 @@
+openapi: 3.1.0
+info:
+  title: DuitNow QR
+  description: |
+
+    > **Attention!** Kindly be informed that these APIs are exclusively intended for reference by Malaysian Banks.
+
+    ### Before Getting Started
+    Participant needs to identify the role it plans to participate as before deciding which API to build. The roles include:
+      - Participant acts as the Originating Financial Institution (OFI) or Issuer. Participant will need to be able to parse the QR code and translate the information into the API payload before sending to RPP host to create the payment instruction.
+      - Participant acts as the Receiving Financial Institution (RFI) or Acquirer. Participant will need to be able to receive the instruction from RPP host and be able to credit the fund to their customer’s account. In such scenario, Participant needs to be able to receive API request from RPP host to process the payment instruction.
+      - Participant acts as both the Originating Financial Institution (OFI) and Receiving Financial Institution (RFI). In such scenario, Participant needs to implement both payment instruction's sending and receiving legs.
+
+    ### V1 API
+    This API version is made available in the following formats:
+      - XML over TCP/IP connection
+      - JSON over HTTP connection
+      
+    Both formats support connectivity over the internet.
+
+    ### Endpoints
+    Participant only needs to implement endpoints for the type of QRs it wishes to offer to customer. Below are the types that RPP is currently offering:
+      - Domestic MPM – Merchant-Presented Mode DuitNow QR for domestic market only.
+      - Cross Border MPM – Merchant-Presented Mode QR is built on top of Domestic MPM but intended for QR transaction in overseas country. Participant who is interested may refer to our product section on the countries being supported.
+      - Domestic CPM – Consumer-Presented Mode DuitNow QR for domestic market only.
+  version: v1
+servers:
+- url: https://mock.developer.paynet.my/qr/v1
+paths:
+  /domestic/enquiry:
+    post:
+      description: This API is used to lookup for the Merchant/Biller information using the QR code. The returned information will be used when initiating QR payment
+      summary: QR Enquiry
+      operationId: Domestic Account Enquiry
+      tags:
+        - Domestic
+      parameters:
+      - name: Authorization
+        in: header
+        description: Bearer &lt;access_token&gt;
+        required: true
+        schema:
+          type: string
+      
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/accountInquiryRequest'
+        required: false
+      responses:
+        200:
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/accountInquiryResponse'
+          x-amf-mediaType: application/json
+        400:
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorResponse'
+          x-amf-mediaType: application/json
+      security:
+      - OAuth 2.0: []
+      x-codegen-request-body-name: generated
+
+  
+
+  /domestic/payment:
+    post:
+      description: This API is used to initiate payment to Merchant/Biller to complete the QR payment. Upon completion of this payment leg, the fund will be credited to the Merchant/Biller’s Creditor Agent
+      summary: QR Payment
+      operationId: Domestic QR Payment 
+      tags:
+        - Domestic
+      parameters:
+      - name: Authorization
+        in: header
+        description: Bearer &lt;access_token&gt;
+        required: true
+        schema:
+          type: string
+      
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/creditTransferRequest'
+        required: false
+      responses:
+        200:
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/creditTransferResponse'
+          x-amf-mediaType: application/json
+        400:
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorResponse'
+          x-amf-mediaType: application/json
+      security:
+      - OAuth 2.0: []
+      x-codegen-request-body-name: generated
+
+  /crossborder/enquiry:
+    post:
+      description: This API is used to lookup for the Merchant/Biller information using the QR code. The returned information will be used when initiating QR payment
+      summary: QR Enquiry
+      operationId: Cross Border Account Enquiry
+      tags:
+        - Cross Border
+      parameters:
+      - name: Authorization
+        in: header
+        description: Bearer &lt;access_token&gt;
+        required: true
+        schema:
+          type: string
+      
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/accountInquiryRequest'
+        required: false
+      responses:
+        200:
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/accountInquiryResponse'
+          x-amf-mediaType: application/json
+        400:
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorResponse'
+          x-amf-mediaType: application/json
+      security:
+      - OAuth 2.0: []
+      x-codegen-request-body-name: generated
+
+  
+
+  /crossborder/payment:
+    post:
+      description: This API is used to initiate payment to Merchant/Biller to complete the QR payment. Upon completion of this payment leg, the fund will be credited to the Merchant/Biller’s Creditor Agent
+      summary: QR Payment
+      operationId: Cross Border QR Payment
+      tags:
+        - Cross Border
+      parameters:
+      - name: Authorization
+        in: header
+        description: Bearer &lt;access_token&gt;
+        required: true
+        schema:
+          type: string
+      
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/creditTransferRequest'
+        required: false
+      responses:
+        200:
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/creditTransferResponse'
+          x-amf-mediaType: application/json
+        400:
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorResponse'
+          x-amf-mediaType: application/json
+      security:
+      - OAuth 2.0: []
+      x-codegen-request-body-name: generated
+
+
+  /trx/enquiry:
+    post:
+      description: This API is used to retrieve the status of the QR payment using the Business Message Identifier
+      operationId: Transaction Enquiry
+      parameters:
+      - name: Authorization
+        in: header
+        description: Bearer &lt;access_token&gt;
+        required: true
+        schema:
+          type: string
+      
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/transactionInquiryRequest'
+        required: false
+      responses:
+        200:
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/transactionInquiryResponse'
+          x-amf-mediaType: application/json
+        400:
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorResponse'
+          x-amf-mediaType: application/json
+      security:
+      - OAuth 2.0: []
+      x-codegen-request-body-name: generated
+
+  /cpm/domestic/payment:
+    post:
+      description: This API is used to initiate payment to Merchant/Biller to complete the QR payment. Upon completion of this payment leg, the fund will be credited to the Merchant/Biller’s Creditor Agent
+      summary: CPM QR Payment
+      operationId: CPM Domestic QR Payment 
+      tags:
+        - CPM Domestic
+      parameters:
+      - name: Authorization
+        in: header
+        description: Bearer &lt;access_token&gt;
+        required: true
+        schema:
+          type: string      
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/cpmPaymentRequest'
+        required: false
+      responses:
+        200:
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/cpmPaymentResponse'
+          x-amf-mediaType: application/json
+        400:
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorResponse'
+          x-amf-mediaType: application/json
+      security:
+      - OAuth 2.0: []
+      x-codegen-request-body-name: generated
+  /cpm/domestic/preauth:
+    post:
+      description: This API is used should the Merchant/Biller would like to earmark the payment amount to ensure customer will have sufficient balance before proceeding with the QR payment later
+      summary: CPM QR Preauthorisation
+      operationId: CPM Domestic QR Preauthorisation 
+      tags:
+        - CPM Domestic
+      parameters:
+      - name: Authorization
+        in: header
+        description: Bearer &lt;access_token&gt;
+        required: true
+        schema:
+          type: string      
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/cpmPreauthRequest'
+        required: false
+      responses:
+        200:
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/cpmPreauthResponse'
+          x-amf-mediaType: application/json
+        400:
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorResponse'
+          x-amf-mediaType: application/json
+      security:
+      - OAuth 2.0: []
+      x-codegen-request-body-name: generated
+
+components:
+  schemas:
+    accountInquiryRequest:
+      type : object
+      properties : 
+        BusMsg :
+          type : object
+          properties :
+            AppHdr :
+              type : object
+              "$ref": '#/components/schemas/head.001.001.01'
+            Document:
+              type : object
+              "$ref": '#/components/schemas/pacs.008.001.06.01'
+      example: 
+        BusMsg:
+          AppHdr:
+            Fr:
+              FIId:
+                FinInstnId:
+                  Othr:
+                    Id: DMMMYKL4
+            To:
+              FIId:
+                FinInstnId:
+                  Othr:
+                    Id: RPPEMYKL
+            BizMsgIdr: 20220930DMMMYKL4521OQR95502061
+            MsgDefIdr: pacs.008.001.06.01
+            BizSvc: RPP
+            CreDt: '2022-09-30T07:55:13Z'
+            PssblDplct: false
+            Rltd:
+              Fr:
+                FIId:
+                  FinInstnId:
+                    Othr:
+                      Id: DMMMYKL4
+            RPPSgntr:
+              KeyNbr: 598cbd68fa30bffaebf25f346d09f5853fc03b6e
+              Signature: plKaercqaBnzWh6dmIta+eCf2cKgQfqDD3f2YTTT0zwq1P5SbLH67vPvzS9MSd78usam5dUSlpJLkVJX4EgCb77AF1eG4DheXpBSXDHKR5xB5fM2HvIL5eZtf1tHQ4iqXx25U2N2zWpKK6GzxMYYza3uY+1AOzGJivSGs2gUwrZrBt0zLU9wY7PIhAUpgVQCnRN/eGQN2WcfVWF2w4h8w+hnDutwri+LFceSCHQR+Q2thcFJ1nkfDewpHGATfgdbCqEJvkk6GIDe5Gp0nR3qSWMgvVbetDIQZAkXlQQrAkV645AvoRDVO+lBYEOyjFJ4GC1SeBIinRvUT+CKwtCKvg==
+          Document:
+            FIToFICstmrCdtTrfInf:
+              GrpHdr:
+                MsgId: 20220930DMMMYKL452195502061
+                CreDtTm: '2022-09-30T15:55:13.825'
+                NbOfTxs: '1'
+                SttlmInf:
+                  SttlmMtd: CLRG
+              CdtTrfTxInf:
+              - PmtId:
+                  EndToEndId: 20220930DMMMYKL4521OQR95502061
+                  TxId: 20220930DMMMYKL452195502061
+                PmtTpInf:
+                  CtgyPurp:
+                    Prtry: EPAY
+                ChrgBr: DEBT
+                Dbtr:
+                  Nm: Umair
+                DbtrAcct:
+                  Id:
+                    Othr:
+                      Id: '111111111111'
+                  Tp:
+                    Prtry: SVGS
+                DbtrAgt:
+                  FinInstnId:
+                    Othr:
+                      Id: DMMMYKL4
+                CdtrAgt:
+                  FinInstnId:
+                    Othr:
+                      Id: RPPEMYKL
+                Cdtr:
+                  Nm: QR Payment
+                CdtrAcct:
+                  Id:
+                    Othr:
+                      Id: '99999999999'
+                  Tp:
+                    Prtry: DFLT
+                SplmtryData:
+                - PlcAndNm: Place and name
+                  Envlp:
+                    InstrForCdtrAgt:
+                      RecptRef: QR PAYMENT
+                      PaymntDesc: QR PAYMENT
+                      ScndValInd: N
+                    InstrForDbtrAcct:
+                      RsdntSts: '1'
+                      PrdTp: C
+                      ShariaCmpl: N
+                      Dtls: '1'
+                    Dbtr:
+                      IPAddr: 127.0.0.1
+                      Id: '991001146678'
+                    QRTxInfo:
+                      QRCd: '00020101021126860011SG.COM.NETS01231012345678932123123595902111120181000103082018000109010990816E6529951800007SG.SGQR0112181018001CF0020701.00010306168730040206050201060400010708201808235204000053037025802SG5915NETS
+                        CB PTE LTD6009Singapore63048BBF'
+                      QRCategory: '03'
+                      AcceptedPymtType:
+                      - '04'
+                      PromoCd: a
+                      Field1: FIELD1
+                      Field2: FIELD2
+                      Field3: FIELD3
+                      Field4: FIELD4
+                      Field5: a
+                IntrBkSttlmAmt: '1.00'
+                IntrBkSttlmAmtCcy: MYR
+
+
+    
+    accountInquiryResponse:
+      type : object
+      properties : 
+        BusMsg :
+          type : object
+          properties :
+            AppHdr :
+              type : object
+              "$ref": '#/components/schemas/head.001.001.01'
+            Document:
+              type : object
+              "$ref": '#/components/schemas/pacs.002.001.08.01'
+      example: 
+        BusMsg:
+          AppHdr:
+            Fr:
+              FIId:
+                FinInstnId:
+                  Othr:
+                    Id: RPPEMYKL
+            To:
+              FIId:
+                FinInstnId:
+                  Othr:
+                    Id: DMMMYKL4
+            BizMsgIdr: 20220930RPPEMYKL521HQR65441196
+            MsgDefIdr: pacs.002.001.08.01
+            BizSvc: RPP
+            CreDt: '2022-09-30T07:55:16Z'
+            PssblDplct: false
+            RPPSgntr:
+              KeyNbr: 5d02bb2ab64f3f8d
+              Signature: X/opMUTG/e9IR6NR9UxuLVXIOaBrDgaLp5GcsYctthTxaR4OnCrrti/ckv0/jgcsR/Lrs/OAB49MD5djVTCgxS8/qu+ZIC1zDSXNyVmpDX0vN8B0Q+7vdNude3KnBEbqed99P+3QBSO7F3GtiGD7OAWgDhuPbpNPfdnW4mEbS+G/aD2o98CKMffKxXvLQWB7I97KbiQs5G2I4qz5rEbwSCIyX1pXERf6jNNLBe64B2SJa/csFcY/qDjPwS8H81MsFAQmqWG8lXlVCTK8TM0cE0yGgnk9oBdWytqzyKiN90xN2jUIJBnWDW8GMOOTNwpes/3V3pMgm0wj2i7Y2AjQGw==
+          Document:
+            FIToFIPmtStsRptInf:
+              GrpHdr:
+                MsgId: 20220930DMMMYKL4AE95502061
+                CreDtTm: '2022-09-30T15:55:16.621'
+              OrgnlGrpInfAndSts:
+              - OrgnlMsgId: 20220930DMMMYKL452195502061
+                OrgnlMsgNmId: pacs.008.001.06.01
+              TxInfAndSts:
+              - OrgnlEndToEndId: 20220930DMMMYKL4521OQR95502061
+                OrgnlTxId: 20220930DMMMYKL452195502061
+                TxSts: ACSP
+                StsRsnInf:
+                - Rsn:
+                    Prtry: U000
+                ClrSysRef: '002'
+                OrgnlTxRef:
+                  IntrBkSttlmDt: '2022-09-30'
+                  Cdtr:
+                    Nm: NETS CB PTE LTD
+                  CdtrAcct:
+                    Id:
+                      Othr:
+                        Id: '11201810001'
+                    Tp:
+                      Prtry: DFLT
+                SplmtryData:
+                - Envlp:
+                    InstrForCdtrAcct:
+                      RsdntSts: '3'
+                    CdtrAcctCstmrCtg: RET
+                    QRTxInfo:
+                      QRCategory: '01'
+                      AcceptedPymtType:
+                      - '01'
+                      - '03'
+                      Field1: SGD0.3000;11;0.00
+                      Field2: '202204290001'
+                      Field3: MYR1.00
+
+
+
+
+    creditTransferRequest:
+      type : object
+      properties : 
+        BusMsg :
+          type : object
+          properties :
+            AppHdr :
+              type : object
+              "$ref": '#/components/schemas/head.001.001.01'
+            Document:
+              type : object
+              "$ref": '#/components/schemas/pacs.008.001.06.01'
+      example: 
+        BusMsg:
+          AppHdr:
+            Fr:
+              FIId:
+                FinInstnId:
+                  Othr:
+                    Id: DMMMYKL4
+            To:
+              FIId:
+                FinInstnId:
+                  Othr:
+                    Id: RPPEMYKL
+            BizMsgIdr: 20220930DMMMYKL4031OQR95502061
+            MsgDefIdr: pacs.008.001.06.01
+            BizSvc: RPP
+            CreDt: '2022-09-30T07:55:34Z'
+            PssblDplct: false
+            Rltd:
+              Fr:
+                FIId:
+                  FinInstnId:
+                    Othr:
+                      Id: DMMMYKL4
+            RPPSgntr:
+              KeyNbr: 598cbd68fa30bffaebf25f346d09f5853fc03b6e
+              Signature: TjtWJ3/U9NyyxTHqmZxlByh2BqPagn9OVNfTOBz2IaMaTlEZ4WQ/xVrFb4lfVkwe+AmnyaK/qBOsUn6P4w9MaIqHaCCAwo5YyoYpt+aHNfmJYZ1eAGZ9DYYyXeM3iuTZyn54f5J3jyyXXL9l2+UZ3jQrM15D8Hp7exaBQ9HeLAFZPh4210OFBepYCcpojxMfUgti3sGaJZCiEyjQkyEdnH0leoveqceeOj5HtqdMYJzwJq//Z0KVSRw7v1X1ZnlOUC6FwAo9fyH4HiUnNoCPQfMW1NLFBZIC46wmqvNzwQSSdU2C8h8tg7OGv3uEpyb6cgYlVUSt1rokBSs99XmQkA==
+          Document:
+            FIToFICstmrCdtTrfInf:
+              GrpHdr:
+                MsgId: 20220930DMMMYKL403195502061
+                CreDtTm: '2022-09-30T15:55:34.013'
+                NbOfTxs: '1'
+                SttlmInf:
+                  SttlmMtd: CLRG
+              CdtTrfTxInf:
+              - PmtId:
+                  EndToEndId: 20220930DMMMYKL4031OQR95502061
+                  TxId: 20220930DMMMYKL403195502061
+                PmtTpInf:
+                  CtgyPurp:
+                    Prtry: EPAY
+                ChrgBr: DEBT
+                Dbtr:
+                  Nm: Umair
+                DbtrAcct:
+                  Id:
+                    Othr:
+                      Id: '111111111111'
+                  Tp:
+                    Prtry: SVGS
+                DbtrAgt:
+                  FinInstnId:
+                    Othr:
+                      Id: DMMMYKL4
+                CdtrAgt:
+                  FinInstnId:
+                    Othr:
+                      Id: RPPEMYKL
+                Cdtr:
+                  Nm: NETS CB PTE LTD
+                CdtrAcct:
+                  Id:
+                    Othr:
+                      Id: '11201810001'
+                  Tp:
+                    Prtry: DFLT
+                SplmtryData:
+                - PlcAndNm: Place and name
+                  Envlp:
+                    InstrForCdtrAgt:
+                      RecptRef: QR PAYMENT
+                      PaymntDesc: QR PAYMENT
+                      ScndValInd: N
+                    InstrForDbtrAcct:
+                      RsdntSts: '1'
+                      PrdTp: C
+                      ShariaCmpl: N
+                      Dtls: '1'
+                    Dbtr:
+                      IPAddr: 127.0.0.1
+                      Id: '991001146678'
+                    QRTxInfo:
+                      QRCd: '00020101021126860011SG.COM.NETS01231012345678932123123595902111120181000103082018000109010990816E6529951800007SG.SGQR0112181018001CF0020701.00010306168730040206050201060400010708201808235204000053037025802SG5915NETS
+                        CB PTE LTD6009Singapore63048BBF'
+                      QRCategory: '01'
+                      AcceptedPymtType:
+                      - '01'
+                      - '03'
+                      PromoCd: a
+                      Field1: SGD0.3;11;10.00
+                      Field2: '202204290001'
+                      Field3: MYR33.33
+                      Field4: FIELD4
+                      Field5: a
+                IntrBkSttlmAmt: '33.33'
+                IntrBkSttlmAmtCcy: MYR
+
+
+
+
+
+    creditTransferResponse:
+      type : object
+      properties : 
+        BusMsg :
+          type : object
+          properties :
+            AppHdr :
+              type : object
+              "$ref": '#/components/schemas/head.001.001.01'
+            Document:
+              type : object
+              "$ref": '#/components/schemas/pacs.002.001.08.01'
+      example : 
+        BusMsg:
+          AppHdr:
+            Fr:
+              FIId:
+                FinInstnId:
+                  Othr:
+                    Id: RPPEMYKL
+            To:
+              FIId:
+                FinInstnId:
+                  Othr:
+                    Id: DMMMYKL4
+            BizMsgIdr: 20220930RPPEMYKL031HQR65441197
+            MsgDefIdr: pacs.002.001.08.01
+            BizSvc: RPP
+            CreDt: '2022-09-30T07:55:35Z'
+            PssblDplct: false
+            RPPSgntr:
+              KeyNbr: 5d02bb2ab64f3f8d
+              Signature: N+64iGoKaEyVO4gPwAjiPRdhcbiVCfTgD0Rn+sKj3fmzCx86aJSUx4DfDIepKOdkfY1bLi2Q8V4GZBCP+U0ohjRBa1DsTVn1tlGcORze1l6fvYmzlp3WIjULH5V33/ECVWGYb8a2zxVhHbq/fSyeWSr6Wy27Im+ZXD1FDHfLu0upMhhkmYthTvMlEZqZtXaU/6eWFdQdsYcmc/2oVF9NL/6rV/rGF/usa8k1MpMn1wneSe4oYCaOWy47Mfu6SUz/Fjba5CZdrLhHDVAj3yzukWDh+tcmoxsm/Ts2YCzNUZaXGWSHQtReDvPEYGX+KeYgkUS3jmCccbpEY/mOCMAuGA==
+          Document:
+            FIToFIPmtStsRptInf:
+              GrpHdr:
+                MsgId: 20220930DMMMYKL4CT95502061
+                CreDtTm: '2022-09-30T15:55:35.486'
+              OrgnlGrpInfAndSts:
+              - OrgnlMsgId: 20220930DMMMYKL403195502061
+                OrgnlMsgNmId: pacs.008.001.06.01
+              TxInfAndSts:
+              - OrgnlEndToEndId: 20220930DMMMYKL4031OQR95502061
+                OrgnlTxId: 20220930DMMMYKL403195502061
+                TxSts: ACSP
+                StsRsnInf:
+                - Rsn:
+                    Prtry: U000
+                ClrSysRef: '002'
+                OrgnlTxRef:
+                  IntrBkSttlmDt: '2022-09-30'
+                  Cdtr:
+                    Nm: NETS CB PTE LTD
+                  CdtrAcct:
+                    Id:
+                      Othr:
+                        Id: '11201810001'
+                    Tp:
+                      Prtry: DFLT
+                SplmtryData:
+                - Envlp:
+                    InstrForCdtrAcct:
+                      RsdntSts: '3'
+                    CdtrAcctCstmrCtg: RET
+                    QRTxInfo:
+                      QRCategory: '01'
+                      AcceptedPymtType:
+                      - '01'
+                      - '03'
+                      Field1: SGD0.3;11;10.00
+                      Field2: '202204290001'
+                      Field3: MYR33.33
+
+
+
+        root:
+          BusMsg:
+            AppHdr:
+              Fr:
+                FIId:
+                  FinInstnId:
+                    Othr:
+                      Id: RPPEMYKL
+              To:
+                FIId:
+                  FinInstnId:
+                    Othr:
+                      Id: DMM1MYKL
+              BizMsgIdr: 20220517RPPEMYKL521HQR16560118
+              MsgDefIdr: pacs.002.001.08.01
+              BizSvc: RPP
+              CreDt: '2022-05-17T04:19:57Z'
+              PssblDplct: false
+            Document:
+              FIToFIPmtStsRptInf:
+                GrpHdr:
+                  MsgId: 20220517DMM1MYKL52107037054
+                  CreDtTm: '2022-05-17T12:19:56.952'
+                OrgnlGrpInfAndSts:
+                - OrgnlMsgId: 20220517DMM1MYKL52107037054
+                  OrgnlMsgNmId: pacs.008.001.06.01
+                TxInfAndSts:
+                - OrgnlEndToEndId: 20220517DMM1MYKL521OQR07037054
+                  OrgnlTxId: 20220517DMM1MYKL52107037054
+                  TxSts: ACSP
+                  StsRsnInf:
+                  - Rsn:
+                      Prtry: U000
+                  ClrSysRef: '001'
+                  OrgnlTxRef:
+                    IntrBkSttlmDt: '2022-05-17'
+                    Cdtr:
+                      Nm: YUPIN
+                    CdtrAcct:
+                      Id:
+                        Othr:
+                          Id: '9390113182         '
+                      Tp:
+                        Prtry: SVGS
+                  SplmtryData:
+                  - Envlp:
+                      InstrForCdtrAcct:
+                        RsdntSts: '3'
+                      CdtrAcctCstmrCtg: RET
+                      QRTxInfo:
+                        QRCategory: '01'
+                        AcceptedPymtType:
+                        - '01'
+                        - '03'
+                        Field1: THB10.0000;12;200.50
+                        Field2: '220125000551'
+                        Field3: MYR20.05
+
+
+    transactionInquiryRequest:
+      type : object
+      properties : 
+        BusMsg :
+          type : object
+          properties :
+            AppHdr :
+              type : object
+              "$ref": '#/components/schemas/head.001.001.01'
+            Document:
+              type : object
+              "$ref": '#/components/schemas/camt.005.001.08'
+      example: 
+        BusMsg:
+          AppHdr:
+            Fr:
+              FIId:
+                FinInstnId:
+                  Othr:
+                    Id: SIM1MYKL
+            To:
+              FIId:
+                FinInstnId:
+                  Othr:
+                    Id: RPPEMYKL
+            BizMsgIdr: 20190809SIM1MYKL630ORB88000005
+            MsgDefIdr: camt.005.001.08
+            BizSvc: RPP
+            CreDt: '2019-08-05T10:54:51Z'
+            PssblDplct: 'false'
+            Rltd:
+              Fr:
+                FIId:
+                  FinInstnId:
+                    Othr:
+                      Id: DMM1MYKL
+            RPPSgntr:
+              KeyNbr: 5d02bb2ab64f3f8d
+              Signature: OiWTTEQ88azsFAy9qSAY4oZHOaLcmfRr1otsyxlrVDhhPMQEuKR6kqrzcEniWRi3QSBvsP6WZ27JqfxtM3oqIw02B3vSwEWcwuffkFoZBLxc0L4JPDBdjBqymBZhtHhBDNBkS0MWab2fvjuvItqP2bVh9z3njRgzjcazznAGKlAL9PBvgG26EjmXZWJgOXjTkyrfuohNzUX2IFwosOt0+k0e0bpIl9fxgRvcVVHmLfzAbjRseY+fXJMmRZmKIGsycLi8tqj\/KowYBUCFhRXy4LaJd9iTwgf8zNZp1RPvd\/5JwT69q9HeptAT1VKyR6Nwf76FY13N8nSlK0ZjMs7P6g==
+            
+          Document:
+            GetTx:
+              MsgHdr:
+                MsgId: 20190809SIM1MYKL6308000005
+                CreDtTm: '2019-08-05T18:54:51.605'
+                ReqTp:
+                  Prtry:
+                    Id: 20210414SIM1MYKL031OQR59396245
+                    MerchantID: '14082412001001'
+              TxQryDef:
+                TxCrit:
+                  NewCrit:
+                    SchCrit:
+                    - PmtSch:
+                        ReqdExctnDt:
+                        - DtSch:
+                            EQDt: '2019-06-10'
+                        PmtId:
+                        - TxId: 20210414SIM1MYKL031OQR59396245
+                        Pties:
+                          DbtrAgt:
+                            FinInstnId:
+                              Othr:
+                                Id: SIM1MYKL
+                          Dbtr:
+                            Pty:
+                              Id: '123456'
+                          CdtrAgt:
+                            FinInstnId:
+                              Othr:
+                                Id: '574123'
+                          Cdtr:
+                            Pty:
+                              Id: CITIMYKL
+
+
+
+    transactionInquiryResponse:
+      type : object
+      properties : 
+        BusMsg :
+          type : object
+          properties :
+            AppHdr :
+              type : object
+              "$ref": '#/components/schemas/head.001.001.01'
+            Document:
+              type : object
+              "$ref": '#/components/schemas/camt.006.001.08'
+      example : 
+        BusMsg:
+          AppHdr:
+            Fr:
+              FIId:
+                FinInstnId:
+                  Othr:
+                    Id: RPPEMYKL
+            To:
+              FIId:
+                FinInstnId:
+                  Othr:
+                    Id: SIM1MYKL
+            BizMsgIdr: 20210414RPPEMYKL630HRB00810345
+            MsgDefIdr: camt.006.001.08
+            BizSvc: RPP
+            CreDt: '2021-04-14T05:52:42Z'
+            PssblDplct: false
+            RPPSgntr:
+              KeyNbr: 5d02bb2ab64f3f8d
+              Signature: OiWTTEQ88azsFAy9qSAY4oZHOaLcmfRr1otsyxlrVDhhPMQEuKR6kqrzcEniWRi3QSBvsP6WZ27JqfxtM3oqIw02B3vSwEWcwuffkFoZBLxc0L4JPDBdjBqymBZhtHhBDNBkS0MWab2fvjuvItqP2bVh9z3njRgzjcazznAGKlAL9PBvgG26EjmXZWJgOXjTkyrfuohNzUX2IFwosOt0+k0e0bpIl9fxgRvcVVHmLfzAbjRseY+fXJMmRZmKIGsycLi8tqj\/KowYBUCFhRXy4LaJd9iTwgf8zNZp1RPvd\/5JwT69q9HeptAT1VKyR6Nwf76FY13N8nSlK0ZjMs7P6g==
+            
+          Document:
+            RtrTx:
+              MsgHdr:
+                MsgId: 20190809SIM1MYKL6308000005
+                CreDtTm: '2019-08-05T18:54:51.605'
+              RptOrErr:
+                BizRpt:
+                  TxsSummry:
+                    NbOfNtries: 1
+                    EnqSts:
+                      Cd:
+                        Prtry: ACSP
+                      Rsn:
+                        Prtry: U000
+                  TxRpt:
+                  - PmtId:
+                      TxId: 20210414SIM1MYKL031OQR59396245
+                    TxOrErr:
+                      Tx:
+                        Pmt:
+                          Sts:
+                            Cd:
+                              Prtry: ACSP
+                            Rsn:
+                            - Prtry: U000
+                            DtTm:
+                              DtTm: '2021-04-14T05:45:53Z'
+                          IntrBkSttlmAmt: '11.22'
+                          EndToEndId: 20210414SIM1MYKL031OQR59396245
+                          PayerName: JEAN CHEONG
+                          IntrBkSttlmDt: '2021-04-14'
+              SplmtryData:
+              - Envlp:
+                  Name: JEAN CHEONG
+                  DbtrAgt: SIM1MYKL
+    
+    cpmPaymentRequest:
+      type : object
+      properties : 
+        BusMsg :
+          type : object
+          properties :
+            AppHdr :
+              type : object
+              "$ref": '#/components/schemas/head.001.001.01'
+            Document:
+              type : object
+              "$ref": '#/components/schemas/pacs.003.001.08.01'
+      example : 
+        BusMsg:
+          AppHdr:
+            Fr:
+              FIId:
+                FinInstnId:
+                  Othr:
+                    Id: DMMMYKL3
+            To:
+              FIId:
+                FinInstnId:
+                  Othr:
+                    Id: RPPEMYKL
+            BizMsgIdr: 20221205DMMMYKL3240ORB32905588
+            MsgDefIdr: pacs.003.001.08.01
+            BizSvc: RPP
+            CreDt: '2022-09-30T07:55:34Z'
+            PssblDplct: false
+            Rltd:
+              Fr:
+                FIId:
+                  FinInstnId:
+                    Othr:
+                      Id: DMMMYKL3
+            RPPSgntr:
+              KeyNbr: 5d02bb2ab64f3f8d
+              Signature: OiWTTEQ88azsFAy9qSAY4oZHOaLcmfRr1otsyxlrVDhhPMQEuKR6kqrzcEniWRi3QSBvsP6WZ27JqfxtM3oqIw02B3vSwEWcwuffkFoZBLxc0L4JPDBdjBqymBZhtHhBDNBkS0MWab2fvjuvItqP2bVh9z3njRgzjcazznAGKlAL9PBvgG26EjmXZWJgOXjTkyrfuohNzUX2IFwosOt0+k0e0bpIl9fxgRvcVVHmLfzAbjRseY+fXJMmRZmKIGsycLi8tqj\/KowYBUCFhRXy4LaJd9iTwgf8zNZp1RPvd\/5JwT69q9HeptAT1VKyR6Nwf76FY13N8nSlK0ZjMs7P6g==
+            
+          Document:
+            FIToFICstmrDrctDbtInf:
+              GrpHdr:
+                MsgId: 20221205DMMMYKL324032905588
+                CreDtTm: '2022-09-30T15:55:34.013'
+                IntrBkSttlmDt: '2020-06-10'
+                NbOfTxs: '1'
+                SttlmInf:
+                  SttlmMtd: CLRG
+              DrctDbtTxInf:
+              - PmtId:
+                  EndToEndId: 20220930DMMMYKL4031OQR95502061
+                  TxId: 20220930DMMMYKL403195502061
+                IntrBkSttlmAmt: '10.01'
+                IntrBkSttlmAmtCcy: MYR
+                ChrgBr: DEBT
+                Cdtr:
+                  Nm: Maxis
+                CdtrAcct:
+                  Id:
+                    Othr:
+                      Id: '762372362785'
+                  Tp:
+                    Prtry: DFLT
+                CdtrAgt:
+                  FinInstnId:
+                    Othr:
+                      Id: DMMMYKL3
+                DbtrAgt:
+                  FinInstnId:
+                    Othr:
+                      Id: '123456'
+                Dbtr:
+                  Nm: Kumar
+                DbtrAcct:
+                  Id:
+                    Othr:
+                      Id: '123456'
+                  Tp:
+                    Prtry: DFLT
+              SplmtryData:
+              - Envlp:
+                  CdtrAcctInf:
+                    MerchantId: 
+                      Othr:
+                        Id: '00000000000000000000000000000000001'
+                    ProductId: '00000000000000000000000000000000001'
+                    MCC: '123'
+                    BRN: '10203'
+                  BillInf:
+                    BillRefNo: '000387'
+                    BillDesc: Transaction for 000387
+                  QRTxInfo:
+                    QRCd: '0002010102600963048BBF'
+                    QRCategory: '01'
+                    AcceptedPymtType:
+                    - '01'
+                    - '03'             
+                  DrctDbtTxInf:
+                    IPAddr: '172.19.0.1'
+                    GPSCoord: '3.065-101.484'
+
+    cpmPaymentResponse:
+      type : object
+      properties : 
+        BusMsg :
+          type : object
+          properties :
+            AppHdr :
+              type : object
+              "$ref": '#/components/schemas/head.001.001.01'
+            Document:
+              type : object
+              "$ref": '#/components/schemas/pacs.002.001.08.01'
+      example : 
+        BusMsg:
+          AppHdr:
+            Fr:
+              FIId:
+                FinInstnId:
+                  Othr:
+                    Id: RPPEMYKL
+            To:
+              FIId:
+                FinInstnId:
+                  Othr:
+                    Id: DMMMYKL3
+            BizMsgIdr: 20221205RPPEMYKL240HRB84642701
+            MsgDefIdr: pacs.002.001.08.01
+            BizSvc: RPP
+            CreDt: '2022-09-30T07:55:34Z'
+            PssblDplct: false
+            Rltd:
+              Fr:
+                FIId:
+                  FinInstnId:
+                    Othr:
+                      Id: DMM1MYKL
+            RPPSgntr:
+              KeyNbr: 5d02bb2ab64f3f8d
+              Signature: OiWTTEQ88azsFAy9qSAY4oZHOaLcmfRr1otsyxlrVDhhPMQEuKR6kqrzcEniWRi3QSBvsP6WZ27JqfxtM3oqIw02B3vSwEWcwuffkFoZBLxc0L4JPDBdjBqymBZhtHhBDNBkS0MWab2fvjuvItqP2bVh9z3njRgzjcazznAGKlAL9PBvgG26EjmXZWJgOXjTkyrfuohNzUX2IFwosOt0+k0e0bpIl9fxgRvcVVHmLfzAbjRseY+fXJMmRZmKIGsycLi8tqj\/KowYBUCFhRXy4LaJd9iTwgf8zNZp1RPvd\/5JwT69q9HeptAT1VKyR6Nwf76FY13N8nSlK0ZjMs7P6g==
+            
+          Document:
+            FIToFIPmtStsRptInf:
+              GrpHdr:
+                MsgId: 20221205DMM1MYKL24051259098
+                CreDtTm: '2022-12-05T13:03:24.081'
+              OrgnlGrpInfAndSts:
+              - OrgnlMsgId: 20221205DMMMYKL324032905588
+                OrgnlMsgNmId: pacs.003.001.08.01
+              TxInfAndSts:
+                DrctDbtTxInf:
+                - OrgnlEndToEndId: 20221205DMMMYKL3240ORB32905588
+                  OrgnlTxId: 20221205DMMMYKL324032905588
+                  TxSts: ACSP
+                  StsRsnInf:
+                    - Rsn:
+                        Prtry: U000
+                  ClrSysRef: '001'
+                  OrgnlTxRef:
+                    IntrBkSttlmDt: '2022-12-05'
+                    Cdtr:
+                      Nm: Maxis
+                    CdtrAcct:
+                      Id:
+                        Othr:
+                          Id: '762372362785'
+                  SplmtryData:
+                    - PlcAndNm: Place and Name Testing
+                      Envlp:
+                        CdtrAcctCstmrCtg: RET        
+                        QRTxInfo:
+                          QRCd: '0002010102600963048BBF'
+                          QRCategory: '01'
+                          AcceptedPymtType:
+                          - '01'
+                          - '03'   
+                          PromoCd: str123       
+                          Field1: str123 
+                          Field2: str123 
+                          Field3: str123 
+                          Field4: str123 
+                          Field5: str123    
+                        DrctDbtTxInf:
+                          IPAddr: '172.19.0.1'
+                          GPSCoord: '3.065 -101.484'
+                          PreAuthId: YYYYMMDDQRPTSSSSSSSS
+                          Reserved1: a
+                          Reserved2: b
+                          Reserved3: c
+        
+    cpmPreauthRequest:
+      type : object
+      properties : 
+        BusMsg :
+          type : object
+          properties :
+            AppHdr :
+              type : object
+              "$ref": '#/components/schemas/head.001.001.01'
+            Document:
+              type : object
+              "$ref": '#/components/schemas/pacs.003.001.08.01'
+      example : 
+        BusMsg:
+          AppHdr:
+            Fr:
+              FIId:
+                FinInstnId:
+                  Othr:
+                    Id: DMMMYKL3
+            To:
+              FIId:
+                FinInstnId:
+                  Othr:
+                    Id: RPPEMYKL
+            BizMsgIdr: 20221221DMMMYKL3880OQR77543694
+            MsgDefIdr: pacs.003.001.08.01
+            BizSvc: RPP
+            CreDt: '2022-09-30T07:55:34Z'
+            PssblDplct: false
+            Rltd:
+              Fr:
+                FIId:
+                  FinInstnId:
+                    Othr:
+                      Id: DMMMYKL3
+            RPPSgntr:
+              KeyNbr: 5d02bb2ab64f3f8d
+              Signature: OiWTTEQ88azsFAy9qSAY4oZHOaLcmfRr1otsyxlrVDhhPMQEuKR6kqrzcEniWRi3QSBvsP6WZ27JqfxtM3oqIw02B3vSwEWcwuffkFoZBLxc0L4JPDBdjBqymBZhtHhBDNBkS0MWab2fvjuvItqP2bVh9z3njRgzjcazznAGKlAL9PBvgG26EjmXZWJgOXjTkyrfuohNzUX2IFwosOt0+k0e0bpIl9fxgRvcVVHmLfzAbjRseY+fXJMmRZmKIGsycLi8tqj\/KowYBUCFhRXy4LaJd9iTwgf8zNZp1RPvd\/5JwT69q9HeptAT1VKyR6Nwf76FY13N8nSlK0ZjMs7P6g==
+            
+          Document:
+            FIToFICstmrDrctDbtInf:
+              GrpHdr:
+                MsgId: 20221205DMMMYKL324032905588
+                CreDtTm: '2022-09-30T15:55:34.013'
+                IntrBkSttlmDt: '2020-06-10'
+                NbOfTxs: '1'
+                SttlmInf:
+                  SttlmMtd: CLRG
+              DrctDbtTxInf:
+              - PmtId:
+                  EndToEndId: 20221221DMMMYKL3880OQR77543694
+                  TxId: 20221221DMMMYKL388077543694
+                IntrBkSttlmAmt: '10.01'
+                IntrBkSttlmAmtCcy: MYR
+                ChrgBr: DEBT
+                Cdtr:
+                  Nm: Maxis
+                CdtrAcct:
+                  Id:
+                    Othr:
+                      Id: '762372362785'
+                  Tp:
+                    Prtry: DFLT
+                CdtrAgt:
+                  FinInstnId:
+                    Othr:
+                      Id: DMMMYKL3
+                DbtrAgt:
+                  FinInstnId:
+                    Othr:
+                      Id: '123456'
+                Dbtr:
+                  Nm: Kumar
+                DbtrAcct:
+                  Id:
+                    Othr:
+                      Id: '123456'
+                  Tp:
+                    Prtry: DFLT
+              SplmtryData:
+              - Envlp:
+                  CdtrAcctInf:
+                    MerchantId: 
+                      Othr:
+                        Id: 'WYTTMYKL'
+                    ProductId: 'WYTEST001'
+                    MCC: '123'
+                    BRN: 'WYTESTBRN001'
+                  BillInf:
+                    BillRefNo: '000387'
+                    BillDesc: Transaction for 000387
+                  QRTxInfo:
+                    QRCd: '0002010102600963048BBF'
+                    QRCategory: '03'
+                    AcceptedPymtType:
+                    - '01'
+                    - '03'             
+                  DrctDbtTxInf:
+                    IPAddr: '172.19.0.1'
+                    GPSCoord: '3.065-101.484'
+                    Preauth:
+                      Amt: '1.00'
+                      PreauthXpryDt: '2022-12-21T10:50:23.223'
+
+    cpmPreauthResponse:
+      type : object
+      properties : 
+        BusMsg :
+          type : object
+          properties :
+            AppHdr :
+              type : object
+              "$ref": '#/components/schemas/head.001.001.01'
+            Document:
+              type : object
+              "$ref": '#/components/schemas/pacs.002.001.08.01'
+      example : 
+        BusMsg:
+          AppHdr:
+            Fr:
+              FIId:
+                FinInstnId:
+                  Othr:
+                    Id: RPPEMYKL
+            To:
+              FIId:
+                FinInstnId:
+                  Othr:
+                    Id: DMMMYKL3
+            BizMsgIdr: 20221221RPPEMYKL880HQR73070598
+            MsgDefIdr: pacs.002.001.08.01
+            BizSvc: RPP
+            CreDt: '2022-09-30T07:55:34Z'
+            PssblDplct: false
+            Rltd:
+              Fr:
+                FIId:
+                  FinInstnId:
+                    Othr:
+                      Id: DMM1MYKL
+            RPPSgntr:
+              KeyNbr: 5d02bb2ab64f3f8d
+              Signature: OiWTTEQ88azsFAy9qSAY4oZHOaLcmfRr1otsyxlrVDhhPMQEuKR6kqrzcEniWRi3QSBvsP6WZ27JqfxtM3oqIw02B3vSwEWcwuffkFoZBLxc0L4JPDBdjBqymBZhtHhBDNBkS0MWab2fvjuvItqP2bVh9z3njRgzjcazznAGKlAL9PBvgG26EjmXZWJgOXjTkyrfuohNzUX2IFwosOt0+k0e0bpIl9fxgRvcVVHmLfzAbjRseY+fXJMmRZmKIGsycLi8tqj\/KowYBUCFhRXy4LaJd9iTwgf8zNZp1RPvd\/5JwT69q9HeptAT1VKyR6Nwf76FY13N8nSlK0ZjMs7P6g==
+            
+          Document:
+            FIToFIPmtStsRptInf:
+              GrpHdr:
+                MsgId: 20221221DMM1MYKL88037550247
+                CreDtTm: '2022-12-21T10:50:30.077'
+              OrgnlGrpInfAndSts:
+              - OrgnlMsgId: 20221221DMMMYKL388077543694
+                OrgnlMsgNmId: pacs.003.001.08.01
+              TxInfAndSts:
+                DrctDbtTxInf:
+                - OrgnlEndToEndId: 20221221DMMMYKL3880OQR77543694
+                  OrgnlTxId: 20221221DMMMYKL388077543694
+                  TxSts: ACSP
+                  StsRsnInf:
+                    - Rsn:
+                        Prtry: U000
+                  ClrSysRef: '001'
+                  OrgnlTxRef:
+                    IntrBkSttlmDt: '2022-12-21'
+                    Cdtr:
+                      Nm: Maxis
+                    CdtrAcct:
+                      Id:
+                        Othr:
+                          Id: '762372362785'
+                  SplmtryData:
+                    - PlcAndNm: Place and Name Testing
+                      Envlp:
+                        CdtrAcctCstmrCtg: RET        
+                        QRTxInfo:
+                          QRCd: '0002010102600963048BBF'
+                          QRCategory: '01'
+                          AcceptedPymtType:
+                          - '01'
+                          - '03'   
+                          PromoCd: str123       
+                          Field1: str123 
+                          Field2: str123 
+                          Field3: str123 
+                          Field4: str123 
+                          Field5: str123    
+                        DrctDbtTxInf:
+                          IPAddr: '172.19.0.1'
+                          GPSCoord: '3.065 -101.484'
+                          PreAuthId: 20221221QRPT02190001
+                          Reserved1: a
+                          Reserved2: b
+                          Reserved3: c
+                      
+
+    errorResponse:
+      type : object
+      properties : 
+        BusMsg :
+          type : object
+          properties :
+            AppHdr :
+              type : object
+              "$ref": '#/components/schemas/head.001.001.01'
+            Document:
+              type : object
+              "$ref": '#/components/schemas/admi.002.001.01'
+      example : 
+        BusMsg:
+          AppHdr:
+            Fr:
+              FIId:
+                FinInstnId:
+                  Othr:
+                    Id: RPPEMYKL
+            To:
+              FIId:
+                FinInstnId:
+                  Othr:
+                    Id: WYTTMYKL
+            BizMsgIdr: 20220811WYTTMYKL811OBA99278538
+            MsgDefIdr: admi.002.001.01
+            BizSvc: RPP
+            CreDt: '2022-08-11T01:21:34Z'
+            PssblDplct: false
+            RPPSgntr:
+              KeyNbr: 5d02bb2ab64f3f8d
+              Signature: jJoGdISd2Yttf/cpHPxrRAlP1LmXZkpOdyzDNM1yY8ccz4Lygy176p/M+mCKWozavbZJ9vxr+8zwHxFHU/ikaw/K4nuB0+qQ7vZQJYMIETw9dmx7b1Zx7qYpt/C86XMGoh0tFgDgoUyBV8SYH4Cm2rOFcXnLs5qiAn3Z4GQruYWBh1pKnIHzEwF1udhKyLSbrL7gFx0OY+NcB7fdzg0I4F9YzzewZIAL0peKDgzxJaFJNq/p5AV6t7n+J35ASsW/qQ2jjZNMcOW41M7oq5LZ2BWOOEEF4PTF//BnesV7PjDnSP3GjLVM6iP1xCD9y3eDc7jMrjkve5llS+QFVAeGQg==
+          Document:
+            admi.002.001.01:
+              RltdRef:
+                Ref: 20220811WYTTMYKL811OBA99278538
+              Rsn:
+                RjctgPtyRsn: '0015'
+                RjctnDtTm: '2022-08-11T09:21:34.304'
+                ErrLctn: StaxXmlSubFieldType
+                RsnDesc: ''
+                AddtlData: '{ "BusMsg": { "AppHdr": { "Fr": { "FIId": { "FinInstnId": { "Othr":
+                  { "Id": "WYTTMYKL" } } } }, "To": { "FIId": { "FinInstnId": { "Othr": {
+                  "Id": "RPPEMYKL" } } } }, "BizMsgIdr": "20220811WYTTMYKL811OBA99278538",
+                  "MsgDefIdr": "pain.009.001.06", "BizSvc": "RPP", "CreDt": "2022-08-11T01:21:33Z",
+                  "CpyDplct": "CODU", "PssblDplct": false, "RPPSgntr": { "KeyNbr": "5d02bb2ab64f3f8d",
+                  "Signature": "ivpnZnSQZFFXrA3G/tgPSz83BYbbNANXZtfR30DqsLJWqN/Zbt5FKl38lOoFkagQrsP1pe3eqeRRALdwuEMpi54qZtVBgnWQ750uLqEVTgCaqXLCvDIkD1gc2E8OoyOqKiqs6Wb/mI00U9THy4/n4ZtDQrcs8WvvZFWq2t/h5dvuKWonPh6G6vMBqR08PuEd1SyGFJ6Li6YfTss6oMLQrGn3lzl4NbCeFO1hrR0yidA+nPnFPGb+hLDVJeTPsOTjLGVjtKf468CezRmmgHTfkrlRQFyNyR5ksngrvvR6W09rnEzHSfoSfs7T82czZ93Bh9U9CRHKLFz3S/0t1ROmYw=="
+                  } , "Rltd": { "Fr": { "FIId": { "FinInstnId": { "Othr": { "Id": "WYTTMYKL"
+                  } } } } } }, "Document": { "MndtInitnReq": { "GrpHdr": { "MsgId": "20220811WYTTMYKL81199278538",
+                  "CreDtTm": "2022-08-11T09:21:17.670" }, "Mndt": [ { "MndtReqId": "20220811WYTTMYKL811OBA99278538",
+                  "TrckgInd": false, "Rsn": { "Prtry": "" }, "Cdtr": { "Nm": "Creditor1300101"
+                  }, "Dbtr": { "Nm": "Debitor1300102" }, "DbtrAgt": { "FinInstnId": { "Othr":
+                  { "Id": "DMMMYKL2" } } }, "SplmtryData": [ { "Envlp": { "ConsentInf": {
+                  "ConsentId": "MERAMYKL0000000001", "ConsentTp": "DDPT", "ConsentSts": "ACTV",
+                  "EffctvDt": "2022-08-01", "XpryDt": "2023-08-01", "CanTrmByDbtr": true,
+                  "Cdtr": { "Id": { "Tp": "04", "Val": "0000030005" }, "ScndId": { "Tp": "04",
+                  "Val": "0000030005" }, "RsdntSts": 1, "PrdTp": "C", "ShariaCmpl": "U", "Dtls":
+                  1, "AccptblSrcOfFunds": [ "01", "02" ] }, "Dbtr": { "Id": { "Tp": "04",
+                  "Val": "0000510007" }, "ScndId": { "Tp": "04", "Val": "0000510007" }, "Acct":
+                  { "Id": { "Othr": { "Id": 8888 } }, "Tp": { "Prtry": "SVGS" }, "Nm": "SomeName"
+                  }, "RsdntSts": 1, "PrdTp": "C", "ShariaCmpl": "U", "Dtls": 1 }, "ConsentDtl":
+                  { "DDPTInf": { "MaxAmount": "12301.01", "MaxAmountCcy": "MYR", "FreqMode":
+                  "01", "Reserved1": "str123" } } } } } ] } ], "SplmtryData": [ { "Envlp":
+                  { "RefInf": { "ProductId": "WYTEST001", "ReqXpryDt": 12345 }, "MndtInitnReqInf":
+                  { "ReqXpryDt": "2022-08-11T09:21:17.670", "Merchnt": { "Othr": { "Id": "WYTTMYKL"
+                  } }, "FrstPrtyPymtVal": "00", "Refs1": "2020-09-03", "Refs2": "2020-09-03",
+                  "EndToEndBizMsgId": "20220811WYTTMYKL811OBA99278538", "IPAddr": "127.0.0.1",
+                  "GPSCoord": 5201314 } } } ] } } } }'
+
+
+    admi.002.001.01:
+      type: object
+      id: urn:jsonschema:iso:std:iso:_20022:tech:xsd:admi_002_001:Document
+      properties:
+        admi.002.001.01:
+          type: object
+          id: urn:jsonschema:iso:std:iso:_20022:tech:xsd:admi_002_001:MessageRejectV01
+          properties:
+            RltdRef:
+              type: object
+              description : Related Reference
+              id: urn:jsonschema:iso:std:iso:_20022:tech:xsd:admi_002_001:MessageReference
+              properties:
+                Ref:
+                  type: string
+                  maxLength: 35
+                  required : true
+                  description : <b>Reference</b><br></br>
+                    <b>BizMsgIdr</b> of the original messsage
+            Rsn:
+              type: object
+              id: urn:jsonschema:iso:std:iso:_20022:tech:xsd:admi_002_001:RejectionReason2
+              description : Reason
+              properties:
+                RjctgPtyRsn:
+                  type: string
+                  maxLength: 35
+                  required : true
+                  description : <b>Rejecting party reason</b><br></br>
+                RjctnDtTm:
+                  type: string
+                  format: YYYY-MM-DDTHH:MM:SS.sss
+                  required : false  
+                  description : <b>Rejection DateTime</b><br></br> Message rejection date and time. Example = 2017-09-20T08:35:30.000
+                ErrLctn:
+                  maxLength: 350
+                  type: string
+                  required : false
+                  description : <b>Error Location</b><br></br> Precise location of the potential error in a message
+                RsnDesc:
+                  type: string
+                  maxLength: 350
+                  required : false
+                  description : <b>Reason Description</b><br></br> Detailed description of the rejection reason
+                AddtlData:
+                  maxLength: 20000
+                  type: string
+                  required : false
+                  description : <b>Additional Data</b><br></br> Additional information related to the rejection and meant to allow for the precise identification of the rejection reason. This will have a copy of the rejected message in full so the Sender can investigate the issue
+    Party9ChoiceSender:
+          type: object
+          id: urn:jsonschema:iso:std:iso:_20022:tech:xsd:head_001_001:Party9Choice
+          properties:
+            FIId:
+              type: object
+              description : Financial Institution Identification
+              id: urn:jsonschema:iso:std:iso:_20022:tech:xsd:head_001_001:BranchAndFinancialInstitutionIdentification5
+              properties:
+                FinInstnId:
+                  description : Financial Institution Identification
+                  type: object
+                  id: urn:jsonschema:iso:std:iso:_20022:tech:xsd:head_001_001:FinancialInstitutionIdentification8
+                  properties:
+                    Othr:
+                      type: object
+                      description : Other
+                      id: urn:jsonschema:iso:std:iso:_20022:tech:xsd:head_001_001:GenericFinancialIdentification1
+                      properties:
+                        Id:
+                          type: string
+                          format : BICFIIdentifier
+                          required : true
+                          description : <b>Identification</b><br></br> First 8 characters of the BIC Code of the Sending Participant
+
+    Party9ChoiceReceiver:
+          type: object
+          id: urn:jsonschema:iso:std:iso:_20022:tech:xsd:head_001_001:Party9Choice
+          properties:
+            FIId:
+              type: object
+              id: urn:jsonschema:iso:std:iso:_20022:tech:xsd:head_001_001:BranchAndFinancialInstitutionIdentification5
+              description : Financial Institution Identification
+              properties:
+                FinInstnId:
+                  type: object
+                  id: urn:jsonschema:iso:std:iso:_20022:tech:xsd:head_001_001:FinancialInstitutionIdentification8
+                  description : Financial Institution Identification
+                  properties:
+                    Othr:
+                      type: object
+                      id: urn:jsonschema:iso:std:iso:_20022:tech:xsd:head_001_001:GenericFinancialIdentification1
+                      description: Other
+                      properties:
+                        Id:
+                          type: string
+                          format : BICFIIdentifier
+                          required : true
+                          description : <b>Identification</b><br></br> First 8 characters of the BIC Code of the Receiving Participant
+
+    head.001.001.01:
+      type: object
+      id: urn:jsonschema:iso:std:iso:_20022:tech:xsd:head_001_001:BusinessApplicationHeaderV01
+      properties:
+        Fr:
+          type: object
+          "$ref": '#/components/schemas/Party9ChoiceSender'
+        To:
+          type: object
+          "$ref": '#/components/schemas/Party9ChoiceReceiver'
+        BizMsgIdr:
+          type: string
+          maxLength: 35
+          required : true
+          description: <b>Business Message Identification</b><br></br> Unique message identification. Format YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS
+            where <li>YYYYMMDD – Current Date</li><li>BBBBBBBB – BIC Code</li>
+            <li>XXX – Transaction Code. Refer to <a href="https://docs.developer.paynet.my/docs/duitnowqr/transactiontype/index.html" target="_blank"> <b style="color:blue;">Transaction Code</b> </a> </li>
+            <li>O – Originator. Refer to <a href="https://docs.developer.paynet.my/docs/duitnow/mappingtable#originator-code" target="_blank"> <b style="color:blue;">Originator</b> </a> </li>
+            <li>CC – Channel Code. Set to <b>QR</b> </li>
+            <li>SSSSSSSS – Sequence Number</li>
+            <br></br> During QR payment from OFI, use the same <BizMsgId> generated during QR Enquiry request and replace the transaction code from 520 to the corresponding QR Payment code accordingly. 
+            <br></br> The rest of the information in <b>BizMsgId</b> remain the same. 
+            <br></br> If the QR is not parse-able, OFI to send payment type as 521 or 031 respectively. 
+        MsgDefIdr:
+          type: string
+          required : true
+          maxLength: 35
+          description: <b>Message Definition Identification</b><br></br> Example pacs.008.001.06.01
+        BizSvc:
+          type: string
+          required : true
+          maxLength: 35
+          description: <b>Business Service</b><br></br> Default to <b>RPP </b>
+        CreDt:
+          type: string
+          required : true
+          format: YYYY-MM-DDTHH:MM:SSZ
+          description: <b>Message creation date and time</b>
+            <br></br>Must be in ISONormalizedDateTime (UTC) format. Cannot be longer than 15 mins against the time RPP receives this request
+        CpyDplct:
+          type: string
+          required : false
+          enum:
+          - CODU
+          - COPY
+          - DUPL
+          - EXPY
+          description: <b>Copy Duplicate</b><br></br> <li> CODU – Set to this value if sender is OFI </li>
+            <li> COPY – Set to this value if sender is RPP </li>
+            <li> DUPL – Currently not in used </li>
+        PssblDplct:
+          type: boolean
+          required : false
+          description: <b>Possible Duplicate</b><br></br> Default to <b>false</b>. If set to true, RPP will not apply time validation on CreDtTm, and will return the original payment response to sender
+        Rltd:
+          type: object
+          description : Related
+          id: urn:jsonschema:iso:std:iso:_20022:tech:xsd:head_001_001:PYNTBusinessApplicationHeaderRelated
+          properties:
+            Fr:
+              description : From
+              type: object
+              "$ref": '#/components/schemas/Party9ChoiceSender'
+        RPPSgntr:
+          type: object
+          id: urn:jsonschema:iso:std:iso:_20022:tech:xsd:head_001_001:PYNTRPPSignatureEnvelope
+          description : RPPSignature
+          properties:
+            KeyNbr:
+              type: string
+              maxLength: 100
+              required : false
+              description: <b>Key Number</b><br></br> Participant can have multiple certificates configured. This field indicates the certificate key number used to sign the message signature
+            Signature:
+              type: string
+              required : false
+              maxLength: 1024
+              description : <b>Signature</b><br></br> Message signature signed using the certificate defined in <b>KeyNbr</b>
+
+    
+
+    ActiveCurrencyAndAmount:
+      type: object
+      id: urn:jsonschema:iso:std:iso:_20022:tech:xsd:pacs_008_001_06:ActiveCurrencyAndAmount
+      properties:
+        Amount:
+          required: true
+          description: <b>Amount</b><br></br> For Account Enquiry, default to 1.00 as dummy value
+          type: number
+        Ccy:
+          type: string
+          required: true
+          maxLength: 3
+          description: <b>Currency</b><br></br> Default to MYR.
+            <br></br> For Static QR Type = 11 (<Field1>), 521 response= Field1 - " IDR3480.3211;11; 0.00" Field2 - "202102190025" Field3 - "MYR1.00"
+            <br></br> During 031 Merchant required - IDR348030
+            <br></br> Calculation = IDR348030 (Actual Amount)/IDR3470.3211 (<Field1>) = 100.287549 And Rounded Off = <b>MYR100.29</b>
+            <br></br> Rounding Logic = 1,2,3,4  Round Down , 5,6,7,8,9  Round Up
+            <br></br> For Dynamic QR Type = 12 (<b>Field1</b>), Issuer is required to pass in <b>IntrBkSttlmAmt</b> based on the amount returned in <b>Field3</b> from pacs.002 (521) during Credit Transfer (031)
+    
+    BranchAndFinancialInstitutionIdentification5:
+      type: object
+      id: urn:jsonschema:iso:std:iso:_20022:tech:xsd:pacs_008_001_06:BranchAndFinancialInstitutionIdentification5
+      properties:
+        FinInstnId:
+          type: object
+          id: urn:jsonschema:iso:std:iso:_20022:tech:xsd:pacs_008_001_06:FinancialInstitutionIdentification8
+          description : Financial Institution Identification
+          properties:
+            Nm:
+              type: string
+              maxLength: 140
+              required: false
+              description : <b>Name</b><br></br> Not used.
+            PstlAdr:
+              type: object
+              id: urn:jsonschema:iso:std:iso:_20022:tech:xsd:pacs_008_001_06:PostalAddress6
+              description : Postal Address
+              properties:
+                StrtNm:
+                  type: string
+                  maxLength: 70
+                  description: <b>Street Name</b><br></br> Not used.
+                  required: false
+                TwnNm:
+                  type: string
+                  maxLength: 35
+                  description: <b>Town Name</b><br></br> Not used.
+                  required: false
+                CtrySubDvsn:
+                  type: string
+                  maxLength: 35
+                  description: <b>Country Sub Division</b><br></br> Not used.
+                  required: false
+                Ctry:
+                  type: string
+                  maxLength: 35
+                  description: <b>Country</b><br></br> Not used.
+                  required: false
+            Othr:
+              type: object
+              id: urn:jsonschema:iso:std:iso:_20022:tech:xsd:pacs_008_001_06:GenericFinancialIdentification1
+              description : Other
+              properties:
+                Id:
+                  type: string
+                  description : <b>Identification</b><br></br> First 8 digits of BIC code. Not used.
+    BranchAndFinancialInstitutionIdentification5-DbtrAgt:
+      type: object
+      id: urn:jsonschema:iso:std:iso:_20022:tech:xsd:pacs_008_001_06:BranchAndFinancialInstitutionIdentification5
+      description : Debtor Agent
+      properties:
+        FinInstnId:
+          type: object
+          id: urn:jsonschema:iso:std:iso:_20022:tech:xsd:pacs_008_001_06:FinancialInstitutionIdentification8
+          description : Financial Institution Identification
+          properties:
+            Othr:
+              type: object
+              id: urn:jsonschema:iso:std:iso:_20022:tech:xsd:pacs_008_001_06:GenericFinancialIdentification1
+              description : Other
+              properties:
+                Id:
+                  type: string
+                  description : <b>Identification</b><br></br> Same as <b>Fr/FIId/FinInstnId/Othr/Id</b>
+                  required: true
+
+    BranchAndFinancialInstitutionIdentification5-CdtrAgt:
+      type: object
+      id: urn:jsonschema:iso:std:iso:_20022:tech:xsd:pacs_008_001_06:BranchAndFinancialInstitutionIdentification5
+      description : Creditor Agent
+      properties:
+        FinInstnId:
+          type: object
+          id: urn:jsonschema:iso:std:iso:_20022:tech:xsd:pacs_008_001_06:FinancialInstitutionIdentification8
+          description : Financial Institution Identification 
+          properties:
+            Othr:
+              type: object
+              id: urn:jsonschema:iso:std:iso:_20022:tech:xsd:pacs_008_001_06:GenericFinancialIdentification1
+              description : Other
+              properties:
+                Id:
+                  type: string
+                  maxLength: 35
+                  required: true
+                  description : <b>Identification</b><br></br> <li>Acquirer ID – for request from OFI to RPP. OFI to extract from QR Code </li>
+                   <li>BIC Code – for request from RPP to RFI. RPP to propagate based on the Acquirer ID </li>
+                   <li>Default to <b>RPPEMYKL</b> for Cross Border QR , if QR is not parse-able or AID does not belong to PayNet</li>
+
+    PartyIdentification43:
+      type: object
+      id: urn:jsonschema:iso:std:iso:_20022:tech:xsd:pacs_008_001_06:PartyIdentification43
+      properties:
+        Nm:
+          type: string
+          maxLength: 140
+          description : Debtor’s name
+          required: true
+
+    PartyIdentification43-Cdtr:
+      type: object
+      id: urn:jsonschema:iso:std:iso:_20022:tech:xsd:pacs_008_001_06:PartyIdentification43
+      description : Creditor
+      properties:
+        Nm:
+          type: string
+          maxLength: 140
+          description : <b>Name</b><br></br> For Account Enquiry, default to QR Payment as dummy value. For Credit Transfer, propagate with the actual name returned from Account Enquiry.
+          required: true
+
+    CashAccount24:
+      type: object
+      id: urn:jsonschema:iso:std:iso:_20022:tech:xsd:pacs_008_001_06:CashAccount24
+      properties:
+        Id:
+          type: object
+          id: urn:jsonschema:iso:std:iso:_20022:tech:xsd:pacs_008_001_06:AccountIdentification4Choice
+          description : Identification
+          properties:
+            Othr:
+              type: object
+              id: urn:jsonschema:iso:std:iso:_20022:tech:xsd:pacs_008_001_06:GenericAccountIdentification1
+              description : Other
+              properties:
+                Id:
+                  type: string
+                  maxLength: 34
+                  required : true
+                  description: Debtor's account number
+        Tp:
+          type: object
+          id: urn:jsonschema:iso:std:iso:_20022:tech:xsd:pacs_008_001_06:CashAccountType2Choice
+          properties:
+            Prtry:
+              type: string
+              required: true
+              description: Account type
+                <li> CACC – Current Account</li>
+                <li> SVGS – Savings Account</li>
+                <li> CCRD – Credit Card</li>
+                <li> WALL – e-Wallet</li>
+                <li> DFLT – either Savings or Current</li>
+
+    CashAccount24-CdtrAcct:
+      type: object
+      id: urn:jsonschema:iso:std:iso:_20022:tech:xsd:pacs_008_001_06:CashAccount24
+      description : Creditor Account
+      properties:
+        Id:
+          type: object
+          id: urn:jsonschema:iso:std:iso:_20022:tech:xsd:pacs_008_001_06:AccountIdentification4Choice
+          description : Identification
+          properties:
+            Othr:
+              type: object
+              id: urn:jsonschema:iso:std:iso:_20022:tech:xsd:pacs_008_001_06:GenericAccountIdentification1
+              description : Other
+              properties:
+                Id:
+                  type: string
+                  maxLength: 34
+                  required : true
+                  description: <b>Identification</b><br></br> <li> QR ID – To be extracted from PayNet QR </li>
+                    <li> Default to 99999999999 for Cross Border QR,  if QR is not parse-able or AID does not belong to PayNet</li>
+        Tp:
+          type: object
+          id: urn:jsonschema:iso:std:iso:_20022:tech:xsd:pacs_008_001_06:CashAccountType2Choice
+          description : Type
+          properties:
+            Prtry:
+              type: string
+              required: true
+              description: <b>Proprietary</b><br></br> Default to <b>DFLT</b>
+
+    AccountSchemeName1Choice:
+      type: object
+      id: urn:jsonschema:iso:std:iso:_20022:tech:xsd:pacs_008_001_06:AccountSchemeName1Choice
+      properties:
+        Prtry:
+          type: string
+          required : true
+          maxLength : 35
+          description: Proprietary. Currently not used
+        Issr : 
+          type : string
+          maxLength : 35
+          required : false
+          description : Issuer. Currently not used
+
+    pacs.008.001.06.01:
+      type: object
+      properties:
+        FIToFICstmrCdtTrfInf:
+          type: object
+          id: urn:jsonschema:iso:std:iso:_20022:tech:xsd:pacs_008_001_06:FIToFICustomerCreditTransferV06Q
+          properties:
+            GrpHdr:
+              type: object
+              id: urn:jsonschema:iso:std:iso:_20022:tech:xsd:pacs_008_001_06:GroupHeader70Q
+              description : Group Header
+              properties:
+                MsgId:
+                  type: string
+                  maxLength: 35
+                  required : true
+                  description: <b>Message Identification</b><br></br> Unique message identification. Format YYYYMMDDBBBBBBBBTTTSSSSSSSS 
+                    where <li>YYYYMMDD – Current Date</li><li>BBBBBBBB – BIC Code</li>
+                    <li>TTT – Transaction Code. </li><li>SSSSSSSS – Sequence
+                    Number</li>
+                    Transaction code - Refer to <a style="color:blue;" href="https://docs.developer.paynet.my/docs/duitnowqr/transactiontype/index.html" target="_blank"><b style="color:blue;">Transaction Code</b></a>
+                CreDtTm:
+                  type: string
+                  format: YYYY-MM-DDTHH:MM:SS.mmm.sss
+                  required: true
+                  description : <b>Creation Date</b><br></br> Must be in Malaysia Standard Time format of message creation date and time.
+                NbOfTxs:
+                  type: string
+                  maxLength : 15
+                  required: true
+                  description: <b>Number of Transactions</b><br></br> Default to 1 as RPP currently only supports one transaction at a time
+            
+                SttlmInf:
+                  type: object
+                  id: urn:jsonschema:iso:std:iso:_20022:tech:xsd:pacs_008_001_06:SettlementInstruction4
+                  description : Settlement Information
+                  properties:
+                    SttlmMtd:
+                      type: string
+                      enum:
+                      - INDA
+                      - INGA
+                      - COVE
+                      - CLRG
+                      description: <b>Settlement Method</b><br></br> Default to <b>CLRG</b>
+                      required: true
+                
+            CdtTrfTxInf:
+              type: array
+              description : Credit Transfer Transaction Information
+              items:
+                type: object
+                id: urn:jsonschema:iso:std:iso:_20022:tech:xsd:pacs_008_001_06:CreditTransferTransaction25Q
+                properties:
+                  PmtId:
+                    type: object
+                    id: urn:jsonschema:iso:std:iso:_20022:tech:xsd:pacs_008_001_06:PaymentIdentification3
+                    description : Payment Identification
+                    properties:
+                      EndToEndId:
+                        type: string
+                        maxLength: 35
+                        required: true
+                        description: <b>End to End Identification</b><br></br> Same as OFI's <b>BizMsgId</b>
+                      TxId:
+                        type: string
+                        maxLength: 35
+                        required : true
+                        description: <b>Transaction Identification</b><br></br> Same as OFI's <b>MsgId</b>
+                      ClrSysRef:
+                        type: string
+                        maxLength: 35
+                        required: false
+                        description: <b>Settlement Cycle Number</b><br></br> Settlement cycle on when the payment will be settled e.g. 001, 002 or etc. This will be set by RPP
+                  PmtTpInf:
+                    type: object
+                    id: urn:jsonschema:iso:std:iso:_20022:tech:xsd:pacs_008_001_06:PaymentTypeInformation21
+                    description : Payment Type Information
+                    properties:
+                      CtgyPurp:
+                        type: object
+                        id: urn:jsonschema:iso:std:iso:_20022:tech:xsd:pacs_008_001_06:CategoryPurpose1Choice
+                        description : Category Purpose
+                        properties:
+                          Prtry:
+                            type: string
+                            required: false
+                            description: <b>Proprietary</b><br></br> Default to <b>EPAY</b>
+                  IntrBkSttlmAmt:
+                    required: true
+                    description: <b>Amount</b><br></br> For Account Enquiry, default to 1.00 as dummy value
+                      <br></br> For Credit Transfer, transaction amount shall exclude any fee or charges
+                    type: string
+                  IntrBkSttlmAmtCcy:
+                    type: string
+                    required: true
+                    maxLength: 3
+                    description: <b>Currency</b><br></br> This field only used for JSON type. Default to MYR.
+                      <br></br> For Static QR Type = 11 (<Field1>), 521 response= Field1 - " IDR3480.3211;11; 0.00" Field2 - "202102190025" Field3 - "MYR1.00"
+                      <br></br> During 031 Merchant required - IDR348030
+                      <br></br> Calculation = IDR348030 (Actual Amount)/IDR3470.3211 (<Field1>) = 100.287549 And Rounded Off = <b>MYR100.29</b>
+                      <br></br> Rounding Logic = 1,2,3,4  Round Down , 5,6,7,8,9  Round Up
+                      <br></br> For Dynamic QR Type = 12 (<b>Field1</b>), Issuer is required to pass in <b>IntrBkSttlmAmt</b> based on the amount returned in <b>Field3</b> from pacs.002 (521) during Credit Transfer (031)
+                  IntrBkSttlmDt:
+                    type: string
+                    format: YYYY-MM-DD
+                    required: false
+                    description: <b>Interbank Settlement Date</b><br></br> Settlement date when the payment will be settled. This will be set by RPP
+                  ChrgBr:
+                    type: string
+                    enum:
+                    - DEBT
+                    - CRED
+                    - SHAR
+                    - SLEV
+                    description: <b>Charge Bearer</b><br></br> Defaulted to DEBT
+                    required: true
+                  InstgAgt:
+                    type: object
+                    "$ref": '#/components/schemas/BranchAndFinancialInstitutionIdentification5'
+                  Dbtr:
+                    type: object
+                    "$ref": '#/components/schemas/PartyIdentification43'
+                  DbtrAcct:
+                    type: object
+                    "$ref": '#/components/schemas/CashAccount24'
+                  DbtrAgt:
+                    type: object
+                    "$ref": '#/components/schemas/BranchAndFinancialInstitutionIdentification5-DbtrAgt'
+                  CdtrAgt:
+                    type: object
+                    "$ref": '#/components/schemas/BranchAndFinancialInstitutionIdentification5-CdtrAgt'
+                  Cdtr:
+                    type: object
+                    "$ref": '#/components/schemas/PartyIdentification43-Cdtr'
+                  CdtrAcct:
+                    type: object
+                    "$ref": '#/components/schemas/CashAccount24-CdtrAcct'
+                  SplmtryData:
+                    type: array
+                    description : Supplementary Data
+                    items:
+                      type: object
+                      id: urn:jsonschema:iso:std:iso:_20022:tech:xsd:pacs_008_001_06:SupplementaryData1Q
+                      properties:
+                        PlcAndNm:
+                          type: string
+                          required : true
+                        Envlp:
+                          type: object
+                          id: urn:jsonschema:iso:std:iso:_20022:tech:xsd:pacs_008_001_06:SupplementaryDataEnvelope1Q
+                          description : Envelope
+                          properties:
+                            InstrForCdtrAgt:
+                              type: object
+                              id: urn:jsonschema:iso:std:iso:_20022:tech:xsd:pacs_008_001_06:InstructionForCreditorAgent1
+                              description : Instruction for Crediting Agent
+                              properties:
+                                RecptRef:
+                                  type: string
+                                  required: true
+                                  description: <b>Recipient Reference</b><br></br> Default to <b>QR PAYMENT</b>
+                                  maxLength: 140
+                                PaymntDesc:
+                                  type: string
+                                  required: false
+                                  maxLength: 140
+                                  description : Payment Description
+                                ScndValInd:
+                                  type: string
+                                  maxLength: 1
+                                  required: true
+                                  description: <b>Creditor Identification Validation Required</b><br></br> Default to <b>N</b> as the feature is not used for QR
+                                IdTp:
+                                  type: string
+                                  maxLength: 2
+                                  required: false
+                                  description: <b>Identification Type</b><br></br> <li>01 – New IC No </li>
+                                    <li>02 – Army No/Police No</li>
+                                    <li>03 – Passport No</li>
+                                    <li>04 – Registration No</li>
+                                    <br> </br> Not applicable for QR Payment 
+                                Id:
+                                  type: string
+                                  maxLength: 20
+                                  required: false
+                                  description: <b>Identification</b><br></br> Identification value <b>IdTp</b> type
+                                    Not applicable for QR Payment
+                                SellerId:
+                                  type: string
+                                  maxLength : 10
+                                  required : false
+                                  description: <b>Seller Identification</b><br></br> Not applicable for QR Payment
+                            InstrForDbtrAcct:
+                              type: object
+                              id: urn:jsonschema:iso:std:iso:_20022:tech:xsd:pacs_008_001_06:InstructionForAccount1
+                              description : Instruction for Debtor’s Account
+                              properties:
+                                RsdntSts:
+                                  type: string
+                                  description: <b>Resident Status</b><br></br> <li>1 – Resident </li>
+                                    <li>2 – Non-Resident</li>
+                                    <li>3 – Unavailable</li>
+                                  required: false
+                                  maxLength : 1
+                                PrdTp:
+                                  type: string
+                                  required: false
+                                  description: <b>Product Type</b><br></br> <li>I – Islamic </li>
+                                    <li>C – Conventional</li>
+                                  maxLength : 1
+                                ShariaCmpl:
+                                  type: string
+                                  required: false
+                                  description: <b>Sharia Compliant</b><br></br> <li>Y – Yes </li>
+                                    <li>N – No</li>
+                                    <li>U – Unknown</li>
+                                  maxLength : 1
+                                Dtls:
+                                  type: string
+                                  required: false
+                                  description: <b>Details</b><br></br> Account holder type
+                                    <li>1 – Single </li>
+                                    <li>2 – Joint</li>
+                                    <li>3 – Government</li>
+                                    <li>4 – Corporate</li>
+                                    <li>5 – NGO</li>
+                                  maxLength : 1
+                                SchmeNm:
+                                  type: object
+                                  "$ref": '#/components/schemas/AccountSchemeName1Choice'
+                                
+                            Dbtr:
+                              type: object
+                              id: urn:jsonschema:iso:std:iso:_20022:tech:xsd:pacs_008_001_06:DbtrInf1Q
+                              description : Debtor
+                              properties:
+                                Id:
+                                  type: string
+                                  maxLength: 35
+                                  required: true
+                                  description: <b>Debtor Identification</b><br></br> Identification of the Debtor. This information will be masked to last 4 characters when sent to RFI
+                                GPSCoord:
+                                  type: string
+                                  maxLength : 35
+                                  required: false
+                                  description: <b>Sender Location</b><br></br> Location of the sender in decimal degree (DD) coordinate. Participant may default the value in case unable to capture from the customer session.
+                                    <br></br> Example - 40.689263 -74.044505
+                                IPAddr:
+                                  type: string
+                                  maxLength : 100
+                                  required : false
+                                  description : <b>IP Address</b><br></br> IP address where the transaction was initiated. Participant may default the value in case unable to capture from the customer session. Must be in IP address format
+                            CdtTrfTxInf:
+                              type: object
+                              id: urn:jsonschema:iso:std:iso:_20022:tech:xsd:pacs_008_001_06:TxInf1
+                              description: <b>Not used</b>
+                              properties:
+                                URL:
+                                  type: string
+                                  required: false
+                                  maxLength: 250
+                                  description: URL. <b>Not used</b>
+                                PrxyLkUpRef:
+                                  type: string
+                                  required: false
+                                  maxLength: 35
+                                  description: Look up Reference. <b>Not used</b>
+                            QRTxInfo:
+                              type: object
+                              id: urn:jsonschema:iso:std:iso:_20022:tech:xsd:pacs_008_001_06:QRTxInf1
+                              description : QR Transaction Information 
+                              properties:
+                                AcceptedPymtType:
+                                  type: array
+                                  required: true
+                                  description: <b>Accepted Source of Fund/Line of Credit </b><br></br> Multiple choice of elements.
+                                    <li>01 – CASA</li>
+                                    <li>02 – Credit Card</li>
+                                    <li>03 – Wallet</li>
+                                    <li>04 – DFLT</li>
+                                    <br></br>For QR Verification (520, 521) request, OFI to send as <b>DFLT</b>
+                                    <br></br>For QR Payment request (030, 031, 040), OFI to send the value returned in pacs.002 from RFI 
+                                  items:
+                                    type: string
+                                PromoCd:
+                                  type: string
+                                  maxLength: 35
+                                  required: false
+                                  description: <b>Promo Code </b><br></br>  Promotional code to be used to provide offer/discount
+                                Field1:
+                                  type: string
+                                  maxLength: 35
+                                  required: false
+                                  description: Refer to <a style="color:blue;" href="https://docs.developer.paynet.my/docs/duitnowqr/extrafield/index.html#pacs0080010601" target="_blank"><b>Extra Fields</b></a>
+                                Field2:
+                                  type: string
+                                  maxLength : 35
+                                  required : false
+                                  description : Refer to <a style="color:blue;" href="https://docs.developer.paynet.my/docs/duitnowqr/extrafield/index.html#pacs0080010601" target="_blank"><b>Extra Fields</b></a>
+                                Field3:
+                                  type: string
+                                  required : false
+                                  maxLength : 35
+                                  description : Refer to <a style="color:blue;" href="https://docs.developer.paynet.my/docs/duitnowqr/extrafield/index.html#pacs0080010601" target="_blank"><b>Extra Fields</b></a>
+                                Field4:
+                                  type: string
+                                  maxLength : 35
+                                  required : false
+                                  description : Reserved field for future usage. Refer to <a style="color:blue;" href="https://docs.developer.paynet.my/docs/duitnowqr/extrafield/index.html#pacs0080010601" target="_blank"><b>Extra Fields</b></a>
+                                Field5:
+                                  type: string
+                                  maxLength : 35
+                                  required : false
+                                  description : Reserved field for future usage. Refer to <a style="color:blue;" href="https://docs.developer.paynet.my/docs/duitnowqr/extrafield/index.html#pacs0080010601" target="_blank"><b>Extra Fields</b></a>
+                                QRCategory:
+                                  type: string
+                                  required: true
+                                  maxLength: 2
+                                  description: <b>QR Category</b><br></br> <li> 01 – Point of Sales </li>
+                                    <li> 02 – P2P  </li>
+                                    <li> 03 – DFLT  </li>
+                                    <br></br>For QR Verification request  (520, 521), OFI to send as <b>DFLT</b>
+                                    <br></br> For QR Payment request (030, 031, 040), OFI need to send back the value return in pacs.002 from RFI 
+                                    <br></br> RPP will not validate this field. Value must be returned as 
+                                    <li> 520/030/040/031/032 - 01 or 02  </li> 
+                                    <li> 521/522 - 01 </li> 
+                                QRCd:
+                                  type: string
+                                  required: true
+                                  description: <b>QR Code</b>
+                                  maxLength : 2000
+
+    StatusReasonInformation9:
+      type: object
+      id: urn:jsonschema:iso:std:iso:_20022:tech:xsd:pacs_002_001_08:StatusReasonInformation9
+      properties:
+        Rsn:
+          type: object
+          id: urn:jsonschema:iso:std:iso:_20022:tech:xsd:pacs_002_001_08:StatusReason6Choice
+          description : Reason
+          properties:
+            Prtry:
+              type: string
+              required: true
+              description : <b>Proprietary</b><br></br> Refer to <a style="color:blue;" href="https://docs.developer.paynet.my/docs/duitnow/responsecodes/index.html#reason-codes" target="_blank"><b style="color:blue;">Reason Code</b></a>
+
+    ActiveOrHistoricCurrencyAndAmount: 
+      type: object
+      id: urn:jsonschema:iso:std:iso:_20022:tech:xsd:pacs_002_001_08:ActiveOrHistoricCurrencyAndAmount
+      properties:
+        value:
+          type: number
+        ccy:
+          type: string
+
+    pacs.003.001.08.01:
+      type: object
+      properties:
+        FIToFICstmrDrctDbtInf:
+          type: object
+          id: urn:jsonschema:iso:std:iso:_20022:tech:xsd:pacs_003_001_08:FIToFICustomerDirectDebitV09
+          properties:
+            GrpHdr:
+              type: object
+              id: urn:jsonschema:iso:std:iso:_20022:tech:xsd:pacs_003_001_08:GroupHeader53Q
+              description : Group Header
+              properties:
+                MsgId:
+                  type: string
+                  maxLength : 35
+                  required : true
+                  description: <b>MsgId</b> from request message
+                CreDtTm:
+                  type: string
+                  format: YYYY-MM-DDTHH:MM:SS.mmm.sss
+                  required : true
+                  description : Transaction creation date and time. Must be in Malaysia Standard Time format
+                NbOfTxs:
+                  type: string
+                  maxLength: 15
+                  required: true
+                  description: <b>Number of Transactions</b><br/> Default to <b>1</b>
+                SttlmInf:
+                  type: object
+                  description: Settlement Information
+                  properties:
+                    SttlmMtd:
+                      type: string
+                      description: <b>Settlement Method</b><br/> Default to <b>CLRG</b>
+            DrctDbtTxInf:
+              type: array   
+              description: Direct Debit Transaction Information     
+              items:
+                id: urn:jsonschema:iso:std:iso:_20022:tech:xsd:pacs_003_001_08:DirectDebitTransactionInformation29           
+                properties:
+                  PmtId: 
+                    type: object
+                    properties:
+                      EndToEndId:
+                        type: string
+                        required: true
+                        description: <b>End to End Identification</b><br/>
+                          Same as <b>&lt;BizMsgIdr&gt;</b>
+                      TxId:
+                        type: string
+                        required: true
+                        description: <b>End to End Identification</b><br/>
+                          Same as <b>&lt;MsgId&gt;</b>
+                  IntrBkSttlmAmt:
+                    type: string
+                    required: true
+                    description: <b>Amount</b>
+                  IntrBkSttlmAmtCcy:
+                    type: string
+                    required: true
+                    maxLength: 3
+                    description: <b>Currency</b><br></br> This field only used for JSON type. Default to MYR.
+
+                  ChrgBr:
+                    type: string
+                    required: true
+                    description: Default to <b>&lt;DEBT&gt;</b>
+                  Cdtr:
+                    type: object
+                    properties:
+                      Nm:
+                        type: string
+                        required: true
+                        description: <b>Creditor's Name</b>
+                  CdtrAcct:
+                    type: object
+                    properties:
+                      Id:
+                        type: object
+                        properties:
+                          Othr: 
+                            type: object
+                            properties:
+                              Id:
+                                type: string
+                                required: true
+                                maxLength: 34
+                                description: <b>Creditor's Account Number</b>
+                  CdtrAgt:
+                    type: object
+                    properties:
+                      FinInstnId:
+                        type: object
+                        properties:
+                          Othr: 
+                            type: object
+                            properties:
+                              Id:
+                                  type: string
+                                  required: true
+                                  maxLength: 35
+                                  description: <b>Creditor's Agent BIC</b>
+                  Dbtr:
+                    type: object
+                    properties:
+                      Nm:
+                        type: string
+                        required: true
+                        maxLength: 140
+                        description: <b>Debtor's Name</b> <br/>
+                          Acquirer should populate the cardholder name from QR code
+                  DbtrAcct:
+                    type: object
+                    properties:
+                      Id:
+                        type: object
+                        properties:
+                          Othr: 
+                            type: object
+                            properties:
+                              Id:
+                                type: string
+                                required: true
+                                maxLength: 34
+                                description: <b> Debtor Account Identification</b> <br/>
+                                  Populate with Primary Account Reference from QR Code
+                      Tp:
+                        type: object
+                        properties:
+                          Prtry:
+                            type: string
+                            required: true
+                            enum:
+                              - CACC
+                              - SVGS
+                              - CCRD
+                              - WALL
+                              - DFLT
+                            maxLength: 35
+                            description: <b>Transaction Category Code</b>
+                              <br/>Populate with Transaction Category Code from QR Code <br/> 
+                              <ul><li>CACC - Current</li>
+                                  <li>SVGS - Savings</li>
+                                  <li>CCRD - Credit Card</li>
+                                  <li>WALL – e-Wallet</li>
+                                  <li>DFLT – Current or Savings</li>
+                              </ul>
+                  DbtrAgt:
+                    type: object
+                    properties:
+                      FinInstnId:
+                        type: object
+                        properties:
+                          Othr: 
+                            type: object
+                            properties:
+                              Id:
+                                  type: string
+                                  required: true
+                                  maxLength: 35
+                                  description: <b>Identification </b> <br> To be populated with Issuer Identification Number
+                  SplmtryData:
+                    type: array
+                    items:
+                      properties:
+                        Envlp:
+                          type: object
+                          properties: 
+                            CdtrAcctInf:
+                              type: object
+                              properties: 
+                                MerchantId:
+                                  type: object
+                                  properties:
+                                    Othr:
+                                      type: object
+                                      properties:
+                                        Id:
+                                          type: string
+                                          required: true
+                                          maxLength: 35
+                                          description: <b>Merchant Identification </b>
+                                ProductId:
+                                  type: string
+                                  required: true
+                                  maxLength: 35
+                                  description: <b>Merchant's Product Identification</b> <br/> Used by Debiting Agent to inform customer of which Merchant Product ID. 
+                                    Send Merchant ID if do not contain separate Product ID
+                                MCC:
+                                  type: string
+                                  required: true
+                                  maxLength: 4
+                                  description: <b>Merchant Category Code </b> <br/> Follow ISO 18245
+                                BRN:
+                                  type: string
+                                  required: true
+                                  maxLength: 140
+                                  description: <b>Merchant BRN</b>
+                            BillInf:
+                              type: object
+                              properties:
+                                BillRefNo:
+                                  type: string
+                                  maxLength: 140
+                                  required: true
+                                  description: Bill Reference Number, Ref 1
+                                BillDesc:
+                                  type: string
+                                  maxLength: 140
+                                  description: Bill Description, Ref 2
+                                Reserved1:
+                                  type: string
+                                  maxLength: 35
+                                  description: Reserved Field 1
+                                Reserved2:
+                                  type: string
+                                  maxLength: 35
+                                  description: Reserved Field 2
+                                Reserved3:
+                                  type: string
+                                  maxLength: 35
+                                  description: Reserved Field 3
+                            QRTxInfo:
+                              type: object
+                              properties:
+                                QRCd: 
+                                  type: string
+                                  maxLength: 2000
+                                  required: true
+                                  description: <b>QR Code</b> <br/> Entire QR String
+                                QRCategory:
+                                  type: string
+                                  maxLength: 2
+                                  required: true
+                                  description: <b>QR Category</b> <br/> 
+                                    <li>01 - Point of Sales</li>
+                                    <li>02 - P2P</li>
+                                    <li>03 - DFLT</li>
+                                    <br/>
+                                    Default to 01
+                                AcceptedPymtType:
+                                  type: array
+                                  required: true
+                                  description: <b>Accepted source of funds</b> <br/>
+                                    <li>01 - SVGS</li>
+                                    <li>02 - Credit Card</li>
+                                    <li>03 - Wallet</li>
+                                    <li>04 - DFLT</li>
+                                    <li>11 - CACC</li>
+                                PromoCd:
+                                  type: string
+                                  maxLength: 35
+                                  description: Promo Code <br/> For use with a promotional code to provide offer/discount
+                                Field1:
+                                  type: string
+                                  maxLength: 35
+                                  description: Reserve for future use
+                                Field2:
+                                  type: string
+                                  maxLength: 35
+                                  description: Reserve for future use
+                                Field3:
+                                  type: string
+                                  maxLength: 35
+                                  description: Reserve for future use
+                                Field4:
+                                  type: string
+                                  maxLength: 35
+                                  description: Reserve for future use
+                                Field5:
+                                  type: string
+                                  maxLength: 35
+                                  description: Reserve for future use
+                            DrctDbtTxInf:
+                              type: object
+                              properties:
+                                IPAddr:
+                                      type: string
+                                      maxLength : 100
+                                      required: false
+                                      description: <b>IP Address </b><br></br> Required for CPM QR 240, 250, 880
+                                        <br/>Ip address where the transaction was initiated. Participant may default the value in case unable to capture from the customer session.
+                                GPSCoord:
+                                  type: string   
+                                  maxLength : 35
+                                  required: false
+                                  description: <b>GPS Coordinate </b><br></br> Required for CPM QR 240, 250, 880
+                                    <p>Location of the sender in decimal degree (DD) coordinate</p>
+                                    <p>Example = 40.689263 -74.044505</p>
+                                    Participant may default the value in case unable to capture from the customer session.
+
+                                Preauth:
+                                  type: object
+                                  properties:
+                                    Amt:
+                                      type: string
+                                      description: <b>Pre-authorised amount</b> <br/> Must be within the limit of max pre-auth amount configured at RPP
+                                    AmtCcy:
+                                      type: string
+                                      maxLength : 3
+                                      description: <b>Currency</b> <br/> Only used in JSON format
+                                    PreauthXpryDt:
+                                      type: string
+                                      description: Pre-authorisation Expiry date
+                                    Id:
+                                      type: string
+                                      description: <b>Pre-authorisation Identification</b>
+                                       <br/>To be generated by RPP <br/>         
+                                        CPM QR Pre-Auth ID format is <b>YYYYMMDDQRPTSSSSSSSS</b>,
+                                        Where
+                                        <li>YYMMDD = Date</li>
+                                        <li>SSSSSSSS = Running Serial Number</li>
+                                        RPP will populate this field for pre-auth transaction 880, example - 20190825QRPT00000001 <br/>
+                                        Note - For 250 this field must be populated with the Pre-Auth ID received in 880 response from RPP
+                                Reserved1:
+                                  type: string
+                                  required : false
+                                  maxLength : 35
+                                  description : Reserved field for future usage
+                                Reserved2:
+                                  type: string
+                                  required : false
+                                  maxLength : 35
+                                  description : Reserved field for future usage
+                                Reserved3:
+                                  type: string
+                                  required : false
+                                  maxLength : 35
+                                  description : Reserved field for future usage
+                                    
+    pacs.002.001.08.01:
+      type: object
+      properties:
+        FIToFIPmtStsRptInf:
+          type: object
+          id: urn:jsonschema:iso:std:iso:_20022:tech:xsd:pacs_002_001_08:FIToFIPaymentStatusReportV08Q
+          properties:
+            GrpHdr:
+              type: object
+              id: urn:jsonschema:iso:std:iso:_20022:tech:xsd:pacs_002_001_08:GroupHeader53Q
+              description : Group Header
+              properties:
+                MsgId:
+                  type: string
+                  maxLength : 35
+                  required : true
+                  description: <b>MsgId</b> from request message
+                CreDtTm:
+                  type: string
+                  format: YYYY-MM-DDTHH:MM:SS.mmm.sss
+                  required : true
+                  description : Transaction creation date and time. Must be in Malaysia Standard Time format
+                
+            OrgnlGrpInfAndSts:
+              type: array
+              description : Original Group Information and Status
+              items:
+                type: object
+                id: urn:jsonschema:iso:std:iso:_20022:tech:xsd:pacs_002_001_08:OriginalGroupHeader7
+                properties:
+                  OrgnlMsgId:
+                    type: string
+                    maxLength : 35
+                    required : true
+                    description : <b>Original Message Id</b><br></br> <b>MsgId</b> from pacs.008 request
+                  OrgnlMsgNmId:
+                    type: string
+                    maxLength : 35
+                    required : true
+                    description: <b>Original Message Name Id</b><br></br> <b>MsgDefIdr</b> from pacs.008 request
+            TxInfAndSts:
+              type: array
+              description : Transaction Information And Status
+              items:
+                type: object
+                id: urn:jsonschema:iso:std:iso:_20022:tech:xsd:pacs_002_001_08:PaymentTransaction80Q
+                properties:
+                  OrgnlEndToEndId:
+                    type: string
+                    required: true
+                    maxLength : 35
+                    description : <b>Original End to End Identification</b><br></br> <b>EndToEndId</b> from pacs.008 request
+                  OrgnlTxId:
+                    type: string
+                    required: true
+                    maxLength : 35
+                    description : <b>Original Transaction Identification</b><br></br> <b>TxId</b> from pacs.008 request
+                  TxSts:
+                    type: string
+                    required: true
+                    description : <b>Transaction Status</b><br></br> Refer to <a style="color:blue;" href="https://docs.developer.paynet.my/docs/duitnow/mappingtable/index.html##externalpaymenttransactionstatus1code-txsts" target="_blank"><b style="color:blue;">External Payment Transaction Status Code</b></a>
+                  StsRsnInf:
+                    type: array
+                    description : Status Reason Information
+                    items:
+                      type: object
+                      "$ref": '#/components/schemas/StatusReasonInformation9'
+                  ClrSysRef:
+                    type: string
+                    required : false
+                    description : <b>Settlement Cycle Number</b><br></br> Settlement cycle on when the payment will be settled. E.g. 001, 002 or etc
+                  OrgnlTxRef:
+                    type: object
+                    id: urn:jsonschema:iso:std:iso:_20022:tech:xsd:pacs_002_001_08:OriginalTransactionReference24Q
+                    description : Original Transaction Reference
+                    properties:
+                      IntrBkSttlmDt:
+                        type: string
+                        format: YYYY-MM-DD
+                        description : <b>Interbank Settlement Date</b><br></br> Mandatory for Credit Transfer (031). Interbank settlement date
+                      Cdtr:
+                        type: object
+                        id: urn:jsonschema:iso:std:iso:_20022:tech:xsd:pacs_002_001_08:PartyIdentification43Q
+                        description : Creditor
+                        properties:
+                          Nm:
+                            type: string
+                            required : true
+                            maxLength : 140
+                            description: <b>Creditor’s Name</b><br></br> Acquirer to return the Merchant Name during QR verification process. <b>240, 250</b> – Debiting Bank to return debtor name
+                      CdtrAcct:
+                        type: object
+                        id: urn:jsonschema:iso:std:iso:_20022:tech:xsd:pacs_002_001_08:CashAccount24Q
+                        description : Creditor
+                        properties:
+                          Id:
+                            type: object
+                            id: urn:jsonschema:iso:std:iso:_20022:tech:xsd:pacs_002_001_08:AccountIdentification4Choice
+                            description : Identification
+                            properties:
+                              Othr:
+                                type: object
+                                id: urn:jsonschema:iso:std:iso:_20022:tech:xsd:pacs_002_001_08:GenericAccountIdentification1
+                                description : Other
+                                properties:
+                                  Id:
+                                    type: string
+                                    description : <b>Identification</b><br></br> QR ID . For CPM QR, to send Primary Account reference
+                                    required : true
+                                    maxLength : 34
+                          Tp:
+                            type: object
+                            id: urn:jsonschema:iso:std:iso:_20022:tech:xsd:pacs_002_001_08:CashAccountType2Choice
+                            description : Type
+                            properties:
+                              Prtry:
+                                type: string
+                                required : false
+                                description : <b>Proprietary</b><br></br> Default to DFLT. <b>240, 250</b>  – Debiting Bank to return debtor account type
+                  SplmtryData:
+                    type: array
+                    description : Supplementary Data
+                    items:
+                      type: object
+                      id: urn:jsonschema:iso:std:iso:_20022:tech:xsd:pacs_002_001_08:PYNTSupplementaryData1TxInfAndStsq
+                      properties:
+                        PlcAndNm:
+                          type: string
+                          required : false
+                        Envlp:
+                          type: object
+                          id: urn:jsonschema:iso:std:iso:_20022:tech:xsd:pacs_002_001_08:PYNTSupplementaryDataEnvelope1TxInfAndStsq
+                          properties:
+                            InstrForCdtrAcct:
+                              type: object
+                              id: urn:jsonschema:iso:std:iso:_20022:tech:xsd:pacs_002_001_08:InstructionForAccount1
+                              properties:
+                                RsdntSts:
+                                  type: string
+                                  required : false
+                                  description : <b>Resident Status</b><br></br> <li>1 – Resident </li>
+                                    <li>2 – Non-Resident </li>
+                                    <li>3 – Unavailable </li>
+
+                                PrdTp:
+                                  type: string
+                                  required: false
+                                  description : <b>Product Type</b><br></br> <li>I – Islamic </li>
+                                    <li>C – Conventional </li>
+                                ShariaCmpl:
+                                  type: string
+                                  required : false
+                                  description: <b>Sharia Compliant</b><br></br> <li>Y – Yes </li>
+                                    <li>N – No </li>
+                                    <li>U – Unknown </li>
+                                Dtls:
+                                  type: string
+                                  required : false
+                                  description: <b>Details</b><br></br> Account owner type
+                                    <li>1 – Single </li>
+                                    <li>2 – Joint </li>
+                                    <li>3 – Government </li>
+                                    <li>4 – Corporate </li>
+                                    <li>5 – NGO </li>
+                                SchmeNm:
+                                  type: object
+                                  id: urn:jsonschema:iso:std:iso:_20022:tech:xsd:pacs_002_001_08:AccountSchemeName1Choice
+                                  properties:
+                                    Cd:
+                                      type: string
+                                      description: Not required
+                                      required : true
+                                    Prtry:
+                                      type: string
+                                      description : Not required
+                                      required : true
+                                      maxLength : 35
+                                Issr:
+                                  type: string
+                                  required: false
+                                  maxLength : 35
+                                  description: Not required
+                            CdtrAcctCstmrCtg:
+                              type: string
+                              maxLength : 16
+                              required : true
+                              description : <b>Customer Category</b><br></br> <li>RET – Retail Customer </li>
+                                <li>COR – Corporate Customer </li>
+                                <li>OTH – Others </li>
+                            QRTxInfo:
+                              type: object
+                              id: urn:jsonschema:iso:std:iso:_20022:tech:xsd:pacs_002_001_08:QRTxInf1Q
+                              description : QR Transaction Information 
+                              properties:
+                                QRCategory :
+                                  required : true
+                                  maxLength : 2
+                                  description : <b>QR Category </b><br></br> <li>01 – Point of Sales (POS) </li>
+                                    <li>02 – P2P  </li>
+                                    <br> </br>
+                                    RPP will not validate this field. Value must be returned
+                                    <li> 520 – 01 or 02 </li>
+                                    <li> 521 – 01  </li>
+                                AcceptedPymtType:
+                                  required : true
+                                  type: array
+                                  items:
+                                    type: string
+                                    description : <b>Accepted Source of Fund/Line of Credit </b><br></br> <li>01 – CASA </li>
+                                      <li>02 – Credit Card </li>
+                                      <li>03 – Wallet </li>
+                                PromoCd:
+                                  type: string
+                                  maxLength : 35
+                                  description: <b>QR Promo Code </b><br></br> Promotional code to be used to provide offer/discount
+                                Field1:
+                                  type: string
+                                  required : false
+                                  description : Refer to <a style="color:blue;" href="https://docs.developer.paynet.my/docs/duitnowqr/extrafield/index.html#pacs0020010801" target="_blank"><b>Extra Fields</b></a>
+                                Field2:
+                                  type: string
+                                  required : false
+                                  description : Refer to <a style="color:blue;" href="https://docs.developer.paynet.my/docs/duitnowqr/extrafield/index.html#pacs0020010801" target="_blank"><b>Extra Fields</b></a>
+                                Field3:
+                                  type: string
+                                  required : false
+                                  description : Refer to <a style="color:blue;" href="https://docs.developer.paynet.my/docs/duitnowqr/extrafield/index.html#pacs0020010801" target="_blank"><b>Extra Fields</b></a>
+                                Field4:
+                                  type: string
+                                  required : false
+                                  description : Refer to <a style="color:blue;" href="https://docs.developer.paynet.my/docs/duitnowqr/extrafield/index.html#pacs0020010801" target="_blank"><b>Extra Fields</b></a>
+                                Field5:
+                                  type: string
+                                  required : false
+                                  description : Refer to <a style="color:blue;" href="https://docs.developer.paynet.my/docs/duitnowqr/extrafield/index.html#pacs0020010801" target="_blank"><b>Extra Fields</b></a>
+                            DrctDbtTxInf:
+                              type: object
+                              id: urn:jsonschema:iso:std:iso:_20022:tech:xsd:pacs_002_001_08:PYNTDrctDbtTxInfo
+                              description : Direct Debit Transaction Information
+                              properties:
+                                PreAuthId:
+                                  type: string
+                                  maxLength : 35
+                                  required : false
+                                  description: <b>Pre-Authorization Id </b><br></br> Required for CPM QR 250, 880
+                                    <p> CPM QR Pre-Auth ID format is  YYYYMMDDQRPTSSSSSSSS where = 
+                                    <li> YYYYMMDD – Date</li>
+                                    <li> SSSSSSSS – Running Serial Number</li>
+                                    </p>
+                                    <p> RPP will populate this field for Pre-Auth transaction 880</p>
+                                    <p> Must be returned in 250 and 880 by Debiting Agent</p>
+                                    <p> Example = 20190825QRPT00000001</p>
+                                Reserved1:
+                                  type: string
+                                  required : false
+                                  maxLength : 35
+                                  description : Reserved field for future usage
+                                Reserved2:
+                                  type: string
+                                  required : false
+                                  maxLength : 35
+                                  description : Reserved field for future usage
+                                Reserved3:
+                                  type: string
+                                  required : false
+                                  maxLength : 35
+                                  description : Reserved field for future usage
+                                IPAddr:
+                                  type: string
+                                  maxLength : 100
+                                  required: false
+                                  description: <b>IP Address </b><br></br> Required for CPM QR 240, 250, 880
+                                    <br></br><br></br>Ip address where the transaction was initiated. Participant may default the value in case unable to capture from the customer session.
+                                GPSCoord:
+                                  type: string   
+                                  maxLength : 35
+                                  required: false
+                                  description: <b>GPS Coordinate </b><br></br> Required for CPM QR 240, 250, 880
+                                    <p>Location of the sender in decimal degree (DD) coordinate</p>
+                                    <p>Example = 40.689263 -74.044505</p>
+                                    Participant may default the value in case unable to capture from the customer session.
+
+    camt.005.001.08:
+      type: object
+      properties:
+        GetTx:
+          type: object
+          id: urn:jsonschema:iso:std:iso:_20022:tech:xsd:camt_005_001:GetTransactionV08
+          properties:
+            MsgHdr:
+              type: object
+              id: urn:jsonschema:iso:std:iso:_20022:tech:xsd:camt_005_001:MessageHeader9
+              description : Message Header
+              properties:
+                MsgId:
+                  type: string
+                  required : true
+                  maxLength : 35
+                  description : <b>Message Identification </b><br></br> Unique message identification. Format YYYYMMDDBBBBBBBBTTTSSSSSSSS 
+                    where <li>YYYYMMDD – Current Date</li><li>BBBBBBBB – BIC Code</li>
+                    <li>TTT – Transaction Code. </li><li>SSSSSSSS – Sequence
+                    Number</li>
+                    Transaction code - Refer to <a style="color:blue;" href="https://docs.developer.paynet.my/docs/duitnowqr/transactiontype/index.html" target="_blank"><b style="color:blue;">Transaction Code</b></a>
+                CreDtTm:
+                  type: integer
+                  format: DDTHH:MM:SS.mmm.sss
+                  description : <b>Creation Date Time </b><br></br> Message creation date and time. Must be in Malaysia Standard Time format.
+                    Example = 2017-09-20T08:35:30.000
+                ReqTp:
+                  type: object
+                  id: urn:jsonschema:iso:std:iso:_20022:tech:xsd:camt_005_001:RequestType1
+                  description : Request Type
+                  properties:
+                    Prtry:
+                      type: object
+                      description : Proprietary
+                      id: urn:jsonschema:iso:std:iso:_20022:tech:xsd:camt_005_001:GenericIdentification1
+                      properties:
+                        Id:
+                          type: string
+                          maxLength : 35
+                          required : true
+                          description: <b>Identification </b><br></br> <li>630 – Issuing Bank to send the <b>EndToEndId</b> from the original QR Payment transaction</li>
+                            <li>640 – Acquiring Bank to send last 8 digit of original QR Payment transaction captured by merchant from successful message shown by customer  </li>
+                            Issuer bank to display the last digit of the end to end id for merchant tracking
+                        MerchantID:
+                          type: string
+                          maxLength : 35
+                          required : false
+                          description : <b>Merchant ID </b><br></br> Only applicable to 640. Acquiring Bank/Debiting Agent to send the Merchant ID 
+                       
+            TxQryDef:
+              type: object
+              id: urn:jsonschema:iso:std:iso:_20022:tech:xsd:camt_005_001:TransactionQuery5
+              description : Transaction Query Definition
+              properties:
+                TxCrit:
+                  type: object
+                  id: urn:jsonschema:iso:std:iso:_20022:tech:xsd:camt_005_001:TransactionCriteria5Choice
+                  description : Transaction Criteria
+                  properties:
+                    NewCrit:
+                      type: object
+                      id: urn:jsonschema:iso:std:iso:_20022:tech:xsd:camt_005_001:TransactionCriteria8
+                      description : New Criteria
+                      properties:
+                        SchCrit:
+                          type: array
+                          description : Search Criteria
+                          items:
+                            type: object
+                            id: urn:jsonschema:iso:std:iso:_20022:tech:xsd:camt_005_001:TransactionSearchCriteria8
+                            properties:
+                              PmtSch:
+                                type: object
+                                id: urn:jsonschema:iso:std:iso:_20022:tech:xsd:camt_005_001:PaymentSearch8
+                                description : Payment Search
+                                properties:
+                                  ReqdExctnDt:
+                                    type: array
+                                    description : RequestedExecutionDate
+                                    items:
+                                      type: object
+                                      id: urn:jsonschema:iso:std:iso:_20022:tech:xsd:camt_005_001:DateAndDateTimeSearch3Choice
+                                      properties:
+                                        DtSch:
+                                          type: object
+                                          id: urn:jsonschema:iso:std:iso:_20022:tech:xsd:camt_005_001:DatePeriodSearch1Choice
+                                          description : Date Search
+                                          properties:
+                                            EQDt:
+                                              type: string
+                                              format: YYYY-MM-DD
+                                              required : true
+                                              description : Equal Date
+                                  PmtId:
+                                    type: array
+                                    description : Payment Identification
+                                    items:
+                                      type: object
+                                      id: urn:jsonschema:iso:std:iso:_20022:tech:xsd:camt_005_001:PaymentIdentification6Choice
+                                      properties:
+                                        TxId:
+                                          type: string
+                                          maxLength : 35
+                                          required : true
+                                          description : <b>Transaction Identification </b><br></br> Same value as <b>Id</b>
+                                  Pties:
+                                    type: object
+                                    id: urn:jsonschema:iso:std:iso:_20022:tech:xsd:camt_005_001:PaymentTransactionParty3
+                                    description : Parties
+                                    properties:
+                                      Dbtr:
+                                        type: object
+                                        description : Debtor
+                                        id: urn:jsonschema:iso:std:iso:_20022:tech:xsd:camt_005_001:Party40Choice
+                                        properties:
+                                          Pty:
+                                            type: object
+                                            id: urn:jsonschema:iso:std:iso:_20022:tech:xsd:camt_005_001:PartyIdentification135
+                                            description : Party
+                                            properties:
+                                              Id:
+                                                type: string
+                                                required : false
+                                                maxLength : 35
+                                                description : Identification
+                                      DbtrAgt:
+                                        type: object
+                                        id: urn:jsonschema:iso:std:iso:_20022:tech:xsd:camt_005_001:BranchAndFinancialInstitutionIdentification6
+                                        description : Debtor Agent
+                                        properties:
+                                          FinInstnId:
+                                            type: object
+                                            id: urn:jsonschema:iso:std:iso:_20022:tech:xsd:camt_005_001:FinancialInstitutionIdentification18
+                                            description : Financial Institution Identification
+                                            properties:
+                                              Othr:
+                                                type: object
+                                                id: urn:jsonschema:iso:std:iso:_20022:tech:xsd:camt_005_001:GenericFinancialIdentification1
+                                                description : Other
+                                                properties:
+                                                  Id:
+                                                    type: string
+                                                    required : false
+                                                    maxLength : 35
+                                                    description : <b>Identification </b><br></br> First 8 characters of the BIC Code of the Sending Participant
+                                      CdtrAgt:
+                                        type: object
+                                        id: urn:jsonschema:iso:std:iso:_20022:tech:xsd:camt_005_001:BranchAndFinancialInstitutionIdentification6
+                                        description : Creditor Agent
+                                        properties:
+                                          FinInstnId:
+                                            type: object
+                                            id: urn:jsonschema:iso:std:iso:_20022:tech:xsd:camt_005_001:FinancialInstitutionIdentification18
+                                            description : Financial Institution Identification
+                                            properties:
+                                              Othr:
+                                                type: object
+                                                id: urn:jsonschema:iso:std:iso:_20022:tech:xsd:camt_005_001:GenericFinancialIdentification1
+                                                properties:
+                                                  Id:
+                                                    type: string
+                                                    maxLength : 35
+                                                    required : false
+                                                    description : <b>Identification </b><br></br> First 8 characters of the BIC Code of the Receiving Participant
+
+                                      Cdtr:
+                                        type: object
+                                        id: urn:jsonschema:iso:std:iso:_20022:tech:xsd:camt_005_001:Party40Choice
+                                        description : Creditor
+                                        properties:
+                                          Pty:
+                                            type: object
+                                            id: urn:jsonschema:iso:std:iso:_20022:tech:xsd:camt_005_001:PartyIdentification135
+                                            description : Party
+                                            properties:
+                                              Id:
+                                                type: string
+                                                maxLength : 35
+                                                required : false
+                                                description : <b>Identification </b><br></br> Merchant ID/NRIC/Account Number
+
+    camt.006.001.08:
+      type: object
+      properties:
+        RtrTx:
+          type: object
+          id: urn:jsonschema:iso:std:iso:_20022:tech:xsd:camt_006_001:ReturnTransactionV08
+          properties:
+            MsgHdr:
+              type: object
+              id: urn:jsonschema:iso:std:iso:_20022:tech:xsd:camt_006_001:MessageHeader8
+              description : Message Header
+              properties:
+                MsgId:
+                  type: string
+                  maxLength : 35
+                  required : true
+                  description : <b>MsgId</b> from request message
+                CreDtTm:
+                  type: string
+                  format: YYYY-MM-DDTHH:MM:SS.mmm.sss
+                  required : true
+                  description : Message creation date and time. Must be in Malaysia Standard Time format
+            RptOrErr:
+              type: object
+              id: urn:jsonschema:iso:std:iso:_20022:tech:xsd:camt_006_001:TransactionReportOrError4Choice
+              description : ReportOrError
+              properties:
+                BizRpt:
+                  type: object
+                  id: urn:jsonschema:iso:std:iso:_20022:tech:xsd:camt_006_001:Transactions8
+                  description : BusinessReport
+                  properties:
+                    TxsSummry:
+                      type: object
+                      id: urn:jsonschema:iso:std:iso:_20022:tech:xsd:camt_006_001:NumberAndSumOfTransactions2
+                      description : TransactionsSummary
+                      properties:
+                        NbOfNtries:
+                          type: string
+                          maxLength : 15
+                          required : true
+                          description : Number Of Entries
+                        EnqSts:
+                          type: object
+                          id: urn:jsonschema:iso:std:iso:_20022:tech:xsd:camt_006_001:EnquiryStatus6
+                          description : EnquiryStatus
+                          properties:
+                            Cd:
+                              type: object
+                              description : Code
+                              properties:
+                                Prtry :
+                                  type : string
+                                  required : true
+                                  maxLength : 35
+                                  description : <b>Proprietary </b><br></br> Status code. Refer to <a style="color:blue;" href="https://docs.developer.paynet.my/docs/duitnow/responsecodes/index.html#status-codes" target="_blank"><b style="color:blue;">Status Code</b></a>
+                            Rsn:
+                              type: object
+                              description : Reason
+                              properties: 
+                                Prtry :
+                                  type : string
+                                  required : true
+                                  description : <b>Proprietary </b><br></br> Reason code. Refer to <a style="color:blue;" href="https://docs.developer.paynet.my/docs/duitnow/responsecodes/index.html#reason-codes" target="_blank"><b style="color:blue;">Reason Code</b></a>
+                    TxRpt:
+                      type: array
+                      description : TransactionReport
+                      items:
+                        type: object
+                        id: urn:jsonschema:iso:std:iso:_20022:tech:xsd:camt_006_001:TransactionReport5
+                        properties:
+                          PmtId:
+                            type: object
+                            id: urn:jsonschema:iso:std:iso:_20022:tech:xsd:camt_006_001:PaymentIdentification6Choice
+                            description : PaymentIdentification
+                            properties:
+                              TxId:
+                                type: string
+                                maxLength : 35
+                                required : true
+                                description : <b>TransactionIdentification  </b><br></br> <b>TxId</b> from camt.005 request
+                          TxOrErr:
+                            type: object
+                            id: urn:jsonschema:iso:std:iso:_20022:tech:xsd:camt_006_001:TransactionOrError4Choice
+                            description : TransactionOrError
+                            properties:
+                              Tx:
+                                type: object
+                                id: urn:jsonschema:iso:std:iso:_20022:tech:xsd:camt_006_001:Transaction66
+                                description : Transaction
+                                properties:
+                                  Pmt:
+                                    type: object
+                                    id: urn:jsonschema:iso:std:iso:_20022:tech:xsd:camt_006_001:PaymentInstruction32
+                                    description : Payment
+                                    properties:
+                                      Sts:
+                                        type: object
+                                        id: urn:jsonschema:iso:std:iso:_20022:tech:xsd:camt_006_001:PaymentStatus6
+                                        description : Status
+                                        properties:
+                                          Cd:
+                                            type: object
+                                            id: urn:jsonschema:iso:std:iso:_20022:tech:xsd:camt_006_001:PaymentStatusCode6Choice
+                                            description : Code
+                                            properties:
+                                              Prtry:
+                                                type: string
+                                                maxLength : 35
+                                                required : false
+                                                description : <b>Proprietary  </b><br></br> Enquiry status
+                                          DtTm:
+                                            type: object
+                                            id: urn:jsonschema:iso:std:iso:_20022:tech:xsd:camt_006_001:DateAndDateTime2Choice
+                                            description : Date Time
+                                            properties:
+                                              dtTm:
+                                                type: string
+                                                format: YYYY-MM-DDTHH:MM:SS.mmm.sss
+                                                description : Message response date and time (Malaysia Standard Time). Example = 2017-09-20T08:35:30.000
+                                          Rsn:
+                                            type: array
+                                            description : Reason
+                                            items:
+                                              type: object
+                                              id: urn:jsonschema:iso:std:iso:_20022:tech:xsd:camt_006_001:PaymentStatusReason1Choice
+                                              properties:
+                                                Prtry:
+                                                  type: string
+                                                  maxLength : 35
+                                                  required : false
+                                                  description : <b>Transaction Status   </b><br></br> <li> ACTC</li>
+                                                    <li> ACSP</li>
+                                                    <li> RJCT</li>
+                                      IntrBkSttlmAmt:
+                                        type: string
+                                        required : false
+                                        description : Transaction Amount
+                                      IntrBkSttlmAmtCcy:
+                                        type: string
+                                        required : false
+                                        maxLength : 3
+                                        description : Currency. This field only used for JSON type.                                             
+                                      ConvertedAmt:
+                                        type: number
+                                        required : false
+                                        description : For use with foreign currency, will contain converted amount from MYR
+                                      ConvertedAmtCcy: 
+                                        type: string
+                                        required : false
+                                        maxLength : 3
+                                        description : Currency
+                                      IntrBkSttlmDt:
+                                        type: string
+                                        format: YYYY-MM-DD
+                                        required : false
+                                        description : Interbank settlement date
+                                      EndToEndId:
+                                        type: string
+                                        maxLength : 35
+                                        required : false
+                                        description : End To End Identification
+                                      PayerName:
+                                        type: string
+                                        required : false
+                                        maxLength : 140
+                                        description : Name of the Payer or Sender
+                              BizErr:
+                                type: array
+                                description : BusinessError
+                                items:
+                                  type: object
+                                  id: urn:jsonschema:iso:std:iso:_20022:tech:xsd:camt_006_001:ErrorHandling5
+                                  properties:
+                                    Err:
+                                      type: object
+                                      id: urn:jsonschema:iso:std:iso:_20022:tech:xsd:camt_006_001:ErrorHandling3Choice
+                                      properties:
+                                        Prtry:
+                                          type: string
+                                          required : false
+                                          maxLength : 35
+                                          description : <b>Business error </b><br></br>  Indicate that no transaction/record was found 
+            SplmtryData:
+              type: array
+              description : SupplementaryData
+              items:
+                type: object
+                id: urn:jsonschema:iso:std:iso:_20022:tech:xsd:camt_006_001:PYNTSupplementaryData1RtrTx
+                properties:
+                  Envlp:
+                    type: object
+                    id: urn:jsonschema:iso:std:iso:_20022:tech:xsd:camt_006_001:PYNTSupplementaryDataEnvelope1RtrTx
+                    description : Envelope
+                    properties:
+                      Name:
+                        type: string
+                        maxLength : 140
+                        required : false
+                        description : Name of the Merchant/Recipient
+                      DbtrAgt:
+                        type: string
+                        required : false
+                        description : Debtor BIC Code 
+
+    BICFIIdentifier :
+      type: string
+      format: First 8 characters of the BIC Code
+
+  securitySchemes:
+    OAuth 2.0:
+      type: oauth2
+      description: |
+        This API supports OAuth 2.0 for authenticating all API requests <b>except for Webhook APIs.</b> For more information, please read our <a href="https://docs.developer.paynet.my/api-oauth#/"><b style="color:blue;">OAuth 2.0 API</b></a> specification.
+      flows:
+        clientCredentials :   # <---- OAuth flow(authorizationCode, implicit, password or clientCredentials)
+          tokenUrl: https://sandbox.api.paynet.my/auth/token
+          scopes:
+            qr:bank: Bank QR Access Rights
+      x-amf-describedBy:
+        headers:
+          authorization:
+            description: |
+              Used to send a valid OAuth 2 access token. Do not use with the "access_token" query
+              string parameter.
+            type: string
+        queryParameters:
+          access_token:
+            description: |
+              Used to send a valid OAuth 2 access token. Do not use together with the "Authorization"
+              header
+            type: string
+        responses:
+          400:
+            description: Invalid token.
+          401:
+            description: |
+              Unauthorized or Connection error when connecting to the authorization server.
+          403:
+            description: |
+              Forbidden, invalid client application credentials.
+          500:
+            description: |
+              Bad response from authorization server, or WSDL SOAP Fault error.
+      x-amf-settings:
+        authorizationGrants:
+        - client_credentials

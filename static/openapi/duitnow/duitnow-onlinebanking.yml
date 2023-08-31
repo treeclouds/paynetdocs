@@ -1,0 +1,1380 @@
+openapi: 3.1.0
+info:
+  title: DuitNow Online Banking/Wallets (Merchants)
+  description: |
+    Flexible payment option that complements existing payment methods, and enjoying the benefits from digital payments.
+
+    ### Before Getting Started
+    Participant needs to identify the role it plans to participate before deciding which API to build. The roles include:
+      - Participant acts as the Merchant which is the sender of the payment instruction. OFI is expected to manage their customer’s account balances and able to debit the fund from their customer’s account. In such scenario, Participant needs to make API request to RPP host to initiate the payment instruction.
+
+    ### V1 API
+    This API version is made available in JSON format and request can be called via HTTP. 
+    
+    It only supports connectivity over the internet. MPLS line is not supported.
+    
+    Currently, this API only supports for Participant that wishes to join as Merchant.
+
+    ### Endpoints
+    - Retrieve Bank List – It is not necessary to make an API call to this before every Initiate Payment API. It is recommended to call periodically instead e.g. every 5 minutes.
+    - Cancel Payment – The request may be rejected in the event the transaction has been processed before this API is received by RPP host. Hence it is not guaranteed the payment instruction can be terminated.
+    - Status Inquiry – Participant is advised to not make excessive API calls as it may take up to 10 minutes for the customer to complete the payment using their internet banking account.
+  version: v1
+servers:
+- url: https://mock.developer.paynet.my/merchants/v1
+
+
+paths:
+  /payments: {}
+  /payments/lists/bank:
+    get:
+      description: This API allows the Merchant to retrieve the list of participants
+        supporting DuitNow Online Banking/Wallets along with the necessary information
+        for Merchant to initiate subsequent steps e.g. redirect customer to the their
+        selected debiting bank.
+      operationId: Retrieve Bank List
+      parameters:
+      - name: clientId
+        in: query
+        description: Bank Identification Code (BIC) of the Participant
+        required: true
+        schema:
+          maxLength: 8
+          pattern: ^[a-zA-Z0-9]*$
+          type: string
+      - name: messageId
+        in: query
+        description: "Unique message identification. Format YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS\
+          \ where: \n<li>YYYYMMDD – Current Date</li>\n<li>BBBBBBBB – BIC Code</li>\n\
+          <li>XXX – Transaction Type. Set to <b>650</b> </li>\n<li>O – Originator.\
+          \ Set to <b>O</b></li>\n<li>CC – Channel Code </li>\n<li>SSSSSSSS – Sequence\
+          \ Number</li><br />\nOriginator can be any of the following:\n<li>O – OFI</li>\n\
+          <li>H – RPP</li>\n<li>R – RFI</li><br />\nChannel code can be any of the\
+          \ following:\n<li>BA – Mobile Application</li>\n<li>BW – Web Browser</li>\n"
+        required: true
+        schema:
+          maxLength: 35
+          pattern: ^[a-zA-Z0-9]*$
+          type: string
+      - name: transactionId
+        in: query
+        description: |
+          Set to the same as <b>messageId</b> but without originator and channel code<br /><br />
+          Unique transaction identification. Format YYYYMMDDBBBBBBBBTTTSSSSSSSS
+        required: true
+        schema:
+          maxLength: 35
+          pattern: ^[a-zA-Z0-9]*$
+          type: string
+      - name: pageKey
+        in: query
+        description: <b>banks.code</b> of the last element in the previous page, used
+          to fetch next page. If blank or not present, indicates to fetch first page
+        schema:
+          maxLength: 35
+          pattern: ^[a-zA-Z0-9]*$
+          type: string
+      - name: Authorization
+        in: header
+        description: Bearer &lt;access_token&gt;
+        required: true
+        schema:
+          type: string
+      - name: X-Signature-Key
+        in: header
+        description: Certificate serial number used to sign the message signature
+        required: true
+        schema:
+          maxLength: 40
+          pattern: ^[a-zA-Z0-9]*$
+          type: string
+      - name: X-Signature
+        in: header
+        description: Message signature signed using the certificate defined in <b>X-Signature-Key</b>.
+          It is combined with a few ID such as 'clientId + "RPPEMYKL" + messageId
+          + transactionId + messageId + clientId'
+           <br /><br />Refer to <a style="color:blue;" href="https://docs.developer.paynet.my/docs/duitnow/authentication/index.html#retrieve-bank-request" target="_blank"><b>Authentication & Encryption</b></a>
+
+        required: true
+        schema:
+          maxLength: 1024
+          type: string
+      - name: X-Ip-Address
+        in: header
+        description: IP address where the transaction originated from
+        required: true
+        schema:
+          maxLength: 100
+          pattern: ^(\d{1,2}|(0|1)\d{2}|2[0-4]\d|25[0-5])\.(\d{1,2}|(0|1)\d{2}|2[0-4]\d|25[0-5])\.(\d{1,2}|(0|1)\d{2}|2[0-4]\d|25[0-5])\.(\d{1,2}|(0|1)\d{2}|2[0-4]\d|25[0-5])$
+          type: string
+      - name: X-Gps-Coordinates
+        in: header
+        description: Location of the sender in decimal degree coordinate e.g. 40.689263,
+          74.044505
+        required: true
+        schema:
+          maxLength: 35
+          type: string
+      responses:
+        200:
+          description: ""
+          headers:
+            X-Signature-Key:
+              description: Certificate serial number used to sign the message signature
+              schema:
+                title: Key Number
+                maxLength: 40
+                pattern: ^[a-zA-Z0-9]*$
+                type: string
+                x-amf-required: true
+            X-Signature:
+              description: Message signature signed using the certificate defined
+                in <b>X-Signature-Key</b>. It is combined with a few ID such as '"RPPEMYKL"
+                + clientId + messageId + transactionId + endToEndId + code + reason'
+                <br /><br />Refer to <a style="color:blue;" href="https://docs.developer.paynet.my/docs/duitnow/authentication/index.html#retrieve-bank-response" target="_blank"><b>Authentication & Encryption</b></a>
+              schema:
+                title: Digital Signature signed
+                maxLength: 1024
+                pattern: ^[a-zA-Z0-9]*$
+                type: string
+                x-amf-required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/responseRetrieveBankList'
+          x-amf-mediaType: application/json
+        400:
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error400'
+          x-amf-mediaType: application/json
+        401:
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: object
+          x-amf-mediaType: application/json
+        429:
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: object
+          x-amf-mediaType: application/json
+        500:
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: object
+          x-amf-mediaType: application/json
+      security:
+      - OAuth 2.0: []
+      x-codeSamples:
+        - lang: 'cURL'
+          label: 'cURL'
+          source: |
+            curl --location -g --request GET 'https://sandbox.api.paynet.my/merchants/{{version}}/payments/lists/bank?clientId=RDna&messageId=C&transactionId=C&pageKey=C' \
+            --header 'X-Signature-Key: 1341313' \
+            --header 'X-Signature: aaaa' \
+            --header 'X-Ip-Address: 4.176.252.63' \
+            --header 'Authorization: Bearer token' \
+            --header 'X-Gps-Coordinates: 2.000, 1.000'
+  /payments/redirect:
+    post:
+      description: This API allows Merchant to create a payment request. The created
+        payment request contains all the necessary information related to the transaction
+        e.g. purchase details, transaction amount, payment reference and etc prior
+        to Merchant redirecting the Customer to their internet banking.
+      operationId: Initiate Payment
+      parameters:
+      - name: Authorization
+        in: header
+        description: Bearer &lt;access_token&gt;
+        required: true
+        schema:
+          type: string
+      - name: X-Signature-Key
+        in: header
+        description: Certificate serial number used to sign the message signature
+        required: true
+        schema:
+          maxLength: 40
+          pattern: ^[a-zA-Z0-9]*$
+          type: string
+      - name: X-Signature
+        in: header
+        description: Message signature signed using the certificate defined in X-Signature-Key.
+          It is combined with a few ID such as 'clientId + "RPPEMYKL" + messageId
+          + transactionId + "RPPEMYKL" + endToEndId + amount + clientId'
+          <br /><br />Refer to <a style="color:blue;" href="https://docs.developer.paynet.my/docs/duitnow/authentication/index.html#initiate-payment-request" target="_blank"><b>Authentication & Encryption</b></a>
+        required: true
+        schema:
+          maxLength: 1024
+          type: string
+      - name: X-Ip-Address
+        in: header
+        description: Customer’s IP address where the transaction originated. Merchant
+          shall not default with their internal system IP
+        required: true
+        schema:
+          maxLength: 100
+          pattern: ^(\d{1,2}|(0|1)\d{2}|2[0-4]\d|25[0-5])\.(\d{1,2}|(0|1)\d{2}|2[0-4]\d|25[0-5])\.(\d{1,2}|(0|1)\d{2}|2[0-4]\d|25[0-5])\.(\d{1,2}|(0|1)\d{2}|2[0-4]\d|25[0-5])$
+          type: string
+      - name: X-Gps-Coordinates
+        in: header
+        description: Customer’s location in decimal degree coordinate e.g. 40.689263,
+          74.044505. Merchant shall not default with their internal system value
+        required: true
+        schema:
+          maxLength: 35
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/requestInitiatePayment'
+        required: false
+      responses:
+        200:
+          description: ""
+          headers:
+            X-Signature-Key:
+              description: Certificate serial number used to sign the message signature
+              schema:
+                title: Key Number
+                maxLength: 40
+                pattern: ^[a-zA-Z0-9]*$
+                type: string
+                x-amf-required: true
+            X-Signature:
+              description: Message signature signed using the certificate defined
+                in <b>X-Signature-Key</b>. It is combined with a few ID such as '"RPPEMYKL"
+                + clientId + messageId + transactionId + originalEndToEndId + code
+                + reason'
+               <br /><br />Refer to <a style="color:blue;" href="https://docs.developer.paynet.my/docs/duitnow/authentication/index.html#initiate-payment-response" target="_blank"><b>Authentication & Encryption</b></a>
+              schema:
+                title: Digital Signature signed
+                maxLength: 1024
+                type: string
+                x-amf-required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/responseInitiatePayment'
+          x-amf-mediaType: application/json
+        400:
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error400'
+          x-amf-mediaType: application/json
+        401:
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: object
+          x-amf-mediaType: application/json
+        429:
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: object
+          x-amf-mediaType: application/json
+        500:
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: object
+          x-amf-mediaType: application/json
+      security:
+      - OAuth 2.0: []
+      x-codegen-request-body-name: generated
+      x-codeSamples:
+        - lang: 'cURL'
+          label: 'cURL'
+          source: |
+            curl --location -g --request POST 'https://sandbox.api.paynet.my/merchants/{{version}}/payments/redirect' \
+            --header 'X-Signature-Key: VhaM' \
+            --header 'X-Signature: a' \
+            --header 'X-Ip-Address: 4.176.252.63' \
+            --header 'X-Gps-Coordinates: 2.000, 1.000' \
+            --header 'Authorization: Bearer token' \
+            --header 'Content-Type: application/json' \
+            --data-raw '{
+            "clientId": "M0000221",
+            "messageId": "20210101M0000221861OBW36240300",
+            "transactionId": "20210101M000022186136240300",
+            "endToEndId": "20210101M0000221861OBW36240300",
+            "merchant": {
+                "name": "WindUp",
+                "accountType": "SVGS"
+            },
+            "customer": {
+                "name": "John Doe",
+                "bankType": "RET"
+            },
+            "amount": 150.99,
+            "currency": "MYR",
+            "productId": "P00000381",
+            "sourceOfFunds": [
+                "01"
+            ],
+            "recipientReference": "Order No 12345",
+            "paymentDescription": "Shop XYZ"
+            }'
+  /payments/payment: {}
+  /payments/payment/cancel:
+    put:
+      description: This API can be used in the event Merchant wishes to cancel a transaction.
+        Though, if the Debiting Participant has already updated the transaction status
+        as successful, the cancellation request will be rejected. The system practices
+        first come first serve basis policy during request processing.
+      operationId: Cancel Payment
+      parameters:
+      - name: Authorization
+        in: header
+        description: Bearer &lt;access_token&gt;
+        required: true
+        schema:
+          type: string
+      - name: X-Signature-Key
+        in: header
+        description: Certificate serial number used to sign the message signature
+        required: true
+        schema:
+          maxLength: 40
+          pattern: ^[a-zA-Z0-9]*$
+          type: string
+      - name: X-Signature
+        in: header
+        description: Message signature signed using the certificate defined in <b>X-Signature-Key</b>.
+          It is combined with a few ID such as 'clientId + "RPPEMYKL" + messageId
+          + transactionId + endToEndId + status + clientId'
+          <br /><br />Refer to <a style="color:blue;" href="https://docs.developer.paynet.my/docs/duitnow/authentication/index.html#cancel-payment-request" target="_blank"><b>Authentication & Encryption</b></a>
+        required: true
+        schema:
+          maxLength: 1024
+          type: string
+      - name: X-Ip-Address
+        in: header
+        description: IP address where the transaction originated from
+        required: true
+        schema:
+          maxLength: 100
+          pattern: ^(\d{1,2}|(0|1)\d{2}|2[0-4]\d|25[0-5])\.(\d{1,2}|(0|1)\d{2}|2[0-4]\d|25[0-5])\.(\d{1,2}|(0|1)\d{2}|2[0-4]\d|25[0-5])\.(\d{1,2}|(0|1)\d{2}|2[0-4]\d|25[0-5])$
+          type: string
+      - name: X-Gps-Coordinates
+        in: header
+        description: Location of the sender in decimal degree coordinate e.g. 40.689263,
+          74.044505
+        required: true
+        schema:
+          maxLength: 35
+          pattern: ^([-+]?([1-8]?\d(\.\d+)?|90(\.0+)?),\s*[-+]?(180(\.0+)?|((1[0-7]\d)|([1-9]?\d))(\.\d+)?))$
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/requestCancelPayment'
+        required: false
+      responses:
+        200:
+          description: ""
+          headers:
+            X-Signature-Key:
+              description: Certificate serial number used to sign the message signature
+              schema:
+                title: Key Number
+                maxLength: 40
+                pattern: ^[a-zA-Z0-9]*$
+                type: string
+                x-amf-required: true
+            X-Signature:
+              description: Message signature signed using the certificate defined
+                in <b>X-Signature-Key</b>. It is combined with a few ID such as '"RPPEMYKL"
+                + clientId + messageId + transactionId + originalTransactionId + code
+                + reason + endToEndId'
+                <br /><br />Refer to <a style="color:blue;" href="https://docs.developer.paynet.my/docs/duitnow/authentication/index.html#cancel-payment-response" target="_blank"><b>Authentication & Encryption</b></a>
+
+              schema:
+                title: Digital Signature signed
+                maxLength: 1024
+                type: string
+                x-amf-required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/responseCancelPayment'
+          x-amf-mediaType: application/json
+        400:
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error400'
+          x-amf-mediaType: application/json
+        401:
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: object
+          x-amf-mediaType: application/json
+        429:
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: object
+          x-amf-mediaType: application/json
+        500:
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: object
+          x-amf-mediaType: application/json
+      security:
+      - OAuth 2.0: []
+      x-codegen-request-body-name: generated
+      x-codeSamples:
+        - lang: 'cURL'
+          label: 'cURL'
+          source: |
+            curl --location -g --request PUT 'https://sandbox.api.paynet.my/merchants/{{version}}/payments/payment/cancel' \
+            --header 'X-Signature-Key: VhaM' \
+            --header 'X-Signature: a' \
+            --header 'X-Ip-Address: 4.176.252.63' \
+            --header 'X-Gps-Coordinates: 2.000, 1.000' \
+            --header 'Authorization: Bearer token' \
+            --header 'Content-Type: application/json' \
+            --data-raw '{
+            "clientId": "M0000221",
+            "messageId": "20210101M0000221865OBW36450459",
+            "transactionId": "20210101M000022186536450459",
+            "endToEndId": "20210101M0000221861OBW36390862",
+            "productId": "P00000381",
+            "status": "CANC"
+            }'
+  /payments/payment/status:
+    get:
+      description: In the event where Merchant does not receive status of the payment
+        request, this API can be used to enquire the status of the transaction. Though,
+        Merchant is advised to use this sparingly as PayNet may rate limit and throttle
+        the request. The current setting permits the same transaction with the same
+        same endToEndId to be queried once every 30 seconds. Otherwise, timeout error
+        will be thrown.
+      operationId: Status Inquiry
+      parameters:
+      - name: clientId
+        in: query
+        description: Bank Identification Code (BIC) of the Participant
+        required: true
+        schema:
+          maxLength: 8
+          pattern: ^[a-zA-Z0-9]*$
+          type: string
+      - name: messageId
+        in: query
+        description: "Unique message identification. Format YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS\
+          \ where: \n<li>YYYYMMDD – Current Date</li>\n<li>BBBBBBBB – BIC Code</li>\n\
+          <li>XXX – Transaction Type</li>\n<li>O – Originator. Set to <b>O</b></li>\n\
+          <li>CC – Channel Code</li>\n<li>SSSSSSSS – Sequence Number</li><br />\n\
+          Transaction type can be any of the following:<br />\n<li>630 – Inquire if\
+          \ the transaction is received by PayNet</li>\n<li>864 – Inquire the transaction\
+          \ status</li><br />\nOriginator can be any of the following:\n<li>O – OFI</li>\n\
+          <li>H – RPP</li>\n<li>R – RFI</li><br />\nChannel code can be any of the\
+          \ following:\n<li>BA – Mobile Application</li>\n<li>BW – Web Browser</li>\n"
+        required: true
+        schema:
+          maxLength: 35
+          pattern: ^[a-zA-Z0-9]*$
+          type: string
+      - name: transactionId
+        in: query
+        description: |
+          Set to the same as <b>messageId</b> but without originator and channel code<br /><br />
+          Unique transaction identification. Format YYYYMMDDBBBBBBBBTTTSSSSSSSS
+        required: true
+        schema:
+          maxLength: 35
+          pattern: ^[a-zA-Z0-9]*$
+          type: string
+      - name: endToEndId
+        in: query
+        description: <b>endToEndId</b> from the original payment request
+        required: true
+        schema:
+          maxLength: 35
+          pattern: ^[a-zA-Z0-9]*$
+          type: string
+      - name: Authorization
+        in: header
+        description: Bearer &lt;access_token&gt;
+        required: true
+        schema:
+          type: string
+      - name: X-Signature-Key
+        in: header
+        description: Certificate serial number used to sign the message signature
+        required: true
+        schema:
+          maxLength: 40
+          pattern: ^[a-zA-Z0-9]*$
+          type: string
+      - name: X-Signature
+        in: header
+        description: Message signature signed using the certificate defined in <b>X-Signature-Key</b>.
+          It is combined with a few ID such as 'clientId + "RPPEMYKL" + messageId
+          + transactionId + endToEndId + endToEndId'
+          <br /><br />Refer to <a style="color:blue;" href="https://docs.developer.paynet.my/docs/duitnow/authentication/index.html#status-inquiry-request" target="_blank"><b>Authentication & Encryption</b></a>
+        required: true
+        schema:
+          maxLength: 1024
+          type: string
+      - name: X-Ip-Address
+        in: header
+        description: IP address where the transaction originated from
+        required: true
+        schema:
+          maxLength: 100
+          pattern: ^(\d{1,2}|(0|1)\d{2}|2[0-4]\d|25[0-5])\.(\d{1,2}|(0|1)\d{2}|2[0-4]\d|25[0-5])\.(\d{1,2}|(0|1)\d{2}|2[0-4]\d|25[0-5])\.(\d{1,2}|(0|1)\d{2}|2[0-4]\d|25[0-5])$
+          type: string
+      - name: X-Gps-Coordinates
+        in: header
+        description: Location of the sender in decimal degree coordinate e.g. 40.689263,
+          74.044505
+        required: true
+        schema:
+          maxLength: 35
+          pattern: ^([-+]?([1-8]?\d(\.\d+)?|90(\.0+)?),\s*[-+]?(180(\.0+)?|((1[0-7]\d)|([1-9]?\d))(\.\d+)?))$
+          type: string
+      responses:
+        200:
+          description: ""
+          headers:
+            X-Signature-Key:
+              description: Certificate serial number used to sign the message signature
+              schema:
+                title: Key Number
+                maxLength: 40
+                pattern: ^[a-zA-Z0-9]*$
+                type: string
+                x-amf-required: true
+            X-Signature:
+              description: Message signature signed using the certificate defined
+                in <b>X-Signature-Key</b>. Please note that originalTransactionId
+                is only required as part of Message Signature for 864 transaction
+                code only. It is combined with a few ID such as '"RPPEMYKL" + clientId
+                + messageId + transactionId + originalTransactionId + code + reason'
+                <br /><br />Refer to <a style="color:blue;" href="https://docs.developer.paynet.my/docs/duitnow/authentication/index.html#status-inquiry-response" target="_blank"><b>Authentication & Encryption</b></a>
+
+              schema:
+                title: Digital Signature signed
+                maxLength: 1024
+                type: string
+                x-amf-required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/responseStatusInquiry'
+          x-amf-mediaType: application/json
+        400:
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error400'
+          x-amf-mediaType: application/json
+        401:
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: object
+          x-amf-mediaType: application/json
+        429:
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: object
+          x-amf-mediaType: application/json
+        500:
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: object
+          x-amf-mediaType: application/json
+      security:
+      - OAuth 2.0: []
+      x-codeSamples:
+        - lang: 'cURL'
+          label: 'cURL'
+          source: |
+            curl --location -g --request GET 'https://sandbox.api.paynet.my/merchants/{{version}}/payments/payment/status?clientId=RDna&messageId=C&transactionId=C&endToEndId=C' \
+            --header 'X-Signature-Key: VhaM' \
+            --header 'X-Signature: a' \
+            --header 'X-Ip-Address: 4.176.252.63' \
+            --header 'Authorization: Bearer token' \
+            --header 'X-Gps-Coordinates: 2.000, 1.000'
+
+    
+  /RPP/MY/Notification: {}
+  /RPP/MY/Notification/PaymentStatus:
+    post:
+      description: Merchant to publish an API based on below specifications so that
+        it can be notified on the status of the payment request. Please take note that the endpoint exposed should be as <b>"https://[domain]/RPP/MY/Notification/PaymentStatus" </b>
+      servers:
+      - url: https://test.sandbox1.nonprod.c0.paynet.my/
+        description: Override base path for all operations with the webhook path
+      tags:
+        - Webhook
+      operationId: Payment Status Notification
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/requestPaymentStatusNotification'
+        required: false
+      responses:
+        200:
+          description: ""
+          content: {}
+      
+components:
+  schemas:
+    responseRetrieveBankList:
+      required:
+      - banks
+      - endToEndId
+      - header
+      - pageKey
+      - transactionId
+      type: object
+      properties:
+        header:
+          required:
+          - date
+          - messageId
+          - status
+          type: object
+          properties:
+            messageId:
+              maxLength: 35
+              type: string
+              description: Unique message identification
+            date:
+              type: string
+              description: Message date and time in MYT using yyyy-MM-ddTHH:mm:ss.SSS
+                format
+            status:
+              required:
+              - code
+              - reason
+              type: object
+              properties:
+                code:
+                  maxLength: 4
+                  type: string
+                  description: |
+                    Status code. <br /><br />Refer to <a style="color:blue;" href="https://docs.developer.paynet.my/docs/duitnow/mappingtable#payment-transaction-status-code-externalpaymenttransactionstatus1code" target="_blank"><b>Mapping Table</b></a>
+                reason:
+                  maxLength: 35
+                  type: string
+                  description: Reason code
+                description:
+                  maxLength: 140
+                  type: string
+                  description: Reason code description
+        transactionId:
+          maxLength: 35
+          type: string
+          description: <b>transactionId</b> from request message
+        endToEndId:
+          maxLength: 35
+          type: string
+          description: <b>messageId</b> from request message
+        pageKey:
+          title: Pagination Key
+          maxLength: 35
+          type: string
+          description: |
+            <b>Conditional</b><br />
+            If present, is same as <b>banks.code</b> of last entry returned in results list. Used to retrieve next page of results. If absent, means this is the last page
+        banks:
+          type: array
+          items:
+            required:
+            - code
+            - name
+            type: object
+            properties:
+              code:
+                maxLength: 35
+                type: string
+                description: Bank identification code
+              name:
+                maxLength: 35
+                type: string
+                description: Bank name
+              active:
+                type: boolean
+                description: |
+                  DuitNow services status
+                  <li>True – Bank is online</li>
+                  <li>False – Bank is offline</li>
+              browser:
+                maxLength: 140
+                type: string
+                description: Browser information and version
+              androidApplicationId:
+                maxLength: 140
+                type: string
+                description: Application identifier for Andoid platform
+              iosApplicationId:
+                maxLength: 140
+                type: string
+                description: Application identifier for iOS platform
+              redirectUrls:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    type:
+                      maxLength: 3
+                      type: string
+                      description: |
+                        Redirection URL type
+                        <li>RET – Retail channel</li>
+                        <li>COR – Corporate channel</li>
+                    url:
+                      maxLength: 140
+                      type: string
+                      description: Bank URL to be redirected to
+      example:
+        header:
+          messageId: 20210101RPPEMYKL650HRB51440895
+          date: 2021-01-01T22:40:11.000
+          status:
+            code: ACSP
+            reason: U000
+            description: Success/ Transaction Accepted
+        transactionId: 20210101M000022165040020209
+        endToEndId: 20210101M0000221650ORB40020209
+        pageKey: BSSMMYKLSAN
+        banks:
+        - code: AFBQMYKL
+          name: AFB Bank
+          active: true
+          browser: BNP browser
+          iosApplicationId: AND22
+          androidApplicationId: IOS11
+          redirectUrls:
+          - type: RET
+            url: www.url1.com.my
+          - type: COR
+            url: www.url2.com.my
+        - code: AGOBMYKL
+          name: AGO Bank
+          active: true
+          browser: BNP browser
+          iosApplicationId: AND22
+          androidApplicationId: IOS11
+          redirectUrls:
+          - type: RET
+            url: www.url1.com.my
+          - type: COR
+            url: www.url2.com.my
+        - code: BSSMMYKLSAN
+          name: Bank Sama Sama Rakyat
+    error400:
+      required:
+      - errorCode
+      type: object
+      properties:
+        errorCode:
+          maxLength: 35
+          type: string
+          description: Reason code
+        description:
+          maxLength: 140
+          type: string
+          description: Reason code description
+      example:
+        errorCode: API.002
+        description: messageId - invalid format
+    requestInitiatePayment:
+      required:
+      - amount
+      - clientId
+      - currency
+      - customer
+      - endToEndId
+      - merchant
+      - messageId
+      - productId
+      - recipientReference
+      - sourceOfFunds
+      - transactionId
+      type: object
+      properties:
+        clientId:
+          maxLength: 8
+          type: string
+          description: Bank Identification Code (BIC) of the Participant
+        messageId:
+          maxLength: 35
+          type: string
+          description: "Unique message identification. Format YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS\
+            \ where: \n<li>YYYYMMDD – Current Date</li>\n<li>BBBBBBBB – BIC Code</li>\n\
+            <li>XXX – Transaction Type. Set to <b>861</b></li>\n<li>O – Originator.\
+            \ Set to <b>O</b></li>\n<li>CC – Channel Code</li>\n<li>SSSSSSSS – Sequence\
+            \ Number</li><br />\nOriginator can be any of the following:\n<li>O –\
+            \ OFI</li>\n<li>H – RPP</li>\n<li>R – RFI</li><br />\nChannel code can\
+            \ be any of the following:\n<li>BA – Mobile Application</li>\n<li>BW –\
+            \ Web Browser</li>\n"
+        date:
+          type: string
+          description: Transaction date and time in MYT using yyyy-MM-ddTHH:mm:ss.SSS
+            format<br /><br />System to default to current date and time if field
+            is not sent
+        transactionId:
+          maxLength: 35
+          type: string
+          description: |
+            Set to the same as <b>messageId</b> but without originator and channel code<br /><br />
+            Unique transaction identification. Format YYYYMMDDBBBBBBBBTTTSSSSSSSS
+        endToEndId:
+          maxLength: 35
+          type: string
+          description: Set to the same as <b>messageId</b>
+        expiryDate:
+          type: string
+          description: Date and time in MYT the request shall expire if no action
+            is taken by customer<br /><br /> System to default appropriately if field
+            is not sent
+        currency:
+          maxLength: 3
+          type: string
+          description: Set currency code to <b>MYR</b>
+        amount:
+          type: number
+          description: Transaction amount
+        productId:
+          maxLength: 35
+          type: string
+          description: Product identification assigned by PayNet during registration
+        customer:
+          required:
+          - bankType
+          - name
+          type: object
+          properties:
+            name:
+              maxLength: 140
+              type: string
+              description: Customer name
+            bankType:
+              maxLength: 3
+              type: string
+              description: <b>banks.redirectUrls.type</b> from Retrieve Bank List
+                API
+            identificationType:
+              maxLength: 2
+              type: string
+              description: |
+                Identification type. When field is sent, Debiting Bank to ensure the <b>identification</b> field matches with their internal record before allowing to debit from the account<br /><br />
+                Refer to <a style="color:blue;" href="https://docs.developer.paynet.my/docs/duitnow/mappingtable/index.html#identification-type" target="_blank"><b>Identification Type</b></a>
+            identification:
+              maxLength: 140
+              type: string
+              description: Identification value
+            identityValidation:
+              maxLength: 2
+              type: string
+              description: |
+                Indicates if Debiting Bank should perform validation on customer information<br /><br />
+                Refer to <a style="color:blue;" href="https://docs.developer.paynet.my/docs/duitnow/mappingtable/index.html#identity-validation" target="_blank"><b>Identity Validation</b></a>
+        merchant:
+          required:
+          - accountType
+          - name
+          type: object
+          properties:
+            name:
+              maxLength: 140
+              type: string
+              description: Merchant name
+            accountType:
+              maxLength: 35
+              type: string
+              description: |
+                Account type
+                <li>CACC – Current</li>
+                <li>SVGS – Savings</li>
+                <li>CCRD – Credit Card</li>
+                <li>WALL – eWallet</li>
+            identificationType:
+              maxLength: 2
+              type: string
+              description: |
+                Identification type. Only supports <b>04</b> for Business Registration Number <br/><br/>
+                When field is sent, Crediting Bank to ensure the <b>identification</b> field matches with their internal record before allowing to credit into the account
+            identification:
+              maxLength: 140
+              type: string
+              description: Identification value
+        sourceOfFunds:
+          type: array
+          description: |
+            Acceptable source of funds by Merchant
+            <li>01 – CASA</li>
+            <li>02 – Credit Card</li>
+            <li>03 – eWallet</li>
+        recipientReference:
+          maxLength: 140
+          type: string
+          description: Payment reference to recipient
+        paymentDescription:
+          maxLength: 140
+          type: string
+          description: Additional payment description
+        consent:
+          required:
+          - effectiveDate
+          - expiryDate
+          - frequency
+          - maximumPaymentAmount
+          - maximumPaymentCurrency
+          type: object
+          properties:
+            effectiveDate:
+              type: string
+              description: |
+                <b>Conditional</b><br />
+                Consent effective date in YYYY-MM-DD format
+            expiryDate:
+              type: string
+              description: |
+                <b>Conditional</b><br />
+                Consent expiry date in YYYY-MM-DD format
+            frequency:
+              maxLength: 2
+              type: string
+              description: "<b>Conditional</b><br />\nFrequency mode<br /><br />\n\
+                Refer to <a style=\"color:blue;\" href=\"https://docs.developer.paynet.my/docs/duitnow/mappingtable/index.html#frequency-mode\"\
+                \ target=\"_blank\"><b>Frequency Mode</b></a> \n"
+            maximumPaymentCurrency:
+              maxLength: 3
+              type: string
+              description: |
+                <b>Conditional</b><br />
+                Set currency code to <b>MYR</b>
+            maximumPaymentAmount:
+              type: number
+              description: |-
+                <b>Conditional</b><br />
+                Maximum payment amount
+          description: These fields can be included if Merchant would like to prompt
+            for Consent Registration during the same Request-to-Pay flow
+      example:
+        clientId: M0000221
+        messageId: 20210101M0000221861OBW36240300
+        transactionId: 20210101M000022186136240300
+        endToEndId: 20210101M0000221861OBW36240300
+        merchant:
+          name: WindUp
+          accountType: SVGS
+        customer:
+          name: John Doe
+          bankType: RET
+        amount: 150.99
+        currency: MYR
+        productId: P00000381
+        sourceOfFunds:
+        - "01"
+        recipientReference: Order No 12345
+        paymentDescription: Shop XYZ
+    responseInitiatePayment:
+      required:
+      - endToEndId
+      - endToEndIdSignature
+      - header
+      - transactionId
+      type: object
+      properties:
+        header:
+          required:
+          - date
+          - messageId
+          - status
+          type: object
+          properties:
+            messageId:
+              maxLength: 35
+              type: string
+              description: Unique message identification
+            date:
+              type: string
+              description: Message date and time in MYT using yyyy-MM-ddTHH:mm:ss.SSS
+                format
+            status:
+              required:
+              - code
+              - reason
+              type: object
+              properties:
+                code:
+                  maxLength: 4
+                  type: string
+                  description: |
+                    Status code. <br /><br />Refer to <a style="color:blue;" href="https://docs.developer.paynet.my/docs/duitnow/mappingtable#payment-transaction-status-code-externalpaymenttransactionstatus1code" target="_blank"><b>Mapping Table</b></a>
+                reason:
+                  maxLength: 35
+                  type: string
+                  description: Reason code
+                description:
+                  maxLength: 140
+                  type: string
+                  description: Reason code description
+        transactionId:
+          maxLength: 35
+          type: string
+          description: <b>transactionId</b> from request message
+        endToEndId:
+          maxLength: 35
+          type: string
+          description: <b>endToEndId</b> from Initiate Payment request
+        endToEndIdSignature:
+          maxLength: 1024
+          type: string
+          description: Signed End-to-End ID
+      example:
+        header:
+          messageId: 20210101RPPEMYKL861HBW51441372
+          date: 2021-01-01T00:36:37.000
+          status:
+            code: ACSP
+            reason: U000
+            description: Success / Transaction Accepted
+        transactionId: 20210101M000022186136240300
+        endToEndId: 20210101M0000221861OBW36240300
+        endToEndIdSignature: tzfOJ+HLie3Ouhhd62ipQaNuH2BUXF/6seHEcKGtwBT1BxeOI7WLFqDybUms/C5eJH5VG+mc3mVUSrVa0W4Za58IWt0A21jqml1wg5mKts4wwmBeKJqXB5eQsfFlMC5KBB69ekOQDajuAvDaZhalme9msWnzoYgjW2BgZVE25U0U3oJqF+gRCwXcdoHcAxnpLp7lcYhFs8BLloYyY5BWQtMF63eVS8z7I8UxWM7hgg1TtqvX3SBV7D0vX9z28S16UCsGfICFdaUrre0aSWVPV0EVsoOQXCL2bQ1/S+hnDPXCnJTYwjjcbikhXROGG4zzheLLxV4eX+ptL70j9NXyig==
+    requestCancelPayment:
+      required:
+      - clientId
+      - endToEndId
+      - messageId
+      - productId
+      - status
+      - transactionId
+      type: object
+      properties:
+        clientId:
+          maxLength: 8
+          type: string
+          description: Bank Identification Code (BIC) of the Participant
+        messageId:
+          maxLength: 35
+          type: string
+          description: "Unique message identification. Format YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS\
+            \ where: \n<li>YYYYMMDD – Current Date</li>\n<li>BBBBBBBB – BIC Code</li>\n\
+            <li>XXX – Transaction Type. Set to <b>865</b></li>\n<li>O – Originator.\
+            \ Set to <b>O</b></li>\n<li>CC – Channel Code</li>\n<li>SSSSSSSS – Sequence\
+            \ Number</li><br />\nOriginator can be any of the following:\n<li>O –\
+            \ OFI</li>\n<li>H – RPP</li>\n<li>R – RFI</li><br />\nChannel code can\
+            \ be any of the following:\n<li>BA – Mobile Application</li>\n<li>BW –\
+            \ Web Browser</li>   \n"
+        transactionId:
+          maxLength: 35
+          type: string
+          description: |
+            Set to the same as <b>messageId</b> but without originator and channel code<br /><br />
+            Unique transaction identification. Format YYYYMMDDBBBBBBBBTTTSSSSSSSS
+        endToEndId:
+          maxLength: 35
+          type: string
+          description: <b>endToEndId</b> from original Initiate Payment request
+        productId:
+          maxLength: 35
+          type: string
+          description: Product identification assigned by PayNet during registration
+        status:
+          maxLength: 35
+          type: string
+          description: Default to <b>CANC</b> to cancel the transaction
+      example:
+        clientId: M0000221
+        messageId: 20210101M0000221865OBW36450459
+        transactionId: 20210101M000022186536450459
+        endToEndId: 20210101M0000221861OBW36390862
+        productId: P00000381
+        status: CANC
+    responseCancelPayment:
+      required:
+      - endToEndId
+      - header
+      - originalTransactionId
+      - transactionId
+      type: object
+      properties:
+        header:
+          required:
+          - date
+          - messageId
+          - status
+          type: object
+          properties:
+            messageId:
+              maxLength: 35
+              type: string
+              description: Unique message identification
+            date:
+              type: string
+              description: Message date and time in MYT using yyyy-MM-ddTHH:mm:ss.SSS
+                format
+            status:
+              required:
+              - code
+              - reason
+              type: object
+              properties:
+                code:
+                  maxLength: 4
+                  type: string
+                  description: |
+                    Status code. <br /><br />Refer to <a style="color:blue;" href="https://docs.developer.paynet.my/docs/duitnow/mappingtable#payment-transaction-status-code-externalpaymenttransactionstatus1code" target="_blank"><b>Mapping Table</b></a>
+                reason:
+                  maxLength: 35
+                  type: string
+                  description: Reason code
+                description:
+                  maxLength: 140
+                  type: string
+                  description: Reason code description
+        transactionId:
+          maxLength: 35
+          type: string
+          description: <b>transactionId</b> from request message
+        originalTransactionId:
+          maxLength: 35
+          type: string
+          description: <b>transactionId</b> from request message
+        endToEndId:
+          maxLength: 35
+          type: string
+          description: <b>endToEndId</b> from request message
+      example:
+        header:
+          messageId: 20210101RPPEMYKL865HBW51441395
+          date: 2021-01-01T00:36:52.000
+          status:
+            code: ACSP
+            reason: U000
+            description: Success / Transaction Accepted
+        transactionId: 20210101M000022186536450459
+        originalTransactionId: 20210101M0000221865OBW36450459
+        endToEndId: 20210101M0000221865OBW36450459
+    responseStatusInquiry:
+      required:
+      - header
+      - transactionId
+      - transactionStatus
+      type: object
+      properties:
+        header:
+          required:
+          - date
+          - messageId
+          - status
+          type: object
+          properties:
+            messageId:
+              maxLength: 35
+              type: string
+              description: Unique message identification
+            date:
+              type: string
+              description: Message date and time in MY using yyyy-MM-ddTHH:mm:ss.SSS format
+            status:
+              required:
+              - code
+              - reason
+              type: object
+              properties:
+                code:
+                  maxLength: 4
+                  type: string
+                  description: |
+                    Status code. <br /><br />Refer to <a style="color:blue;" href="https://docs.developer.paynet.my/docs/duitnow/mappingtable#payment-transaction-status-code-externalpaymenttransactionstatus1code" target="_blank"><b>Mapping Table</b></a>
+                reason:
+                  maxLength: 35
+                  type: string
+                  description: Reason code
+                description:
+                  maxLength: 140
+                  type: string
+                  description: Reason code description
+        transactionId:
+          maxLength: 35
+          type: string
+          description: <b>transactionId</b> from request message
+        originalTransactionId:
+          maxLength: 35
+          type: string
+          description: <b>originalTransactionId</b> from request message. Only for
+            864 transaction code.
+        transactionStatus:
+          maxLength: 35
+          type: string
+          description: |
+            Transaction status
+            <li>RECEIVED – Pending</li>
+            <li>CLEARED – Successful Credit</li>
+            <li>REJECTED – DA perform Reject on 861</li>
+            <li>PENDAUTH – DA perform Pending Authorization for 861</li>
+      example:
+        header:
+          messageId: 20210101RPPEMYKL864ORB10000002
+          date: 2021-01-01T09:30:47Z
+          status:
+            code: ACTC
+            reason: U000
+            description: Success/ Transaction Accepted
+        transactionId: 20210101M000022163010000002
+        transactionStatus: PENDING AUTHORISATION
+    requestPaymentStatusNotification:
+      required:
+      - Notification
+      type: object
+      properties:
+        Notification:
+          required:
+          - EventHeader
+          - EventInfo
+          type: object
+          properties:
+            EventHeader:
+              required:
+              - EventCd
+              - MsgId
+              type: object
+              properties:
+                MsgId:
+                  maxLength: 35
+                  type: string
+                  description: |
+                    Unique message identification. Format YYYYMMDDBBBBBBBBSSSSSSSS where:
+                    <li>BBBBBBBB – First 8 characters of the BIC</li>
+                    <li>SSSSSSSS – Sequence number</li>
+                EventCd:
+                  maxLength: 10
+                  type: string
+                  description: Notification event code. Default to <b>PMT001</b>
+            EventInfo:
+              required:
+              - EndToEndID
+              - PaymentStatus
+              - Signature
+              type: object
+              properties:
+                EndToEndID:
+                  maxLength: 35
+                  type: string
+                  description: End-to-End ID of the transaction
+                Signature:
+                  maxLength: 1024
+                  type: string
+                  description: Signed <b>MsgId</b> used for verification
+                PaymentStatus:
+                  required:
+                  - Code
+                  - Reason
+                  - Substate
+                  type: object
+                  properties:
+                    PayerName:
+                      maxLength: 100
+                      type: string
+                      description: Payer name
+                    Code:
+                      maxLength: 4
+                      type: string
+                      description: "Transaction status: \n<li>ACSP – Accepted</li>\n\
+                        <li>ACTC – Accepted with Completion of Technical Validation</li>\n\
+                        <li>RJCT – Rejected</li>\n"
+                    Substate:
+                      maxLength: 35
+                      type: string
+                      description: "Substate code: \n<li>CLEARED – Transaction has\
+                        \ been cleared</li>\n<li>PENDING AUTHORISATION – Pending approval</li>\n\
+                        <li>CANCELLED – Transaction has been cancelled</li>\n<li>REJECT\
+                        \ – Transaction has been rejected</li>                   \
+                        \   \n"
+                    Reason:
+                      maxLength: 4
+                      type: string
+                      description: Reason code
+                    
+      example:
+        Notification:
+          EventHeader:
+            MsgId: 20210101M000022110000025
+            EventCd: PMT001
+          EventInfo:
+            EndToEndID: 20210101M0000221861ORB10000012
+            Signature: JYy72jUcmj6vMu+p2KiAkIIEUP+SG9O7EAO5hsbekZgmQQCQ5U+LCrULjwUUUx/YKSq6qrj0fCgdi+i5pYdPRxsDRZss5QUGLR2Hlxuwjw0yC8/F+qJ4mizQAsW4qDjIMzMlzyCYgXKQAqQ3tm+SiUEgTtQK8C1q9ZsJ0jzrZszz+mZwxAdHXWMqlP5IaaNYzp47YyiJQTFOZ2gQETnYPyusFqHnLtV15GBhHfniNmLzCLfEgALgZm0vZ03N7mO0JG97rckoote+XBS7On5K9XBdmmomtLfyXh74kW74pikoRrmafwNeCQtoJRHb42Rkep8G7h90XXzkimNXxQOezA==
+            PaymentStatus:
+              Code: ACSP
+              Substate: CLEARED
+              Reason: U000
+              
+  securitySchemes:
+    OAuth 2.0:
+      type: oauth2
+      description: |
+        This API supports OAuth 2.0 for authenticating all API requests. For more information, please read our <a href="https://docs.developer.paynet.my/api-oauth#/"><b>OAuth 2.0 API</b></a> specification.
+      flows:
+        clientCredentials :   # <---- OAuth flow(authorizationCode, implicit, password or clientCredentials)
+          tokenUrl: https://sandbox.api.paynet.my/auth/token
+          scopes:
+            rpp:merchant: Merchants Access Rights
+      x-amf-describedBy:
+        headers:
+          authorization:
+            description: |
+              Used to send a valid OAuth 2 access token. Do not use with the "access_token" query
+              string parameter.
+            type: string
+        queryParameters:
+          access_token:
+            description: |
+              Used to send a valid OAuth 2 access token. Do not use together with the "Authorization"
+              header
+            type: string
+        responses:
+          400:
+            description: Invalid token.
+          401:
+            description: |
+              Unauthorized or Connection error when connecting to the authorization server.
+          403:
+            description: |
+              Forbidden, invalid client application credentials.
+          500:
+            description: |
+              Bad response from authorization server, or WSDL SOAP Fault error.
+      x-amf-settings:
+        authorizationGrants:
+        - client_credentials

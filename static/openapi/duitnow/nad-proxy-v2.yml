@@ -1,0 +1,1680 @@
+openapi: 3.1.0
+info:
+  title: NAD
+  description: |
+    > **Attention!** These APIs are still in the beta stage and are not yet available to the general public. Stay tuned for updates on when they will be ready for everyone to explore!
+    ### Who Should Use
+    This API should only be used by bank as the Issuer.
+  version: v2
+servers:
+- url: https://mock.developer.paynet.my/banks/nad/v2
+paths:
+  /register:
+    post:
+      summary: Register Proxy 
+      description: This API is used by Participant to initiate a new proxy registration with RPP
+      operationId: nad_admin_register
+      parameters:
+      - $ref: "./base.yml#/components/parameters/X-Business-Message-Id"
+      - $ref: "./base.yml#/components/parameters/X-Client-Id"
+      - $ref: "./base.yml#/components/parameters/X-Ip-Address"
+      - $ref: "./base.yml#/components/parameters/X-Gps-Coordinates"
+      
+      requestBody: 
+        content: 
+          application/json:
+            schema: 
+              $ref: "#/components/schemas/nadRegistrationRequest"
+            example: 
+              data:
+                businessMessageId: "20230120DMMMYKL4710ORB01162512"
+                proxy:
+                  type: "BREG"
+                  value: "DEVDD202301100029"
+                account:
+                  id: "202301100092"
+                  type: "CACC"
+                  name: "Account Name"
+                secondaryId:
+                  type: "BREG"
+                  value: "DEVDD202301100029"
+
+      responses: 
+        200:
+          description: ""
+          headers: 
+            Authorization:
+              required: true
+              $ref: "./base.yml#/components/headers/Authorization"
+            X-Business-Message-Id:
+              required: true
+              $ref: "./base.yml#/components/headers/X-Business-Message-Id"
+          content: 
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/nadAdminResponse"
+              example: 
+                data:
+                  businessMessageId: "20230120RPPEMYKL710HRB01162512"
+                  code: "ACTC"
+                  reason: "U000"
+                  registrationId: "0075800039"
+        400:
+          description: ""
+          headers: 
+            X-Business-Message-Id:
+              required: true
+              $ref: "./base.yml#/components/headers/X-Business-Message-Id"
+          content: 
+            application/json:
+              schema: 
+                $ref: "./base.yml#/components/schemas/errorResponse"
+              example: 
+                data:
+                  businessMessageId: "20230120DMMMYKL4710ORB01162512"
+                  code: "API.002"
+                  reason: "data.businessMessageId - Invalid format"
+        401:
+          description: ""
+          headers: 
+            X-Business-Message-Id:
+              required: true
+              $ref: "./base.yml#/components/headers/X-Business-Message-Id"
+          content: 
+            application/json:
+              schema: 
+                $ref: "./base.yml#/components/schemas/errorResponse"
+              example: 
+                data:
+                  businessMessageId: "20230120DMMMYKL4710ORB01162512"
+                  code: "API.007"
+                  reason: "Unauthorized request"
+        500:
+          description: ""
+          headers: 
+            X-Business-Message-Id:
+              required: true
+              $ref: "./base.yml#/components/headers/X-Business-Message-Id"
+          content: 
+            application/json:
+              schema: 
+                $ref: "./base.yml#/components/schemas/errorResponse"
+              example: 
+                data:
+                  businessMessageId: "20230120DMMMYKL4710ORB01162512"
+                  code: "API.500"
+                  reason: "Internal Server Error"
+
+      security:
+        - bearerAuth: []
+      x-codegen-request-body-name: generated
+      
+  /deregister:
+    put:
+      summary: Deregister Proxy
+      description: This API is used by Participant to deregister an existing proxy. Proxy that is deregistered can no longer be used to accept any payment
+      operationId: nad_admin_deregister
+      parameters:
+      - $ref: "./base.yml#/components/parameters/X-Business-Message-Id"
+      - $ref: "./base.yml#/components/parameters/X-Client-Id"
+      - $ref: "./base.yml#/components/parameters/X-Ip-Address"
+      - $ref: "./base.yml#/components/parameters/X-Gps-Coordinates"
+          
+      requestBody: 
+        content: 
+          application/json:
+            schema: 
+              $ref: "#/components/schemas/nadAdminRequest"
+            example: 
+              data:
+                businessMessageId: "20230120DMMMYKL4720ORB01162512"
+                proxy:
+                  type: "BREG"
+                  value: "DEVDD202301100029"
+                registrationId: "0075800039"
+
+      responses: 
+        200:
+          description: ""
+          headers: 
+            Authorization:
+              required: true
+              $ref: "./base.yml#/components/headers/Authorization"
+            X-Business-Message-Id:
+              required: true
+              $ref: "./base.yml#/components/headers/X-Business-Message-Id"
+          content: 
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/nadAdminResponse"
+              example: 
+                data:
+                  businessMessageId: "20230120RPPEMYKL720HRB01162512"
+                  code: "ACTC"
+                  reason: "U000"
+                  registrationId: "0075800039"
+        400:
+          description: ""
+          headers: 
+            X-Business-Message-Id:
+              required: true
+              $ref: "./base.yml#/components/headers/X-Business-Message-Id"
+          content: 
+            application/json:
+              schema: 
+                $ref: "./base.yml#/components/schemas/errorResponse"
+              example: 
+                data:
+                  businessMessageId: "20230120DMMMYKL4720ORB01162512"
+                  code: "API.002"
+                  reason: "data.businessMessageId - Invalid format"
+        401:
+          description: ""
+          headers: 
+            X-Business-Message-Id:
+              required: true
+              $ref: "./base.yml#/components/headers/X-Business-Message-Id"
+          content: 
+            application/json:
+              schema: 
+                $ref: "./base.yml#/components/schemas/errorResponse"
+              example: 
+                data:
+                  businessMessageId: "20230120DMMMYKL4720ORB01162512"
+                  code: "API.007"
+                  reason: "Unauthorized request"
+        500:
+          description: ""
+          headers: 
+            X-Business-Message-Id:
+              required: true
+              $ref: "./base.yml#/components/headers/X-Business-Message-Id"
+          content: 
+            application/json:
+              schema: 
+                $ref: "./base.yml#/components/schemas/errorResponse"
+              example: 
+                data:
+                  businessMessageId: "20230120DMMMYKL4720ORB01162512"
+                  code: "API.500"
+                  reason: "Internal Server Error"
+
+      security:
+        - bearerAuth: []
+      x-codegen-request-body-name: generated
+  
+  /update:
+    put:
+      summary: Update Proxy
+      description: This API is used by Participant to update the account information that is linked to an existing proxy
+      operationId: nad_admin_update
+      parameters:
+      - $ref: "./base.yml#/components/parameters/X-Business-Message-Id"
+      - $ref: "./base.yml#/components/parameters/X-Client-Id"
+      - $ref: "./base.yml#/components/parameters/X-Ip-Address"
+      - $ref: "./base.yml#/components/parameters/X-Gps-Coordinates"
+          
+      requestBody: 
+        content: 
+          application/json:
+            schema: 
+              $ref: "#/components/schemas/nadUpdateRequest"
+            example: 
+              data:
+                businessMessageId: "20230120DMMMYKL4720ORB01162513"
+                proxy:
+                  type: "BREG"
+                  value: "DEVDD202301100029"
+                registrationId: "0075800039"
+                account:
+                  id: "202301100092"
+                  type: "CACC"
+                  name: "New Account Name"
+                  accountTypeHolder: "S"
+
+      responses: 
+        200:
+          description: ""
+          headers: 
+            Authorization:
+              required: true
+              $ref: "./base.yml#/components/headers/Authorization"
+            X-Business-Message-Id:
+              required: true
+              $ref: "./base.yml#/components/headers/X-Business-Message-Id"
+          content: 
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/nadAdminResponse"
+              example: 
+                data:
+                  businessMessageId: "20230120RPPEMYKL720HRB01162513"
+                  code: "ACTC"
+                  reason: "U000"
+                  registrationId: "0075800039"
+        400:
+          description: ""
+          content: 
+            application/json:
+              schema: 
+                $ref: "./base.yml#/components/schemas/errorResponse"
+              example: 
+                data:
+                  businessMessageId: "20230120DMMMYKL4720ORB01162513"
+                  code: "API.002"
+                  reason: "data.businessMessageId - Invalid format"
+        401:
+          description: ""
+          headers: 
+            X-Business-Message-Id:
+              required: true
+              $ref: "./base.yml#/components/headers/X-Business-Message-Id"
+          content: 
+            application/json:
+              schema: 
+                $ref: "./base.yml#/components/schemas/errorResponse"
+              example: 
+                data:
+                  businessMessageId: "20230120DMMMYKL4720ORB01162512"
+                  code: "API.007"
+                  reason: "Unauthorized request"
+        500:
+          description: ""
+          headers: 
+            X-Business-Message-Id:
+              required: true
+              $ref: "./base.yml#/components/headers/X-Business-Message-Id"
+          content: 
+            application/json:
+              schema: 
+                $ref: "./base.yml#/components/schemas/errorResponse"
+              example: 
+                data:
+                  businessMessageId: "20230120DMMMYKL4720ORB01162512"
+                  code: "API.500"
+                  reason: "Internal Server Error"
+
+      security:
+        - bearerAuth: []
+      x-codegen-request-body-name: generated
+
+  /suspend:
+    put:
+      summary: Suspend Proxy
+      description: This API is used by Participant to suspend an existing proxy. A suspended proxy can not be used for payment processing
+      operationId: nad_admin_suspend
+      parameters:
+      - $ref: "./base.yml#/components/parameters/X-Business-Message-Id"
+      - $ref: "./base.yml#/components/parameters/X-Client-Id"
+      - $ref: "./base.yml#/components/parameters/X-Ip-Address"
+      - $ref: "./base.yml#/components/parameters/X-Gps-Coordinates"
+      
+      requestBody: 
+        content: 
+          application/json:
+            schema: 
+              $ref: "#/components/schemas/nadAdminRequest"
+            example: 
+              data:
+                businessMessageId: "20230120DMMMYKL4720ORB01162511"
+                proxy:
+                  type: "BREG"
+                  value: "DEVDD202301100029"
+                registrationId: "0075800039"
+
+      responses: 
+        200:
+          description: ""
+          headers: 
+            Authorization:
+              required: true
+              $ref: "./base.yml#/components/headers/Authorization"
+            X-Business-Message-Id:
+              required: true
+              $ref: "./base.yml#/components/headers/X-Business-Message-Id"
+          content: 
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/nadAdminResponse"
+              example: 
+                data:
+                  businessMessageId: "20230120RPPEMYKL720HRB01162511"
+                  code: "ACTC"
+                  reason: "U000"
+                  registrationId: "0075800039"
+        400:
+          description: ""
+          headers: 
+            X-Business-Message-Id:
+              required: true
+              $ref: "./base.yml#/components/headers/X-Business-Message-Id"
+          content: 
+            application/json:
+              schema: 
+                $ref: "./base.yml#/components/schemas/errorResponse"
+              example: 
+                data:
+                  businessMessageId: "20230120DMMMYKL4720ORB01162511"
+                  code: "API.002"
+                  reason: "data.businessMessageId - Invalid format"
+        401:
+          description: ""
+          headers: 
+            X-Business-Message-Id:
+              required: true
+              $ref: "./base.yml#/components/headers/X-Business-Message-Id"
+          content: 
+            application/json:
+              schema: 
+                $ref: "./base.yml#/components/schemas/errorResponse"
+              example: 
+                data:
+                  businessMessageId: "20230120DMMMYKL4720ORB01162512"
+                  code: "API.007"
+                  reason: "Unauthorized request"
+        500:
+          description: ""
+          headers: 
+            X-Business-Message-Id:
+              required: true
+              $ref: "./base.yml#/components/headers/X-Business-Message-Id"
+          content: 
+            application/json:
+              schema: 
+                $ref: "./base.yml#/components/schemas/errorResponse"
+              example: 
+                data:
+                  businessMessageId: "20230120DMMMYKL4720ORB01162511"
+                  code: "API.500"
+                  reason: "Internal Server Error"
+
+      security:
+        - bearerAuth: []
+      x-codegen-request-body-name: generated
+      
+  /bank-suspend:
+    put:
+      summary: Suspend Proxy By Bank
+      description: This API is used by Participant to suspend an existing proxy at their own discretion. Such suspended proxy can only be reactivated by suspending participant
+      operationId: nad_admin_suspend_by_bank
+      parameters:
+      - $ref: "./base.yml#/components/parameters/X-Business-Message-Id"
+      - $ref: "./base.yml#/components/parameters/X-Client-Id"
+      - $ref: "./base.yml#/components/parameters/X-Ip-Address"
+      - $ref: "./base.yml#/components/parameters/X-Gps-Coordinates"
+      
+      requestBody: 
+        content: 
+          application/json:
+            schema: 
+              $ref: "#/components/schemas/nadAdminRequest"
+            example: 
+              data:
+                businessMessageId: "20230120DMMMYKL4720ORB01162511"
+                proxy:
+                  type: "BREG"
+                  value: "DEVDD202301100029"
+                registrationId: "0075800039"
+
+      responses: 
+        200:
+          description: ""
+          headers: 
+            Authorization:
+              required: true
+              $ref: "./base.yml#/components/headers/Authorization"
+            X-Business-Message-Id:
+              required: true
+              $ref: "./base.yml#/components/headers/X-Business-Message-Id"
+          content: 
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/nadAdminResponse"
+              example: 
+                data:
+                  businessMessageId: "20230120RPPEMYKL720HRB01162511"
+                  code: "ACTC"
+                  reason: "U000"
+                  registrationId: "0075800039"
+        400:
+          description: ""
+          headers: 
+            X-Business-Message-Id:
+              required: true
+              $ref: "./base.yml#/components/headers/X-Business-Message-Id"
+          content: 
+            application/json:
+              schema: 
+                $ref: "./base.yml#/components/schemas/errorResponse"
+              example: 
+                data:
+                  businessMessageId: "20230120DMMMYKL4720ORB01162511"
+                  code: "API.002"
+                  reason: "data.businessMessageId - Invalid format"
+        401:
+          description: ""
+          headers: 
+            X-Business-Message-Id:
+              required: true
+              $ref: "./base.yml#/components/headers/X-Business-Message-Id"
+          content: 
+            application/json:
+              schema: 
+                $ref: "./base.yml#/components/schemas/errorResponse"
+              example: 
+                data:
+                  businessMessageId: "20230120DMMMYKL4720ORB01162512"
+                  code: "API.007"
+                  reason: "Unauthorized request"
+        500:
+          description: ""
+          headers: 
+            X-Business-Message-Id:
+              required: true
+              $ref: "./base.yml#/components/headers/X-Business-Message-Id"
+          content: 
+            application/json:
+              schema: 
+                $ref: "./base.yml#/components/schemas/errorResponse"
+              example: 
+                data:
+                  businessMessageId: "20230120DMMMYKL4720ORB01162511"
+                  code: "API.500"
+                  reason: "Internal Server Error"
+
+      security:
+        - bearerAuth: []
+      x-codegen-request-body-name: generated
+
+  /activate:
+    put:
+      summary: Activate Proxy
+      description: This API is used by Participant to activate a proxy that is inactive/suspended
+      operationId: nad_admin_activate
+      parameters:
+      - $ref: "./base.yml#/components/parameters/X-Business-Message-Id"
+      - $ref: "./base.yml#/components/parameters/X-Client-Id"
+      - $ref: "./base.yml#/components/parameters/X-Ip-Address"
+      - $ref: "./base.yml#/components/parameters/X-Gps-Coordinates"
+
+      requestBody: 
+        content: 
+          application/json:
+            schema: 
+              $ref: "#/components/schemas/nadAdminRequest"
+            example: 
+              data:
+                businessMessageId: "20230120DMMMYKL4720ORB01162510"
+                proxy:
+                  type: "BREG"
+                  value: "DEVDD202301100029"
+                registrationId: "0075800039"
+
+      responses: 
+        200:
+          description: ""
+          headers: 
+            Authorization:
+              required: true
+              $ref: "./base.yml#/components/headers/Authorization"
+            X-Business-Message-Id:
+              required: true
+              $ref: "./base.yml#/components/headers/X-Business-Message-Id"
+          content: 
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/nadAdminResponse"
+              example: 
+                data:
+                  businessMessageId: "20230120RPPEMYKL720HRB01162510"
+                  code: "ACTC"
+                  reason: "U000"
+                  registrationId: "0075800039"
+        400:
+          description: ""
+          headers: 
+            X-Business-Message-Id:
+              required: true
+              $ref: "./base.yml#/components/headers/X-Business-Message-Id"
+          content: 
+            application/json:
+              schema: 
+                $ref: "./base.yml#/components/schemas/errorResponse"
+              example: 
+                data:
+                  businessMessageId: "20230120DMMMYKL4720ORB01162510"
+                  code: "API.002"
+                  reason: "data.businessMessageId - Invalid format"
+        401:
+          description: ""
+          headers: 
+            X-Business-Message-Id:
+              required: true
+              $ref: "./base.yml#/components/headers/X-Business-Message-Id"
+          content: 
+            application/json:
+              schema: 
+                $ref: "./base.yml#/components/schemas/errorResponse"
+              example: 
+                data:
+                  businessMessageId: "20230120DMMMYKL4720ORB01162512"
+                  code: "API.007"
+                  reason: "Unauthorized request"
+        500:
+          description: ""
+          headers: 
+            X-Business-Message-Id:
+              required: true
+              $ref: "./base.yml#/components/headers/X-Business-Message-Id"
+          content: 
+            application/json:
+              schema: 
+                $ref: "./base.yml#/components/schemas/errorResponse"
+              example: 
+                data:
+                  businessMessageId: "20230120DMMMYKL4720ORB01162510"
+                  code: "API.500"
+                  reason: "Internal Server Error"
+              
+      security:
+        - bearerAuth: []
+      x-codegen-request-body-name: generated
+
+  /bank-activate:
+    put:
+      summary: Activate Proxy By Bank
+      description: This API is used by Participant to activate a proxy that previously suspended by the Participant
+      operationId: nad_admin_activate_by_bank
+      parameters:
+      - $ref: "./base.yml#/components/parameters/X-Business-Message-Id"
+      - $ref: "./base.yml#/components/parameters/X-Client-Id"
+      - $ref: "./base.yml#/components/parameters/X-Ip-Address"
+      - $ref: "./base.yml#/components/parameters/X-Gps-Coordinates"
+
+      requestBody: 
+        content: 
+          application/json:
+            schema: 
+              $ref: "#/components/schemas/nadAdminRequest"
+            example: 
+              data:
+                businessMessageId: "20230120DMMMYKL4720ORB01162510"
+                proxy:
+                  type: "BREG"
+                  value: "DEVDD202301100029"
+                registrationId: "0075800039"
+
+      responses: 
+        200:
+          description: ""
+          headers: 
+            Authorization:
+              required: true
+              $ref: "./base.yml#/components/headers/Authorization"
+            X-Business-Message-Id:
+              required: true
+              $ref: "./base.yml#/components/headers/X-Business-Message-Id"
+          content: 
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/nadAdminResponse"
+              example: 
+                data:
+                  businessMessageId: "20230120RPPEMYKL720HRB01162510"
+                  code: "ACTC"
+                  reason: "U000"
+                  registrationId: "0075800039"
+        400:
+          description: ""
+          headers: 
+            X-Business-Message-Id:
+              required: true
+              $ref: "./base.yml#/components/headers/X-Business-Message-Id"
+          content: 
+            application/json:
+              schema: 
+                $ref: "./base.yml#/components/schemas/errorResponse"
+              example: 
+                data:
+                  businessMessageId: "20230120DMMMYKL4720ORB01162510"
+                  code: "API.002"
+                  reason: "data.businessMessageId - Invalid format"
+        401:
+          description: ""
+          headers: 
+            X-Business-Message-Id:
+              required: true
+              $ref: "./base.yml#/components/headers/X-Business-Message-Id"
+          content: 
+            application/json:
+              schema: 
+                $ref: "./base.yml#/components/schemas/errorResponse"
+              example: 
+                data:
+                  businessMessageId: "20230120DMMMYKL4720ORB01162512"
+                  code: "API.007"
+                  reason: "Unauthorized request"
+        500:
+          description: ""
+          headers: 
+            X-Business-Message-Id:
+              required: true
+              $ref: "./base.yml#/components/headers/X-Business-Message-Id"
+          content: 
+            application/json:
+              schema: 
+                $ref: "./base.yml#/components/schemas/errorResponse"
+              example: 
+                data:
+                  businessMessageId: "20230120DMMMYKL4720ORB01162510"
+                  code: "API.500"
+                  reason: "Internal Server Error"
+              
+      security:
+        - bearerAuth: []
+      x-codegen-request-body-name: generated
+
+  /transfer:
+    post:
+      summary: Transfer Proxy
+      description: This API is used by Participant to seek transfer of an existing proxy from another Participant
+      operationId: nad_admin_transfer
+      parameters:
+      - $ref: "./base.yml#/components/parameters/X-Business-Message-Id"
+      - $ref: "./base.yml#/components/parameters/X-Client-Id"
+      - $ref: "./base.yml#/components/parameters/X-Ip-Address"
+      - $ref: "./base.yml#/components/parameters/X-Gps-Coordinates"
+      
+      requestBody: 
+        content: 
+          application/json:
+            schema: 
+              $ref: "#/components/schemas/nadTransferRequest"
+            example: 
+              data:
+                businessMessageId: "20230120BIMBMYKL710ORB01162513"
+                proxy:
+                  type: "BREG"
+                  value: "DEVDD202301100029"
+                registrationId: "0075800039"
+                account:
+                  id: "202301100105"
+                  type: "CACC"
+                  name: "Bank Account"
+                  accountTypeHolder: "S"
+                secondaryId:
+                  type: "BREG"
+                  value: "DEVDD202301100029"
+
+      responses: 
+        200:
+          description: ""
+          headers: 
+            Authorization:
+              required: true
+              $ref: "./base.yml#/components/headers/Authorization"
+            X-Business-Message-Id:
+              required: true
+              $ref: "./base.yml#/components/headers/X-Business-Message-Id"
+          content: 
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/nadAdminResponse"
+              example: 
+                data:
+                  businessMessageId: "20230120RPPEMYKL710HRB01162513"
+                  code: "ACTC"
+                  reason: "U000"
+                  registrationId: "0075800040"
+        400:
+          description: ""
+          headers: 
+            X-Business-Message-Id:
+              required: true
+              $ref: "./base.yml#/components/headers/X-Business-Message-Id"
+          content: 
+            application/json:
+              schema: 
+                $ref: "./base.yml#/components/schemas/errorResponse"
+              example: 
+                data:
+                  businessMessageId: "20230120BIMBMYKL710ORB01162513"
+                  code: "API.002"
+                  reason: "data.businessMessageId - Invalid format"
+        401:
+          description: ""
+          headers: 
+            X-Business-Message-Id:
+              required: true
+              $ref: "./base.yml#/components/headers/X-Business-Message-Id"
+          content: 
+            application/json:
+              schema: 
+                $ref: "./base.yml#/components/schemas/errorResponse"
+              example: 
+                data:
+                  businessMessageId: "20230120DMMMYKL4720ORB01162512"
+                  code: "API.007"
+                  reason: "Unauthorized request"
+        500:
+          description: ""
+          headers: 
+            X-Business-Message-Id:
+              required: true
+              $ref: "./base.yml#/components/headers/X-Business-Message-Id"
+          content: 
+            application/json:
+              schema: 
+                $ref: "./base.yml#/components/schemas/errorResponse"
+              example: 
+                data:
+                  businessMessageId: "20230120BIMBMYKL710ORB01162513"
+                  code: "API.500"
+                  reason: "Internal Server Error"
+
+      security:
+        - bearerAuth: []
+      x-codegen-request-body-name: generated
+  
+  /enquiry/{secondaryIdType}/{secondaryId}:
+    get:
+      summary: Proxy Enquiry
+      description: This API is used by Participant to retrieve all the proxies that are registered to the customer
+      operationId: nad_maintainance_enquiry
+      parameters:
+      - name: secondaryIdType
+        in: path
+        allowEmptyValue: false
+        description: Secondary/customer identification type to be enquired.  <br /><br />Refer to <a style="color:blue;" href="https://docs.developer.paynet.my/docs/duitnow/mappingtable#proxy-type-prxytp" target="_blank"><b>Mapping Table</b></a>
+        required: true
+        schema: 
+          type: string
+          minLength: 4
+          maxLength: 4
+          enum: ["NRIC", "PSPT", "BREG", "MBNO", "ARMN"]
+        example: BREG
+      - name: secondaryId
+        in: path
+        description: Secondary/customer identification value to be enquired
+        required: true
+        schema: 
+          type: string
+          maxLength: 140
+        example: "DEVDD202301100009"
+      - $ref: "./base.yml#/components/parameters/Date"
+      - name: X-Business-Message-Id
+        in: header
+        description: <b>Business Message Identification</b><br></br> Unique message identification. Format YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS
+                where <li>YYYYMMDD – Current Date</li>
+                <li>BBBBBBBB – BIC Code</li>
+                <li>XXX – Transaction Code. Set to <b>620</b>. Refer to <a href="https://docs.developer.paynet.my/docs/duitnowqr/transactiontype/index.html" target="_blank"> <b style="color:blue;">Transaction Code</b> </a> </li>
+                <li>O – Originator. Refer to <a href="https://docs.developer.paynet.my/docs/duitnow/mappingtable#originator-code" target="_blank"> <b style="color:blue;">Originator</b> </a> </li>
+                <li>CC – Channel Code. Refer to <a href="https://docs.developer.paynet.my/docs/duitnow/mappingtable#channel-code" target="_blank"> <b style="color:blue;">Channel Code</b> </a> </li>
+                <li>SSSSSSSS – Sequence Number</li>
+                <br> </br>Channel Code set as RB.
+        required: true
+        schema: 
+          type: string
+          maxLength: 35
+          format: "YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS"
+        example: "20230120DMMMYKL4620ORB00495923"
+      - $ref: "./base.yml#/components/parameters/X-Client-Id"
+      - $ref: "./base.yml#/components/parameters/X-Ip-Address"
+      - $ref: "./base.yml#/components/parameters/X-Gps-Coordinates"
+
+      responses:
+        200:
+          description: ""
+          headers: 
+            Authorization:
+              required: true
+              $ref: "./base.yml#/components/headers/Authorization"
+            X-Business-Message-Id:
+              required: true
+              $ref: "./base.yml#/components/headers/X-Business-Message-Id"
+          content: 
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/nadEnquiryResponse"
+              example: 
+                data: 
+                  businessMessageId: "20230120RPPEMYKL620HRB00495923"
+                  code: "ACTC"
+                  reason: "U000"
+                  response: 
+                    - registrationId: "0075800040"
+                      displayName: "Bank Account"
+                      proxy:
+                        type: "BREG"
+                        value: "*************0009"
+                        status: "ACTV"
+                      account:
+                        id: "********0105"
+                        type: "CACC"
+                        agentId: "BIMBMYKL"
+                        name: "Bank Account"
+                    - registrationId: "0075860034"
+                      displayName: "Karate CACC 20230110-770"
+                      proxy:
+                        type: "MBNO"
+                        value: "*********4334"
+                        status: "ACTV"
+                        checksum: "702"
+                      account:
+                        id: "********0770"
+                        type: "CACC"
+                        agentId: "DMMMYKL4"
+                        name: "Karate CACC 20230110-770"
+
+        400:
+          description: ""
+          headers: 
+            X-Business-Message-Id:
+              required: true
+              $ref: "./base.yml#/components/headers/X-Business-Message-Id"
+          content: 
+            application/json:
+              schema: 
+                $ref: "./base.yml#/components/schemas/errorResponse"
+              example: 
+                data:
+                  businessMessageId: "20230120DMMMYKL4620ORB00495923"
+                  code: "API.002"
+                  reason: "X-Business-Message-Id - Invalid format"
+        401:
+          description: ""
+          headers: 
+            X-Business-Message-Id:
+              required: true
+              $ref: "./base.yml#/components/headers/X-Business-Message-Id"
+          content: 
+            application/json:
+              schema: 
+                $ref: "./base.yml#/components/schemas/errorResponse"
+              example: 
+                data:
+                  businessMessageId: "20230120DMMMYKL4720ORB01162512"
+                  code: "API.007"
+                  reason: "Unauthorized request"
+        500:
+          description: ""
+          headers: 
+            X-Business-Message-Id:
+              required: true
+              $ref: "./base.yml#/components/headers/X-Business-Message-Id"
+          content: 
+            application/json:
+              schema: 
+                $ref: "./base.yml#/components/schemas/errorResponse"
+              example: 
+                data:
+                  businessMessageId: "20230120DMMMYKL4620ORB00495923"
+                  code: "API.500"
+                  reason: "Internal Server Error"
+
+      security:
+        - bearerAuth: []
+      x-codegen-request-body-name: generated
+
+  /resolution/{proxyType}/{proxy}:
+    get:
+      summary: Proxy Resolution
+      description: This API is used to perform lookup on the beneficiary account so that the beneficiary account details can be returned and displayed to customer prior to payment confirmation. The returned information will be used when initiating payment later
+      operationId: nad_maintainance_resolution
+      parameters:
+      - name: proxyType
+        in: path
+        description: Proxy type to be enquired. <br /><br />Refer to <a style="color:blue;" href="https://docs.developer.paynet.my/docs/duitnow/mappingtable#proxy-type-prxytp" target="_blank"><b>Mapping Table</b></a>
+        required: true
+        schema: 
+          type: string
+          minLength: 4
+          maxLength: 4
+          enum: ["NRIC", "PSPT", "BREG", "MBNO", "ARMN"]
+        example: BREG
+      - name: proxy
+        in: path
+        description: Proxy value to be enquired
+        required: true
+        schema: 
+          type: string
+          maxLength: 140
+        example: "DEVDD202301100009"
+      - $ref: "./base.yml#/components/parameters/Date"
+      - name: X-Business-Message-Id
+        in: header
+        description: <b>Business Message Identification</b><br></br> Unique message identification. Format YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS
+                where <li>YYYYMMDD – Current Date</li>
+                <li>BBBBBBBB – BIC Code</li>
+                <li>XXX – Transaction Code. Set to <b>610</b>. Refer to <a href="https://docs.developer.paynet.my/docs/duitnowqr/transactiontype/index.html" target="_blank"> <b style="color:blue;">Transaction Code</b> </a> </li>
+                <li>O – Originator. Refer to <a href="https://docs.developer.paynet.my/docs/duitnow/mappingtable#originator-code" target="_blank"> <b style="color:blue;">Originator</b> </a> </li>
+                <li>CC – Channel Code. Refer to <a href="https://docs.developer.paynet.my/docs/duitnow/mappingtable#channel-code" target="_blank"> <b style="color:blue;">Channel Code</b> </a> </li>
+                <li>SSSSSSSS – Sequence Number</li>
+                <br> </br>Channel Code set as RB.
+        required: true
+        schema: 
+          type: string
+          maxLength: 35
+        example: "20230120DMMMYKL4610ORB09781854"
+      - $ref: "./base.yml#/components/parameters/X-Client-Id"
+      - $ref: "./base.yml#/components/parameters/X-Ip-Address"
+      - $ref: "./base.yml#/components/parameters/X-Gps-Coordinates"
+
+
+      responses: 
+        200:
+          description: ""
+          headers: 
+            Authorization:
+              required: true
+              $ref: "./base.yml#/components/headers/Authorization"
+            X-Business-Message-Id:
+              required: true
+              $ref: "./base.yml#/components/headers/X-Business-Message-Id" 
+          content: 
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/nadLookupResponse"
+              example: 
+                data:
+                  businessMessageId: "20230120RPPEMYKL610HRB09781854"
+                  code: "ACTC"
+                  reason: "U000"
+                  proxy:
+                    type: "BREG"
+                    value: "*************0009"
+                  registrationId: "0075800025"
+                  displayName: "Bank Account"
+                  account: 
+                    agentId: "****MYKL"
+                    id: "********0105"
+                    type: "CACC"
+                    name: "Bank Account"
+        400:
+          description: ""
+          headers: 
+            X-Business-Message-Id:
+              required: true
+              $ref: "./base.yml#/components/headers/X-Business-Message-Id"
+          content: 
+            application/json:
+              schema: 
+                $ref: "./base.yml#/components/schemas/errorResponse"
+                example: 20230120DMMMYKL4610ORB09781854
+              example: 
+                data:
+                  businessMessageId: "20230120DMMMYKL4610ORB09781854"
+                  code: "API.002"
+                  reason: "X-Business-Message-Id - Invalid format"
+        401:
+          description: ""
+          headers: 
+            X-Business-Message-Id:
+              required: true
+              $ref: "./base.yml#/components/headers/X-Business-Message-Id"
+          content: 
+            application/json:
+              schema: 
+                $ref: "./base.yml#/components/schemas/errorResponse"
+              example: 
+                data:
+                  businessMessageId: "20230120DMMMYKL4720ORB01162512"
+                  code: "API.007"
+                  reason: "Unauthorized request"
+        500:
+          description: ""
+          headers: 
+            X-Business-Message-Id:
+              required: true
+              $ref: "./base.yml#/components/headers/X-Business-Message-Id"
+          content: 
+            application/json:
+              schema: 
+                $ref: "./base.yml#/components/schemas/errorResponse"
+              example: 
+                data:
+                  businessMessageId: "20230120DMMMYKL4610ORB09781854"
+                  code: "API.500"
+                  reason: "Internal Server Error"
+
+      security:
+        - bearerAuth: []
+      x-codegen-request-body-name: generated
+  
+  /webhook/v2/notify:
+    post:
+      summary: Proxy Transfer Notification Webhook
+      description: For Receiving Participant, it is expected to publish an API based on this specification that allow the participant to be informed in the event any proxy registered under them has been requested by customer to be transferred to another Participant
+      operationId: nad_webhook_notify
+      servers:
+        - url: https://test.sandbox1.nonprod.c0.paynet.my/banks/nad
+          description: Override base path for all operations with the webhook path
+      parameters:
+      - $ref: "./base.yml#/components/parameters/Authorization"
+      - $ref: "./base.yml#/components/parameters/X-Business-Message-Id"
+      tags: 
+        -  Webhook
+
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/nadNotificationRequest'
+            example: 
+              data:
+                businessMessageId: "20230120RPPEMYKL901HRB14608847"
+                originalId: "20221206DMMMYKL471083933223"
+                originalProxy:
+                  type: "BREG"
+                  value: "DEVDD20221125001"
+                originalAccount:
+                  registrationId: "0075710016"
+                  displayName: "Bank Account A"
+                  account:
+                    id: "221125000002"
+                    type: "CACC"
+                    agentId: "DMMMYKL4"
+                    name: "Bank Account A"
+                newAccount:
+                  registrationId: "0075710016"
+                  displayName: "Bank Account B"
+                  account:
+                    id: "321125000002"
+                    type: "CACC"
+                    agentId: "BIMBMYKL"
+                    name: "Bank Account B"
+
+      responses:
+        200:
+          description: ""
+          content: {}
+        400:
+          description: ""
+          content: {}
+
+      security: 
+        - bearerAuth: []
+      x-codegen-request-body-name: generated
+  
+components:
+  schemas:     
+    enquiryResponse:
+      description: "Response"
+      type: array
+      items:
+        type: object
+        required: 
+          - registrationId
+          - displayName
+          - proxy
+          - account
+        properties: 
+          registrationId:
+            type: string
+            maxLength: 35
+            description: Registration Identification
+          displayName:
+            type: string
+            maxLength: 140
+            description: Display Name
+          proxy:
+            description: Proxy Information
+            required: 
+              - status
+            allOf: 
+              - $ref: "#/components/schemas/proxy"
+              - type: object
+                properties: 
+                  value:
+                    description: "Proxy Value \n\n
+                    Masked with **** except last 4 characters"
+                  status:
+                    type: string
+                    description: "Proxy Status \n\n
+                      RPP will send all proxies registered under the Secondary Id except those with ICTV (deregistered) status \n\n
+                      Participants will need to filter the proxies to be displayed depending on where it is initiated from"
+                  checksum:
+                    type: string
+                    description: "Mobile Number Checksum \n\n
+                      This is only applicable to mobile number proxy \n\n
+                      The check sum is calculated using weight sum formula with Prime Number as its weight factor.\n\n
+                      Example: The checksum for Mobile Number (+60104940395) is 731.\n\n
+                      Step by step:\n
+                      - First remove the leading plus(+) symbol from mobile number: 60104940395\n
+                      - Derive the weight factor which based on prime numbers: 2 3 5 7 11 13 17 19 23 29 31 37 ..\n
+                      - Multiply each digit with its weight factor: (6x2)+(0x3)+(1x5)+(0x7)+(4x11)+(9x13)+(4x17)+(0x19)+(3x23)+(9x29)+(5x31)\n
+                      - check sum is 731."
+          account:
+            description: Account
+            required:
+              - agentId
+              - id
+              - type 
+              - name
+            allOf: 
+              - $ref: "./base.yml#/components/schemas/account"
+              - type: object
+                properties: 
+                  agentId:
+                    type: string
+                    maxLength: 8
+                    description: "Agent Identification \n\n
+                      BIC of the FI where the proxy is registered"
+                  id:
+                    description: "Identification \n\n
+                      Account number will be masked \n\n
+                      Masked with **** except last 4 characters"
+                  type:
+                    enum: ["SVGS", "CACC"]
+                    description: "Account Type \n\n
+                      Supported types are: \n\n
+                      -	SVGS – Savings Account \n\n
+                      -	CACC – Current Account"
+                  name:
+                    maxLength: 140
+                    type: string
+                    description: "Name \n\n
+                      Account name of the proxy"
+              
+    nadAdminRequest:
+      type: object
+      required: 
+        -  data
+      properties: 
+        data:
+          required: 
+            - businessMessageId
+            - proxy
+            - registrationId
+          properties: 
+            businessMessageId:
+              maxLength: 35
+              type: string
+              format: "YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS"
+              description: <b>Business Message Identification</b><br></br> Unique message identification. Format YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS
+                where <li>YYYYMMDD – Current Date</li>
+                <li>BBBBBBBB – BIC Code</li>
+                <li>XXX – Transaction Code. Set to <b>720</b>. Refer to <a href="https://docs.developer.paynet.my/docs/duitnowqr/transactiontype/index.html" target="_blank"> <b style="color:blue;">Transaction Code</b> </a> </li>
+                <li>O – Originator. Refer to <a href="https://docs.developer.paynet.my/docs/duitnow/mappingtable#originator-code" target="_blank"> <b style="color:blue;">Originator</b> </a> </li>
+                <li>CC – Channel Code. Refer to <a href="https://docs.developer.paynet.my/docs/duitnow/mappingtable#channel-code" target="_blank"> <b style="color:blue;">Channel Code</b> </a> </li>
+                <li>SSSSSSSS – Sequence Number</li>
+                <br> </br>Channel Code set as RB.
+            createdDateTime :
+              type: string
+              description: <b>Creation Date Time </b> <br></br> Must be in Malaysia Standard Time format of message creation date and time.
+              format : yyyy-MM-ddTHH:mm:ss.SSS
+            proxy:
+              $ref: "#/components/schemas/proxy"
+            registrationId:
+              maxLength: 35
+              type: string
+              description: "Registration Identification \n\n
+                Unique identification assigned by RPP to the proxy during registration \n\n
+                - For **New Registration**, this is not required \n\n
+                - For other types, this is mandatory to identify the record to be changed"
+      
+    nadAdminResponse:
+      type: object
+      required: 
+        -  data
+      properties: 
+        data:
+          allOf: 
+            - $ref: "./base.yml#/components/schemas/baseDataResponse"
+            - type: object
+              required: 
+                - code
+                - registrationId
+              properties:
+                registrationId:
+                  type: string
+                  maxLength: 35
+                  description: "Registration Identification \n\n
+                  - For **New Registration** and **Proxy Transfer**, this is new Registration Id generated by RPP \n\n
+                  - For other types, RPP will return the existing Registration Id"
+    
+    nadEnquiryResponse:
+      type: object
+      required: 
+        - data
+      properties: 
+        data:
+          allOf: 
+            - $ref: "./base.yml#/components/schemas/baseDataResponse"
+            - type: object
+              required: 
+                - code
+                - response
+              properties: 
+                response:
+                  $ref: "#/components/schemas/enquiryResponse"
+              
+    nadLookupResponse:
+      type: object
+      required: 
+        - data
+      properties: 
+        data:
+          allOf: 
+            - $ref: "./base.yml#/components/schemas/baseDataResponse"
+            - type: object
+              required: 
+                - businessMessageId
+                - code
+                - proxy
+                - registrationId
+                - displayName
+                - account
+              properties: 
+                proxy:
+                  allOf: 
+                    - $ref: "#/components/schemas/proxy"
+                    - type: object
+                      properties: 
+                        value:
+                          description: "Proxy Value \n\n
+                            Masked with **** except last 4 characters in the event OFI is not the owner of the proxy"
+                        
+                registrationId:
+                  type: string
+                  maxLength: 35
+                  description: Registration Identification                  
+                displayName:
+                  type: string
+                  maxLength: 140
+                  description: Display Name
+                account:
+                  description: Account
+                  required:
+                    - id
+                    - type 
+                    - name
+                  allOf: 
+                    - $ref: "./base.yml#/components/schemas/account"
+                    - type: object
+                      properties: 
+                        agentId:
+                          type: string
+                          maxLength: 8
+                          description: "Agent Identification \n\n
+                            BIC of the FI owning the proxy \n\n
+                            Masked with **** except last 4 characters in the event OFI is not the owner of the proxy"
+                        id:
+                          description: "Identification \n\n
+                            Account number of the proxy \n\n
+                            Masked with **** except last 4 characters in the event OFI is not the owner of the proxy"
+                        type:
+                          enum: ["SVGS", "CACC"]
+                          description: "Account Type \n\n
+                            Supported types are: \n\n
+                            -	SVGS – Savings Account \n\n
+                            -	CACC – Current Account"
+                        name:
+                          maxLength: 140
+                          type: string
+                          description: "Name \n\n
+                            Account name of the proxy"
+              
+    nadNotificationRequest:
+      type: object
+      properties: 
+        data:
+          type: object
+          properties: 
+            businessMessageId:
+              type: string
+              description: Unique business message identification
+            createdDateTime :
+              type: string
+              description: <b>Creation Date Time </b> <br></br> Must be in Malaysia Standard Time format of message creation date and time.
+              format : yyyy-MM-ddTHH:mm:ss.SSS
+            originalId:
+              type: string
+              description: Original notification identification
+            originalProxy: 
+              $ref: "#/components/schemas/proxy"
+            originalAccount:
+              description: Original Account
+              type: object
+              properties: 
+                registrationId:
+                  type: string
+                  maxLength: 35
+                  description: Registration Identification
+                displayName:
+                  type: string
+                  description: Display Name
+                account:
+                  description: Account
+                  required: 
+                    - id
+                    - type
+                    - agentId
+                    - name
+                  allOf: 
+                    - $ref: "./base.yml#/components/schemas/account"
+                    - type: object
+                      properties: 
+                        id:
+                          description: "Identification \n\n
+                            Account number"
+                        type:
+                          enum: ["SVGS", "CACC"]
+                          description: "Account Type \n\n
+                            Supported types are: \n\n
+                            -	SVGS – Savings Account \n\n
+                            -	CACC – Current Account" 
+                        agentId:
+                          type: string
+                          maxLength: 8
+                          description: "Agent Identification \n\n
+                            BIC of the FI where the proxy is registered"
+                        name: 
+                          type: string
+                          description: Account name
+            newAccount:
+              description: New Account
+              type: object
+              properties: 
+                registrationId:
+                  type: string
+                  maxLength: 35
+                  description: New Registration Identification
+                displayName:
+                  type: string
+                  description: Display Name
+                account:
+                  description: Account
+                  required: 
+                    - id
+                    - type
+                    - agentId
+                    - name
+                  allOf: 
+                    - $ref: "./base.yml#/components/schemas/account"
+                    - type: object
+                      properties: 
+                        id:
+                          description: "Identification \n\n
+                            Account number"
+                        type:
+                          enum: ["SVGS", "CACC"]
+                          description: "Account Type \n\n
+                            Supported types are: \n\n
+                            -	SVGS – Savings Account \n\n
+                            -	CACC – Current Account"
+                        agentId:
+                          type: string
+                          maxLength: 8
+                          description: "Agent Identification \n\n
+                            BIC of the FI where the proxy is registered"
+                        name: 
+                          type: string
+                          description: Account name
+
+    nadRegistrationRequest:
+      type: object
+      required: 
+        -  data
+      properties: 
+        data:
+          required: 
+            - businessMessageId
+            - proxy
+            - account
+            - secondaryId
+          properties: 
+            businessMessageId:
+              maxLength: 35
+              type: string
+              format: "YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS "
+              description: <b>Business Message Identification</b><br></br> Unique message identification. Format YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS
+                where <li>YYYYMMDD – Current Date</li>
+                <li>BBBBBBBB – BIC Code</li>
+                <li>XXX – Transaction Code. Set to <b>710</b>. Refer to <a href="https://docs.developer.paynet.my/docs/duitnowqr/transactiontype/index.html" target="_blank"> <b style="color:blue;">Transaction Code</b> </a> </li>
+                <li>O – Originator. Refer to <a href="https://docs.developer.paynet.my/docs/duitnow/mappingtable#originator-code" target="_blank"> <b style="color:blue;">Originator</b> </a> </li>
+                <li>CC – Channel Code. Refer to <a href="https://docs.developer.paynet.my/docs/duitnow/mappingtable#channel-code" target="_blank"> <b style="color:blue;">Channel Code</b> </a> </li>
+                <li>SSSSSSSS – Sequence Number</li>
+                <br> </br> Channel set as RB.
+            createdDateTime :
+              type: string
+              description: <b>Creation Date Time </b> <br></br> Must be in Malaysia Standard Time format of message creation date and time.
+              format : yyyy-MM-ddTHH:mm:ss.SSS
+            proxy:
+              $ref: "#/components/schemas/proxy"
+            account:
+              description: Account
+              required: 
+                - id
+                - type
+                - name
+              allOf: 
+                - $ref: "./base.yml#/components/schemas/account"
+                - type: object
+                  properties: 
+                    id:
+                      description: "Identification \n\n
+                        Account number linked to the proxy \n\n
+                        Mandatory for **New Registration**. Mandatory for **Update Proxy** if the field to be amended is account number"
+                    type:
+                      enum: ["SVGS", "CACC"]
+                      description: "Account Type \n\n
+                        Account type linked to the proxy \n\n
+                        Supported types are: \n\n
+                        -	SVGS – Savings Account \n\n
+                        -	CACC – Current Account \n\n
+                        
+                        Mandatory for **New Registration**. Mandatory for **Update Proxy** if the field to be amended is account number"
+                    name:
+                      maxLength: 140
+                      type: string
+                      description: "Name \n\n
+                        Account name of the proxy"
+                    accountHolderType:
+                      type: string
+                      enum: ["S", "J"]
+                      description: "Account Holder Type \n\n
+                        Supported types are: \n\n
+                        - S - Single Account \n\n
+                        - J - Join Account \n\n"
+            secondaryId:
+              $ref: "#/components/schemas/secondaryIdentification"
+              
+    nadTransferRequest:
+      type: object
+      required: 
+        -  data
+      properties: 
+        data:
+          required: 
+            - businessMessageId
+            - registrationId
+            - proxy
+            - account
+          properties: 
+            businessMessageId:
+              maxLength: 35
+              type: string
+              format: "YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS"
+              description: <b>Business Message Identification</b><br></br> Unique message identification. Format YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS
+                where <li>YYYYMMDD – Current Date</li>
+                <li>BBBBBBBB – BIC Code</li>
+                <li>XXX – Transaction Code. Set to <b>710</b>. Refer to <a href="https://docs.developer.paynet.my/docs/duitnowqr/transactiontype/index.html" target="_blank"> <b style="color:blue;">Transaction Code</b> </a> </li>
+                <li>O – Originator. Refer to <a href="https://docs.developer.paynet.my/docs/duitnow/mappingtable#originator-code" target="_blank"> <b style="color:blue;">Originator</b> </a> </li>
+                <li>CC – Channel Code. Refer to <a href="https://docs.developer.paynet.my/docs/duitnow/mappingtable#channel-code" target="_blank"> <b style="color:blue;">Channel Code</b> </a> </li>
+                <li>SSSSSSSS – Sequence Number</li>
+                <br></br>Channel set as RB.
+            createdDateTime :
+              type: string
+              description: <b>Creation Date Time </b> <br></br> Must be in Malaysia Standard Time format of message creation date and time.
+              format : yyyy-MM-ddTHH:mm:ss.SSS
+            proxy:
+              $ref: "#/components/schemas/proxy"
+            registrationId:
+              maxLength: 35
+              type: string
+              description: "Registration Identification \n\n
+                Unique identification assigned by RPP to the proxy during registration \n\n
+                - For **New Registration**, this is not required \n\n
+                - For other types, this is mandatory to identify the record to be changed"
+            account:
+              description: Account
+              required: 
+                - id
+                - type
+                - name
+              allOf: 
+                - $ref: "./base.yml#/components/schemas/account"
+                - type: object
+                  properties: 
+                    id:
+                      description: "Identification \n\n
+                        Account number linked to the proxy \n\n
+                        Mandatory for **New Registration**. Mandatory for **Update Proxy** if the field to be amended is account number"
+                    type:
+                      enum: ["SVGS", "CACC"]
+                      description: "Account Type \n\n
+                        Account type linked to the proxy \n\n
+                        Supported types are: \n\n
+                        -	SVGS – Savings Account \n\n
+                        -	CACC – Current Account \n\n
+                        
+                        Mandatory for **New Registration**. Mandatory for **Update Proxy** if the field to be amended is account number"
+                    name:
+                      maxLength: 140
+                      type: string
+                      description: "Name \n\n
+                        Account name of the proxy"
+                    accountHolderType:
+                      type: string
+                      enum: ["S", "J"]
+                      description: "Account Holder Type \n\n
+                        Supported types are: \n\n
+                        - S - Single Account \n\n
+                        - J - Join Account \n\n"
+            secondaryId:
+              $ref: "#/components/schemas/secondaryIdentification"
+
+    nadUpdateRequest:
+      type: object
+      required: 
+        -  data
+      properties: 
+        data:
+          required: 
+            - businessMessageId
+            - registrationId
+            - proxy
+            - account
+          properties: 
+            businessMessageId:
+              maxLength: 35
+              type: string
+              format: "YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS"
+              description: <b>Business Message Identification</b><br></br> Unique message identification. Format YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS
+                where <li>YYYYMMDD – Current Date</li>
+                <li>BBBBBBBB – BIC Code</li>
+                <li>XXX – Transaction Code. Set to <b>720</b>. Refer to <a href="https://docs.developer.paynet.my/docs/duitnowqr/transactiontype/index.html" target="_blank"> <b style="color:blue;">Transaction Code</b> </a> </li>
+                <li>O – Originator. Refer to <a href="https://docs.developer.paynet.my/docs/duitnow/mappingtable#originator-code" target="_blank"> <b style="color:blue;">Originator</b> </a> </li>
+                <li>CC – Channel Code. Refer to <a href="https://docs.developer.paynet.my/docs/duitnow/mappingtable#channel-code" target="_blank"> <b style="color:blue;">Channel Code</b> </a> </li>
+                <li>SSSSSSSS – Sequence Number</li>
+                <br></br>Channel Code set as RB
+            createdDateTime :
+              type: string
+              description: <b>Creation Date Time </b> <br></br> Must be in Malaysia Standard Time format of message creation date and time.
+              format : yyyy-MM-ddTHH:mm:ss.SSS
+            registrationId:
+              maxLength: 35
+              type: string
+              description: "Registration Identification \n\n
+                Unique identification assigned by RPP to the proxy during registration \n\n
+                - For **New Registration**, this is not required \n\n
+                - For other types, this is mandatory to identify the record to be changed"
+            proxy:
+              $ref: "#/components/schemas/proxy"
+            account:
+              description: Account
+              required: 
+                - id
+                - type
+                - name
+              allOf: 
+                - $ref: "./base.yml#/components/schemas/account"
+                - type: object
+                  properties: 
+                    id:
+                      description: "Identification \n\n
+                        Account number linked to the proxy \n\n
+                        Mandatory for **New Registration**. Mandatory for **Update Proxy** if the field to be amended is account number"
+                    type:
+                      enum: ["SVGS", "CACC"]
+                      description: "Account Type \n\n
+                        Account type linked to the proxy \n\n
+                        Supported types are: \n\n
+                        -	SVGS – Savings Account \n\n
+                        -	CACC – Current Account \n\n
+                        
+                        Mandatory for **New Registration**. Mandatory for **Update Proxy** if the field to be amended is account number"
+                    name:
+                      maxLength: 140
+                      type: string
+                      description: "Name \n\n
+                        Account name of the proxy"
+                    accountHolderType:
+                      type: string
+                      enum: ["S", "J"]
+                      description: "Account Holder Type \n\n
+                        Supported types are: \n\n
+                        - S - Single Account \n\n
+                        - J - Join Account \n\n"
+
+    proxy:
+      type: object
+      description: "Proxy"
+      required: 
+        - type
+        - value
+      properties: 
+        type:
+          type: string
+          enum: ["NRIC", "PSPT", "BREG", "MBNO", "ARMN"]
+          description: Proxy Type . <br /><br />Refer to <a style="color:blue;" href="https://docs.developer.paynet.my/docs/duitnow/mappingtable#proxy-type-prxytp" target="_blank"><b>Mapping Table</b></a>
+        value:
+          type: string
+          maxLength: 140
+          description: "Proxy value \n\n
+          
+          Proxy value to be registered \n\n
+          - For NRIC/Passport Number/Business Registration Number/Army Number – do not include hyphens (only alphanumeric characters) \n\n
+          - For Passport Number – it should follow with the ALPHA-3 country code of the country of issuance. E.g. E394029340VSGP. Refer to this list for the ALPHA-3 Country codes https://www.iso.org/obp/ui/#search \n\n
+          - For Mobile Number – <International Dialing Code preceding with '+'> plus <up to 15-digit Mobile Number> *** include the full mobile number (including country code/area code) in the field e.g. +60104940394. Refer to this list for the international dialing country codes https://countrycode.org/"
+
+    secondaryIdentification:
+      type: object
+      description: Secondary Identification
+      required: 
+        - type
+        - value
+      properties: 
+        type:
+          type: string
+          enum: ["NRIC", "PSPT", "BREG"]
+          description: "Type \n\n
+            Customer identification type of the proxy belonging to \n\n
+            -	NRIC – NRIC Number \n\n
+            -	PSPT – Passport Number \n\n
+            -	BREG – Business Registration Number \n\n
+            
+            Mandatory for **New Registration** and **Transfer Proxy** only"          
+        value:
+          type: string
+          maxLength: 35
+          description: "Value \n\n
+            Customer identification of the proxy belonging to \n\n
+            Please omit dashes \n\n
+            
+            Mandatory for **New Registration** and **Transfer Proxy** only"
+
+  securitySchemes:
+    bearerAuth:
+      $ref: './base.yml#/components/securitySchemes/bearerAuth'

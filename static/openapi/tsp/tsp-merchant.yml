@@ -1,0 +1,1364 @@
+openapi: 3.0.1
+info:
+  title: Tokenisation Services for Acquirer/Merchant
+  description: |
+    PayNet TSP allows a token requestor to tokenise Funding PAN (FPAN) or Account PAN (Primary Account Number) entered by consumers or existing CoF (Cards on File), replacing each PAN with a unique token number which is issued by PayNet TSP.
+  
+    These tokens can be used for online-transaction in the same way as FPAN, such as ecommerce and in-app transactions. Since additional cryptogram / token data are available, tokenisation transactions are more secure compared to existing online FPAN transactions
+   
+    Merchants are required to obtain a unique Token Requester ID (TR_ID) by signing up to this program in order to get started with PayNet TSP. Please follow the steps below in the API overview and integration tutorial for more information. 
+    
+    ### Who Should Use
+    This API should only be used by merchants and banks as the Acquirer.
+  version: v1, v2
+servers:
+- url: https://mock.developer.paynet.my/merchant-api/v1
+- url: https://mock.developer.paynet.my/merchant-api/v2
+paths:
+  /token: {}
+  /token/provision:
+    post:
+      description: This API can be used to digitize a real card number to create a
+        Cloud-based Token (e-commerce, or in-app).
+      servers:
+      - url: https://mock.developer.paynet.my/merchant-api/v2
+      operationId: Token Provisioning
+      parameters:
+      - name: Authorization
+        in: header
+        description: Authorization Header with format apiVersion:apiKey:timestamp:signature
+        required: true
+        schema:
+          pattern: ^[a-zA-Z0-9]*$
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/tokenProvisionRequestSchema'
+        required: false
+      responses:
+        200:
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/tokenProvisionResponseSchema'
+          x-amf-mediaType: application/json
+        401:
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error401'
+          x-amf-mediaType: application/json
+        403:
+          description: ""
+          content:
+            application/json:
+              schema:
+                # type: object
+          x-amf-mediaType: application/json
+        404:
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error404'
+                type: object
+          x-amf-mediaType: application/json
+        500:
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error500'
+                type: object
+          x-amf-mediaType: application/json
+        503:
+          description: ""
+          content:
+            application/json:
+              schema:
+          x-amf-mediaType: application/json
+      x-codegen-request-body-name: generated
+  /token/data:
+    post:
+      description: This API can be used by the Token Requestor to obtain transaction
+        credential or cryptogram.
+      servers:
+      - url: https://mock.developer.paynet.my/merchant-api/v2
+      operationId: Get Token (Payment) Data
+      parameters:
+      - name: Authorization
+        in: header
+        description: Authorization Header with format apiVersion:apiKey:timestamp:signature
+        required: true
+        schema:
+          pattern: ^[a-zA-Z0-9]*$
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/tokenDataRequestSchema'
+        required: false
+      responses:
+        200:
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/tokenDataResponseSchema'
+          x-amf-mediaType: application/json
+        401:
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error401'
+          x-amf-mediaType: application/json
+        403:
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: object
+          x-amf-mediaType: application/json
+        404:
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error404'
+                type: object
+          x-amf-mediaType: application/json
+        500:
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error500'
+                type: object
+          x-amf-mediaType: application/json
+        503:
+          description: ""
+          content:
+            application/json:
+              schema:
+          x-amf-mediaType: application/json
+      x-codegen-request-body-name: generated
+  /token/suspend:
+    post:
+      description: This API can be used by the Token Requestor to temporarily suspend a
+        token.
+      servers:
+      - url: https://mock.developer.paynet.my/merchant-api/v2
+      operationId: Suspend Token
+      parameters:
+      - name: Authorization
+        in: header
+        description: Authorization Header with format apiVersion:apiKey:timestamp:signature
+        required: true
+        schema:
+          pattern: ^[a-zA-Z0-9]*$
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/tokenLifecycleRequestSchema'
+        required: false
+      responses:
+        200:
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/tokenLifecycleResponseSchema'
+          x-amf-mediaType: application/json
+        401:
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error401'
+          x-amf-mediaType: application/json
+        403:
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: object
+          x-amf-mediaType: application/json
+        404:
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error404'
+                type: object
+          x-amf-mediaType: application/json
+        500:
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error500'
+                type: object
+          x-amf-mediaType: application/json
+        503:
+          description: ""
+          content:
+            application/json:
+              schema:
+          x-amf-mediaType: application/json
+      x-codegen-request-body-name: generated
+  /token/resume:
+    post:
+      description: This can be used by a Token Requestor to resume a suspended token.
+      servers:
+      - url: https://mock.developer.paynet.my/merchant-api/v2
+      operationId: Resume Token
+      parameters:
+      - name: Authorization
+        in: header
+        description: Authorization Header with format apiVersion:apiKey:timestamp:signature
+        required: true
+        schema:
+          pattern: ^[a-zA-Z0-9]*$
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/tokenLifecycleRequestSchema'
+        required: false
+      responses:
+        200:
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/tokenLifecycleResponseSchema'
+          x-amf-mediaType: application/json
+        401:
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error401'
+          x-amf-mediaType: application/json
+        403:
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: object
+          x-amf-mediaType: application/json
+        404:
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error404'
+                type: object
+          x-amf-mediaType: application/json
+        500:
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error500'
+                type: object
+          x-amf-mediaType: application/json
+        503:
+          description: ""
+          content:
+            application/json:
+              schema:
+          x-amf-mediaType: application/json
+      x-codegen-request-body-name: generated
+  /token/delete:
+    post:
+      description: This API can be used by the Token Requestor to delete a token.
+      servers:
+      - url: https://mock.developer.paynet.my/merchant-api/v2
+      operationId: Delete Token
+      parameters:
+      - name: Authorization
+        in: header
+        description: Authorization Header with format apiVersion:apiKey:timestamp:signature
+        required: true
+        schema:
+          pattern: ^[a-zA-Z0-9]*$
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/tokenLifecycleRequestSchema'
+        required: false
+      responses:
+        200:
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/tokenLifecycleResponseSchema'
+          x-amf-mediaType: application/json       
+        401:
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error401'
+          x-amf-mediaType: application/json
+        403:
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: object
+          x-amf-mediaType: application/json
+        404:
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error404'
+                type: object
+          x-amf-mediaType: application/json
+        500:
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error500'
+                type: object
+          x-amf-mediaType: application/json
+        503:
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: object
+          x-amf-mediaType: application/json
+      x-codegen-request-body-name: generated
+  /token/status:
+    post:
+      description: This API can be used by the Token Requestor to check the status
+        of a token.
+      servers:
+      - url: https://mock.developer.paynet.my/merchant-api/v1
+      operationId: Get Token Status
+      parameters:
+      - name: Authorization
+        in: header
+        description: Authorization Header with format apiVersion:apiKey:timestamp:signature
+        required: true
+        schema:
+          pattern: ^[a-zA-Z0-9]*$
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/tokenStatusRequestSchema'
+        required: false
+      responses:
+        200:
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/tokenLifecycleResponseSchema'
+          x-amf-mediaType: application/json
+        401:
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error401'
+          x-amf-mediaType: application/json
+        403:
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: object
+          x-amf-mediaType: application/json
+        404:
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error404'
+                type: object
+          x-amf-mediaType: application/json
+        500:
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error500'
+                type: object
+          x-amf-mediaType: application/json
+        503:
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: object
+          x-amf-mediaType: application/json
+      x-codegen-request-body-name: generated
+  /card: {}
+  /card/metadata:
+    post:
+      description: This API can be used by a Token Requestor to retrieve the static
+        via the Token Reference ID.
+      servers:
+      - url: https://mock.developer.paynet.my/merchant-api/v1
+      operationId: Get Card Metadata
+      parameters:
+      - name: Authorization
+        in: header
+        description: Authorization Header with format apiVersion:apiKey:timestamp:signature
+        required: true
+        schema:
+          pattern: ^[a-zA-Z0-9]*$
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/cardMetadataRequestSchema'
+        required: false
+      responses:
+        200:
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/tokenLifecycleResponseSchema'
+          x-amf-mediaType: application/json
+        401:
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error401'
+          x-amf-mediaType: application/json
+        403:
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: object
+          x-amf-mediaType: application/json
+        404:
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error404'
+                type: object
+          x-amf-mediaType: application/json
+        500:
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error500'
+                type: object
+          x-amf-mediaType: application/json
+        503:
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: object
+          x-amf-mediaType: application/json
+      x-codegen-request-body-name: generated
+  /notification: {}
+  /notification/details:
+    post:
+      description: Merchant needs to publish a callback endpoint to receive notification
+        from TSP.
+      servers:
+      - url: https://mock.developer.paynet.my/merchant-api/v1
+      operationId: Get Notification Details
+      parameters:
+      - name: Authorization
+        in: header
+        description: Authorization Header with format apiVersion:apiKey:timestamp:signature
+        required: true
+        schema:
+          pattern: ^[a-zA-Z0-9]*$
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/notificationDetailsRequestSchema'
+        required: false
+      responses:
+        200:
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/tokenLifecycleResponseSchema'
+          x-amf-mediaType: application/json
+        401:
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error401'
+          x-amf-mediaType: application/json
+        403:
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: object
+          x-amf-mediaType: application/json
+        404:
+          description: ""
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/error404'
+                type: object
+          x-amf-mediaType: application/json
+        500:
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error500'
+                type: object
+          x-amf-mediaType: application/json
+        503:
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: object
+          x-amf-mediaType: application/json
+      x-codegen-request-body-name: generated
+
+  /CNP/MY/Notification: {}
+  /CNP/MY/Notification/TokenUpdatedStatus:
+    post:
+      description: Token Requestor will be informed about the status change of token
+        PAN such as activation, suspension and deletion. Merchant needs to publish
+        a callback endpoint to receive this notification.
+      servers:
+      - url: https://mock.developer.paynet.my/merchant-api/v1       
+      operationId: Token Updated Notification
+      tags:
+        - Webhook
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/tokenUpdatedRequestSchema'
+        required: false
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/tokenUpdatedResponseSchema'
+          x-amf-mediaType: application/json
+      x-outbound: true
+      x-outboundUrl: https://<domain>
+      x-codegen-request-body-name: generated
+  /CNP/MY/Notification/CardMetaDataUpdatedNotification:
+    post:
+      description: A notification is sent from TSP to Token Requestor. Token Requestor
+        will be informed about the changes of card metadata
+      servers:
+      - url: https://mock.developer.paynet.my/merchant-api/v1
+      tags:
+        - Webhook
+      operationId: Card Metadata Update Notification
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/cardMetadataUpdatedNotificationRequestSchema'
+        required: false
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/cardMetadataUpdatedNotificationResponseSchema'
+          x-amf-mediaType: application/json
+      x-outbound: true
+      x-outboundUrl: https://<domain>
+      x-codegen-request-body-name: generated     
+      
+webhooks:
+  Token Updated Notification:
+    post:
+      description: Token Requestor will be informed about the status change of token
+        PAN such as activation, suspension and deletion. Merchant needs to publish
+        a callback endpoint to receive this notification.
+      operationId: Token Updated Notification
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/tokenUpdatedRequestSchema'
+        required: false
+      responses:
+        200:
+          description: ""
+          content: {}
+      x-outbound: true
+      x-outboundUrl: https://<domain>
+      x-codegen-request-body-name: generated
+      
+  Card Metadata Update Notification:
+    post:
+      description: A notification is sent from TSP to Token Requestor. Token Requestor
+        will be informed about the changes of card metadata
+      operationId: Card Metadata Update Notification
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/cardMetadataUpdatedNotificationRequestSchema'
+        required: false
+      responses:
+        200:
+          description: ""
+          content: {}
+      x-outbound: true
+      x-outboundUrl: https://<domain>
+      x-codegen-request-body-name: generated
+components:
+  schemas:
+    tokenProvisionRequestSchema:
+      required:
+      - enc_pan_data
+      - pan_source
+      - presentation_type
+      - protection_type
+      - request_id
+      - token_requestor_id
+      type: object
+      properties:
+        request_id:
+          maxLength: 36
+          type: string
+          description: Unique request identification number
+        enc_pan_data:
+          type: string
+          description: Random IV + Encrypted JSON string of the below parameters
+                  <li>pan – Credict Card Number</li> 
+                  <li>pan_cvv – CVV/CVV2</li>
+                  <li>pan_expiry_date – Expiry date (YYYYMM)</li>
+        token_requestor_id:
+          maxLength: 11
+          type: string
+          description: Merchant’s Token Requestor Id (TR_ID)
+        pan_source:
+          maxLength: 30
+          type: string
+          description: |
+            Source of PAN
+            <li>ONFILE – For tokenized card or Card-on-File</li>
+            <li>MANUALLY_ENTERED – Manually entered during first time provisioning</li>
+        protection_type:
+          maxLength: 30
+          type: string
+          description: |
+            Protection type
+            <li>CLOUD – By Cloud application</li>
+            <li>TEE – Mobile proximity payment via NFC (not used)</li>
+            <li>SE – Mobile proximity payment via NFC (not used)</li>
+            <li>SOFTWARE – Software based</li>
+        presentation_type:
+          maxLength: 30
+          type: string
+          description: |
+            Presentation type
+            <li>ECOM – Used for eCommerce transaction</li>
+            <li>QR_CONSUMER_CLOUD – Used for QR transaction (currently not used)</li>
+        billing_address:
+          type: object
+          properties:
+            line1:
+              maxLength: 100
+              type: string
+              description: Line 1 of billing address
+            line2:
+              maxLength: 100
+              type: string
+              description: Line 2 of billing address
+            state:
+              maxLength: 30
+              type: string
+              description: State name
+            country:
+              maxLength: 30
+              type: string
+              description: Country name
+            city:
+              maxLength: 30
+              type: string
+              description: City
+            postcode:
+              maxLength: 5
+              type: string
+              description: Postcode
+          description: Billing address
+      example:
+        request_id: REQ0001585039870815
+        enc_pan_data: IfWEg5E76jjjRCyOZoW/XGjB4nbUmhG2O4YfPlsuRUqks3GB8nIfCwLAxV2wuUENDilJRlX7gmnKrugRofKHHbxV
+          G1ACx2QxmnurYBZNHrk=
+        token_requestor_id: TR230202925
+        pan_source: ONFILE
+        protection_type: CLOUD
+        presentation_type: ECOM
+        billing_address:
+          line1: No. 3000
+          line2: Jalan Stark
+          state: Selangor
+          country: Malaysia
+          city: Iron City
+          postcode: "52000"
+    tokenProvisionResponseSchema:
+      required:
+      - enc_token_data
+      - masked_pan
+      - message
+      - response_id
+      - status
+      type: object
+      properties:
+        status:
+          maxLength: 3
+          type: string
+          description: Response code
+        message:
+          type: string
+          description: Response message
+        response_id:
+          maxLength: 36
+          type: string
+          description: Unique response identification number
+        enc_token_data:
+          type: string
+          description: Random IV + Encrypted JSON string of the below parameters
+            <li>token_reference_id  – Reference ID for this token </li>
+            <li>token_pan  – Token PAN </li>
+            <li>token_pan_expiry_date   – Expiry date (YYYYMM)  </li>
+        masked_pan:
+          maxLength: 19
+          type: string
+          description: Masked PAN (first 6 digits and last 4 digits will not be masked)
+      example:
+        status: "200"
+        message: Success
+        response_id: TSP1FZF3SBiVQRdBBicF
+        enc_token_data: rvgsjVWcp5KcOUPbd5fgG6tRTHGaWQy+28I5yNQFdkizDvGFv7MWqOQqxaw+S2pXBb+hrZwomoaUj2PC2
+          /csyl9Q1hxLoSPkmj7k5pxigmWOPgK6PfnqrWNPHPRkXmOsIE9urk/VOgvyEjj9njTu+NgolhHtuud4c63ni6t3e
+          HvYWdoroKLVY1WyGePjbWrD
+        masked_pan: 431234******3346
+    error401:
+      required:
+      - message
+      - status
+      type: object
+      properties:
+        status:
+          type: string
+          description: Error code
+        message:
+          type: string
+          description: Error code description
+      example:
+        status: "601"
+        message: Invalid API key
+    error404:
+      required:
+      - status
+      - error
+      - path
+      - timestamp
+      type: object
+      properties:
+        timestamp:
+          type: string
+          description: Time Stamp      
+        status:
+          type: string
+          description: Error code
+        error:
+          type: string
+          description: Error code description
+        path:
+          type: string
+          description: API url Path          
+      example:
+        timestamp: "2023-07-10T08:02:26.855+00:00"
+        status: "404"
+        error: Not Found
+        path: /nnn-/v1/nnn
+    error500:
+      required:
+      - status
+      - error
+      - path
+      - timestamp
+      type: object
+      properties:
+        timestamp:
+          type: string
+          description: Time Stamp      
+        status:
+          type: string
+          description: Error code
+        error:
+          type: string
+          description: Error code description
+        path:
+          type: string
+          description: API url Path          
+      example:
+        timestamp: "2023-07-10T08:02:26.855+00:00"
+        status: "500"
+        error: Internal Server Error
+        path: /nnn-/v1/nnn
+    tokenDataRequestSchema:
+      required:
+      - request_id
+      - token_reference_id
+      type: object
+      properties:
+        request_id:
+          maxLength: 36
+          type: string
+          description: Unique request identification number
+        token_reference_id:
+          maxLength: 36
+          type: string
+          description: Token reference identification for Paynet TSP
+      example:
+        request_id: REQ0001585041757788
+        token_reference_id: 179b0d32-a6c8-4b97-b4ed-3a80a34ece38
+    tokenDataResponseSchema:
+      required:
+      - card_scheme
+      - enc_token_data
+      - masked_pan
+      - message
+      - response_id
+      - status
+      type: object
+      properties:
+        response_id:
+          maxLength: 36
+          type: string
+          description: Unique response identification number
+        status:
+          maxLength: 3
+          type: string
+          description: Response code
+        message:
+          type: string
+          description: Response message
+        masked_pan:
+          maxLength: 19
+          type: string
+          description: Masked PAN (the first 6 digits and last 4 digits will not be
+            masked) 
+        card_scheme:
+          maxLength: 4
+          type: string
+          description: Card scheme code
+        enc_token_data:
+          type: string
+          description: Random IV + Encrypted JSON string of the below parameters
+            <li>token_pan   – Token PAN  </li>
+            <li>token_pan_expiry_date   – Token Expiry date (YYYYMM) </li>
+            <li>cryptogram   – Online Payment Cryptogram (PTAV)   </li>
+      example:
+        status: "200"
+        message: Success
+        response_id: TSP1FZF3WRKJkpETIUNi
+        masked_pan: 531234********3507
+        card_scheme: MCCS
+        enc_token_data: 1QEPtWrI/GtlrUmwLjZwrh8C90vUajae+KeheT+ddQclca3bCQEzAYNwSyielkVDOeu01bYrHCa0OwTWRrWt8mS
+          gqA8k7fUQ6DXxB/rkIFiPy/YXXe+eglDSUC24Xe8EnZI5XGGA3CvEOiBAy5/XjARpzdORFJtwGdNkaCozAix2+SugI
+          0L/0uPslq6Ado65
+    tokenLifecycleRequestSchema:
+      required:
+      - caused_by
+      - reason
+      - reason_code
+      - request_id
+      - token_reference_id
+      type: object
+      properties:
+        request_id:
+          maxLength: 36
+          type: string
+          description: Unique request identification number
+        token_reference_id:
+          maxLength: 36
+          type: string
+          description: Token reference identification
+        reason:
+          type: string
+          description: Reason description
+        caused_by:
+          maxLength: 30
+          type: string
+          description: |
+            Requested by
+            <li>CARD_HOLDER – Cardholder</li>
+            <li>TOKEN_REQUESTOR – Token requestor</li>
+        reason_code:
+          maxLength: 30
+          type: string
+          description: |-
+            Reason code
+            <li>FRAUD – Fraud case</li>
+            <li>CUSTOMER_CONFIRMED – Confirmed by customer</li>
+      example:
+        request_id: REQ0001585041757788
+        token_reference_id: 7eae66a4-4f63-44d1-9913-b117a227a08e
+        reason: Fraud reported by card holder
+        caused_by: CARD_HOLDER
+        reason_code: FRAUD
+    tokenLifecycleResponseSchema:
+      required:
+      - message
+      - response_id
+      - status
+      type: object
+      properties:
+        status:
+          maxLength: 3
+          type: string
+          description: Response code
+        message:
+          type: string
+          description: Response message
+        response_id:
+          maxLength: 36
+          type: string
+          description: Unique response identification number
+      example:
+        status: "200"
+        message: Success
+        response_id: TSP1FZF3Y5GThRcZMTlQ
+    tokenStatusRequestSchema:
+      required:
+      - request_id
+      - token_reference_id
+      type: object
+      properties:
+        request_id:
+          maxLength: 36
+          type: string
+          description: Unique request identification number
+        token_reference_id:
+          maxLength: 36
+          type: string
+          description: Token reference identification
+      example:
+        request_id: REQ0001585041757788
+        token_reference_id: 179b0d32-a6c8-4b97-b4ed-3a80a34ece38
+    tokenStatusResponseSchema:
+      required:
+      - message
+      - response_id
+      - status
+      - token_pan_expiry_date
+      - token_pan_status
+      type: object
+      properties:
+        status:
+          maxLength: 3
+          type: string
+          description: Response code
+        message:
+          type: string
+          description: Response message
+        response_id:
+          maxLength: 36
+          type: string
+          description: Unique response identification number
+        token_pan_status:
+          maxLength: 30
+          type: string
+          description: |
+            Status of PAN
+            <li>ACTIVE</li>
+            <li>SUSPENDED</li>
+            <li>SUSPENDED_BY_ISSUER</li>
+            <li>DELETED</li>
+            <li>NOT_EXIST</li>
+        token_pan_expiry_date:
+          maxLength: 6
+          type: string
+          description: Token expiry date in YYYYMM format
+      example:
+        status: "200"
+        message: Success
+        response_id: TSP1FZF3aUM2M3F5JldA
+        token_pan_status: ACTIVE
+        token_pan_expiry_date: "202110"
+    cardMetadataRequestSchema:
+      required:
+      - request_id
+      - token_reference_id
+      type: object
+      properties:
+        request_id:
+          maxLength: 36
+          type: string
+          description: Unique request identification number
+        token_reference_id:
+          maxLength: 36
+          type: string
+          description: Token reference identification
+      example:
+        request_id: REQ0001585041757788
+        token_reference_id: 179b0d32-a6c8-4b97-b4ed-3a80a34ece38
+    cardMetadataResponseSchema:
+      required:
+      - card_metadata
+      - message
+      - response_id
+      - status
+      type: object
+      properties:
+        status:
+          maxLength: 3
+          type: string
+          description: Response code
+        message:
+          type: string
+          description: Response message
+        response_id:
+          maxLength: 36
+          type: string
+          description: Unique response identification number
+        card_metadata:
+          required:
+          - card_bin_id
+          - description
+          - foreground_color
+          - image_height
+          - image_url
+          - image_width
+          - issuer
+          type: object
+          properties:
+            card_bin_id:
+              maxLength: 36
+              type: string
+              description: BIN Range ID
+            image_url:
+              type: string
+              description: Image data link 
+            image_width:
+              maxLength: 4
+              type: string
+              description: Image width
+            image_height:
+              maxLength: 4
+              type: string
+              description: Image height
+            foreground_color:
+              maxLength: 7
+              type: string
+              description: Foreground color of card art
+            issuer:
+              maxLength: 100
+              type: string
+              description: Issuer name
+            description:
+              maxLength: 250
+              type: string
+              description: Description of card 
+          description: Card Metadata
+      example:
+        status: "200"
+        message: Success
+        response_id: TSP1FZF3aUM2M3F3JldS
+        card_metadata:
+          card_bin_id: fb765f04-58b9-409f-b6f5-d6a02d10c76f
+          image_url: https://tsp.s3.ap-southeast-1.amazonaws.com/cards/default/00Default.png?X-Amz-Algorithm=AWS4-HMAC-S
+            HA256&X-Amz-Credential=AKIAJJWZ7B6WCRGMKFGQ%2F20180210%2Feu-west-2%2Fs3%2Faws4_request
+            &X-Amz-Date=20180210T171315Z&X-Amz-Expires=1800&X-Amz-Signature=12b74b0788aa036bc7c3d03b3f20
+            c61f1f91cc9ad8873e3314255dc479a25351&X-Amz-SignedHeaders=host
+          image_width: "1536"
+          image_height: "969"
+          foreground_color: '#ffffff'
+          issuer: Big Bank
+          description: World DebitCard
+    notificationDetailsRequestSchema:
+      required:
+      - notification_id
+      - notification_type
+      - request_id
+      type: object
+      properties:
+        request_id:
+          maxLength: 36
+          type: string
+          description: Unique request identification number
+        notification_id:
+          maxLength: 36
+          type: string
+          description: Unique notification identification number
+        notification_type:
+          maxLength: 30
+          type: string
+          description: |-
+            Notification type
+            <li>TOKEN_UPDATE</li>
+            <li>CARD_METADATA_UPDATE</li>
+      example:
+        request_id: REQ0001585041757788
+        notification_id: fb165f04-58b9-409f-b6f5-d6a02d10c14f
+        notification_type: TOKEN_UPDATE
+    notificationDetailsResponseSchema:
+      required:
+      - message
+      - notification_data
+      - notification_id
+      - notification_type
+      - response_id
+      - status
+      type: object
+      properties:
+        status:
+          maxLength: 3
+          type: string
+          description: Response code
+        message:
+          type: string
+          description: Response message
+        response_id:
+          maxLength: 36
+          type: string
+          description: Unique response identification number
+        notification_id:
+          maxLength: 36
+          type: string
+          description: Unique notification identification number
+        notification_type:
+          maxLength: 30
+          type: string
+          description: Notification type. Values are <b>TOKEN_UPDATE</b> or <b>CARD_METADATA_UPDATE</b>
+        notification_data:
+          required:
+          - reason_code
+          - token_pan_expiry_date
+          - token_pan_status
+          - token_reference_id
+          type: object
+          properties:
+            token_reference_id:
+              type: string
+              description: Token reference identification
+            token_pan_status:
+              type: string
+              description: |
+                Token PAN status
+                  <li>ACTIVE</li>
+                  <li>SUSPENDED</li>
+                  <li>SUSPENDED_BY_ISSUER</li>
+                  <li>DELETED</li>
+                  <li>NOT_EXIST</li>
+            token_pan_expiry_date:
+              type: string
+              description: Token expiry date in YYYYMM format
+            reason_code:
+              type: string
+              description: |
+                Reason code
+                <li>FRAUD – Fraud case</li>
+                <li>CUSTOMER_CONFIRMED – Confirmed by customer</li>
+          description: JSON data based notification type 
+      example:
+        status: "200"
+        message: Success
+        response_id: TSP1FZF3aUM2M3F3JldS
+        notification_id: fb165f04-58b9-409f-b6f5-d6a02d10c14f
+        notification_type: TOKEN_UPDATE
+        notification_data:
+          token_reference_id: 7eae66a4-4f63-44d1-9913-b117a227a08e
+          token_pan_status: SUSPENDED
+          token_pan_expiry_date: "202110"
+          reason_code: FRAUD
+    tokenUpdatedRequestSchema:
+      required:
+      - notification_data
+      - notification_id
+      - notification_type
+      type: object
+      properties:
+        notification_id:
+          maxLength: 36
+          type: string
+          description: Unique notification identification number
+        notification_type:
+          maxLength: 30
+          type: string
+          description: Default to <b>TOKEN_UPDATE</b>
+        notification_data:
+          required:
+          - reason_code
+          - token_pan_expiry_date
+          - token_pan_status
+          - token_reference_id
+          type: object
+          properties:
+            token_reference_id:
+              maxLength: 36
+              type: string
+              description: Token reference identification
+            token_pan_status:
+              maxLength: 30
+              type: string
+              description: |
+                Token PAN status
+                <li>ACTIVE</li>
+                <li>SUSPENDED</li>
+                <li>SUSPENDED_BY_ISSUER</li>
+                <li>DELETED</li>
+            token_pan_expiry_date:
+              maxLength: 6
+              type: string
+              description: Token expiry date in YYYYMM format
+            reason_code:
+              maxLength: 30
+              type: string
+              description: |-
+                Reason
+                <li>ISSUER – By Issuer</li>
+                <li>FRAUD – Suspected fraud</li>
+                <li>CUSTOMER_CONFIRMED – Confirmed by customer</li>
+          description: Notification Data
+      example:
+        notification_id: fb165f04-58b9-409f-b6f5-d6a02d10c14f
+        notification_type: TOKEN_UPDATE
+        notification_data:
+          token_reference_id: 7eae66a4-4f63-44d1-9913-b117a227a08e
+          token_pan_status: SUSPENDED
+          token_pan_expiry_date: "202110"
+          reason_code: FRAUD
+    tokenUpdatedResponseSchema:
+      required:
+      - notification_id
+      - notification_type
+      type: object
+      properties:
+        notification_id:
+          maxLength: 36
+          type: string
+          description: Unique notification identification number
+        notification_type:
+          maxLength: 30
+          type: string
+          description: Default to <b>TOKEN_UPDATE</b>
+      example:
+        notification_id: fb165f04-58b9-409f-b6f5-d6a02d10c14f
+        notification_type: TOKEN_UPDATE
+    cardMetadataUpdatedNotificationRequestSchema:
+      required:
+      - notification_data
+      - notification_id
+      - notification_type
+      type: object
+      properties:
+        notification_id:
+          maxLength: 36
+          type: string
+          description: Notification identification
+        notification_type:
+          maxLength: 30
+          type: string
+          description: CARD_METADATA_UPDATE 
+        notification_data:
+          required:
+          - card_bin_id
+          - foreground_color
+          - image_height
+          - image_url
+          - image_width
+          - issuer
+          type: object
+          properties:
+            card_bin_id:
+              maxLength: 36
+              type: string
+              description: BIN Range ID
+            image_url:
+              type: string
+              description: Image data link
+            image_width:
+              maxLength: 4
+              type: string
+              description: Image width
+            image_height:
+              maxLength: 4
+              type: string
+              description: Image height
+            foreground_color:
+              maxLength: 7
+              type: string
+              description: Foreground color of card art
+            issuer:
+              maxLength: 100
+              type: string
+              description: Issuer name
+            description:
+              maxLength: 250
+              type: string
+              description: Description of card
+          description: Notification Data
+      example:
+        notification_id: fb165f04-58b9-409f-b6f5-d6a02d10c14f
+        notification_type: CARD_METADATA_UPDATE
+        notification_data:
+          card_bin_id: fb765f04-58b9-409f-b6f5-d6a02d10c76f
+          image_url: https://tsp.s3.ap-southeast-1.amazonaws.com/cards/default/00Default.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAJJWZ7B6WCRGMKFGQ%2F20180210%2Feu-west-2%2Fs3%2Faws4_request&X-Amz-Date=20180210T171315Z&X-Amz-Expires=1800&X-Amz-Signature=12b74b0788aa036bc7c3d03b3f20c61f1f91cc9ad8873e3314255dc479a25351&X-Amz-SignedHeaders=host
+          image_width: "1536"
+          image_height: "969"
+          foreground_color: '#ffffff'
+          issuer: Big Bank
+          description: World MasterCard
+    cardMetadataUpdatedNotificationResponseSchema:
+      required:
+      - notification_id
+      - notification_type
+      type: object
+      properties:
+        notification_id:
+          maxLength: 36
+          type: string
+          description: Unique notification identification number
+        notification_type:
+          maxLength: 30
+          type: string
+          description: Default to <b>CARD_METADATA_UPDATE</b>
+      example:
+        notification_id: fb165f04-58b9-409f-b6f5-d6a02d10c14f
+        notification_type: CARD_METADATA_UPDATE
+x-urlparameters:
+  sit: https://api.tsp.sit.inet.paynet.my
+x-typeofdeployment:
+  types: cloud

@@ -1,0 +1,1180 @@
+openapi: 3.0.3
+info:
+  title: FPX Services
+  description: |
+    FPX facilitates Buyers to securely perform real-time payments from any FPX Merchant via FPX Buyer Bank's internet banking.
+
+    ### Who Should Use
+    This API should only be used by merchants.
+  version: v1
+servers:
+- url: https://sandbox.api.paynet.my/fpx/merchants/v1
+paths:
+  /FPXMain: {}
+  /seller2DReceiver.jsp:
+    post:
+      description: AR message serves as a starting point for the Merchant to request for the authorization from the Buyer Bank. It contains the transaction information from the Buyer, which inclusive of Seller ID, Seller Order Number, and Transaction Amount.
+        </br>
+        </br>
+        AE message serves as a query to obtain the current status of the transaction automatically. This is important in the event that Merchant does not receive any AC message from FPX after FPX timeout duration or when Merchant receive AC with response code 09.
+      operationId: Authorization Request
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ARRequest'
+        required: false
+      responses:
+        200:
+          description: ""
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ACResponse'
+          x-amf-mediaType: application/json
+  
+  /bankListResponse.jsp:
+    post:
+      description : BE message serves as a query to get the latest list of Buyer Bank and its status from FPX. This message should be send every time Merchant want to display the Buyer Bank listing to their customers or very Merchant can request every 30 minutes
+      operationId: Retrieve Bank List
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/BERequest'
+        required: false
+      responses:
+        200:
+          description: ""
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/BCResponse'
+          x-amf-mediaType: application/json
+  /bulkRefund.jsp:
+    post:
+      description : AF message serves as a starting point for the Merchant to request for the authorization of refund in bulk from the Buyer Bank. The format is similar as the AR – B2B2 message with additional Refund transaction information must be populated in new fpx_orderList field.
+      operationId: Bulk Refund
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/RequestAF'
+        required: false
+      responses:
+        200:
+          description: ""
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ResponseAB'
+          x-amf-mediaType: application/json
+  /bulkRefundQuery.jsp:
+    post:
+      description : AQ message serves as a query to obtain the current status of the bulk refund transaction automatically. This is important in the event that Merchant does not receive any AB message from FPX after FPX timeout duration or when Merchant receive AB with response code 09.
+      operationId: Bulk Refund Inquiry
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/RequestAQ'
+        required: false
+      responses:
+        200:
+          description: ""
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ResponseAB'
+          x-amf-mediaType: application/json
+  
+  /cancelRequest.jsp:
+    post:
+      description : AX message is a request triggered by merchant’s system to FPX system for the transaction cancellation request.
+      operationId: Cancel Transaction
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/RequestAX'
+        required: false
+      responses:
+        200:
+          description: ""
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ResponseAXA'
+          x-amf-mediaType: application/json
+
+
+components:
+  schemas:
+    ARRequest:
+      required:
+      - fpx_msgType
+      - fpx_msgToken
+      - fpx_sellerExId
+      - fpx_sellerExOrderNo
+      - fpx_sellerTxnTime
+      - fpx_sellerOrderNo
+      - fpx_sellerId
+      - fpx_sellerBankCode
+      - fpx_txnCurrency
+      - fpx_txnAmount
+      - fpx_checkSum
+      - fpx_buyerBankId
+      - fpx_productDesc
+      - fpx_version
+      type: object
+      properties:
+        fpx_msgType:
+          maxLength: 2
+          type: string
+          description: |
+            Indicate message type.
+            AR / AE
+        fpx_msgToken:
+          maxLength: 2
+          type: string
+          description: |
+            Indicate business model.
+            01 – B2C / 02 – B2B1 / 03 - B2B2
+        fpx_sellerExId:
+          maxLength: 10
+          type: string
+          description: Exchange ID – provided by FPX.
+            E.g. EX00000374
+        fpx_sellerExOrderNo:
+          maxLength: 40
+          type: string
+          description: Unique ID generated by Exchange for each transaction originating from an Exchange.
+            Not Supported - Ampersand (&) and Apostrophe (‘).
+        fpx_sellerTxnTime:
+          maxLength: 14
+          type: string
+          description: Date and time transaction originated from Merchant.
+            YYYYMMDDHHmmSS (in MYT).
+        fpx_sellerOrderNo:
+          maxLength: 40
+          type: string
+          description: Order number generated by Merchant.
+            Not Supported - Ampersand (&) and Apostrophe (‘).
+        fpx_sellerId:
+          maxLength: 10
+          type: string
+          description: Seller ID - provided by FPX.
+            E.g. SE00000585
+        fpx_sellerBankCode:
+          maxLength: 2
+          type: string
+          description: Seller account number registered in FPX.
+            01 / 02 / 03 / 04 
+            Default value = 01
+        fpx_txnCurrency:
+          maxLength: 3
+          type: string
+          description: Transaction currency.
+            Default value  = MYR
+        fpx_txnAmount:
+          maxLength: 18
+          type: string
+          description: Total amount.
+        fpx_buyerEmail:
+          maxLength: 50
+          type: string
+          description: Buyer email address.
+        fpx_checkSum:
+          type: string
+          description: Checksum value.Hold message signature.
+        fpx_buyerName:
+          maxLength: 40
+          type: string
+          description: Buyer name.
+        fpx_buyerBankId:
+          maxLength: 10
+          type: string
+          description: Provided by FPX – ties to Bank that Buyer has an account in.
+        fpx_buyerBankBranch:
+          maxLength: 10
+          type: string
+          description: Bank’s branch code that Buyer opened his account.
+            Not Supported - Slash (/), Ampersand (&) and Apostrophe (‘).
+        fpx_buyerAccNo:
+          maxLength: 20
+          type: string
+          description: Buyer account number.
+        fpx_buyerId:
+          maxLength: 20
+          type: string
+          description: Buyer identification number.
+            Not Supported - Slash (/), Ampersand (&) and Apostrophe (‘).
+        fpx_makerName:
+          maxLength: 40
+          type: string
+          description: Buyer representative (Maker) who initiate the transaction.
+        fpx_buyerIban:
+          maxLength: 35
+          type: string
+          description: Buyer IBAN.
+        fpx_productDesc:
+          maxLength: 30
+          type: string
+          description: Product Description.
+        fpx_version:
+          maxLength: 3
+          type: string
+          description: Version number. Default value = 7.0.
+        fpx_eaccountNum:
+          maxLength: 40
+          type: string
+          description: Buyer account number for Payer’s Identity Verification. 
+            Not to be include in checksum calculation.
+        fpx_ebuyerID:
+          maxLength: 40
+          type: string
+          description: Buyer identification number.  For Payer’s Identity Verification.
+            Not Supported - Slash (/), Ampersand (&) and Apostrophe (‘).
+            Not to be include in checksum calculation.
+      example:
+          | 
+          "<form method="post" action="https://fpxsit.myclear.org.my/FPXMain/seller2DReceiver.jsp" >
+           <input type=hidden name="fpx_msgType" value="AR">
+           <input type=hidden name="fpx_msgToken" value="01">
+           <input type=hidden name="fpx_sellerExId" value="EX00002460">
+           <input type=hidden name="fpx_sellerExOrderNo" value="8409064171163719153">
+           <input type=hidden name="fpx_sellerTxnTime" value="20161018095905">
+           <input type=hidden name="fpx_sellerOrderNo" value="8387036127029875582">
+           <input type=hidden name="fpx_sellerId" value="SE00006921">
+           <input type=hidden name="fpx_sellerBankCode" value="01">
+           <input type=hidden name="fpx_txnCurrency" value="MYR">
+           <input type=hidden name="fpx_txnAmount" value="1.00">
+           <input type=hidden name="fpx_buyerEmail" value="ad_fpx@myclear.org.my">
+           <input type=hidden name="fpx_checkSum" value="C95E4D53EC92E311AE5BFABCB7E46928637AD0254A1D3C2E48D9B070B490AE7A7985FE24D80A4544FFEDBFA29C36574B9667FC3F57DFBF5E1C4730C2DA3505B9F694399EDB558E39343FD9ED7A57F265EF5A3A8C6078471D7DAED52B4D8307206ED84B6AE35DC0000A7116F9081B112A359B36FE2ECFA8604B5EDE5F305F717665A7C89BDAEEECAF67ADA97B583C2314F5F6259B28C61AA8B7DBB74C9925B0ADEC3703288A907B632F133D7CFC35DC6A020037A4EA7F94CA5836C3FBFFC6DB050B0B879D1320C915754DFD565CBFFC4BBF18C1FD84530BF4FED0B7D4AE1280666C060AFCD6D6CEF3ADFB3AC31CF4851700B28197D19174F5147B4597E01A41BE">
+           <input type=hidden name="fpx_buyerName" value="">
+           <input type=hidden name="fpx_buyerBankId" value="TEST0021">
+           <input type=hidden name="fpx_buyerBankBranch" value="">
+           <input type=hidden name="fpx_buyerAccNo" value="">
+           <input type=hidden name="fpx_buyerId" value="">
+           <input type=hidden name="fpx_makerName" value="">
+           <input type=hidden name="fpx_buyerIban" value="">
+           <input type=hidden name="fpx_productDesc" value="MyClear Regression Testing">
+           <input type=hidden name="fpx_version" value="7.0">
+           <input type=hidden name=" fpx_eaccountNum " value="12345678">
+           <input type=hidden name=" fpx_ebuyerID " value="12345678">
+           <input type="submit" value="Click To Pay">	
+           </form>
+          "
+            
+    ACResponse:
+      required:
+      - fpx_msgType
+      - fpx_msgToken
+      - fpx_fpxTxnId
+      - fpx_sellerExId
+      - fpx_sellerExOrderNo
+      - fpx_fpxTxnTime
+      - fpx_sellerTxnTime
+      - fpx_sellerOrderNo
+      - fpx_sellerId
+      - fpx_txnCurrency
+      - fpx_txnAmount
+      - fpx_checkSum
+      - fpx_debitAuthCode
+      type: object
+      properties:
+        fpx_msgType:
+          maxLength: 2
+          type: string
+          description: |
+            Indicate message type AC
+        fpx_msgToken:
+          maxLength: 2
+          type: string
+          description: |
+            Indicate business model.
+            01 – B2C / 02 – B2B1 / 03 - B2B2
+        fpx_fpxTxnId:
+          maxLength: 16
+          type: string
+          description: |
+            Unique ID generated by FPX for each payment request received from Merchant.
+            YYMMDDHH24MISS####
+        fpx_sellerExId:
+          maxLength: 10
+          type: string
+          description: Exchange ID – provided by FPX.
+            E.g. EX00000374
+        fpx_sellerExOrderNo:
+          maxLength: 40
+          type: string
+          description: Unique ID generated by Exchange for each transaction originating from an Exchange.
+            Not Supported - Ampersand (&) and Apostrophe (‘).
+        fpx_fpxTxnTime:
+          maxLength: 14
+          type: string
+          description: Date and time FPX processed transaction. YYYYMMDDHH24MISS (in MYT)
+        fpx_sellerTxnTime:
+          maxLength: 14
+          type: string
+          description: Date and time transaction originated from Merchant.
+            YYYYMMDDHHmmSS (in MYT).
+        fpx_sellerOrderNo:
+          maxLength: 40
+          type: string
+          description: Order number generated by Merchant.
+            Not Supported - Ampersand (&) and Apostrophe (‘).
+        fpx_sellerId:
+          maxLength: 10
+          type: string
+          description: Seller ID - provided by FPX.
+            E.g. SE00000585
+        fpx_txnCurrency:
+          maxLength: 3
+          type: string
+          description: Transaction currency.
+            Default value  = MYR
+        fpx_txnAmount:
+          maxLength: 18
+          type: string
+          description: Total amount.
+        fpx_checkSum:
+          type: string
+          description: Checksum value.Hold message signature.
+        fpx_buyerName:
+          maxLength: 40
+          type: string
+          description: Buyer name.
+        fpx_buyerBankId:
+          maxLength: 10
+          type: string
+          description: Provided by FPX – ties to Bank that Buyer has an account in.
+        fpx_buyerBankBranch:
+          maxLength: 10
+          type: string
+          description: Bank’s branch code that Buyer opened his account.
+            Not Supported - Slash (/), Ampersand (&) and Apostrophe (‘).
+        fpx_buyerId:
+          maxLength: 20
+          type: string
+          description: Buyer identification number.
+            Not Supported - Slash (/), Ampersand (&) and Apostrophe (‘).
+        fpx_makerName:
+          maxLength: 40
+          type: string
+          description: Buyer representative (Maker) who initiate the transaction.
+        fpx_buyerIban:
+          maxLength: 35
+          type: string
+          description: Buyer IBAN.
+        fpx_debitAuthCode:
+          maxLength: 2
+          type: string
+          description: Debit response code authorized by Buyer Bank.
+        fpx_debitAuthNo:
+          maxLength: 10
+          type: string
+          description: Mandatory if Debit Authorization Code is ‘00’.
+        fpx_creditAuthCode:
+          maxLength: 2
+          type: string
+          description: Credit response code authorized by Acquiring Bank.
+        fpx_creditAuthNo:
+          maxLength: 10
+          type: string
+          description: Mandatory if Credit Authorization Code is ‘00’.
+        fpx_xtraInfo:
+          maxLength: 6
+          type: string
+          description: Mandatory if Seller is in Payer’s Identity Verification list. Not to be include in checksum calculation. 
+      example:
+          | 
+          "<form>
+          <input type="hidden" name="fpx_msgType" value="AC">
+          <input type="hidden" name="fpx_msgToken" value="01">
+          <input type="hidden" name="fpx_fpxTxnId" value="1610181200130689">
+          <input type="hidden" name="fpx_sellerExId" value="EX00002460">
+          <input type="hidden" name="fpx_sellerExOrderNo value="2204757146129723630">
+          <input type="hidden" name="fpx_fpxTxnTime" value="20161018115351">
+          <input type="hidden" name="fpx_sellerTxnTime" value="20161018120215">
+          <input type="hidden" name="fpx_sellerOrderNo" value="5408327679348321178">
+          <input type="hidden" name="fpx_sellerId" value="SE00006921">
+          <input type="hidden" name="fpx_txnCurrency" value="MYR">
+          <input type="hidden" name="fpx_txnAmount" value="1.00">
+          <input type="hidden" name="fpx_checkSum" value="22B141C646CDD15C5B5AD647A274C106FF80FBDFE727F8000D456EB269355526D7B13F2AF1E2BB8A38530860C7D977706606CCE6324898B52B697266E7B50B2541788194BC52B8FC04E6C36B937F82DC06AF64BD99D3594496468538E92CB979E216929326B331B93B12222F226EF0C15482E50C1A5F9E72CF370DDADD43831AC5B7384FC97F66C97A9F04E75BB80642752E4CEB32DF3F5429809CA9DD9810FF4DC495CF0CCFD09BAA11EE689B6DB5AB3071EF57D2A30F4CFD0CF0AB38910AD97EC9B1B6B9A29113E58822B3FAF978670ED2A0B9DF37AC995FFDD9533893167D8AD5A96C456A8E324F9BCE5A8BBB5483D01AB6EBBB02E189C31E5CA0093CEF6D">
+          <input type="hidden" name="fpx_buyerName" value="Buyer Name">
+          <input type="hidden" name="fpx_buyerBankId" value="TEST0021">
+          <input type="hidden" name="fpx_buyerBankBranch" value="SBI BANK A">
+          <input type="hidden" name="fpx_buyerId" value="Buyer1234">
+          <input type="hidden" name="fpx_makerName" value="Maker Name">
+          <input type="hidden" name="fpx_buyerIban" value="">
+          <input type="hidden" name="fpx_debitAuthCode" value="00">
+          <input type="hidden" name="fpx_debitAuthNo" value="15733223">
+          <input type="hidden" name="fpx_creditAuthCode" value="00">
+          <input type="hidden" name="fpx_creditAuthNo" value="10096415">
+          <input type="hidden" name="fpx_xtraInfo" value="010101">
+          </form>
+          "
+
+    BERequest:
+      required:
+      - fpx_msgType 
+      - fpx_msgToken
+      - fpx_sellerExId
+      - fpx_version
+      - fpx_checkSum
+      type: object
+      properties:
+        fpx_msgType:
+          maxLength: 2
+          type: string
+          description: Indicate message type BE
+        fpx_msgToken:
+          maxLength: 2
+          type: string
+          description: Indicate business model.
+            01 – B2C / 02 – B2B1 / 03 - B2B2
+        fpx_sellerExId:
+          maxLength: 10
+          type: string
+          description: Exchange ID – provided by FPX.
+            E.g. EX00000374
+        fpx_version:
+          maxLength: 3
+          type: string
+          description: Version number. Default value = 7.0
+        fpx_checkSum:
+          type: string
+          description: Checksum value. Hold message signature.
+      example:
+          | 
+          "<form method="post" action="bankListResponse.jsp">
+           <input type="text" name="fpx_msgType" value= "BE" >
+           <input type="text" name="fpx_msgToken" value= "01" >
+           <input type="text" name="fpx_sellerExId" value= "EX00002200" >
+           <input type="text" name="fpx_version" value= "7.0" >
+           <input type="text" name="fpx_checkSum" value= "A038ED836ECB57F22AC5055B59700E4F16F1A471D97CF961687C19EB7E31C331349E582E31979624952CD5C1C817EBCA3E44B934E4213137BF8D139F95085891565F243D68AA3BA256E33468DB55ACE1D883BE6CF881585C79A090ECC41DF56848C41CD96C4C8BEAEB254039DDF4FD77575B2184DDDFEB391E52CCBE55AECD7ABF548B978437FA1D45C428C4C23B4AC6694DCBE7D780453E2D93902ED7441FA6B61E8D0E74D139F4EDD337E8B2AE4CED33FEF6137E2357B37FE464AC5FEB13B6EF7E226CD3252DA9075BF17384D1461DB739C12640FEFFC985455DF357C4F7E4389F876A11C5C82ECACCF4D27A22402581B745EF7C4205675FEDF08E1CAB2374" >			  
+           <input type="submit" name="Submit" value="Submit">
+           </form>
+          "
+          
+    BCResponse:
+      required:
+      - fpx_msgType
+      - fpx_msgToken
+      - fpx_sellerExId
+      - fpx_bankList
+      - fpx_checkSum
+      type: object
+      properties:
+        fpx_msgType:
+          maxLength: 2
+          type: string
+          description: Indicate message type BC
+        fpx_msgToken:
+          maxLength: 2
+          type: string
+          description: Indicate business model.
+            01 – B2C / 02 – B2B1 / 03 - B2B2
+        fpx_sellerExId:
+          maxLength: 10
+          type: string
+          description: Exchange ID – provided by FPX.
+            E.g. EX00000374
+        fpx_bankList:
+          type: string
+          description: FPX Bank ID ~ Bank Status= Active (A) / Blocked (B) E.g. TESTBANK10~A,TESTBANK11~B
+        fpx_checkSum:
+          type: string
+          description: Checksum value. Hold message signature.
+      example:
+         | 
+          "fpx_msgType=BC&fpx_msgToken=01&fpx_sellerExId=EX00002460&fpx_bankList=MBB0227%7EA%2CPBB0233%7EA%2CMB2U0227%7EA%2CBIMB0340%7EA%2CRHB0218%7EA%2CHLB0224%7EA%2CTEST0023%7EA%2CTPAIPAY88%7EA%2CTEST0022%7EA%2CTEST0004%7EA%2CTEST0003%7EB%2CTEST0021%7EA%2CTEST0002%7EA%2CTEST0001%7EA%2CTPAMOLPAY%7EA%2CBCBB0235%7EA%2CTEST0011%7EA&fpx_checkSum=2A2AAAF509334AB80326CEDBB43B355A560581DDC593F5D8C21BB0AE807B2E64661825FCCF06AA7A9E96A33FEB9FBAF3CF0E879BA4160A7E11DDD42890C3907DF94C2BD524EC367A326A3CF9ABABC3D5412667D9D8761C1F5E2DA432176FC9DA5353717601ED9889B0897ABBBF854ECD89A669AA65FABDA4FA1BF0F3E034B55C08D5A942DDC0FF40AFF277DC9AAF5EBE2F387A92C8D5BEEB8B446296C88F2ABF03519B9F0B6A669FE0B15CEFDB739E435121DB0D79F1B4930D040F8C86D23043FCD577E3B2D21412DE9ED8864346A2ECEC4659EFE68E2095DF71F98338755846F7760C34B2E3ACB3321911165C8385B4F3FB729C929611AC194167FEF2B77FF1"
+
+          
+        
+    requestAD:
+      required:
+      - fpx_msgType
+      - fpx_msgToken
+      - fpx_sellerExId
+      - fpx_sellerExOrderNo
+      - fpx_sellerTxnTime
+      - fpx_sellerOrderNo
+      - fpx_sellerId
+      - fpx_sellerBankCode
+      - fpx_txnCurrency
+      - fpx_txnAmount
+      - fpx_checkSum
+      - fpx_buyerBankId
+      - fpx_buyerId
+      - fpx_buyerIban
+      - fpx_productDesc
+      - fpx_version
+      type: object
+      properties:
+        fpx_msgType:
+          maxLength: 2
+          type: string
+          description: |
+            Indicate message type AD
+        fpx_msgToken:
+          maxLength: 2
+          type: string
+          description: Indicate business model 01 – B2C / 02 – B2B1.
+        fpx_sellerExId:
+          maxLength: 10
+          type: string
+          description: Exchange ID – provided by FPX. E.g. EX00000374
+        fpx_sellerExOrderNo:
+          maxLength: 40
+          type: string
+          description: Unique ID generated by Exchange for each transaction originating from an Exchange.
+            Not Supported - Ampersand (&) and Apostrophe (‘).
+        fpx_sellerTxnTime:
+          maxLength: 14
+          type: string
+          description: Date and time transaction originated from Biller. YYYYMMDDHHmmSS (in MYT).
+        fpx_sellerOrderNo:
+          maxLength: 20
+          type: string
+          description: Payment reference number.
+            Not Supported - Ampersand (&) and Apostrophe (‘).
+        fpx_sellerId:
+          maxLength: 10
+          type: string
+          description: Biller ID - provided by FPX. E.g. SE00000585
+        fpx_sellerBankCode:
+          maxLength: 2
+          type: string
+          description: Biller account number registered in FPX. 01 / 02 / 03 / 04 . Default value = 01
+        fpx_txnCurrency:
+          maxLength: 3
+          type: string
+          description: Transaction currency. Default value  = MYR
+        fpx_txnAmount:
+          maxLength: 18
+          type: string
+          description: Direct Debit amount.
+        fpx_buyerEmail:
+          maxLength: 27
+          type: string
+          description: Payer email address.
+        fpx_buyerBankId:
+          maxLength: 10
+          type: string
+          description: Provided by FPX – ties to Bank that Buyer has an account in.
+        fpx_buyerBankBranch:
+          maxLength: 10
+          type: string
+          description: Not Required.
+        fpx_buyerAccNo:
+          maxLength: 20
+          type: string
+          description: Not Required.
+        fpx_buyerId:
+          maxLength: 20
+          type: string
+          description: Payer ID additional information.
+            Refer Section 5.8.2 – Payer ID Information for more details.
+            Not Supported - Slash (/), Ampersand (&) and Apostrophe (‘).
+        fpx_makerName:
+          maxLength: 40
+          type: string
+          description: Not required.
+        fpx_buyerIban:
+          maxLength: 35
+          type: string
+          description: E-Mandate additional information. Refer Section 5.8.3 – E-Mandate Information for more details.
+        fpx_productDesc:
+          maxLength: 27
+          type: string
+          description: Purpose of Payment.
+        fpx_version:
+          maxLength: 3
+          type: string
+          description: Version number. Default value = 7.0
+      example:
+          | 
+          "<form method="post" action="https://fpxsit.myclear.org.my/FPXMain/seller2DReceiver.jsp" >
+           <input type=hidden name="fpx_msgType" value="AD">
+           <input type=hidden name="fpx_msgToken" value="01">
+           <input type=hidden name="fpx_sellerExId" value="EX00002460">
+           <input type=hidden name="fpx_sellerExOrderNo" value="8409064171163719153">
+           <input type=hidden name="fpx_sellerTxnTime" value="20161018095905">
+           <input type=hidden name="fpx_sellerOrderNo" value="8387036127029875582">
+           <input type=hidden name="fpx_sellerId" value="SE00006921">
+           <input type=hidden name="fpx_sellerBankCode" value="01">
+           <input type=hidden name="fpx_txnCurrency" value="MYR">
+           <input type=hidden name="fpx_txnAmount" value="1.00">
+           <input type=hidden name="fpx_buyerEmail" value="ad_fpx@myclear.org.my">
+           <input type=hidden name="fpx_checkSum" value="C95E4D53EC92E311AE5BFABCB7E46928637AD0254A1D3C2E48D9B070B490AE7A7985FE24D80A4544FFEDBFA29C36574B9667FC3F57DFBF5E1C4730C2DA3505B9F694399EDB558E39343FD9ED7A57F265EF5A3A8C6078471D7DAED52B4D8307206ED84B6AE35DC0000A7116F9081B112A359B36FE2ECFA8604B5EDE5F305F717665A7C89BDAEEECAF67ADA97B583C2314F5F6259B28C61AA8B7DBB74C9925B0ADEC3703288A907B632F133D7CFC35DC6A020037A4EA7F94CA5836C3FBFFC6DB050B0B879D1320C915754DFD565CBFFC4BBF18C1FD84530BF4FED0B7D4AE1280666C060AFCD6D6CEF3ADFB3AC31CF4851700B28197D19174F5147B4597E01A41BE">
+           <input type=hidden name="fpx_buyerName" value="">
+           <input type=hidden name="fpx_buyerBankId" value="TEST0021">
+           <input type=hidden name="fpx_buyerBankBranch" value="">
+           <input type=hidden name="fpx_buyerAccNo" value="">
+           <input type=hidden name="fpx_buyerId" value="123456789012,1">
+           <input type=hidden name="fpx_makerName" value="">
+           <input type=hidden name="fpx_buyerIban" value="01,01232129380,9,MT,101017,101018">
+           <input type=hidden name="fpx_productDesc" value="Loan repayment">
+           <input type=hidden name="fpx_version" value="7.0">
+           <input type="submit" value="Click To Pay">	
+           </form>
+          "
+          
+          
+    RequestAF:
+      required:
+      - fpx_msgType
+      - fpx_msgToken
+      - fpx_sellerExId
+      - fpx_sellerExOrderNo
+      - fpx_sellerOrderNo
+      - fpx_sellerBankCode
+      - fpx_sellerTxnTime
+      - fpx_txnCurrency
+      - fpx_txnAmount
+      - fpx_checkSum
+      - fpx_buyerName
+      - fpx_buyerBankId
+      - fpx_buyerBankBranch
+      - fpx_buyerAccNo
+      - fpx_buyerId
+      - fpx_makerName
+      - fpx_buyerIban
+      - fpx_orderList
+      - fpx_productDesc
+      - fpx_version
+      type: object
+      properties:
+        fpx_msgType:
+          maxLength: 4
+          type: string
+          description: |
+            Indicate message type. AF - Authorization Bulk Refund
+        fpx_msgToken:
+          maxLength: 2
+          type: string
+          description: |
+            Indicate business model. Default: 03
+        fpx_sellerExId:
+          maxLength: 10
+          type: string
+          description: Exchange ID - provided by FPX E.g = EX00000374.
+        fpx_sellerExOrderNo:
+          maxLength: 35
+          type: string
+          description: Unique ID generated by Exchange for each transaction originating from an Exchange.
+            Not Supported -  Ampersand (&) and Apostrophe (').
+        fpx_sellerOrderNo:
+          maxLength: 40
+          type: string
+          description: Order number generated by merchant. Not Supported - Ampersand (&) and Apostrophe (').
+        fpx_sellerBankCode:
+          maxLength: 2
+          type: string
+          description: Seller account number registered in FPX. 01 / 02 / 03 / 04. Default value = 01
+        fpx_sellerTxnTime:
+          maxLength: 14
+          type: string
+          description: Date and time transaction originated from Merchant. YYYYMMDDHHmmSS (in MYT).
+        fpx_txnCurrency:
+          maxLength: 3
+          type: string
+          description: Transaction currency. Default value = MYR
+        fpx_txnAmount:
+          maxLength: 18
+          type: string
+          description: Total amount.
+        fpx_buyerEmail:
+          maxLength: 50
+          type: string
+          description: Buyer email address.
+        fpx_checkSum:
+          type: string
+          description: Checksum value. Hold message signature.
+        fpx_buyerName:
+          maxLength: 40
+          type: string
+          description: Buyer name.
+        fpx_buyerBankId:
+          maxLength: 10
+          type: string
+          description: Provided by FPX - ties to Bank that Buyer has an account in.
+        fpx_buyerBankBranch:
+          maxLength: 10
+          type: string
+          description: Bank's branch code that Buyer opened his account. 
+            Not supported -  Slash (/), Ampersand (&) and Apostrophe (')
+        fpx_buyerAccNo:
+          maxLength: 20
+          type: string
+          description: Buyer account number.
+        fpx_buyerId:
+          maxLength: 20
+          type: string
+          description: Buyer identification number. Not supported =  Slash (/), Ampersand (&) and Apostrophe (')
+        fpx_makerName:
+          maxLength: 40
+          type: string
+          description: Buyer respresentative (Maker) who initiate the transaction.
+        fpx_buyerIban:
+          maxLength: 35
+          type: string
+          description: Buyer IBAN.
+        fpx_orderList:
+          type: string
+          description: |
+            Refund transaction detail delimited by semicolon (;) for each transaction. Maximum transaction is 1000.
+            Format =  Seller Order Num, Seller ID, Refund Amount;
+            E.g = 1234567812345678,SE00000585,100.00;
+        fpx_productDesc:
+          maxLength: 30
+          type: string
+          description: Product description.
+        fpx_version:
+          maxLength: 3
+          type: string
+          description: Default value = 7.0
+      example:
+          | 
+          "<form method=”POST”>
+           <input type=hidden name="fpx_msgType" value="AF" >
+           <input type=hidden name="fpx_msgToken" value="03" >
+           <input type=hidden name="fpx_sellerExId" value="EX00002320" >
+           <input type=hidden name="fpx_sellerExOrderNo" value="1015738756484823025" >
+           <input type=hidden name="fpx_sellerTxnTime" value="20190408152148" >
+           <input type=hidden name="fpx_sellerOrderNo" value="1132582697504810095" >
+           <input type=hidden name="fpx_sellerBankCode" value="01" >
+           <input type=hidden name="fpx_txnCurrency" value="MYR" >
+           <input type=hidden name="fpx_txnAmount" value="200.00" >
+           <input type=hidden name="fpx_buyerEmail" value="zalikha@example.com.my" >
+           <input type=hidden name="fpx_checkSum" value="A9D9D9607B1788B9726EF3423533FCA605618A6621681345421DDFDB1855B892799F1DBCF8C01F4F81F1BCAB1AE6B8BAAAD9DE9F7A5ECBA7558A4B0F3D075DED8DBE99075FCE3D5947E6213B7CC4D1B974E871DC23E906993AA26561DFC8EAB5847F47703A6DC3E6D0754C0527F5C7F97D28CAAF1E1C047FBD14283198A06530A9908074CE1298A4996EC82C2B47FA923BFD7C114426A87EF3F18AA563CBDD92E3BF63403F381D049DDB79836D94DDE9E23C72FAB513FBCCB622DE1132B9456E60D96F52BA1E1DB56474EE2F66470FCC11B540827320F26CDC96FA6C30E9354C16F42862AE280DEB8E1E50037A83CCD854F25F80DF5A64F7A8C05E0049250175" >
+           <input type=hidden name="fpx_buyerName" value="ZALIKHA BINTI OMAR" >
+           <input type=hidden name="fpx_buyerBankId" value="SBI0002" >
+           <input type=hidden name="fpx_buyerBankBranch" value="SBI0002" >
+           <input type=hidden name="fpx_buyerAccNo" value="7654123456" >
+           <input type=hidden name="fpx_buyerId" value="920518102468" >
+           <input type=hidden name="fpx_makerName" value="PAYNET SDN BHD" >
+           <input type=hidden name="fpx_buyerIban" value="SBI0002" >
+           <input type=hidden name="fpx_orderList" value="1904081026090434,SE00004441,100.00; 1904081026090435,SE00005552,100.00;" >
+           <input type=hidden name="fpx_productDesc" value="Books" >
+           <input type=hidden name="fpx_version" value="7.0" >
+           </form>
+          "
+          
+          
+    ResponseAB:
+      required:
+      - fpx_msgType
+      - fpx_msgToken
+      - fpx_fpxTxnId
+      - fpx_sellerExId
+      - fpx_sellerExOrderNo
+      - fpx_fpxTxnTime
+      - fpx_sellerTxnTime
+      - fpx_sellerOrderNo
+      - fpx_txnAmount
+      - fpx_txnCurrency
+      - fpx_checkSum
+      - fpx_buyerName
+      - fpx_buyerBankId
+      - fpx_buyerBankBranch
+      - fpx_buyerId
+      - fpx_makerName
+      - fpx_buyerIban
+      - fpx_orderList
+      type: object
+      properties:
+        fpx_msgType:
+          maxLength: 4
+          type: string
+          description: |
+            Indicate message type. AB - Authorization Bulk Refund Confirmation
+        fpx_msgToken:
+          maxLength: 2
+          type: string
+          description: |
+            Indicate business model. Default: 03
+        fpx_fpxTxnId:
+          maxLength: 16
+          type: string
+          description: |
+            FPX Transaction ID - provided by FPX
+        fpx_sellerExId:
+          maxLength: 10
+          type: string
+          description: Exchange ID - provided by FPX E.g = EX00000374.
+        fpx_sellerExOrderNo:
+          maxLength: 35
+          type: string
+          description: Unique ID generated by Exchange for each transaction originating from an Exchange.
+            Not Supported -  Ampersand (&) and Apostrophe (').
+        fpx_fpxTxnTime:
+          maxLength: 40
+          type: string
+          description: Date and time FPX processed transaction. YYYYMMDDHH24MISS (in MYT)
+        fpx_sellerTxnTime:
+          maxLength: 14
+          type: string
+          description: Date and time transaction originated from Merchant. YYYYMMDDHHmmSS (in MYT).
+        fpx_sellerOrderNo:
+          maxLength: 40
+          type: string
+          description: Order number generated by merchant. Not Supported - Ampersand (&) and Apostrophe (').
+        fpx_txnAmount:
+          maxLength: 18
+          type: string
+          description: Total amount  
+        fpx_txnCurrency:
+          maxLength: 3
+          type: string
+          description: Transaction currency. Default value = MYR
+        fpx_checkSum:
+          type: string
+          description: Checksum value. Hold message signature.
+        fpx_buyerName:
+          maxLength: 40
+          type: string
+          description: Buyer name.
+        fpx_buyerBankId:
+          maxLength: 10
+          type: string
+          description: Provided by FPX - ties to Bank that Buyer has an account in.
+        fpx_buyerBankBranch:
+          maxLength: 10
+          type: string
+          description: Bank's branch code that Buyer opened his account. 
+            Not supported -  Slash (/), Ampersand (&) and Apostrophe (')
+        fpx_buyerId:
+          maxLength: 20
+          type: string
+          description: Buyer identification number. Not supported =  Slash (/), Ampersand (&) and Apostrophe (')  
+        fpx_makerName:
+          maxLength: 40
+          type: string
+          description: Buyer respresentative (Maker) who initiate the transaction.
+        fpx_buyerIban:
+          maxLength: 35
+          type: string
+          description: Buyer IBAN.
+        fpx_debitAuthCode:
+          maxLength: 2
+          type: string
+          description: Debit response code authorized by Buyer Bank.
+        fpx_debitAuthNo:
+          maxLength: 10
+          type: string
+          description: Mandatory if Debit Authorization Code is '00'
+        fpx_orderList:
+          type: string
+          description: |
+            Refund transaction detail delimited by semicolon (;) for each transaction. Maximum transaction is 1000.
+            Format =  Seller Order Num, Seller ID, Refund Amount;
+            E.g = 1234567812345678,SE00000585,100.00;
+
+      example:
+         |
+          "<form method=”POST”>
+          <input type='hidden' name='fpx_msgType' value='AB' />
+          <input type='hidden' name='fpx_msgToken' value='3' />
+          <input type='hidden' name='fpx_fpxTxnId' value='1904081552050456' />
+          <input type='hidden' name='fpx_sellerExId' value='EX00002320' />
+          <input type='hidden' name='fpx_sellerExOrderNo' value='1015738756484823025' />
+          <input type='hidden' name='fpx_fpxTxnTime' value='20190408155105' />
+          <input type='hidden' name='fpx_sellerTxnTime' value='20190408152148' />
+          <input type='hidden' name='fpx_sellerOrderNo' value='1132582697504810095' />
+          <input type='hidden' name=' fpx_txnAmount' value='8.00' />
+          <input type='hidden' name='fpx_txnCurrency' value='MYR' /><input type='hidden' name='fpx_checkSum' value='053BF2E99C9D28EBF9C740D1883BEC9CDE9791FBDE41D2C5BDDBC56B1D19708DA0253C3C3DD3B5E19FC9ABC10F4741212FF709A5C61CF7E23B3AE01DF9F3FB3EB71A2C7E03D2E841F2D7EA051174E019447BCEC0BF6B246B801F3A778F552F432380140ED96946D0F5A42791FD823C9DA4201B266D8BAA8C96B35F44CC8ECC8E66AEDC74E154015850335A1DA9B201A619528330DB3F7F5A8415259FABDC38EEA699236304B7606FCA79DC79821AE6540D24FAE367264B1808D075952ECAD772C7282FAE762DF118043B8BB63EF733D7557649D11706ED7CC331E8F3AF527A7F3F957B64EB97C0C0F668EBA3EA0CCDBD5C7D6D5E6E5742F4EB60B8CFD510743A' />
+          <input type='hidden' name='fpx_buyerName' value='ZALIKHA BINTI OMAR' />
+          <input type='hidden' name='fpx_buyerBankId' value='SBI0002' />
+          <input type='hidden' name='fpx_buyerBankBranch' value='SBI0002' />
+          <input type='hidden' name='fpx_buyerId' value='920518102468' />
+          <input type='hidden' name='fpx_makerName' value='PAYNET SDN BHD' />
+          <input type='hidden' name='fpx_buyerIban' value='SBI0002' />
+          <input type='hidden' name='fpx_debitAuthCode' value='00' />
+          <input type='hidden' name='fpx_debitAuthNo' value='9999999' />
+          <input type='hidden' name='fpx_orderList' value='1904081026090434,SE00004441,100,1904081552050457,00,9999999; 1904081026090435,SE00004441,100,1904081552050457,00,9999999,00;' />
+          </form>
+          "
+
+          
+    RequestAQ:
+      required:
+      - fpx_msgType
+      - fpx_msgToken
+      - fpx_sellerExId
+      - fpx_sellerExOrderNo
+      - fpx_sellerTxnTime
+      - fpx_sellerOrderNo
+      - fpx_sellerBankCode
+      - fpx_txnCurrency
+      - fpx_checkSum
+      - fpx_buyerName
+      - fpx_buyerBankId
+      - fpx_buyerBankBranch
+      - fpx_buyerAccNo
+      - fpx_buyerId
+      - fpx_makerName
+      - fpx_buyerIban
+      - fpx_productDesc
+      - fpx_version
+      type: object
+      properties:
+        fpx_msgType:
+          maxLength: 4
+          type: string
+          description: |
+            Indicate message type. AQ - Authorization Enquiry for Bulk Refund
+        fpx_msgToken:
+          maxLength: 2
+          type: string
+          description: |
+            Indicate business model. Default: 03
+        fpx_sellerExId:
+          maxLength: 10
+          type: string
+          description: Exchange ID - provided by FPX E.g = EX00000374.
+        fpx_sellerExOrderNo:
+          maxLength: 35
+          type: string
+          description: Unique ID generated by Exchange for each transaction originating from an Exchange.
+            Not Supported -  Ampersand (&) and Apostrophe (').
+        fpx_sellerTxnTime:
+          maxLength: 14
+          type: string
+          description: Date and time transaction originated from Merchant YYYYMMDDHHmmSS (in MYT)
+        fpx_sellerOrderNo:
+          maxLength: 40
+          type: string
+          description: Order number generated by merchant. Not Supported - Ampersand (&) and Apostrophe (').
+        fpx_sellerBankCode:
+          maxLength: 2
+          type: string
+          description: Seller account number registered in FPX. 01 / 02 / 03 / 04. Default value = 01
+        fpx_txnCurrency:
+          maxLength: 3
+          type: string
+          description: Transaction currency. Default value = MYR
+        fpx_buyerEmail:
+          maxLength: 50
+          type: string
+          description: Buyer email address.
+        fpx_checkSum:
+          type: string
+          description: Checksum value. Hold message signature.
+        fpx_buyerName:
+          maxLength: 40
+          type: string
+          description: Buyer name.
+        fpx_buyerBankId:
+          maxLength: 10
+          type: string
+          description: Provided by FPX - ties to Bank that Buyer has an account in.
+        fpx_buyerBankBranch:
+          maxLength: 10
+          type: string
+          description: Bank's branch code that Buyer opened his account. 
+            Not supported -  Slash (/), Ampersand (&) and Apostrophe (')
+        fpx_buyerAccNo:
+          maxLength: 20
+          type: string
+          description: Buyer account number.
+        fpx_buyerId:
+          maxLength: 20
+          type: string
+          description: Buyer identification number. Not supported =  Slash (/), Ampersand (&) and Apostrophe (')
+        fpx_makerName:
+          maxLength: 40
+          type: string
+          description: Buyer respresentative (Maker) who initiate the transaction.
+        fpx_buyerIban:
+          maxLength: 35
+          type: string
+          description: Buyer IBAN.
+        fpx_productDesc:
+          maxLength: 30
+          type: string
+          description: Product description.
+        fpx_version:
+          maxLength: 3
+          type: string
+          description: Default value = 7.0
+      example:
+         |
+          "<form method=”POST”>
+           <input type=hidden name="fpx_msgType" value="AQ" >
+           <input type=hidden name="fpx_msgToken" value="03" >
+           <input type=hidden name="fpx_sellerExId" value="EX00002320" >
+           <input type=hidden name="fpx_sellerExOrderNo" value="1015738756484823025" >
+           <input type=hidden name="fpx_sellerTxnTime" value="20190408164301" >
+           <input type=hidden name="fpx_sellerOrderNo" value="1132582697504810095" >
+           <input type=hidden name="fpx_sellerBankCode" value="01" >
+           <input type=hidden name="fpx_txnCurrency" value="MYR" >
+           <input type=hidden name="fpx_buyerEmail" value="zalikha@example.com.my" >
+           <input type=hidden name="fpx_checkSum" value="33828D583EABCE10DC9781E156E33C99ACEE2C73CD01E12304D819AD026100378E26F00E503CFFE7948E043ED3B0533F7B295AEB79F185E9BB7FC32A5F46BB043BE9E1F4B88F05BE619F7702F59F7D665BAB145E5A9D8F74F210AA7431C515B0231D1191E7F78730405237E10EB7AB59196E985E832BCE718DC0E293C78D6EC37E73E16ADFC9F3983CBB3369518EF46E6FB34608678C48F98C324B6317053658ACC9CFBA8C1A887896ED70DBE5DBC27C69F2E7C3173611EB73092C6A0C3F43CC8383B31604C3F0EB83248B9FEB66252D72F6B928E0057070808F80039B0915B004ED89B5066BB8B28625964E78951EC20B694441FDC5CEF937F95F5C23081DB4" >
+           <input type=hidden name="fpx_buyerName" value="ZALIKHA BINTI OMAR" >
+           <input type=hidden name="fpx_buyerBankId" value="SBI0002" >
+           <input type=hidden name="fpx_buyerBankBranch" value="SBI0002" >
+           <input type=hidden name="fpx_buyerAccNo" value="7654123456" >
+           <input type=hidden name="fpx_buyerId" value="920518102468" >
+           <input type=hidden name="fpx_makerName" value="PAYNET SDN BHD" >
+           <input type=hidden name="fpx_buyerIban" value="SBI0002" >
+           <input type=hidden name="fpx_orderList" value="" >
+           <input type=hidden name="fpx_productDesc" value="Books" >
+           <input type=hidden name="fpx_version" value="7.0" >
+           </form>
+            "
+          
+    RequestAX:
+      required:
+      - fpx_msgType
+      - fpx_msgToken
+      - fpx_sellerExId
+      - fpx_sellerId
+      - fpx_sellerTxnTime
+      - fpx_fpxTxnId
+      - fpx_sellerExOrderNo
+      - fpx_sellerOrderNo
+      - fpx_checkSum
+      - fpx_version
+      type: object
+      properties:
+        fpx_msgType:
+          maxLength: 4
+          type: string
+          description: |
+            Indicate message type. AX - Authorization request for transaction Cancelation
+        fpx_msgToken:
+          maxLength: 2
+          type: string
+          description: |
+            Indicate business model. Default: 03
+        fpx_sellerExId:
+          maxLength: 10
+          type: string
+          description: Exchange ID - provided by FPX E.g = EX00000374.
+        fpx_sellerId:
+          maxLength: 10
+          type: string
+          description: Seller ID - provided by FPX E.g = SE00000543.
+        fpx_sellerTxnTime:
+          maxLength: 14
+          type: string
+          description: Date and time transaction originated from Merchant YYYYMMDDHHmmSS (in MYT)
+        fpx_fpxTxnId:
+          maxLength: 16
+          type: string
+          description: Requested FPX Transaction ID that going to be cancel
+        fpx_sellerExOrderNo:
+          maxLength: 35
+          type: string
+          description: Unique ID generated by Exchange for each transaction originating from an Exchange.
+            Not Supported -  Ampersand (&) and Apostrophe (').
+        fpx_sellerOrderNo:
+          maxLength: 40
+          type: string
+          description: Order number generated by merchant. Not Supported - Ampersand (&) and Apostrophe (').
+        fpx_checkSum:
+          type: string
+          description: Checksum value. Hold message signature.
+        fpx_version:
+          maxLength: 3
+          type: string
+          description: Default value = 7.0
+      example:
+         |
+          "<form method=”POST”>
+           <input type=hidden name="fpx_msgType" value="AX" >
+           <input type=hidden name="fpx_msgToken" value="01" >
+           <input type=hidden name="fpx_sellerExId" value="EX00002320" >
+           <input type=hidden name="fpx_sellerExOrderNo" value="3977236029931760964" >
+           <input type=hidden name="fpx_sellerTxnTime" value="20190628113651" >
+           <input type=hidden name="fpx_sellerOrderNo" value="3201107809476725730" >
+           <input type=hidden name="fpx_sellerId" value="SE00004441" >
+           <input type=hidden name="fpx_checkSum" value="6491D4AA9D0F741E9CFB9076D2F847FCE8C2750698AFBC45B440B1A4E80960776C5D933F781C08E305C410424E21F338BD69C2D436E0BAF9FD49B7969F409DF9F2705E20F18FDD0441F273E5C2E01D104BD49671F2C46ECC0DD0EDE0303F21C31F13977A2319889DE3ACBC8E8AB759BE0A2A4D8546583CE5A3B26A4A67F98533510583A34EB2CFE2E9D5B0DC3DB96DEF9C7B77407CBE10504246F2FE7FA1EB00DED9D13E747C8D2C764CD1F5AD95433BF6392A7A8023C4517B567B6E8B7312129EEAEC5DFF90EC1BCC6CDE0E88Q`Q88D6BDB3774121A4AB09ADFE66C6BA4F2B7A652F2192208AADC25783240F68ED4482C7E6F6492DCF94C02DC4C344B66A9C1A72" >
+           <input type=hidden name="fpx_version" value="7.0" >
+           <input type=hidden name="fpx_fpxTxnId" value="1906281138590756" >	
+           </form>
+            "
+          
+    ResponseAXA:
+      required:
+      - fpx_msgType
+      - fpx_msgToken
+      - fpx_sellerExId
+      - fpx_sellerId
+      - fpx_sellerTxnTime
+      - fpx_fpxTxnId
+      - fpx_sellerExOrderNo
+      - fpx_sellerOrderNo
+      - fpx_checkSum
+      - fpx_axaCode
+      type: object
+      properties:
+        fpx_msgType:
+          maxLength: 4
+          type: string
+          description: |
+            Indicate message type. AX - Authorization request for transaction Cancelation
+        fpx_msgToken:
+          maxLength: 2
+          type: string
+          description: |
+            Indicate business model. Default: 03
+        fpx_sellerExId:
+          maxLength: 10
+          type: string
+          description: Exchange ID - provided by FPX E.g = EX00000374.
+        fpx_sellerId:
+          maxLength: 10
+          type: string
+          description: Seller ID - provided by FPX E.g = SE00000543.
+        fpx_sellerTxnTime:
+          maxLength: 14
+          type: string
+          description: Date and time transaction originated from Merchant YYYYMMDDHHmmSS (in MYT)
+        fpx_fpxTxnId:
+          maxLength: 16
+          type: string
+          description: Requested FPX Transaction ID that going to be cancel
+        fpx_sellerExOrderNo:
+          maxLength: 35
+          type: string
+          description: Unique ID generated by Exchange for each transaction originating from an Exchange.
+            Not Supported -  Ampersand (&) and Apostrophe (').
+        fpx_sellerOrderNo:
+          maxLength: 40
+          type: string
+          description: Order number generated by merchant. Not Supported - Ampersand (&) and Apostrophe (').
+        fpx_checkSum:
+          type: string
+          description: Checksum value. Hold message signature.
+        fpx_axaCode:
+          maxLength: 2
+          type: string
+          description: Transaction cancelation status Value are = 00 - for successful cancelation , 2X - transaction cancelation request is rejected
+        fpx_debitAuthCode:
+          maxLength: 2
+          type: string
+          description: Debit response code authorized by Buyer Bank.
+        fpx_debitAuthNo:
+          maxLength: 10
+          type: string
+          description: Mandatory if Debit Authorization Code is '00'
+      example:
+         |
+          "<form method=”POST”>
+          <input type=hidden name="fpx_msgType" value="AX" >
+          <input type=hidden name="fpx_msgToken" value="01" >
+          <input type=hidden name="fpx_sellerExId" value="EX00002320" >
+          <input type=hidden name="fpx_sellerExOrderNo" value="3977236029931760964" >
+          <input type=hidden name="fpx_sellerTxnTime" value="20190628113651" >
+          <input type=hidden name="fpx_sellerOrderNo" value="3201107809476725730" >
+          <input type=hidden name="fpx_sellerId" value="SE00004441" >
+          <input type=hidden name="fpx_checkSum" value="6491D4AA9D0F741E9CFB9076D2F847FCE8C2750698AFBC45B440B1A4E80960776C5D933F781C08E305C410424E21F338BD69C2D436E0BAF9FD49B7969F409DF9F2705E20F18FDD0441F273E5C2E01D104BD49671F2C46ECC0DD0EDE0303F21C31F13977A2319889DE3ACBC8E8AB759BE0A2A4D8546583CE5A3B26A4A67F98533510583A34EB2CFE2E9D5B0DC3DB96DEF9C7B77407CBE10504246F2FE7FA1EB00DED9D13E747C8D2C764CD1F5AD95433BF6392A7A8023C4517B567B6E8B7312129EEAEC5DFF90EC1BCC6CDE0E88Q`Q88D6BDB3774121A4AB09ADFE66C6BA4F2B7A652F2192208AADC25783240F68ED4482C7E6F6492DCF94C02DC4C344B66A9C1A72" >
+          <input type=hidden name="fpx_version" value="7.0" >
+          <input type=hidden name="fpx_fpxTxnId" value="1906281138590756" >	
+          </form>
+          "
+    

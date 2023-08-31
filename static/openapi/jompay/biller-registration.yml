@@ -1,0 +1,444 @@
+openapi: 3.0.1
+info:
+  title: Biller Registration Services
+  description: |
+    The Biller Registration System (BRS), which is a part of the NBPS system, in an online service provided by and hosted at PayNet. The Biller Bank makes online web-service calls to the BRS when validating and notifying successful Biller Registration (BR). The BRS service is available to the Biller Bank 24 hours daily to facilitate the expedite BR capability.
+  
+    ### Who Should Use
+    This API should only be used by merchants.
+  version: v1
+servers:
+- url: https://brs.jompay.uat.mpls.paynet.my:8446/api/brs/{version}
+paths:
+  /registerbiller:
+    post:
+      description: The RegisterBiller API is used to validate that the biller registration
+        details are valid and to return registration status either success or fail.
+      operationId: Register Biller
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/registerBillerRequest'
+        required: false
+      responses:
+        200:
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/registerBillerResponse'
+          x-amf-mediaType: application/json
+      x-outbound: false
+      x-outboundUrl: https://<domain>
+      x-codegen-request-body-name: generated
+components:
+  schemas:
+    registerBillerRequest:
+      required:
+      - body
+      - header
+      type: object
+      properties:
+        header:
+          required:
+          - sig
+          - timestamp
+          type: object
+          properties:
+            sig:
+              maxLength: 100
+              type: string
+              description: |
+                Message signature<br /><br />
+                Refer to <a style="color:blue;" href="https://developer.paynet.my/jompay-authentication-n-encryption#signature/" target="_blank"><b>Web Service Message Signature Generation</b></a>
+            timestamp:
+              type: string
+              description: |
+                String representation of the UTC time of the operation in ISO 8601 format. If this time differs from the current time by more than 15 minutes, the Biller should ignore the request
+        body:
+          required:
+          - bcodeeffectivedate
+          - billercodename
+          - bregcreatedate
+          - businesscategory
+          - checkdigitoption
+          - collectionacc1
+          - collectionacc2
+          - companyname
+          - companyregno
+          - currency
+          - masterbillerbank
+          - paymentlimitchecking
+          - paymentnotification
+          - paymenttypes
+          - pricontactareacode
+          - pricontactname
+          - pricontactno
+          - priemailaddress
+          - prisalutation
+          - ref1lengthchecking
+          - ref1type
+          type: object
+          properties:
+            bcodeeffectivedate:
+              maxLength: 10
+              type: string
+              description: |
+                Effective Date. String representation of local date Format dd-MM-yyyy.
+            bcontactareacode:
+              maxLength: 3
+              type: string
+              description: Business Contact No. Area Code
+            bcontactno:
+              maxLength: 9
+              type: string
+              description: |
+                Business Contact No.
+            bfaxareacode:
+              maxLength: 3
+              type: string
+              description: Business Fax No. Area Code
+            bfaxno:
+              maxLength: 9
+              type: string
+              description: |
+                Business Fax No.
+            billercodename:
+              maxLength: 30
+              type: string
+              description: Biller Code Name
+            bregcreatedate:
+              maxLength: 10
+              type: string
+              description: Biller Registration Creation Date. Format:dd-MM-yyyy
+            businessadd1:
+              maxLength: 100
+              type: string
+              description: |
+                Address 1
+            businessadd2:
+              maxLength: 100
+              type: string
+              description: Address 2
+            businesscategory:
+              maxLength: 15
+              type: string
+              description: |
+                Business Category
+            businesshomeurl:
+              maxLength: 1000
+              type: string
+              description: Business Home URL
+            checkdigitoption:
+              maxLength: 1
+              type: string
+              description: Check Digit
+            city:
+              maxLength: 50
+              type: string
+              description: City
+            collectionacc1:
+              maxLength: 17
+              type: string
+              description: Collection Account
+            collectionacc2:
+              maxLength: 17
+              type: string
+              description: Fee/ Charge Account
+            companyname:
+              maxLength: 50
+              type: string
+              description: Company name
+            companyregno:
+              maxLength: 30
+              type: string
+              description: Company registration No.
+            country:
+              maxLength: 50
+              type: string
+              description: Country
+            currency:
+              maxLength: 3
+              type: string
+              description: Currency
+            ftpip:
+              maxLength: 50
+              type: string
+              description: FTP IP Address. Mandatory if Payment Notification is Yes(Y)
+                and Payment Notification Method is FTP(2).
+            ftpipport:
+              maxLength: 15
+              type: string
+              description: FTP Port Number. Mandatory if Payment Notification is Yes(Y)
+                and Payment Notification Method is FTP(2).
+            lang:
+              maxLength: 2
+              type: string
+              description: Language for return messages. Currently, must be English
+                (EN). If not provided, default value is English (EN)
+            masterbillerbank:
+              maxLength: 20
+              type: string
+              description: Master Biller Bank Source ID
+            maxcc:
+              type: number
+              description: Max Credit Card Account Payment Limit (without cents).Must
+                be non-zero. Maximum value is 1000000. Mandatory if Payment Limit
+                Checking is Yes(Y) and Payment Type is CASA and Card (2)
+            maxref1length:
+              type: number
+              description: Ref-1 Max Length. Mandatory if Ref-1 Length Checking is
+                Yes(Y)
+            maxsavings:
+              type: number
+              description: Max Current & Saving Account Payment Limit (without cents).
+                Must be non-zero. Maximum value is 1000000. Mandatory if Payment Limit
+                Checking is Yes(Y) and Payment Type is CASA(1).
+            mincc:
+              type: number
+              description: Min Credit Card Account Payment Limit (without cents).
+                Must be non-zero. Maximum value is 1000000. Mandatory if Payment Limit
+                Checking is Yes(Y) and Payment Type is CASA and Card (2).
+            minref1length:
+              type: number
+              description: Ref-1 Min Length. Must be non-zero. Maximum value is 20.
+                Mandatory if Ref-1 Length Checking is Yes(Y).
+            minsavings:
+              type: number
+              description: Min Current & Saving Account Payment Limit (without cents).
+                Must be non-zero. Maximum value is 1000000.
+            mstate:
+              maxLength: 20
+              type: string
+              description: State.
+            notificationemail:
+              maxLength: 200
+              type: string
+              description: RTN Email.Mandatory if Payment Notification is Yes(Y) and
+                Payment Notification Method is Email(3)
+            passkeyduration:
+              type: number
+              description: Passkey Renewal Duration in Year. Mandatory if Payment
+                Notification is Yes(Y) and Payment Notification Method is Web Service(1)
+                or FTP(2)
+            paymentlimitchecking:
+              maxLength: 1
+              type: string
+              description: Payment Limit
+            paymentnotification:
+              maxLength: 1
+              type: string
+              description: Payment Notification
+            paymentnotificationmethod:
+              maxLength: 1
+              type: string
+              description: Payment Notification Method. Mandatory if Payment Notification
+                is Yes(Y).
+            paymenttypes:
+              maxLength: 1
+              type: string
+              description: Payment Type.
+            postcode:
+              maxLength: 6
+              type: string
+              description: Postcode.
+            pricontactareacode:
+              maxLength: 3
+              type: string
+              description: Primary Contact Area Code.
+            pricontactname:
+              maxLength: 50
+              type: string
+              description: Primary Contact Name.
+            pricontactno:
+              maxLength: 9
+              type: string
+              description: Primary Contact No.
+            priemailaddress:
+              maxLength: 50
+              type: string
+              description: Primary Email Address.
+            prisalutation:
+              maxLength: 20
+              type: string
+              description: Primary Salutation.
+            productname:
+              maxLength: 40
+              type: string
+              description: Product Name.
+            ref1lengthchecking:
+              maxLength: 1
+              type: string
+              description: Ref-1 Length Checking.
+            ref1samples:
+              maxLength: 1000
+              type: string
+              description: Ref-1 Samples.Mandatory if checkdigitoption is Yes(Y).
+            ref1type:
+              maxLength: 1
+              type: string
+              description: Ref-1 Type.
+            seccontactareacode:
+              maxLength: 3
+              type: string
+              description: Secondary Contact No. Area Code.
+            seccontactname:
+              maxLength: 50
+              type: string
+              description: Secondary Contact Name.
+            seccontactno:
+              maxLength: 9
+              type: string
+              description: Secondary Contact No.
+            secemailaddress:
+              maxLength: 50
+              type: string
+              description: Secondary Email Address.
+            secsalutation:
+              maxLength: 20
+              type: string
+              description: Secondary Salutation.
+            wsip:
+              maxLength: 50
+              type: string
+              description: RTN IP Address.Mandatory if Payment Notification is Yes(Y)
+                and Payment Notification Method is Web Service(1).
+            wsipport:
+              maxLength: 15
+              type: string
+              description: RTN Port Number.Mandatory if Payment Notification is Yes(Y)
+                and Payment Notification Method is Web Service(1).
+            wsurl:
+              maxLength: 1000
+              type: string
+              description: RTN URL. Mandatory if Payment Notification is Yes(Y) and
+                Payment Notification Method is Web Service(1).
+      example:
+        header:
+          sig: bMv4lPU4t2tPVHxeEceuVp7Lcu+qWaLkBTTueXium+c=
+          timestamp: 2019-01-28T02:32:19Z
+        body:
+          bcodeeffectivedate: 31-01-2019
+          bcontactareacode: ""
+          bcontactno: ""
+          bfaxareacode: ""
+          bfaxno: ""
+          billercodename: Ali Cafe
+          bregcreatedate: 22-01-2019
+          businessadd1: 1 Jalan PJS
+          businessadd2: ""
+          businesscategory: "1111"
+          businesshomeurl: ""
+          checkdigitoption: Y
+          city: PJ
+          collectionacc1: "12211111"
+          collectionacc2: "1221122"
+          companyname: New Vision Sdn Bhd
+          companyregno: ABC1234
+          country: Malaysia
+          currency: MYR
+          ftpip: ""
+          ftpipport: ""
+          lang: en
+          masterbillerbank: HSBC2225
+          maxcc: 1000
+          maxref1length: 10
+          maxsavings: 1000
+          mincc: 1
+          minref1length: 3
+          minsavings: 1
+          mstate: Selangor
+          notificationemail: ali@email.com
+          passkeyduration: 1
+          paymentlimitchecking: Y
+          paymentnotification: Y
+          paymentnotificationmethod: "3"
+          paymenttypes: "2"
+          postcode: "50400"
+          pricontactareacode: "03"
+          pricontactname: Mohd Ali
+          pricontactno: "6544203"
+          priemailaddress: ali@email.com
+          prisalutation: MR
+          productname: Ali Coffee
+          ref1lengthchecking: Y
+          ref1samples: A00001,A00002,A00003,A00004,A00005,A00006,A00007,A00008,A00009,A000010,A00011,A00012,A00013,A00014,A00015,A00016,A00017,A00018,A00019,A000020
+          ref1type: S
+          seccontactareacode: ""
+          seccontactname: ""
+          seccontactno: ""
+          secemailaddress: ""
+          secsalutation: ""
+          wsip: ""
+          wsipport: ""
+          wsurl: ""
+    registerBillerResponse:
+      required:
+      - body
+      - header
+      type: object
+      properties:
+        header:
+          required:
+          - sig
+          - timestamp
+          type: object
+          properties:
+            sig:
+              maxLength: 100
+              type: string
+              description: |
+                Message signature<br /><br />
+                Refer to <a style="color:blue;" href="https://developer.paynet.my/jompay-authentication-n-encryption#signature/" target="_blank"><b>Web Service Message Signature Generation</b></a>
+            timestamp:
+              maxLength: 25
+              type: string
+              description: |
+                String representation of the UTC time of the operation in ISO 8601 format. If this time differs from the current time by more than 15 minutes, the Biller should ignore the request
+        body:
+          required:
+          - companyregno
+          - success
+          type: object
+          properties:
+            success:
+              maxLength: 1
+              type: string
+              description: |
+                Whether the operation was successful or not. Valid values are ‘Y’ or ‘N’.
+            errorcode:
+              maxLength: 10
+              type: string
+              description: Error Code if the request message was not successful. If
+                success=Y, then this field will be empty string.
+            erroruimessage:
+              maxLength: 200
+              type: string
+              description: |
+                Error UI Message if the request message was not successful. If success=Y, then this field will be empty string.
+            erroruimessagelang:
+              maxLength: 2
+              type: string
+              description: Language Code of the Error UI Message if the request message
+                was not successful.If success=Y, then this field will be empty string.
+            billercode:
+              maxLength: 50
+              type: string
+              description: |
+                Biller Code for the New Biller. If success=N, then this field will be empty string.
+            companyregno:
+              maxLength: 50
+              type: string
+              description: Company Registration No.
+      example:
+        header:
+          sig: ' jQzm9B/AfDnO9NRCbAl2qLozkeXvaml6G4i0/QYMuvY='
+          timestamp: 2019-01-28T04:05:08Z
+        body:
+          success: Y
+          errorcode: ""
+          erroruimessage: ""
+          erroruimessagelang: ""
+          billercode: "1234"
+          companyregno: ABC1234

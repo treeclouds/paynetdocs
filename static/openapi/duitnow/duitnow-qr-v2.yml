@@ -1,0 +1,3205 @@
+openapi: 3.1.0
+info:
+  title: DuitNow QR
+  description: |
+    > **Attention!** These APIs are still in the beta stage and are not yet available to the general public. Stay tuned for updates on when they will be ready for everyone to explore!
+    
+    ### Before Getting Started
+    Participant needs to identify the role it plans to participate as before deciding which API to build. The roles include:
+      - Participant acts as the Originating Financial Institution (OFI) or Issuer. Participant will need to be able to parse the QR code and translate the information into the API payload before sending to RPP host to create the payment instruction.
+      - Participant acts as the Receiving Financial Institution (RFI) or Acquirer. Participant will need to be able to receive the instruction from RPP host and be able to credit the fund to their customer’s account. In such scenario, Participant needs to be able to receive API request from RPP host to process the payment instruction.
+      - Participant acts as both the Originating Financial Institution (OFI) and Receiving Financial Institution (RFI). In such scenario, Participant needs to implement both payment instruction's sending and receiving legs.
+
+    ### V2 API
+    This API version is made available in JSON format and request can be called via HTTP.
+    
+    It only supports connectivity over the internet. MPLS line is not supported.
+    
+    Currently, this API only supports Participant that wishes to join as Issuer. For Acquirer, Participant is expected to implement the [v1 API](https://docs.developer.paynet.my/api-qr#/) instead.
+
+    ### Endpoints
+    Participant only needs to implement endpoints for the type of QRs it wishes to offer to customer. Below are the types that RPP is currently offering:
+      - Domestic MPM – Merchant-Presented Mode DuitNow QR for domestic market only.
+      - Cross Border MPM – Merchant-Presented Mode QR is built on top of Domestic MPM but intended for QR transaction in overseas country. Participant who is interested may refer to our product section on the countries being supported.
+      - Domestic CPM – Consumer-Presented Mode DuitNow QR for domestic market only.
+  version: v2
+servers:
+- url: https://mock.developer.paynet.my/qr/v2
+paths:
+  /domestic/enquiry:
+    post:
+      summary: QR Enquiry
+      description: This API is used to lookup for the Merchant/Biller information using the QR code. The returned information will be used when initiating QR payment
+      operationId: Domestic Account Enquiry
+      tags:
+        - Domestic MPM
+      parameters:
+      - name: Authorization
+        in: header
+        description: Bearer &lt;access_token&gt;
+        required: true
+        schema:
+          type: string
+      - name: X-Client-Id
+        in: header
+        required: true
+        schema: 
+          type: string
+          description : Client Identification.
+      - name: X-Business-Message-Id
+        in: header
+        required: true
+        schema: 
+          maxLength: 35
+          type: string
+          format: "YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS"
+          description : Business Message Id. Similar with businessMessageId in payload body.
+      - name: X-Ip-Address
+        in: header
+        description: IP address where the transaction originated from
+        required: true
+        schema:
+          maxLength: 100
+          pattern: ^(\d{1,2}|(0|1)\d{2}|2[0-4]\d|25[0-5])\.(\d{1,2}|(0|1)\d{2}|2[0-4]\d|25[0-5])\.(\d{1,2}|(0|1)\d{2}|2[0-4]\d|25[0-5])\.(\d{1,2}|(0|1)\d{2}|2[0-4]\d|25[0-5])$
+          type: string
+      - name: X-Gps-Coordinates
+        in: header
+        description: Location of the sender in decimal degree coordinate e.g. 40.689263,
+          74.044505
+        required: true
+        schema:
+          maxLength: 35
+          type: string
+
+      requestBody: 
+        content: 
+          application/json:
+            schema: 
+              $ref: "#/components/schemas/domesticQueryRequest"
+
+      responses: 
+        200:
+          description: ""
+          headers:
+            X-Business-Message-Id:
+              description: Business Message Id. Similar with businessMessageId in payload body.
+              schema:
+                type: string
+                x-amf-required: true
+            Authorization:
+              description: Bearer &lt;access_token&gt;
+              schema:
+                title: Key Number
+                maxLength: 35
+                format : "YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS"
+                type: string
+                x-amf-required: true
+          content: 
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/domesticQueryResponse"
+        400:
+          description: ""
+          content: 
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/errorResponse"
+        401:
+          description: ""
+          content: 
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/errorResponse"
+        500:
+          description: ""
+          content: 
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/errorResponse"
+
+      security:
+        - bearerAuth: []
+      x-codegen-request-body-name: generated
+      
+  /domestic/payment:
+    post:
+      summary: QR Payment
+      description: This API is used to initiate payment to Merchant/Biller to complete the QR payment. Upon completion of this payment leg, the fund will be credited to the Merchant/Biller’s Creditor Agent
+      operationId: Domestic QR Payment
+      tags:
+        - Domestic MPM
+      parameters:
+      - name: Authorization
+        in: header
+        description: Bearer &lt;access_token&gt;
+        required: true
+        schema:
+          type: string
+      - name: X-Client-Id
+        in: header
+        required: true
+        schema: 
+          type: string
+          description : Client Identification.
+      - name: X-Business-Message-Id
+        in: header
+        required: true
+        schema: 
+          maxLength: 35
+          type: string
+          format: "YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS"
+          description : Business Message Id. Similar with businessMessageId in payload body.
+      - name: X-Ip-Address
+        in: header
+        description: IP address where the transaction originated from
+        required: true
+        schema:
+          maxLength: 100
+          pattern: ^(\d{1,2}|(0|1)\d{2}|2[0-4]\d|25[0-5])\.(\d{1,2}|(0|1)\d{2}|2[0-4]\d|25[0-5])\.(\d{1,2}|(0|1)\d{2}|2[0-4]\d|25[0-5])\.(\d{1,2}|(0|1)\d{2}|2[0-4]\d|25[0-5])$
+          type: string
+      - name: X-Gps-Coordinates
+        in: header
+        description: Location of the sender in decimal degree coordinate e.g. 40.689263,
+          74.044505
+        required: true
+        schema:
+          maxLength: 35
+          type: string
+
+      requestBody: 
+        content: 
+          application/json:
+            schema: 
+              $ref: "#/components/schemas/domesticPaymentRequest"
+
+      responses: 
+        200:
+          description: ""
+          headers:
+            X-Business-Message-Id:
+              description: Business Message Id. Similar with businessMessageId in payload body.
+              schema:
+                title: Key Number
+                maxLength: 35
+                format : "YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS"
+                type: string
+                x-amf-required: true
+            Authorization:
+              description: Bearer &lt;access_token&gt;
+              schema:
+                title: Key Number
+                maxLength: 35
+                format : "YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS"
+                type: string
+                x-amf-required: true
+          content: 
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/domesticPaymentResponse"
+        400:
+          description: ""
+          content: 
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/errorResponse"
+        401:
+          description: ""
+          content: 
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/errorResponse"
+        500:
+          description: ""
+          content: 
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/errorResponse"
+
+      security:
+        - bearerAuth: []
+      x-codegen-request-body-name: generated
+      
+  /crossborder/enquiry:
+    post:
+      summary: QR Enquiry
+      description: This API is used to lookup for the Merchant/Biller information using the QR code. The returned information will be used when initiating QR payment
+      operationId: Cross Border Account Enquiry
+      tags:
+        - Cross Border MPM
+      parameters:
+      - name: Authorization
+        in: header
+        description: Bearer &lt;access_token&gt;
+        required: true
+        schema:
+          type: string
+      - name: X-Client-Id
+        in: header
+        required: true
+        schema: 
+          type: string
+          description : Client Identification.
+      - name: X-Business-Message-Id
+        in: header
+        required: true
+        schema: 
+          maxLength: 35
+          type: string
+          format: "YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS"
+          description : Business Message Id. Similar with businessMessageId in payload body.
+      - name: X-Ip-Address
+        in: header
+        description: IP address where the transaction originated from
+        required: true
+        schema:
+          maxLength: 100
+          pattern: ^(\d{1,2}|(0|1)\d{2}|2[0-4]\d|25[0-5])\.(\d{1,2}|(0|1)\d{2}|2[0-4]\d|25[0-5])\.(\d{1,2}|(0|1)\d{2}|2[0-4]\d|25[0-5])\.(\d{1,2}|(0|1)\d{2}|2[0-4]\d|25[0-5])$
+          type: string
+      - name: X-Gps-Coordinates
+        in: header
+        description: Location of the sender in decimal degree coordinate e.g. 40.689263,
+          74.044505
+        required: true
+        schema:
+          maxLength: 35
+          type: string
+
+      requestBody: 
+        content: 
+          application/json:
+            schema: 
+              $ref: "#/components/schemas/crossborderQueryRequest"
+
+      responses: 
+        200:
+          description: ""
+          headers:
+            X-Business-Message-Id:
+              description: Business Message Id. Similar with businessMessageId in payload body.
+              schema:
+                title: Key Number
+                maxLength: 35
+                format : "YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS"
+                type: string
+                x-amf-required: true
+            Authorization:
+              description: Bearer &lt;access_token&gt;
+              schema:
+                title: Key Number
+                maxLength: 35
+                format : "YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS"
+                type: string
+                x-amf-required: true
+          content: 
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/crossborderQueryResponse"
+        400:
+          description: ""
+          content: 
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/errorResponse"
+        401:
+          description: ""
+          content: 
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/errorResponse"
+        500:
+          description: ""
+          content: 
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/errorResponse"
+
+      security:
+        - bearerAuth: []
+      x-codegen-request-body-name: generated
+     
+  /crossborder/payment:
+    post:
+      summary: QR Payment
+      description: This API is used to initiate payment to Merchant/Biller to complete the QR payment. Upon completion of this payment leg, the fund will be credited to the Merchant/Biller’s Creditor Agent
+      operationId: Cross Border QR Payment
+      tags:
+        - Cross Border MPM
+      parameters:
+      - name: Authorization
+        in: header
+        description: Bearer &lt;access_token&gt;
+        required: true
+        schema:
+          type: string
+      - name: X-Client-Id
+        in: header
+        required: true
+        schema: 
+          type: string
+          description : Client Identification.
+      - name: X-Business-Message-Id
+        in: header
+        required: true
+        schema: 
+          maxLength: 35
+          type: string
+          format: "YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS"
+          description : Business Message Id. Similar with businessMessageId in payload body.
+      - name: X-Ip-Address
+        in: header
+        description: IP address where the transaction originated from
+        required: true
+        schema:
+          maxLength: 100
+          pattern: ^(\d{1,2}|(0|1)\d{2}|2[0-4]\d|25[0-5])\.(\d{1,2}|(0|1)\d{2}|2[0-4]\d|25[0-5])\.(\d{1,2}|(0|1)\d{2}|2[0-4]\d|25[0-5])\.(\d{1,2}|(0|1)\d{2}|2[0-4]\d|25[0-5])$
+          type: string
+      - name: X-Gps-Coordinates
+        in: header
+        description: Location of the sender in decimal degree coordinate e.g. 40.689263,
+          74.044505
+        required: true
+        schema:
+          maxLength: 35
+          type: string
+
+      requestBody: 
+        content: 
+          application/json:
+            schema: 
+              $ref: "#/components/schemas/crossborderPaymentRequest"
+
+      responses: 
+        200:
+          description: ""
+          headers:
+            X-Business-Message-Id:
+              description: Business Message Id. Similar with businessMessageId in payload body.
+              schema:
+                title: Key Number
+                maxLength: 35
+                format : "YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS"
+                type: string
+                x-amf-required: true
+            Authorization:
+              description: Bearer &lt;access_token&gt;
+              schema:
+                title: Key Number
+                maxLength: 35
+                format : "YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS"
+                type: string
+                x-amf-required: true
+          content: 
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/crossborderPaymentResponse"
+        400:
+          description: ""
+          content: 
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/errorResponse"
+        401:
+          description: ""
+          content: 
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/errorResponse"
+        500:
+          description: ""
+          content: 
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/errorResponse"
+
+      security:
+        - bearerAuth: []
+      x-codegen-request-body-name: generated
+  
+  /cpm/domestic/payment:
+    post:
+      summary: QR Payment
+      description: This API is used to initiate payment to Merchant/Biller to complete the QR payment. Upon completion of this payment leg, the fund will be credited to the Merchant/Biller’s Creditor Agent
+      operationId: Consumer-Presented QR Payment
+      tags:
+        - Domestic CPM
+      parameters:
+      - name: Authorization
+        in: header
+        description: Bearer &lt;access_token&gt;
+        required: true
+        schema:
+          type: string
+      - name: X-Client-Id
+        in: header
+        required: true
+        schema: 
+          type: string
+          description : Client Identification.
+      - name: X-Business-Message-Id
+        in: header
+        required: true
+        schema: 
+          maxLength: 35
+          type: string
+          format: "YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS"
+          description : Business Message Id. Similar with businessMessageId in payload body.
+      - name: X-Ip-Address
+        in: header
+        description: IP address where the transaction originated from
+        required: true
+        schema:
+          maxLength: 100
+          pattern: ^(\d{1,2}|(0|1)\d{2}|2[0-4]\d|25[0-5])\.(\d{1,2}|(0|1)\d{2}|2[0-4]\d|25[0-5])\.(\d{1,2}|(0|1)\d{2}|2[0-4]\d|25[0-5])\.(\d{1,2}|(0|1)\d{2}|2[0-4]\d|25[0-5])$
+          type: string
+      - name: X-Gps-Coordinates
+        in: header
+        description: Location of the sender in decimal degree coordinate e.g. 40.689263,
+          74.044505
+        required: true
+        schema:
+          maxLength: 35
+          type: string
+
+      requestBody: 
+        content: 
+          application/json:
+            schema: 
+              $ref: "#/components/schemas/cpmPaymentRequest"
+
+      responses: 
+        200:
+          description: ""
+          headers:
+            X-Business-Message-Id:
+              description: Business Message Id. Similar with businessMessageId in payload body.
+              schema:
+                title: Key Number
+                maxLength: 35
+                format : "YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS"
+                type: string
+                x-amf-required: true
+            Authorization:
+              description: Bearer &lt;access_token&gt;
+              schema:
+                title: Key Number
+                maxLength: 35
+                format : "YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS"
+                type: string
+                x-amf-required: true
+          content: 
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/cpmPaymentResponse"
+        400:
+          description: ""
+          content: 
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/errorResponse"
+        401:
+          description: ""
+          content: 
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/errorResponse"
+        500:
+          description: ""
+          content: 
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/errorResponse"
+      security:
+        - bearerAuth: []
+      x-codegen-request-body-name: generated
+
+  /cpm/domestic/preauth:
+    post:
+      summary: QR Pre-Authorisation
+      description: This API is used should the Merchant/Biller would like to earmark the payment amount to ensure customer will have sufficient balance before proceeding with the QR payment later
+      operationId: Consumer-Presented QR Pre-Authorisation
+      tags:
+        - Domestic CPM
+      parameters:
+      - name: Authorization
+        in: header
+        description: Bearer &lt;access_token&gt;
+        required: true
+        schema:
+          type: string
+      - name: X-Client-Id
+        in: header
+        required: true
+        schema: 
+          type: string
+          description : Client Identification.
+      - name: X-Business-Message-Id
+        in: header
+        required: true
+        schema: 
+          maxLength: 35
+          type: string
+          format: "YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS"
+          description : Business Message Id. Similar with businessMessageId in payload body.
+      - name: X-Ip-Address
+        in: header
+        description: IP address where the transaction originated from
+        required: true
+        schema:
+          maxLength: 100
+          pattern: ^(\d{1,2}|(0|1)\d{2}|2[0-4]\d|25[0-5])\.(\d{1,2}|(0|1)\d{2}|2[0-4]\d|25[0-5])\.(\d{1,2}|(0|1)\d{2}|2[0-4]\d|25[0-5])\.(\d{1,2}|(0|1)\d{2}|2[0-4]\d|25[0-5])$
+          type: string
+      - name: X-Gps-Coordinates
+        in: header
+        description: Location of the sender in decimal degree coordinate e.g. 40.689263,
+          74.044505
+        required: true
+        schema:
+          maxLength: 35
+          type: string
+
+      requestBody: 
+        content: 
+          application/json:
+            schema: 
+              $ref: "#/components/schemas/cpmPreauthorisationRequest"
+
+      responses: 
+        200:
+          description: ""
+          headers:
+            X-Business-Message-Id:
+              description: Business Message Id. Similar with businessMessageId in payload body.
+              schema:
+                title: Key Number
+                maxLength: 35
+                format : "YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS"
+                type: string
+                x-amf-required: true
+            Authorization:
+              description: Bearer &lt;access_token&gt;
+              schema:
+                title: Key Number
+                maxLength: 35
+                format : "YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS"
+                type: string
+                x-amf-required: true
+          content: 
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/cpmPreauthorisationResponse"
+        400:
+          description: ""
+          content: 
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/errorResponse"
+        401:
+          description: ""
+          content: 
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/errorResponse"
+        500:
+          description: ""
+          content: 
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/errorResponse"
+      security:
+        - bearerAuth: []
+      x-codegen-request-body-name: generated
+
+  /webhook/v2/domestic/enquiryincoming:
+    post:
+      summary: QR Enquiry Webhook
+      description: This API is used to lookup for the Merchant/Biller information using the QR code. The returned information will be used when initiating QR payment
+      operationId: Domestic Account Enquiry for Webhook
+      servers:
+        - url: https://mock.developer.paynet.my/qr
+          description: Override base path for all operations with the webhook path
+      tags:
+        - Domestic MPM Webhook
+      parameters:
+      - name: Authorization
+        in: header
+        description: Bearer &lt;access_token&gt;
+        required: true
+        schema:
+          type: string
+      - name: X-Business-Message-Id
+        in: header
+        required: true
+        schema: 
+          maxLength: 35
+          type: string
+          format: "YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS"
+          description : Business Message Id. Similar with businessMessageId in payload body.
+      - name: X-Ip-Address
+        in: header
+        description: IP address where the transaction originated from
+        required: true
+        schema:
+          maxLength: 100
+          pattern: ^(\d{1,2}|(0|1)\d{2}|2[0-4]\d|25[0-5])\.(\d{1,2}|(0|1)\d{2}|2[0-4]\d|25[0-5])\.(\d{1,2}|(0|1)\d{2}|2[0-4]\d|25[0-5])\.(\d{1,2}|(0|1)\d{2}|2[0-4]\d|25[0-5])$
+          type: string
+      - name: X-Gps-Coordinates
+        in: header
+        description: Location of the sender in decimal degree coordinate e.g. 40.689263,
+          74.044505
+        required: true
+        schema:
+          maxLength: 35
+          type: string
+
+      requestBody: 
+        content: 
+          application/json:
+            schema: 
+              $ref: "#/components/schemas/domesticQueryRequestWebhook"
+
+      responses: 
+        200:
+          description: ""
+          headers:
+            X-Business-Message-Id:
+              description: Business Message Id. Similar with businessMessageId in payload body.
+              schema:
+                title: Key Number
+                maxLength: 35
+                format : "YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS"
+                type: string
+                x-amf-required: true
+            Authorization:
+              description: Bearer &lt;access_token&gt;
+              schema:
+                title: Key Number
+                maxLength: 35
+                format : "YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS"
+                type: string
+                x-amf-required: true
+          content: 
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/domesticQueryResponse"
+        400:
+          description: ""
+          content: 
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/errorResponse"
+        401:
+          description: ""
+          content: 
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/errorResponse"
+        500:
+          description: ""
+          content: 
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/errorResponse"
+
+      security:
+        - bearerAuth: []
+      x-codegen-request-body-name: generated
+      
+  /webhook/v2/domestic/paymentincoming:
+    post:
+      summary: QR Payment Webhook
+      description: This API is used to initiate payment to Merchant/Biller to complete the QR payment. Upon completion of this payment leg, the fund will be credited to the Merchant/Biller’s Creditor Agent
+      operationId: Domestic QR Payment Webhook
+      servers:
+        - url: https://mock.developer.paynet.my/qr
+          description: Override base path for all operations with the webhook path
+      tags:
+        - Domestic MPM Webhook
+      parameters:
+      - name: Authorization
+        in: header
+        description: Bearer &lt;access_token&gt;
+        required: true
+        schema:
+          type: string
+      - name: X-Business-Message-Id
+        in: header
+        required: true
+        schema: 
+          maxLength: 35
+          type: string
+          format: "YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS"
+          description : Business Message Id. Similar with businessMessageId in payload body.
+      - name: X-Ip-Address
+        in: header
+        description: IP address where the transaction originated from
+        required: true
+        schema:
+          maxLength: 100
+          pattern: ^(\d{1,2}|(0|1)\d{2}|2[0-4]\d|25[0-5])\.(\d{1,2}|(0|1)\d{2}|2[0-4]\d|25[0-5])\.(\d{1,2}|(0|1)\d{2}|2[0-4]\d|25[0-5])\.(\d{1,2}|(0|1)\d{2}|2[0-4]\d|25[0-5])$
+          type: string
+      - name: X-Gps-Coordinates
+        in: header
+        description: Location of the sender in decimal degree coordinate e.g. 40.689263,
+          74.044505
+        required: true
+        schema:
+          maxLength: 35
+          type: string
+
+      requestBody: 
+        content: 
+          application/json:
+            schema: 
+              $ref: "#/components/schemas/domesticPaymentRequestWebhook"
+
+      responses: 
+        200:
+          description: ""
+          headers:
+            X-Business-Message-Id:
+              description: Business Message Id. Similar with businessMessageId in payload body.
+              schema:
+                title: Key Number
+                maxLength: 35
+                format : "YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS"
+                type: string
+                x-amf-required: true
+            Authorization:
+              description: Bearer &lt;access_token&gt;
+              schema:
+                title: Key Number
+                maxLength: 35
+                format : "YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS"
+                type: string
+                x-amf-required: true
+          content: 
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/domesticPaymentResponse"
+        400:
+          description: ""
+          content: 
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/errorResponse"
+        401:
+          description: ""
+          content: 
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/errorResponse"
+        500:
+          description: ""
+          content: 
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/errorResponse"
+
+      security:
+        - bearerAuth: []
+      x-codegen-request-body-name: generated
+      
+  /webhook/v2/crossborder/enquiryincoming:
+    post:
+      summary: QR Enquiry Webhook
+      description: This API is used to lookup for the Merchant/Biller information using the QR code. The returned information will be used when initiating QR payment
+      operationId: Cross Border Account Enquiry Webhook
+      servers:
+        - url: https://mock.developer.paynet.my/qr
+          description: Override base path for all operations with the webhook path
+      tags:
+        - Cross Border MPM Webhook
+      parameters:
+      - name: Authorization
+        in: header
+        description: Bearer &lt;access_token&gt;
+        required: true
+        schema:
+          type: string
+      - name: X-Business-Message-Id
+        in: header
+        required: true
+        schema: 
+          maxLength: 35
+          type: string
+          format: "YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS"
+          description : Business Message Id. Similar with businessMessageId in payload body.
+      - name: X-Ip-Address
+        in: header
+        description: IP address where the transaction originated from
+        required: true
+        schema:
+          maxLength: 100
+          pattern: ^(\d{1,2}|(0|1)\d{2}|2[0-4]\d|25[0-5])\.(\d{1,2}|(0|1)\d{2}|2[0-4]\d|25[0-5])\.(\d{1,2}|(0|1)\d{2}|2[0-4]\d|25[0-5])\.(\d{1,2}|(0|1)\d{2}|2[0-4]\d|25[0-5])$
+          type: string
+      - name: X-Gps-Coordinates
+        in: header
+        description: Location of the sender in decimal degree coordinate e.g. 40.689263,
+          74.044505
+        required: true
+        schema:
+          maxLength: 35
+          type: string
+
+      requestBody: 
+        content: 
+          application/json:
+            schema: 
+              $ref: "#/components/schemas/crossborderQueryRequestWebhook"
+
+      responses: 
+        200:
+          description: ""
+          headers:
+            X-Business-Message-Id:
+              description: Business Message Id. Similar with businessMessageId in payload body.
+              schema:
+                title: Key Number
+                maxLength: 35
+                format : "YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS"
+                type: string
+                x-amf-required: true
+            Authorization:
+              description: Bearer &lt;access_token&gt;
+              schema:
+                title: Key Number
+                maxLength: 35
+                format : "YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS"
+                type: string
+                x-amf-required: true
+          content: 
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/crossborderQueryResponse"
+        400:
+          description: ""
+          content: 
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/errorResponse"
+        401:
+          description: ""
+          content: 
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/errorResponse"
+        500:
+          description: ""
+          content: 
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/errorResponse"
+
+      security:
+        - bearerAuth: []
+      x-codegen-request-body-name: generated
+     
+  /webhook/v2/crossborder/paymentincoming:
+    post:
+      summary: QR Payment Webhook
+      description: This API is used to initiate payment to Merchant/Biller to complete the QR payment. Upon completion of this payment leg, the fund will be credited to the Merchant/Biller’s Creditor Agent
+      operationId: Cross Border QR Payment Webhook
+      servers:
+        - url: https://mock.developer.paynet.my/qr
+          description: Override base path for all operations with the webhook path
+      tags:
+        - Cross Border MPM Webhook
+      parameters:
+      - name: Authorization
+        in: header
+        description: Bearer &lt;access_token&gt;
+        required: true
+        schema:
+          type: string
+      - name: X-Business-Message-Id
+        in: header
+        required: true
+        schema: 
+          maxLength: 35
+          type: string
+          format: "YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS"
+          description : Business Message Id. Similar with businessMessageId in payload body.
+      - name: X-Ip-Address
+        in: header
+        description: IP address where the transaction originated from
+        required: true
+        schema:
+          maxLength: 100
+          pattern: ^(\d{1,2}|(0|1)\d{2}|2[0-4]\d|25[0-5])\.(\d{1,2}|(0|1)\d{2}|2[0-4]\d|25[0-5])\.(\d{1,2}|(0|1)\d{2}|2[0-4]\d|25[0-5])\.(\d{1,2}|(0|1)\d{2}|2[0-4]\d|25[0-5])$
+          type: string
+      - name: X-Gps-Coordinates
+        in: header
+        description: Location of the sender in decimal degree coordinate e.g. 40.689263,
+          74.044505
+        required: true
+        schema:
+          maxLength: 35
+          type: string
+
+      requestBody: 
+        content: 
+          application/json:
+            schema: 
+              $ref: "#/components/schemas/crossborderPaymentRequestWebhook"
+
+      responses: 
+        200:
+          description: ""
+          headers:
+            X-Business-Message-Id:
+              description: Business Message Id. Similar with businessMessageId in payload body.
+              schema:
+                title: Key Number
+                maxLength: 35
+                format : "YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS"
+                type: string
+                x-amf-required: true
+            Authorization:
+              description: Bearer &lt;access_token&gt;
+              schema:
+                title: Key Number
+                maxLength: 35
+                format : "YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS"
+                type: string
+                x-amf-required: true
+          content: 
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/crossborderPaymentResponse"
+        400:
+          description: ""
+          content: 
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/errorResponse"
+        401:
+          description: ""
+          content: 
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/errorResponse"
+        500:
+          description: ""
+          content: 
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/errorResponse"
+
+      security:
+        - bearerAuth: []
+      x-codegen-request-body-name: generated
+  
+  /webhook/v2/cpm/domestic/paymentincoming:
+    post:
+      summary: QR Payment Webhook
+      description: This API is used to initiate payment to Merchant/Biller to complete the QR payment. Upon completion of this payment leg, the fund will be credited to the Merchant/Biller’s Creditor Agent
+      operationId: CPM Domestic QR Payment Webhook
+      servers:
+        - url: https://mock.developer.paynet.my/qr
+          description: Override base path for all operations with the webhook path
+      tags:
+        - Domestic CPM Webhook
+      parameters:
+      - name: Authorization
+        in: header
+        description: Bearer &lt;access_token&gt;
+        required: true
+        schema:
+          type: string
+      - name: X-Business-Message-Id
+        in: header
+        required: true
+        schema: 
+          maxLength: 35
+          type: string
+          format: "YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS"
+          description : Business Message Id. Similar with businessMessageId in payload body.
+      - name: X-Ip-Address
+        in: header
+        description: IP address where the transaction originated from
+        required: true
+        schema:
+          maxLength: 100
+          pattern: ^(\d{1,2}|(0|1)\d{2}|2[0-4]\d|25[0-5])\.(\d{1,2}|(0|1)\d{2}|2[0-4]\d|25[0-5])\.(\d{1,2}|(0|1)\d{2}|2[0-4]\d|25[0-5])\.(\d{1,2}|(0|1)\d{2}|2[0-4]\d|25[0-5])$
+          type: string
+      - name: X-Gps-Coordinates
+        in: header
+        description: Location of the sender in decimal degree coordinate e.g. 40.689263,
+          74.044505
+        required: true
+        schema:
+          maxLength: 35
+          type: string
+
+      requestBody: 
+        content: 
+          application/json:
+            schema: 
+              $ref: "#/components/schemas/cpmPaymentRequestWebhook"
+
+      responses: 
+        200:
+          description: ""
+          headers:
+            X-Business-Message-Id:
+              description: Business Message Id. Similar with businessMessageId in payload body.
+              schema:
+                title: Key Number
+                maxLength: 35
+                format : "YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS"
+                type: string
+                x-amf-required: true
+            Authorization:
+              description: Bearer &lt;access_token&gt;
+              schema:
+                title: Key Number
+                maxLength: 35
+                format : "YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS"
+                type: string
+                x-amf-required: true
+          content: 
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/cpmPaymentResponse"
+        400:
+          description: ""
+          content: 
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/errorResponse"
+        401:
+          description: ""
+          content: 
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/errorResponse"
+        500:
+          description: ""
+          content: 
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/errorResponse"
+
+      security:
+        - bearerAuth: []
+      x-codegen-request-body-name: generated
+  
+  /webhook/v2/cpm/domestic/preauthincoming:
+    post:
+      summary: QR Preauthorisation Webhook
+      description: This API is used should the Merchant/Biller would like to earmark the payment amount to ensure customer will have sufficient balance before proceeding with the QR payment later
+      operationId: CPM Domestic QR Preauthorisation Webhook
+      servers:
+        - url: https://mock.developer.paynet.my/qr
+          description: Override base path for all operations with the webhook path
+      tags:
+        - Domestic CPM Webhook
+      parameters:
+      - name: Authorization
+        in: header
+        description: Bearer &lt;access_token&gt;
+        required: true
+        schema:
+          type: string
+      - name: X-Business-Message-Id
+        in: header
+        required: true
+        schema: 
+          maxLength: 35
+          type: string
+          format: "YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS"
+          description : Business Message Id. Similar with businessMessageId in payload body.
+      - name: X-Ip-Address
+        in: header
+        description: IP address where the transaction originated from
+        required: true
+        schema:
+          maxLength: 100
+          pattern: ^(\d{1,2}|(0|1)\d{2}|2[0-4]\d|25[0-5])\.(\d{1,2}|(0|1)\d{2}|2[0-4]\d|25[0-5])\.(\d{1,2}|(0|1)\d{2}|2[0-4]\d|25[0-5])\.(\d{1,2}|(0|1)\d{2}|2[0-4]\d|25[0-5])$
+          type: string
+      - name: X-Gps-Coordinates
+        in: header
+        description: Location of the sender in decimal degree coordinate e.g. 40.689263,
+          74.044505
+        required: true
+        schema:
+          maxLength: 35
+          type: string
+
+      requestBody: 
+        content: 
+          application/json:
+            schema: 
+              $ref: "#/components/schemas/cpmPreauthorisationRequestWebhook"
+
+      responses: 
+        200:
+          description: ""
+          headers:
+            X-Business-Message-Id:
+              description: Business Message Id. Similar with businessMessageId in payload body.
+              schema:
+                title: Key Number
+                maxLength: 35
+                format : "YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS"
+                type: string
+                x-amf-required: true
+            Authorization:
+              description: Bearer &lt;access_token&gt;
+              schema:
+                title: Key Number
+                maxLength: 35
+                format : "YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS"
+                type: string
+                x-amf-required: true
+          content: 
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/cpmPreauthorisationResponse"
+        400:
+          description: ""
+          content: 
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/errorResponse"
+        401:
+          description: ""
+          content: 
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/errorResponse"
+        500:
+          description: ""
+          content: 
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/errorResponse"
+
+      security:
+        - bearerAuth: []
+      x-codegen-request-body-name: generated
+  
+  
+components:
+  schemas:  
+    
+    crossborderPaymentRequest:
+      type: object
+      required: 
+        -  data
+      properties: 
+        data:
+          required: 
+            - businessMessageId
+            - interbankSettlementAmount
+            - debtor
+            - debtorAccount
+            - creditor
+            - creditorAccount
+            - qr
+          properties: 
+            businessMessageId:
+              maxLength: 35
+              type: string
+              description: <b>Business Message Identification</b><br></br> Unique message identification. Format YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS
+                where <li>YYYYMMDD – Current Date</li>
+                <li>BBBBBBBB – BIC Code</li>
+                <li>XXX – Transaction Code. Set to <b>031</b>. Refer to <a href="https://docs.developer.paynet.my/docs/duitnowqr/transactiontype/index.html" target="_blank"> <b style="color:blue;">Transaction Code</b> </a></li>
+                <li>O – Originator. Refer to <a href="https://docs.developer.paynet.my/docs/duitnow/mappingtable#originator-code" target="_blank"> <b style="color:blue;">Originator</b> </a></li>
+                <li>CC – Channel Code. Set to <b>QR</b> </li>
+                <li>SSSSSSSS – Sequence Number</li>
+                <br></br> During QR payment from OFI, use the same businessMessageId generated during QR Enquiry request and replace the transaction code from 521 to the corresponding QR Payment code accordingly. 
+                <br></br> The rest of the information in <b>businessMessageId</b> remain the same. 
+                <br></br> If the QR is not parse-able, OFI to send payment type as 521 or 031 respectively.
+            createdDateTime :
+              type: string
+              description: <b>Creation Date Time </b> <br></br> Must be in Malaysia Standard Time format of message creation date and time.
+              format : yyyy-MM-ddTHH:mm:ss.SSS
+            interbankSettlementAmount:
+              type: number
+              format: "0.00"
+              description: <b>Interbank Settlement Amount </b> <br></br> This value is always referring to MYR.
+            debtor:
+              required: 
+                - name
+              properties:
+                name :
+                  type: string
+                  description: <b>Debtor's Name</b>
+                  maxLength: 140
+            debtorAccount:
+              required: 
+                - id
+                - type
+              properties:
+                id :
+                  type: string
+                  description: <b>Debtor's Account Number</b>
+                  maxLength: 140
+                'type':
+                  type: string
+                  description: <b>Debtor's Acccount Type</b> 
+                  enum: ["CACC","SVGS", "CCRD", "WALL" , "DFLT"]
+            creditor:
+              required: 
+                - name
+              properties:
+                name :
+                  maxLength: 140
+                  description: <b>Creditor's Name</b>
+            creditorAccount:
+              required: 
+                - id
+                - type
+              properties:
+                id :
+                  maxLength: 34
+                  description: <b>Creditor's Account Number</b>
+                'type' : 
+                  type: string
+                  description: <b>Creditor's Acccount Type</b> 
+                  enum: ["CACC","SVGS", "CCRD", "WALL" , "DFLT"]
+            qr:
+              required: 
+               - code
+               - category
+               - acceptedPaymentType
+               - exchangeRate
+               - type
+               - foreignCurrencyAmount
+               - rateReferenceNumber
+               - merchantCategoryCode
+              properties:
+                code :
+                  type : string
+                  maxLength: 2000
+                  description: <b>QR Code</b>
+                category :
+                  type : string
+                  description : <b>QR Category</b><br></br> <li> 01 – Point of Sales </li>
+                                <li> 02 – P2P  </li>
+                                <li> 03 – DFLT  </li>
+                                <br></br>For QR Verification request  (520, 521), OFI to send as <b>DFLT</b>
+                                <br></br> For QR Payment request (030, 031, 040), OFI need to send back the value return in pacs.002 from RFI 
+                                <br></br> RPP will not validate this field. Value must be returned as 
+                                <li> 520/030/040/031/032 - 01 or 02  </li> 
+                                <li> 521/522 - 01 </li> 
+                  enum: ["01","02", "03"]
+                acceptedPaymentType :
+                  type: array
+                  items: 
+                    type: string
+                    enum: ["01","02", "03", "04"]
+                    description : <b>Accepted Source of Fund/Line of Credit </b><br></br> <li>01 – CASA </li>
+                                  <li>02 – Credit Card </li>
+                                  <li>03 – Wallet </li>
+                exchangeRate:
+                  type: string
+                  description: <b>Foreign exchange rate for MYR1.00</b> <br></br> For Static QR,  during 521 response  always refers to exchange of MYR1.00. <br></br> For Dynamic QR, <Field1> value is the foreign currency amount to be paid during Credit Transfer (031) 
+                               [value read from the Foreign QR] Example = IDR34800.00
+                type :
+                  type : string
+                  description: <b>QR Type. 11 for static QR and 12 for dynamic QR</b>
+                foreignCurrencyAmount :
+                  type : string
+                  description: <b>Foreign Currency Amount</b> <br></br> Foreign currency amount from Dynamic QR. Otherwise foreign amount [Variable Length in 2 decimals]
+                rateReferenceNumber :
+                  type : string
+                  description : <b>Rate Update Reference Number</b> <br></br> RPP rate update reference number Example = 202102190025
+                merchantCategoryCode:
+                  type: string
+                  maxLength: 4
+                  description: Merchant Category Code, follows ISO 18245
+      example:
+        data:
+          businessMessageId: 20230120DMMMYKL4031OQR91201026
+          interbankSettlementAmount: 36.36
+          debtor:
+            name: Umair
+          debtorAccount:
+            id: '11111111'
+            type: SVGS
+          creditor:
+            name: SGSIM1
+          creditorAccount:
+            id: '11201810001'
+            type: DFLT
+          qr:
+            code: '00020101021126860011SG.COM.NETS01231012345678932123123595902111120181000103082018000109010990816E6529951800007SG.SGQR0112181018001CF0020701.00010306168730040206050201060400010708201808235204000053037025802SG5915NETS CB PTE LTD6009Singapore63048BBF'
+            category: '01'
+            acceptedPaymentType:
+              - '01'
+              - '03'
+            exchangeRate: SGD0.33
+            type: '11'
+            foreignCurrencyAmount: '12.00'
+            rateReferenceNumber: '221117010183'
+            merchantCategoryCode : '566'
+                  
+    crossborderPaymentResponse:
+      type: object
+      required: 
+        -  data
+      properties: 
+        data:
+          required: 
+            - businessMessageId
+            - endToEndId
+            - code
+            - reason
+          properties: 
+            businessMessageId:
+              maxLength: 35
+              type: string
+              description: <b>Business Message Identification</b><br></br> Unique message identification. Format YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS
+                where <li>YYYYMMDD – Current Date</li>
+                <li>BBBBBBBB – BIC Code</li>
+                <li>XXX – Transaction Code. Set to <b>031</b>. Refer to <a href="https://docs.developer.paynet.my/docs/duitnowqr/transactiontype/index.html" target="_blank"> <b style="color:blue;">Transaction Code</b> </a> </li>
+                <li>O – Originator. Refer to <a href="https://docs.developer.paynet.my/docs/duitnow/mappingtable#originator-code" target="_blank"> <b style="color:blue;">Originator</b> </a> </li>
+                <li>CC – Channel Code. Set to <b>QR</b> </li>
+                <li>SSSSSSSS – Sequence Number</li>
+                <br></br> During QR payment from OFI, use the same businessMessageId generated during QR Enquiry request and replace the transaction code from 521 to the corresponding QR Payment code accordingly. 
+                <br></br> The rest of the information in <b>businessMessageId</b> remain the same. 
+                <br></br> If the QR is not parse-able, OFI to send payment type as 521 or 031 respectively.
+            createdDateTime :
+              type: string
+              description: <b>Creation Date Time </b> <br></br> Must be in Malaysia Standard Time format of message creation date and time.
+              format : yyyy-MM-ddTHH:mm:ss.SSS
+            endToEndId:
+              type: string
+              description: <b>End to End Identification</b>
+            code:
+              type: string
+              description: <b>Transaction Status</b><br></br> Refer to <a style="color:blue;" href="https://docs.developer.paynet.my/docs/duitnow/mappingtable/index.html##externalpaymenttransactionstatus1code-txsts" target="_blank"><b style="color:blue;">External Payment Transaction Status 
+            reason:
+              type: string
+              description: <b>Reason Code</b><br></br> Refer to <a style="color:blue;" href="https://docs.developer.paynet.my/docs/duitnow/responsecodes/index.html#reason-codes" target="_blank"><b style="color:blue;">Reason Code</b></a>
+      example :
+        data:
+          businessMessageId: 20230120RPPEMYKL031HQR73101232
+          endToEndId: 20230120DMMMYKL4031OQR91201026
+          code: ACSP
+          reason: U000
+
+    crossborderPaymentRequestWebhook:
+      type: object
+      required: 
+        -  data
+      properties: 
+        data:
+          required: 
+            - businessMessageId
+            - endToEndId
+            - interbankSettlementAmount
+            - debtor
+            - debtorAccount
+            - creditor
+            - creditorAccount
+            - qr
+          properties: 
+            businessMessageId:
+              maxLength: 35
+              type: string
+              description: <b>Business Message Identification</b><br></br> Unique message identification. Format YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS
+                where <li>YYYYMMDD – Current Date</li>
+                <li>BBBBBBBB – BIC Code</li>
+                <li>XXX – Transaction Code. Set to <b>031</b>. Refer to <a href="https://docs.developer.paynet.my/docs/duitnowqr/transactiontype/index.html" target="_blank"> <b style="color:blue;">Transaction Code</b> </a></li>
+                <li>O – Originator. Refer to <a href="https://docs.developer.paynet.my/docs/duitnow/mappingtable#originator-code" target="_blank"> <b style="color:blue;">Originator</b> </a></li>
+                <li>CC – Channel Code. Set to <b>QR</b> </li>
+                <li>SSSSSSSS – Sequence Number</li>
+                <br></br> During QR payment from OFI, use the same businessMessageId generated during QR Enquiry request and replace the transaction code from 521 to the corresponding QR Payment code accordingly. 
+                <br></br> The rest of the information in <b>businessMessageId</b> remain the same. 
+                <br></br> If the QR is not parse-able, OFI to send payment type as 521 or 031 respectively.
+            createdDateTime :
+              type: string
+              description: <b>Creation Date Time </b> <br></br> Must be in Malaysia Standard Time format of message creation date and time.
+              format : yyyy-MM-ddTHH:mm:ss.SSS
+            endToEndId:
+              maxLength: 35
+              type: string
+              description: <b>End To End Identification</b><br></br> Same as businessMessageId. RFI is expected to put this field into response message when sending back to RPP.
+            interbankSettlementAmount:
+              type: number
+              format: "0.00"
+              description: <b>Interbank Settlement Amount </b> <br></br> This value is always referring to MYR.
+            debtor:
+              required: 
+                - name
+              properties:
+                name :
+                  type: string
+                  description: <b>Debtor's Name</b>
+                  maxLength: 140
+            debtorAccount:
+              required: 
+                - id
+                - type
+              properties:
+                id :
+                  type: string
+                  description: <b>Debtor's Account Number</b>
+                  maxLength: 140
+                'type':
+                  type: string
+                  description: <b>Debtor's Acccount Type</b> 
+                  enum: ["CACC","SVGS", "CCRD", "WALL" , "DFLT"]
+            creditor:
+              required: 
+                - name
+              properties:
+                name :
+                  maxLength: 140
+                  description: <b>Creditor's Name</b>
+            creditorAccount:
+              required: 
+                - id
+                - type
+              properties:
+                id :
+                  maxLength: 34
+                  description: <b>Creditor's Account Number</b>
+                'type' : 
+                  type: string
+                  description: <b>Creditor's Acccount Type</b> 
+                  enum: ["CACC","SVGS", "CCRD", "WALL" , "DFLT"]
+            qr:
+              required: 
+               - code
+               - category
+               - acceptedPaymentType
+               - exchangeRate
+               - type
+               - foreignCurrencyAmount
+               - rateReferenceNumber
+               - merchantCategoryCode
+              properties:
+                code :
+                  type : string
+                  maxLength: 2000
+                  description: <b>QR Code</b>
+                category :
+                  type : string
+                  description : <b>QR Category</b><br></br> <li> 01 – Point of Sales </li>
+                                <li> 02 – P2P  </li>
+                                <li> 03 – DFLT  </li>
+                                <br></br>For QR Verification request  (520, 521), OFI to send as <b>DFLT</b>
+                                <br></br> For QR Payment request (030, 031, 040), OFI need to send back the value return in pacs.002 from RFI 
+                                <br></br> RPP will not validate this field. Value must be returned as 
+                                <li> 520/030/040/031/032 - 01 or 02  </li> 
+                                <li> 521/522 - 01 </li> 
+                  enum: ["01","02", "03"]
+                acceptedPaymentType :
+                  type: array
+                  items: 
+                    type: string
+                    enum: ["01","02", "03", "04"]
+                    description : <b>Accepted Source of Fund/Line of Credit </b><br></br> <li>01 – CASA </li>
+                                  <li>02 – Credit Card </li>
+                                  <li>03 – Wallet </li>
+                exchangeRate:
+                  type: string
+                  description: <b>Foreign exchange rate for MYR1.00</b> <br></br> For Static QR,  during 521 response  always refers to exchange of MYR1.00. <br></br> For Dynamic QR, <Field1> value is the foreign currency amount to be paid during Credit Transfer (031) 
+                               [value read from the Foreign QR] Example = IDR34800.00
+                type :
+                  type : string
+                  description: <b>QR Type. 11 for static QR and 12 for dynamic QR</b>
+                foreignCurrencyAmount :
+                  type : string
+                  description: <b>Foreign Currency Amount</b> <br></br> Foreign currency amount from Dynamic QR. Otherwise foreign amount [Variable Length in 2 decimals]
+                rateReferenceNumber :
+                  type : string
+                  description : <b>Rate Update Reference Number</b> <br></br> RPP rate update reference number Example = 202102190025
+                merchantCategoryCode:
+                  type: string
+                  maxLength: 4
+                  description: Merchant Category Code, follows ISO 18245
+      example:
+        data:
+          businessMessageId: 20230120DMMMYKL4031OQR91201026
+          endToEndId : 20230120DMMMYKL4031OQR91201026
+          interbankSettlementAmount: 36.36
+          debtor:
+            name: Umair
+          debtorAccount:
+            id: '11111111'
+            type: SVGS
+          creditor:
+            name: SGSIM1
+          creditorAccount:
+            id: '11201810001'
+            type: DFLT
+          qr:
+            code: '00020101021126860011SG.COM.NETS01231012345678932123123595902111120181000103082018000109010990816E6529951800007SG.SGQR0112181018001CF0020701.00010306168730040206050201060400010708201808235204000053037025802SG5915NETS CB PTE LTD6009Singapore63048BBF'
+            category: '01'
+            acceptedPaymentType:
+              - '01'
+              - '03'
+            exchangeRate: SGD0.33
+            type: '11'
+            foreignCurrencyAmount: '12.00'
+            rateReferenceNumber: '221117010183'
+            merchantCategoryCode : '566'
+    
+    domesticPaymentRequest:
+      type: object
+      required: 
+        -  data
+      properties: 
+        data:
+          required: 
+            - businessMessageId
+            - interbankSettlementAmount
+            - debtor
+            - debtorAccount
+            - creditor
+            - creditorAccount
+            - creditorAgent
+            - qr
+          properties: 
+            businessMessageId:
+              maxLength: 35
+              type: string
+              description: <b>Business Message Identification</b><br></br> Unique message identification. Format YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS
+                where <li>YYYYMMDD – Current Date</li><li>BBBBBBBB – BIC Code</li>
+                <li>XXX – Transaction Code. Set to <b>030</b>. Refer to <a href="https://docs.developer.paynet.my/docs/duitnowqr/transactiontype/index.html" target="_blank"> <b style="color:blue;">Transaction Code</b> </a></li>
+                <li>O – Originator. Refer to <a href="https://docs.developer.paynet.my/docs/duitnow/mappingtable#originator-code" target="_blank"> <b style="color:blue;">Originator</b> </a></li>
+                <li>CC – Channel Code. Set to <b>QR</b> </li>
+                <li>SSSSSSSS – Sequence Number</li>
+                <br></br> During QR payment from OFI, use the same businessMessageId generated during QR Enquiry request and replace the transaction code from 520 to the corresponding QR Payment code accordingly. 
+                <br></br> The rest of the information in <b>businessMessageId</b> remain the same. 
+                <br></br> If the QR is not parse-able, OFI to send payment type as 521 or 031 respectively.
+            createdDateTime :
+              type: string
+              description: <b>Creation Date Time </b> <br></br> Must be in Malaysia Standard Time format of message creation date and time.
+              format : yyyy-MM-ddTHH:mm:ss.SSS
+            interbankSettlementAmount:
+              type: number
+              format: "0.00"
+              description: <b>Interbank Settlement Amount </b> <br></br> This value is always referring to MYR.
+            debtor:
+              required: 
+                - name
+              properties:
+                name :
+                  type: string
+                  description: <b>Debtor's Name</b>
+                  maxLength: 140
+            debtorAccount:
+              required: 
+                - id
+                - type
+              properties:
+                id :
+                  type: string
+                  description: <b>Debtor's Account Number</b>
+                  maxLength: 34
+                'type':
+                  type: string
+                  description: <b>Debtor's Acccount Type</b> 
+                  enum: ["CACC","SVGS", "CCRD", "WALL" , "DFLT"]
+            creditor:
+              required: 
+                - name
+              properties:
+                name :
+                  maxLength: 140
+                  description: <b>Creditor's Name</b>
+            creditorAccount:
+              required: 
+                - id
+                - type
+              properties:
+                id :
+                  maxLength: 34
+                  description: <b>Creditor's Account Number</b>
+                'type' : 
+                  type: string
+                  description: <b>Creditor's Acccount Type</b> 
+                  enum: ["CACC","SVGS", "CCRD", "WALL" , "DFLT"]
+            creditorAgent:
+              required: 
+                - id
+              properties:
+                id :
+                  maxLength: 35
+                  type: string
+                  description: <b>Identification</b><br></br> <li>Acquirer ID – for request from OFI to RPP. OFI to extract from QR Code </li>
+                   <li>BIC Code – for request from RPP to RFI. RPP to propagate based on the Acquirer ID </li>
+                   <li>Default to <b>RPPEMYKL</b> for Cross Border QR , if QR is not parse-able or AID does not belong to PayNet</li>
+            qr:
+              required: 
+               - code
+               - category
+               - acceptedPaymentType
+              properties:
+                code :
+                  type : string
+                  maxLength: 2000
+                  description: <b>QR Code</b>
+                category :
+                  type : string
+                  description : <b>QR Category</b><br></br> <li> 01 – Point of Sales </li>
+                                <li> 02 – P2P  </li>
+                                <li> 03 – DFLT  </li>
+                                <br></br>For QR Verification request  (520, 521), OFI to send as <b>DFLT</b>
+                                <br></br> For QR Payment request (030, 031, 040), OFI need to send back the value return in pacs.002 from RFI 
+                                <br></br> RPP will not validate this field. Value must be returned as 
+                                <li> 520/030/040/031/032 - 01 or 02  </li> 
+                                <li> 521/522 - 01 </li> 
+                  enum: ["01","02", "03"]
+                acceptedPaymentType :
+                  type: array
+                  description : <b>Accepted Source of Fund/Line of Credit </b><br></br> <li>01 – CASA </li>
+                                <li>02 – Credit Card </li>
+                                <li>03 – Wallet </li>
+                  items: 
+                    type: string
+                    enum: ["01","02", "03", "04"]
+            reward:
+              description : Applicable to DuitNow QR Reward only.
+              properties:
+                debtorId:
+                  type: string
+                  maxLength: 35
+                  description: <p>In QR Payment, Issuer to send the Debtor ID for Acquirer to identify the user</p>
+                    <p> OFI to RPP - Debtor Secondary ID Value </p>
+                discountedAmount:
+                  type: string
+                  maxLength: 35
+                  description: <p> Issuer to send the discounted amount to Acquirer. Example - </p>
+                      <li>RM100 – populate as 10000</li>
+                      <li>RM0.99 – populate as 99</li>
+                      <p> Issuer should offset the discounted amount from &lt;IntrBkSttlmAmt&gt; </p>
+                redeemedPoints:
+                  type: string
+                  maxLength: 35
+                  description:  <p> Issuer to send the redeemed points to Acquirer. Example - </p>
+                      <li>10,000 points – populate as 10000</li>
+                      <li>99 points – populate as 99</li>
+                      <p> Issuer should offset the equivalent amount of redeemed points from &lt;IntrBkSttlmAmt&gt; </p>
+      example:
+        data:
+          businessMessageId: 20230120DMMMYKL4030OQR90508051
+          interbankSettlementAmount: 10.67
+          debtor:
+            name: Umair
+          debtorAccount:
+            id: '11111111'
+            type: SVGS
+          creditor:
+            name: QR Payment
+          creditorAccount:
+            id: '99999999999'
+            type: DFLT
+          creditorAgent:
+            id: '123456'
+          qr:
+            code: 00020201021226460014A000000615000101061234560214BSNSIMULATORQR520400005303458550201540510.675802MY5907BSNTEST6002MY8216C9A86150A485EDC863048EB7
+            category: '01'
+            acceptedPaymentType:
+              - '01'
+          reward:
+            debtorId: "AMM200"
+            discountedAmount: "100"
+            redeemedPoints: "99"  
+
+    domesticPaymentRequestWebhook:
+      type: object
+      required: 
+        -  data
+      properties: 
+        data:
+          required: 
+            - businessMessageId
+            - endToEndId
+            - interbankSettlementAmount
+            - debtor
+            - debtorAccount
+            - creditor
+            - creditorAccount
+            - creditorAgent
+            - qr
+          properties: 
+            businessMessageId:
+              maxLength: 35
+              type: string
+              description: <b>Business Message Identification</b><br></br> Unique message identification. Format YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS
+                where <li>YYYYMMDD – Current Date</li><li>BBBBBBBB – BIC Code</li>
+                <li>XXX – Transaction Code. Set to <b>030</b>. Refer to <a href="https://docs.developer.paynet.my/docs/duitnowqr/transactiontype/index.html" target="_blank"> <b style="color:blue;">Transaction Code</b> </a></li>
+                <li>O – Originator. Refer to <a href="https://docs.developer.paynet.my/docs/duitnow/mappingtable#originator-code" target="_blank"> <b style="color:blue;">Originator</b> </a></li>
+                <li>CC – Channel Code. Set to <b>QR</b> </li>
+                <li>SSSSSSSS – Sequence Number</li>
+                <br></br> During QR payment from OFI, use the same businessMessageId generated during QR Enquiry request and replace the transaction code from 520 to the corresponding QR Payment code accordingly. 
+                <br></br> The rest of the information in <b>businessMessageId</b> remain the same. 
+                <br></br> If the QR is not parse-able, OFI to send payment type as 521 or 031 respectively.
+            createdDateTime :
+              type: string
+              description: <b>Creation Date Time </b> <br></br> Must be in Malaysia Standard Time format of message creation date and time.
+              format : yyyy-MM-ddTHH:mm:ss.SSS
+            endToEndId:
+              maxLength: 35
+              type: string
+              description: <b>End To End Identification</b><br></br> Same as businessMessageId. RFI is expected to put this field into response message when sending back to RPP.
+            interbankSettlementAmount:
+              type: number
+              format: "0.00"
+              description: <b>Interbank Settlement Amount </b> <br></br> This value is always referring to MYR.
+            debtor:
+              required: 
+                - name
+              properties:
+                name :
+                  type: string
+                  description: <b>Debtor's Name</b>
+                  maxLength: 140
+            debtorAccount:
+              required: 
+                - id
+                - type
+              properties:
+                id :
+                  type: string
+                  description: <b>Debtor's Account Number</b>
+                  maxLength: 34
+                'type':
+                  type: string
+                  description: <b>Debtor's Acccount Type</b> 
+                  enum: ["CACC","SVGS", "CCRD", "WALL" , "DFLT"]
+            creditor:
+              required: 
+                - name
+              properties:
+                name :
+                  maxLength: 140
+                  description: <b>Creditor's Name</b>
+            creditorAccount:
+              required: 
+                - id
+                - type
+              properties:
+                id :
+                  maxLength: 34
+                  description: <b>Creditor's Account Number</b>
+                'type' : 
+                  type: string
+                  description: <b>Creditor's Acccount Type</b> 
+                  enum: ["CACC","SVGS", "CCRD", "WALL" , "DFLT"]
+            creditorAgent:
+              required: 
+                - id
+              properties:
+                id :
+                  maxLength: 35
+                  type: string
+                  description: <b>Identification</b><br></br> <li>Acquirer ID – for request from OFI to RPP. OFI to extract from QR Code </li>
+                   <li>BIC Code – for request from RPP to RFI. RPP to propagate based on the Acquirer ID </li>
+                   <li>Default to <b>RPPEMYKL</b> for Cross Border QR , if QR is not parse-able or AID does not belong to PayNet</li>
+            qr:
+              required: 
+               - code
+               - category
+               - acceptedPaymentType
+              properties:
+                code :
+                  type : string
+                  maxLength: 2000
+                  description: <b>QR Code</b>
+                category :
+                  type : string
+                  description : <b>QR Category</b><br></br> <li> 01 – Point of Sales </li>
+                                <li> 02 – P2P  </li>
+                                <li> 03 – DFLT  </li>
+                                <br></br>For QR Verification request  (520, 521), OFI to send as <b>DFLT</b>
+                                <br></br> For QR Payment request (030, 031, 040), OFI need to send back the value return in pacs.002 from RFI 
+                                <br></br> RPP will not validate this field. Value must be returned as 
+                                <li> 520/030/040/031/032 - 01 or 02  </li> 
+                                <li> 521/522 - 01 </li> 
+                  enum: ["01","02", "03"]
+                acceptedPaymentType :
+                  type: array
+                  description : <b>Accepted Source of Fund/Line of Credit </b><br></br> <li>01 – CASA </li>
+                                <li>02 – Credit Card </li>
+                                <li>03 – Wallet </li>
+                  items: 
+                    type: string
+                    enum: ["01","02", "03", "04"]
+            reward:
+              description : Applicable to DuitNow QR Reward only.
+              properties:
+                debtorId:
+                  type: string
+                  maxLength: 35
+                  description: <p>In QR Payment, Issuer to send the Debtor ID for Acquirer to identify the user</p>
+                    <p> OFI to RPP - Debtor Secondary ID Value </p>
+                discountedAmount:
+                  type: string
+                  maxLength: 35
+                  description: <p> Issuer to send the discounted amount to Acquirer. Example - </p>
+                      <li>RM100 – populate as 10000</li>
+                      <li>RM0.99 – populate as 99</li>
+                      <p> Issuer should offset the discounted amount from &lt;IntrBkSttlmAmt&gt; </p>
+                redeemedPoints:
+                  type: string
+                  maxLength: 35
+                  description:  <p> Issuer to send the redeemed points to Acquirer. Example - </p>
+                      <li>10,000 points – populate as 10000</li>
+                      <li>99 points – populate as 99</li>
+                      <p> Issuer should offset the equivalent amount of redeemed points from &lt;IntrBkSttlmAmt&gt; </p>
+      example:
+        data:
+          businessMessageId: 20230120DMMMYKL4030OQR90508051
+          endToEndId: 20230120DMMMYKL4030OQR90508051
+          interbankSettlementAmount: 10.67
+          debtor:
+            name: Umair
+          debtorAccount:
+            id: '11111111'
+            type: SVGS
+          creditor:
+            name: QR Payment
+          creditorAccount:
+            id: '99999999999'
+            type: DFLT
+          creditorAgent:
+            id: '123456'
+          qr:
+            code: 00020201021226460014A000000615000101061234560214BSNSIMULATORQR520400005303458550201540510.675802MY5907BSNTEST6002MY8216C9A86150A485EDC863048EB7
+            category: '01'
+            acceptedPaymentType:
+              - '01'
+          reward:
+            debtorId: "AMM200"
+            discountedAmount: "100"
+            redeemedPoints: "99"                   
+    domesticPaymentResponse:
+      type: object
+      required: 
+        -  data
+      properties: 
+        data:
+          required: 
+            - businessMessageId
+            - endToEndId
+            - code
+            - reason
+          properties: 
+            businessMessageId:
+              maxLength: 35
+              type: string
+              description: <b>Business Message Identification</b><br></br> Unique message identification. Format YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS
+                where <li>YYYYMMDD – Current Date</li><li>BBBBBBBB – BIC Code</li>
+                <li>XXX – Transaction Code. Set to <b>030</b>. Refer to <a href="https://docs.developer.paynet.my/docs/duitnowqr/transactiontype/index.html" target="_blank"> <b style="color:blue;">Transaction Code</b> </a></li>
+                <li>O – Originator. Refer to <a href="https://docs.developer.paynet.my/docs/duitnow/mappingtable#originator-code" target="_blank"> <b style="color:blue;">Originator</b> </a></li>
+                <li>CC – Channel Code. Set to <b>QR</b> </li>
+                <li>SSSSSSSS – Sequence Number</li>
+                <br></br> During QR payment from OFI, use the same businessMessageId generated during QR Enquiry request and replace the transaction code from 520 to the corresponding QR Payment code accordingly. 
+                <br></br> The rest of the information in <b>businessMessageId</b> remain the same. 
+                <br></br> If the QR is not parse-able, OFI to send payment type as 521 or 031 respectively.
+            createdDateTime :
+              type: string
+              description: <b>Creation Date Time </b> <br></br> Must be in Malaysia Standard Time format of message creation date and time.
+              format : yyyy-MM-ddTHH:mm:ss.SSS
+            endToEndId:
+              type: string
+              description: <b>End to End Identification</b>
+            code:
+              type: string
+              description: <b>Transaction Status</b><br></br> Refer to <a style="color:blue;" href="https://docs.developer.paynet.my/docs/duitnow/mappingtable/index.html##externalpaymenttransactionstatus1code-txsts" target="_blank"><b style="color:blue;">External Payment Transaction Status Code</b></a>
+            reason:
+              type: string
+              description: <b>Reason Code</b><br></br> Refer to <a style="color:blue;" href="https://docs.developer.paynet.my/docs/duitnow/responsecodes/index.html#reason-codes" target="_blank"><b style="color:blue;">Reason Code</b></a>
+            reward:
+              description : Applicable to DuitNow QR Reward only.
+              properties:
+                debtorId:
+                  type: string
+                  description: Acquirer to return the hased Debtor ID during QR Enquiry and QR Payment for issuer. 
+                      The value is from the original request.
+                cashbackInfo:
+                  type: string
+                  description: 
+                    <p>Acquirer to return the new cashback information for Issuer to display to customer</p>
+                    Refer to &lt;Field3&gt; of the pacs.002.001.08.01 message on <a href="https://docs.developer.paynet.my/docs/duitnowqr/extrafield/index.html#pacs0020010801" target="_blank"> <b style="color:blue;">Extra Field</b></a> 
+                pointsInfo:
+                  type: string
+                  description: 
+                    <p>Acquirer to return the points information for Issuer to display to customer</p>
+                    Refer to &lt;Field4&gt; of the pacs.002.001.08.01 message on <a href="https://docs.developer.paynet.my/docs/duitnowqr/extrafield/index.html#pacs0020010801" target="_blank"> <b style="color:blue;">Extra Field</b></a> 
+      example :
+        data:
+          businessMessageId: 20230120RPPEMYKL030HQR73101243
+          endToEndId: 20230120DMMMYKL4030OQR90508051
+          code: ACSP
+          reason: U000
+        reward:
+          debtorId: 'AMM200'
+          cashbackInfo: 'A41234B48888'
+          pointsInfo: 'A520000B6888888'
+
+    crossborderQueryRequest:
+      type: object
+      required: 
+        -  data
+      properties: 
+        data:
+          required: 
+            - businessMessageId
+            - qr
+          properties: 
+            businessMessageId:
+              maxLength: 35
+              type: string
+              description: <b>Business Message Identification</b><br></br> Unique message identification. Format YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS
+                where <li>YYYYMMDD – Current Date</li>
+                <li>BBBBBBBB – BIC Code</li>
+                <li>XXX – Transaction Code. Set to <b>521</b>. Refer to <a href="https://docs.developer.paynet.my/docs/duitnowqr/transactiontype/index.html" target="_blank"> <b style="color:blue;">Transaction Code</b> </a></li>
+                <li>O – Originator. Refer to <a href="https://docs.developer.paynet.my/docs/duitnow/mappingtable#originator-code" target="_blank"> <b style="color:blue;">Originator</b> </a> </li>
+                <li>CC – Channel Code. Set to <b>QR</b> </li>
+                <li>SSSSSSSS – Sequence Number</li>
+                <br></br> During QR payment from OFI, use the same businessMessageId generated during QR Enquiry request and replace the transaction code from 521 to the corresponding QR Payment code accordingly. 
+                <br></br> The rest of the information in <b>businessMessageId</b> remain the same. 
+                <br></br> If the QR is not parse-able, OFI to send payment type as 521 or 031 respectively.
+            qr:
+              required: 
+               - code
+              properties:
+                code :
+                  maxLength: 2000
+                  type : string
+                  description: <b>QR Code</b>
+      example:
+        data:
+          businessMessageId: 20230120DMMMYKL4521OQR95822099
+          qr:
+            code: '00020101021126860011SG.COM.NETS01231012345678932123123595902111120181000103082018000109010990816E6529951800007SG.SGQR0112181018001CF0020701.00010306168730040206050201060400010708201808235204000053037025802SG5915NETS CB PTE LTD6009Singapore63048BBF'
+                  
+    crossborderQueryResponse:
+      type: object
+      required: 
+        -  data
+      properties: 
+        data:
+          required: 
+            - businessMessageId
+            - endToEndId
+            - code
+            - reason
+            - interbankSettlementAmount
+            - creditor
+            - creditorAccount
+            - qr
+          properties: 
+            businessMessageId:
+              maxLength: 35
+              type: string
+              description: <b>Business Message Identification</b><br></br> Unique message identification. Format YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS
+                where <li>YYYYMMDD – Current Date</li>
+                <li>BBBBBBBB – BIC Code</li>
+                <li>XXX – Transaction Code. Set to <b>521</b>. Refer to <a href="https://docs.developer.paynet.my/docs/duitnowqr/transactiontype/index.html" target="_blank"> <b style="color:blue;">Transaction Code</b> </a></li>
+                <li>O – Originator. Refer to <a href="https://docs.developer.paynet.my/docs/duitnow/mappingtable#originator-code" target="_blank"> <b style="color:blue;">Originator</b> </a></li>
+                <li>CC – Channel Code. Set to <b>QR</b> </li>
+                <li>SSSSSSSS – Sequence Number</li>
+                <br></br> During QR payment from OFI, use the same businessMessageId generated during QR Enquiry request and replace the transaction code from 521 to the corresponding QR Payment code accordingly. 
+                <br></br> The rest of the information in <b>businessMessageId</b> remain the same. 
+                <br></br> If the QR is not parse-able, OFI to send payment type as 521 or 031 respectively.
+            createdDateTime :
+              type: string
+              description: <b>Creation Date Time </b> <br></br> Must be in Malaysia Standard Time format of message creation date and time.
+              format : yyyy-MM-ddTHH:mm:ss.SSS
+            endToEndId:
+              maxLength: 35
+              type: string
+              description: <b>End to End Identification</b>
+            code:
+              type: string
+              description: <b>Transaction Status</b><br></br> Refer to <a style="color:blue;" href="https://docs.developer.paynet.my/docs/duitnow/mappingtable/index.html##externalpaymenttransactionstatus1code-txsts" target="_blank"><b style="color:blue;">External Payment Transaction Status Code</b></a>
+            reason:
+              type: string
+              description: <b>Reason Code</b><br></br> Refer to <a style="color:blue;" href="https://docs.developer.paynet.my/docs/duitnow/responsecodes/index.html#reason-codes" target="_blank"><b style="color:blue;">Reason Code</b></a>
+            interbankSettlementAmount:
+              type: number
+              format: "0.00"
+              description: <b>Interbank Settlement Amount </b> <br></br> This value is always referring to MYR.
+            creditor:
+              required: 
+                - name
+              properties:
+                name :
+                  type: string
+                  description: <b>Creditor’s Name</b><br></br>Acquirer to return the Merchant Name during QR verification process. <br></br> 240, 250 – Debiting Bank to return debtor name
+                  maxLength : 140
+            creditorAccount:
+              required: 
+                - id
+                - type
+              properties:
+                id :
+                  type : string
+                  description: <b>Creditor Account Identification</b>
+                  maxLength : 34
+                'type' : 
+                  type : string
+                  enum: ["CACC","SVGS", "CCRD", "WALL" , "DFLT"]
+                  description: <b>Creditor Account Type</b>
+            qr:
+              required: 
+               - category
+               - acceptedPaymentType
+               - exchangeRate
+               - qrType
+               - foreignCurrencyAmount
+               - rateReferenceNumber
+               - merchantCategoryCode
+              properties:
+                category :
+                  type : string
+                  description: <b>QR Category</b><br></br> <li> 01 – Point of Sales </li>
+                               <li> 02 – P2P  </li>
+                               <li> 03 – DFLT  </li>
+                               <br></br>For QR Verification request  (520, 521), OFI to send as <b>DFLT</b>
+                               <br></br> For QR Payment request (030, 031, 040), OFI need to send back the value return in pacs.002 from RFI 
+                               <br></br> RPP will not validate this field. Value must be returned as 
+                               <li> 520/030/040/031/032 - 01 or 02  </li> 
+                               <li> 521/522 - 01 </li> 
+                acceptedPaymentType :
+                  type: array
+                  description: <b>Accepted Source of Fund/Line of Credit </b><br></br> <li>01 – CASA </li>
+                               <li>02 – Credit Card </li>
+                               <li>03 – Wallet </li>
+                  items: 
+                    type: string
+                    enum: ["01","02", "03", "04"]
+                exchangeRate:
+                  type: string
+                  description: <b>Foreign exchange rate for MYR1.00</b> <br></br> For Static QR,  during 521 response  always refers to exchange of MYR1.00. <br></br> For Dynamic QR, <Field1> value is the foreign currency amount to be paid during Credit Transfer (031) 
+                                [value read from the Foreign QR] Example = IDR34800.00
+                qrType:
+                  type: string
+                  description: <b>QR Type. 11 for static QR and 12 for dynamic QR</b>
+                foreignCurrencyAmount:
+                  type: string
+                  description: <b>Foreign Currency Amount</b> <br></br> Foreign currency amount from Dynamic QR. Otherwise foreign amount [Variable Length in 2 decimals]
+                rateReferenceNumber:
+                  type: string
+                  description: <b>Rate Update Reference Number</b> <br></br> RPP rate update reference number Example = 202102190025
+                  maxLength : 35
+                merchantCategoryCode:
+                  type: string
+                  maxLength: 4
+                  description: Merchant Category Code, follows ISO 18245
+      example :
+        data:
+          businessMessageId: 20230120RPPEMYKL521HQR73101228
+          endToEndId: 20230120DMMMYKL4521OQR95822099
+          code: ACSP
+          reason: U000
+          interbankSettlementAmount: 1.01
+          creditor:
+            name: SGSIM1
+          creditorAccount:
+            id: '11201810001'
+            type: DFLT
+          qr:
+            category: '01'
+            acceptedPaymentType:
+              - '01'
+              - '03'
+            exchangeRate: SGD0.3300
+            type: '11'
+            foreignCurrencyAmount: '0.00'
+            rateReferenceNumber: '221117010183'
+            merchantCategoryCode : '566'
+
+    crossborderQueryRequestWebhook:
+      type: object
+      required: 
+        -  data
+      properties: 
+        data:
+          required: 
+            - businessMessageId
+            - endToEndId
+            - qr
+          properties: 
+            businessMessageId:
+              maxLength: 35
+              type: string
+              description: <b>Business Message Identification</b><br></br> Unique message identification. Format YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS
+                where <li>YYYYMMDD – Current Date</li>
+                <li>BBBBBBBB – BIC Code</li>
+                <li>XXX – Transaction Code. Set to <b>521</b>. Refer to <a href="https://docs.developer.paynet.my/docs/duitnowqr/transactiontype/index.html" target="_blank"> <b style="color:blue;">Transaction Code</b> </a></li>
+                <li>O – Originator. Refer to <a href="https://docs.developer.paynet.my/docs/duitnow/mappingtable#originator-code" target="_blank"> <b style="color:blue;">Originator</b> </a> </li>
+                <li>CC – Channel Code. Set to <b>QR</b> </li>
+                <li>SSSSSSSS – Sequence Number</li>
+                <br></br> During QR payment from OFI, use the same businessMessageId generated during QR Enquiry request and replace the transaction code from 521 to the corresponding QR Payment code accordingly. 
+                <br></br> The rest of the information in <b>businessMessageId</b> remain the same. 
+                <br></br> If the QR is not parse-able, OFI to send payment type as 521 or 031 respectively.
+            createdDateTime :
+              type: string
+              description: <b>Creation Date Time </b> <br></br> Must be in Malaysia Standard Time format of message creation date and time.
+              format : yyyy-MM-ddTHH:mm:ss.SSS
+            endToEndId:
+              maxLength: 35
+              type: string
+              description: <b>End To End Identification</b><br></br> Same as businessMessageId. RFI is expected to put this field into response message when sending back to RPP.
+            qr:
+              required: 
+               - code
+              properties:
+                code :
+                  maxLength: 2000
+                  type : string
+                  description: <b>QR Code</b>
+      example:
+        data:
+          businessMessageId: 20230120DMMMYKL4521OQR95822099
+          qr:
+            code: '00020101021126860011SG.COM.NETS01231012345678932123123595902111120181000103082018000109010990816E6529951800007SG.SGQR0112181018001CF0020701.00010306168730040206050201060400010708201808235204000053037025802SG5915NETS CB PTE LTD6009Singapore63048BBF'
+          
+    
+    domesticQueryRequest:
+      type: object
+      required: 
+        -  data
+      properties: 
+        data:
+          required: 
+            - businessMessageId
+            - qr
+            - creditorAgent
+          properties: 
+            businessMessageId:
+              maxLength: 35
+              type: string
+              description: <b>Business Message Identification</b><br></br> Unique message identification. Format YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS
+                where <li>YYYYMMDD – Current Date</li>
+                <li>BBBBBBBB – BIC Code</li>
+                <li>XXX – Transaction Code. Set to <b>520</b>. Refer to <a href="https://docs.developer.paynet.my/docs/duitnowqr/transactiontype/index.html" target="_blank"> <b style="color:blue;">Transaction Code</b> </a></li>
+                <li>O – Originator. Refer to <a href="https://docs.developer.paynet.my/docs/duitnow/mappingtable#originator-code" target="_blank"> <b style="color:blue;">Originator</b> </a></li>
+                <li>CC – Channel Code. Set to <b>QR</b> </li>
+                <li>SSSSSSSS – Sequence Number</li>
+                <br></br> During QR payment from OFI, use the same businessMessageId generated during QR Enquiry request and replace the transaction code from 520 to the corresponding QR Payment code accordingly. 
+                <br></br> The rest of the information in <b>businessMessageId</b> remain the same. 
+                <br></br> If the QR is not parse-able, OFI to send payment type as 521 or 031 respectively. 
+            createdDateTime :
+              type: string
+              description: <b>Creation Date Time </b> <br></br> Must be in Malaysia Standard Time format of message creation date and time.
+              format : yyyy-MM-ddTHH:mm:ss.SSS
+            creditorAgent:
+              required: 
+                - id
+              properties:
+                id :
+                  maxLength: 35
+                  description: <b>Identification</b><br></br> <li>Acquirer ID – for request from OFI to RPP. OFI to extract from QR Code </li>
+                   <li>BIC Code – for request from RPP to RFI. RPP to propagate based on the Acquirer ID </li>
+                   <li>Default to <b>RPPEMYKL</b> for Cross Border QR , if QR is not parse-able or AID does not belong to PayNet</li>
+            qr:
+              required: 
+               - code
+              properties:
+                code :
+                  type: string
+                  maxLength: 2000
+                  description: <b>QR Code</b>
+            reward:
+              description : Applicable to DuitNow QR Reward only.
+              properties:
+                debtorId:
+                  type: string
+                  maxLength: 35
+                  description: <p>In QR Enquiry, Issuer to send the Debtor ID for Acquirer to identify the user</p>
+                    <p> OFI to RPP - Debtor Secondary ID Value </p>
+      example :
+        data:
+          businessMessageId: 20230120DMMMYKL4520OQR90508051
+          endToEndId: 20230120DMMMYKL4520OQR90508051
+          qr:
+            code: 00020201021226460014A000000615000101061234560214BSNSIMULATORQR520400005303458550201540510.675802MY5907BSNTEST6002MY8216C9A86150A485EDC863048EB7
+          creditorAgent:
+            id: '123456'
+          reward:
+            debtorId: 'AMM100'
+    
+    domesticQueryResponse:
+      type: object
+      required: 
+        -  data
+      properties: 
+        data:
+          required: 
+            - businessMessageId
+            - endToEndId
+            - code
+            - reason
+            - creditor
+            - creditorAccount
+            - qr
+          properties: 
+            businessMessageId:
+              maxLength: 35
+              type: string
+              description: <b>Business Message Identification</b><br></br> Unique message identification. Format YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS
+                where <li>YYYYMMDD – Current Date</li>
+                <li>BBBBBBBB – BIC Code</li>
+                <li>XXX – Transaction Code. Set to <b>520</b>. Refer to <a href="https://docs.developer.paynet.my/docs/duitnowqr/transactiontype/index.html" target="_blank"> <b style="color:blue;">Transaction Code</b> </a></li>
+                <li>O – Originator. Refer to <a href="https://docs.developer.paynet.my/docs/duitnow/mappingtable#originator-code" target="_blank"> <b style="color:blue;">Originator</b> </a></li>
+                <li>CC – Channel Code. Set to <b>QR</b> </li>
+                <li>SSSSSSSS – Sequence Number</li>
+                <br></br> During QR payment from OFI, use the same businessMessageId generated during QR Enquiry request and replace the transaction code from 520 to the corresponding QR Payment code accordingly. 
+                <br></br> The rest of the information in <b>businessMessageId</b> remain the same. 
+                <br></br> If the QR is not parse-able, OFI to send payment type as 521 or 031 respectively.
+            createdDateTime :
+              type: string
+              description: <b>Creation Date Time </b> <br></br> Must be in Malaysia Standard Time format of message creation date and time.
+              format : yyyy-MM-ddTHH:mm:ss.SSS
+            endToEndId:
+              maxLength: 35
+              type: string
+              description: <b>End to End Identification</b>
+            code:
+              type: string
+              maxLength: 35
+              description: <b>Transaction Status</b><br></br> Refer to <a style="color:blue;" href="https://docs.developer.paynet.my/docs/duitnow/mappingtable/index.html##externalpaymenttransactionstatus1code-txsts" target="_blank"><b style="color:blue;">External Payment Transaction Status Code</b></a>
+            reason:
+              type: string
+              description: <b>Reason Code</b><br></br> Refer to <a style="color:blue;" href="https://docs.developer.paynet.my/docs/duitnow/responsecodes/index.html#reason-codes" target="_blank"><b style="color:blue;">Reason Code</b></a>
+            creditor:
+              required: 
+                - name
+              properties:
+                name :
+                  description: <b>Creditor’s Name</b><br></br>Acquirer to return the Merchant Name during QR verification process. <br></br> 240, 250 – Debiting Bank to return debtor name
+                  maxLength : 140
+            creditorAccount:
+              required: 
+                - id
+                - type
+              properties:
+                id :
+                  type : string
+                  description: <b>Creditor Account Identification</b>
+                  maxLength : 34
+                'type' : 
+                  type : string
+                  enum: ["CACC","SVGS", "CCRD", "WALL" , "DFLT"]
+                  description: <b>Creditor Account Type</b>
+            qr:
+              required: 
+               - category
+               - acceptedPaymentType
+              properties:
+                category :
+                  type : string
+                  description: <b>QR Category</b><br></br> <li> 01 – Point of Sales </li>
+                               <li> 02 – P2P  </li>
+                               <li> 03 – DFLT  </li>
+                               <br></br>For QR Verification request  (520, 521), OFI to send as <b>DFLT</b>
+                               <br></br> For QR Payment request (030, 031, 040), OFI need to send back the value return in pacs.002 from RFI 
+                               <br></br> RPP will not validate this field. Value must be returned as 
+                               <li> 520/030/040/031/032 - 01 or 02  </li> 
+                               <li> 521/522 - 01 </li> 
+                acceptedPaymentType :
+                  description: <b>Accepted Source of Fund/Line of Credit </b><br></br> <li>01 – CASA </li>
+                               <li>02 – Credit Card </li>
+                               <li>03 – Wallet </li>
+                  type: array
+                  items: 
+                    type: string
+                    enum: ["01","02", "03", "04"]
+            reward:
+              description : Applicable to DuitNow QR Reward only.
+              properties:
+                debtorId:
+                  type: string
+                  description: Acquirer to return the hased Debtor ID during QR Enquiry and QR Payment for issuer. 
+                      The value is from the original request.
+                'description':
+                  type: string
+                  description: Acquirer to return the description during QR Enquiry for Issuer to display to customer. 
+                    Example - <b> Participant A Loyalty Program</b>
+                cashbackInfo:
+                  type: string
+                  description: 
+                    <p>Acquirer to return the cashback information for Issuer to display to customer</p>
+                    Refer to &lt;Field3&gt; of the pacs.002.001.08.01 message on <a href="https://docs.developer.paynet.my/docs/duitnowqr/extrafield/index.html#pacs0020010801" target="_blank"> <b style="color:blue;">Extra Field</b></a>  
+                pointsInfo:
+                  type: string
+                  description:
+                    <p> Acquirer to return the points information for Issuer to display to customer</P>
+                    Refer to &lt;Field4&gt; of the pacs.002.001.08.01 message on <a href="https://docs.developer.paynet.my/docs/duitnowqr/extrafield/index.html#pacs0020010801" target="_blank"> <b style="color:blue;">Extra Field</b></a>
+                discountInfo:
+                  type: string
+                  description: 
+                    <p>Acquirer to return the discount information for Issuer to display to customer</p>
+                    Refer to &lt;Field5&gt; of the pacs.002.001.08.01 message on <a href="https://docs.developer.paynet.my/docs/duitnowqr/extrafield/index.html#pacs0020010801" target="_blank"> <b style="color:blue;">Extra Field</b></a>
+      example :
+        data:
+          businessMessageId: 20230120RPPEMYKL520HQR73101242
+          endToEndId: 20230120DMMMYKL4520OQR90508051
+          code: ACSP
+          reason: U000
+          creditor:
+            name: QR Payment
+          creditorAccount:
+            id: '99999999999'
+            type: DFLT
+          qr:
+            category: '01'
+            acceptedPaymentType:
+              - '01'
+          reward:
+            debtorId: 'AMM200'
+            'description': 'Platinum Loyalty Programme'
+            cashbackInfo: 'A41000B1YC42000D41000'
+            pointsInfo: 'A6999999B61000:1C510000'
+            discountInfo: 'A41999'
+
+    domesticQueryRequestWebhook:
+      type: object
+      required: 
+        -  data
+      properties: 
+        data:
+          required: 
+            - businessMessageId
+            - endToEndId
+            - qr
+            - creditorAgent
+          properties: 
+            businessMessageId:
+              maxLength: 35
+              type: string
+              description: <b>Business Message Identification</b><br></br> Unique message identification. Format YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS
+                where <li>YYYYMMDD – Current Date</li>
+                <li>BBBBBBBB – BIC Code</li>
+                <li>XXX – Transaction Code. Set to <b>520</b>. Refer to <a href="https://docs.developer.paynet.my/docs/duitnowqr/transactiontype/index.html" target="_blank"> <b style="color:blue;">Transaction Code</b> </a></li>
+                <li>O – Originator. Refer to <a href="https://docs.developer.paynet.my/docs/duitnow/mappingtable#originator-code" target="_blank"> <b style="color:blue;">Originator</b> </a></li>
+                <li>CC – Channel Code. Set to <b>QR</b> </li>
+                <li>SSSSSSSS – Sequence Number</li>
+                <br></br> During QR payment from OFI, use the same businessMessageId generated during QR Enquiry request and replace the transaction code from 520 to the corresponding QR Payment code accordingly. 
+                <br></br> The rest of the information in <b>businessMessageId</b> remain the same. 
+                <br></br> If the QR is not parse-able, OFI to send payment type as 521 or 031 respectively.
+            createdDateTime :
+              type: string
+              description: <b>Creation Date Time </b> <br></br> Must be in Malaysia Standard Time format of message creation date and time.
+              format : yyyy-MM-ddTHH:mm:ss.SSS
+            endToEndId:
+              maxLength: 35
+              type: string
+              description: <b>End To End Identification</b><br></br> Same as businessMessageId. RFI is expected to put this field into response message when sending back to RPP.
+            creditorAgent:
+              required: 
+                - id
+              properties:
+                id :
+                  maxLength: 35
+                  description: <b>Identification</b><br></br> <li>Acquirer ID – for request from OFI to RPP. OFI to extract from QR Code </li>
+                   <li>BIC Code – for request from RPP to RFI. RPP to propagate based on the Acquirer ID </li>
+                   <li>Default to <b>RPPEMYKL</b> for Cross Border QR , if QR is not parse-able or AID does not belong to PayNet</li>
+            qr:
+              required: 
+               - code
+              properties:
+                code :
+                  type: string
+                  maxLength: 2000
+                  description: <b>QR Code</b>
+            reward:
+              description: Applicable to DuitNow QR Reward only.
+              properties:
+                debtorId:
+                  type: string
+                  maxLength: 35
+                  description: <p>In QR Enquiry, Issuer to send the Debtor ID for Acquirer to identify the user</p>
+                    <p> OFI to RPP - Debtor Secondary ID Value </p>
+      example :
+        data:
+          businessMessageId: 20230120DMMMYKL4520OQR90508051
+          endToEndId : 20230120DMMMYKL4520OQR90508051
+          qr:
+            code: 00020201021226460014A000000615000101061234560214BSNSIMULATORQR520400005303458550201540510.675802MY5907BSNTEST6002MY8216C9A86150A485EDC863048EB7
+          creditorAgent:
+            id: '123456'
+          reward:
+            debtorId: 'AMM100'
+
+    cpmPaymentRequest:
+      type: object
+      required: data
+      properties:
+        data:
+          required: 
+            - businessMessageId  
+            - interbankSettlementAmount
+            - creditor
+            - creditorAccount
+            - creditorAccountInfo
+            - debtor
+            - debtorAccount
+            - debtorAgent
+            - qr
+          properties: 
+            businessMessageId:
+              maxLength: 35
+              type: string
+              description: <b>Business Message Identification</b><br></br> Unique message identification. Format YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS
+                where <li>YYYYMMDD – Current Date</li>
+                <li>BBBBBBBB – BIC Code</li>
+                <li>XXX – Transaction Code. Set to <b>240 or 250</b>. Refer to <a href="https://docs.developer.paynet.my/docs/duitnowqr/transactiontype/index.html" target="_blank"> <b style="color:blue;">Transaction Code</b> </a></li>
+                <li>O – Originator. Refer to <a href="https://docs.developer.paynet.my/docs/duitnow/mappingtable#originator-code" target="_blank"> <b style="color:blue;">Originator</b> </a></li>
+                <li>CC – Channel Code. Set to <b>QR</b> </li>
+                <li>SSSSSSSS – Sequence Number</li>
+            createdDateTime :
+              type: string
+              description: <b>Creation Date Time </b> <br></br> Must be in Malaysia Standard Time format of message creation date and time.
+              format : yyyy-MM-ddTHH:mm:ss.SSS
+            interbankSettlementAmount:
+              type: number
+              format: "0.00"
+              description: Interbank settlement amount
+            
+            creditor:
+              required: 
+                - name
+              properties:
+                name :
+                  maxLength: 140
+                  description: Creditor name
+
+            creditorAccount:
+              required: 
+                - id
+                - type
+              properties:
+                id :
+                  maxLength: 34
+                  description: Creditor account identification
+                'type' : 
+                  type: string
+                  description: Creditor account type
+                  enum: ["CACC","SVGS", "DFLT"]
+
+            creditorAccountInfo:
+              required:
+                - merchantId
+                - merchantCategoryCode
+              properties:
+                merchantId:
+                  type: string
+                  maxLength: 35
+                  description: Merchant Identification
+                productId:
+                  type: string
+                  maxLength: 35
+                  description: "<p>Product Identification</p><p>Used by Debiting Agent to 
+                  inform customer of the Merchant's Product identification, 
+                  send Merchant Identification if it does not contain a separate Product Identification</p>"
+                merchantCategoryCode:
+                  type: string
+                  maxLength: 4
+                  description: Merchant Category Code, follows ISO 18245
+
+            debtor:
+              required: 
+                - name
+              properties:
+                name :
+                  type: string
+                  description: "Debtor name <br/> Populate the cardholder name from QR code"
+                  maxLength: 140
+            debtorAccount:
+              required: 
+                - id
+                - type
+              properties:
+                id :
+                  type: string
+                  description: "Debtor account identification <br/>Populate with Primary Account Reference from QR Code"	
+                  maxLength: 140
+                'type':
+                  type: string
+                  description: "Debtor account type <br/> Populate with Transaction Category Code from QR Code"
+                  enum: ["CACC","SVGS", "CCRD", "WALL"]
+
+            debtorAgent:
+              required: 
+                - id
+              properties:
+                id :
+                  maxLength: 35
+                  type: string
+                  description: "Debtor agent identification <br/> Populate with Issuer Identification Number"
+
+            qr:
+              required: 
+               - code
+               - acceptedPaymentType
+              properties:
+                code :
+                  type : string
+                  maxLength: 2000
+                  description: QR Code
+                category :
+                  type : string
+                  description: QR Category
+                  enum: ["01","02", "03"]
+                acceptedPaymentType :
+                  type: array
+                  description: Accepted Source of fund/Line of credit 
+                  items: 
+                    type: string
+                    enum: ["01","02", "03", "04", "11"]
+      example:
+        data:
+          businessMessageId: 20221205DMMMYKL3240ORB32905588
+          interbankSettlementAmount: 10.67
+          creditor:
+            name: Maxis
+          creditorAccount:
+            id: '762372362785'
+            type: DFLT
+          creditorAccountInfo:
+            merchantId: '00000000000000000000000000000000001'
+            merchantCategoryCode: '5331'    
+          debtor:
+            name: Kumar
+          debtorAccount:
+            id: '11111111'
+            type: SVGS
+          debtorAgent:
+            id: '123456'     
+          qr:
+            code: 00020201021226460014A000000615000101061234560214BSNSIMULATORQR520400005303458550201540510.675802MY5907BSNTEST6002MY8216C9A86150A485EDC863048EB7
+            category: '01'
+            acceptedPaymentType:
+              - '01'
+
+    cpmPaymentResponse:
+      type: object
+      required: 
+        -  data
+      properties: 
+        data:
+          required: 
+            - businessMessageId
+            - endToEndId
+            - code
+            - reason
+          properties: 
+            businessMessageId:
+              maxLength: 35
+              type: string
+              description: Business message identification
+            createdDateTime :
+              type: string
+              description: <b>Creation Date Time </b> <br></br> Must be in Malaysia Standard Time format of message creation date and time.
+              format : yyyy-MM-ddTHH:mm:ss.SSS
+            endToEndId:
+              type: string
+              description: End to end identification
+            code:
+              type: string
+              description: Code
+            reason:
+              type: string
+              description: Reason
+      example :
+        data:
+          businessMessageId: 20221205RPPEMYKL240HRB84642701
+          endToEndIdentification: 20221205DMMMYKL3240ORB32905588
+          code: ACSP
+          reason: U000
+
+    cpmPaymentRequestWebhook:
+      type: object
+      required: data
+      properties:
+        data:
+          required: 
+            - businessMessageId
+            - endToEndId
+            - interbankSettlementAmount
+            - creditor
+            - creditorAccount
+            - creditorAccountInfo
+            - debtor
+            - debtorAccount
+            - debtorAgent
+            - qr
+          properties: 
+            businessMessageId:
+              maxLength: 35
+              type: string
+              description: <b>Business Message Identification</b><br></br> Unique message identification. Format YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS
+                where <li>YYYYMMDD – Current Date</li>
+                <li>BBBBBBBB – BIC Code</li>
+                <li>XXX – Transaction Code. Set to <b>240 or 250</b>. Refer to <a href="https://docs.developer.paynet.my/docs/duitnowqr/transactiontype/index.html" target="_blank"> <b style="color:blue;">Transaction Code</b> </a></li>
+                <li>O – Originator. Refer to <a href="https://docs.developer.paynet.my/docs/duitnow/mappingtable#originator-code" target="_blank"> <b style="color:blue;">Originator</b> </a></li>
+                <li>CC – Channel Code. Set to <b>QR</b> </li>
+                <li>SSSSSSSS – Sequence Number</li>
+            createdDateTime :
+              type: string
+              description: <b>Creation Date Time </b> <br></br> Must be in Malaysia Standard Time format of message creation date and time.
+              format : yyyy-MM-ddTHH:mm:ss.SSS
+            endToEndId:
+              maxLength: 35
+              type: string
+              description: <b>End To End Identification</b><br></br> Same as businessMessageId. RFI is expected to put this field into response message when sending back to RPP.
+            interbankSettlementAmount:
+              type: number
+              format: "0.00"
+              description: Interbank settlement amount
+            
+            creditor:
+              required: 
+                - name
+              properties:
+                name :
+                  maxLength: 140
+                  description: Creditor name
+
+            creditorAccount:
+              required: 
+                - id
+                - type
+              properties:
+                id :
+                  maxLength: 34
+                  description: Creditor account identification
+                'type' : 
+                  type: string
+                  description: Creditor account type
+                  enum: ["CACC","SVGS", "DFLT"]
+
+            creditorAccountInfo:
+              required:
+                - merchantId
+                - merchantCategoryCode
+              properties:
+                merchantId:
+                  type: string
+                  maxLength: 35
+                  description: Merchant Identification
+                productId:
+                  type: string
+                  maxLength: 35
+                  description: "<p>Product Identification</p><p>Used by Debiting Agent to 
+                  inform customer of the Merchant's Product identification, 
+                  send Merchant Identification if it does not contain a separate Product Identification</p>"
+                merchantCategoryCode:
+                  type: string
+                  maxLength: 4
+                  description: Merchant Category Code, follows ISO 18245
+
+            debtor:
+              required: 
+                - name
+              properties:
+                name :
+                  type: string
+                  description: "Debtor name <br/> Populate the cardholder name from QR code"
+                  maxLength: 140
+            debtorAccount:
+              required: 
+                - id
+                - type
+              properties:
+                id :
+                  type: string
+                  description: "Debtor account identification <br/>Populate with Primary Account Reference from QR Code"  
+                  maxLength: 140
+                'type':
+                  type: string
+                  description: "Debtor account type <br/> Populate with Transaction Category Code from QR Code"
+                  enum: ["CACC","SVGS", "CCRD", "WALL"]
+
+            debtorAgent:
+              required: 
+                - id
+              properties:
+                id :
+                  maxLength: 35
+                  type: string
+                  description: "Debtor agent identification <br/> Populate with Issuer Identification Number"
+
+            qr:
+              required: 
+               - code
+               - acceptedPaymentType
+              properties:
+                code :
+                  type : string
+                  maxLength: 2000
+                  description: QR Code
+                category :
+                  type : string
+                  description: QR Category
+                  enum: ["01","02", "03"]
+                acceptedPaymentType :
+                  type: array
+                  description: Accepted Source of fund/Line of credit 
+                  items: 
+                    type: string
+                    enum: ["01","02", "03", "04", "11"]
+      example:
+        data:
+          businessMessageId: 20221205DMMMYKL3240ORB32905588
+          endToEndId: 20221205DMMMYKL3240ORB32905588
+          interbankSettlementAmount: 10.67
+          creditor:
+            name: Maxis
+          creditorAccount:
+            id: '762372362785'
+            type: DFLT
+          creditorAccountInfo:
+            merchantId: '00000000000000000000000000000000001'
+            merchantCategoryCode: '5331'    
+          debtor:
+            name: Kumar
+          debtorAccount:
+            id: '11111111'
+            type: SVGS
+          debtorAgent:
+            id: '123456'     
+          qr:
+            code: 00020201021226460014A000000615000101061234560214BSNSIMULATORQR520400005303458550201540510.675802MY5907BSNTEST6002MY8216C9A86150A485EDC863048EB7
+            category: '01'
+            acceptedPaymentType:
+              - '01'
+
+
+    cpmPreauthorisationRequest:
+      type: object
+      required: data
+      properties:
+        data:
+          required: 
+            - businessMessageId  
+            - interbankSettlementAmount
+            - creditor
+            - creditorAccount
+            - creditorAccountInfo
+            - debtor
+            - debtorAccount
+            - debtorAgent
+            - qr
+          properties: 
+            businessMessageId:
+              maxLength: 35
+              type: string
+              description: <b>Business Message Identification</b><br></br> Unique message identification. Format YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS
+                where <li>YYYYMMDD – Current Date</li>
+                <li>BBBBBBBB – BIC Code</li>
+                <li>XXX – Transaction Code. Set to <b>880</b>. Refer to <a href="https://docs.developer.paynet.my/docs/duitnowqr/transactiontype/index.html" target="_blank"> <b style="color:blue;">Transaction Code</b> </a></li>
+                <li>O – Originator. Refer to <a href="https://docs.developer.paynet.my/docs/duitnow/mappingtable#originator-code" target="_blank"> <b style="color:blue;">Originator</b> </a></li>
+                <li>CC – Channel Code. Set to <b>QR</b> </li>
+                <li>SSSSSSSS – Sequence Number</li>
+            createdDateTime :
+              type: string
+              description: <b>Creation Date Time </b> <br></br> Must be in Malaysia Standard Time format of message creation date and time.
+              format : yyyy-MM-ddTHH:mm:ss.SSS
+            interbankSettlementAmount:
+              type: number
+              format: "0.00"
+              description: Interbank settlement amount
+            
+            creditor:
+              required: 
+                - name
+              properties:
+                name :
+                  maxLength: 140
+                  description: Creditor name
+
+            creditorAccount:
+              required: 
+                - id
+                - type
+              properties:
+                id :
+                  maxLength: 34
+                  description: Creditor account identification
+                'type' : 
+                  type: string
+                  description: Creditor account type
+                  enum: ["CACC","SVGS", "DFLT"]
+
+            creditorAccountInfo:
+              required:
+                - merchantId
+                - merchantCategoryCode
+              properties:
+                merchantId:
+                  type: string
+                  maxLength: 35
+                  description: Merchant Identification
+                productId:
+                  type: string
+                  maxLength: 35
+                  description: "<p>Product Identification</p><p>Used by Debiting Agent to 
+                  inform customer of the Merchant's Product identification, 
+                  send Merchant Identification if it does not contain a separate Product Identification</p>"
+                merchantCategoryCode:
+                  type: string
+                  maxLength: 4
+                  description: Merchant Category Code, follows ISO 18245
+
+            debtor:
+              required: 
+                - name
+              properties:
+                name :
+                  type: string
+                  description: "Debtor name  <br/> Populate the cardholder name from QR code"
+                  maxLength: 140
+            debtorAccount:
+              required: 
+                - id
+                - type
+              properties:
+                id :
+                  type: string
+                  description: "Debtor account identification <br/>Populate with Primary Account Reference from QR Code"	
+                  maxLength: 140
+                'type':
+                  type: string
+                  description: " Debtor account type <br/> Populate with Transaction Category Code from QR Code "
+                  enum: ["CACC","SVGS", "CCRD", "WALL"]
+
+            debtorAgent:
+              required: 
+                - id
+              properties:
+                id :
+                  maxLength: 35
+                  type: string
+                  description: " Debtor agent identification <br/> Populate with Issuer Identification Number"
+
+            qr:
+              required: 
+               - code
+               - acceptedPaymentType
+               - preauthorisation
+              properties:
+                code :
+                  type : string
+                  description: QR Code
+                  maxLength: 2000
+                category :
+                  type : string
+                  description: QR Category
+                  enum: ["01","02", "03"]
+                acceptedPaymentType :
+                  type: array
+                  description: Accepted Source of fund/Line of credit
+                  items: 
+                    type: string
+                    enum: ["01","02", "03", "04", "11"]
+                preauthorisation:
+                  required: 
+                   - amount
+                   - expiryDate
+                  properties:
+                    amount:
+                      type: number
+                      format: "0.00"
+                      description: Pre-Authorised Amount. Must be within the limit of max pre-auth amount configured at RPP
+                    expiryDate:
+                      type: string
+                      description: Pre-Authorisation Expiry Date
+                    id: 
+                      type: string
+                      maxLength: 35
+                      description: "Pre-authorisation identification. To be generated by RPP. 
+                      \n Format YYYYMMDDQRPTSSSSSSSS where:      
+                        <li>YYYYMMDD = Date </li>
+                       <li>SSSSSSSS = Running Serial Number</li>
+                       For 880: RPP will populate this field <br/>
+                       For 250: this field must be populated with the Pre-Auth ID from 880"
+      example:
+        data:
+          businessMessageId: 20221221DMMMYKL3880OQR77543694
+          interbankSettlementAmount: 10.67
+          creditor:
+            name: Maxis
+          creditorAccount:
+            id: '762372362785'
+            type: DFLT
+          creditorAccountInfo:
+            merchantId: '00000000000000000000000000000000001'
+            merchantCategoryCode: '5331'    
+          debtor:
+            name: Kumar
+          debtorAccount:
+            id: '0000001004'
+            type: SVGS
+          debtorAgent:
+            id: '123456'     
+          qr:
+            code: 00020201021126470014A0000006150001010611111302155202469930102035204000053034585502015802MY5910CB Sdn Bhd6002MY8216C9A86150A485EDC863045333
+            category: '03'
+            acceptedPaymentType:
+              - '04'
+            preauthorisation:
+              amount: 1.01
+              expiryDate: "2022-12-21T10:50:23.223"
+    
+    cpmPreauthorisationResponse:
+      type: object
+      required: 
+        -  data
+      properties: 
+        data:
+          required: 
+            - businessMessageId
+            - endToEndId
+            - code
+            - reason
+          properties: 
+            businessMessageId:
+              maxLength: 35
+              type: string
+              description: Business message identification
+            createdDateTime :
+              type: string
+              description: <b>Creation Date Time </b> <br></br> Must be in Malaysia Standard Time format of message creation date and time.
+              format : yyyy-MM-ddTHH:mm:ss.SSS
+            endToEndId:
+              type: string
+              description: End to end identification
+            preauthorisationId:
+              type: string
+              description: Pre-authorisation identification <br/> To be populated in the PreauthorisationId field in 250
+            code:
+              type: string
+              description: Code
+            reason:
+              type: string
+              description: Reason
+      example :
+        data:
+          businessMessageId: 20221221RPPEMYKL880HQR73070598
+          endToEndIdentification: 20221221DMMMYKL3880OQR77543694
+          preauthorisationId: 20221221QRPT02190001
+          code: ACSP
+          reason: U000
+
+    cpmPreauthorisationRequestWebhook:
+      type: object
+      required: data
+      properties:
+        data:
+          required: 
+            - businessMessageId  
+            - endToEndId
+            - interbankSettlementAmount
+            - creditor
+            - creditorAccount
+            - creditorAccountInfo
+            - debtor
+            - debtorAccount
+            - debtorAgent
+            - qr
+          properties: 
+            businessMessageId:
+              maxLength: 35
+              type: string
+              description: <b>Business Message Identification</b><br></br> Unique message identification. Format YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS
+                where <li>YYYYMMDD – Current Date</li>
+                <li>BBBBBBBB – BIC Code</li>
+                <li>XXX – Transaction Code. Set to <b>880</b>. Refer to <a href="https://docs.developer.paynet.my/docs/duitnowqr/transactiontype/index.html" target="_blank"> <b style="color:blue;">Transaction Code</b> </a></li>
+                <li>O – Originator. Refer to <a href="https://docs.developer.paynet.my/docs/duitnow/mappingtable#originator-code" target="_blank"> <b style="color:blue;">Originator</b> </a></li>
+                <li>CC – Channel Code. Set to <b>QR</b> </li>
+                <li>SSSSSSSS – Sequence Number</li>
+            createdDateTime :
+              type: string
+              description: <b>Creation Date Time </b> <br></br> Must be in Malaysia Standard Time format of message creation date and time.
+              format : yyyy-MM-ddTHH:mm:ss.SSS
+            endToEndId:
+              maxLength: 35
+              type: string
+              description: <b>End To End Identification</b><br></br> Same as businessMessageId. RFI is expected to put this field into response message when sending back to RPP.
+            interbankSettlementAmount:
+              type: number
+              format: "0.00"
+              description: Interbank settlement amount
+            
+            creditor:
+              required: 
+                - name
+              properties:
+                name :
+                  maxLength: 140
+                  description: Creditor name
+
+            creditorAccount:
+              required: 
+                - id
+                - type
+              properties:
+                id :
+                  maxLength: 34
+                  description: Creditor account identification
+                'type' : 
+                  type: string
+                  description: Creditor account type
+                  enum: ["CACC","SVGS", "DFLT"]
+
+            creditorAccountInfo:
+              required:
+                - merchantId
+                - merchantCategoryCode
+              properties:
+                merchantId:
+                  type: string
+                  maxLength: 35
+                  description: Merchant Identification
+                productId:
+                  type: string
+                  maxLength: 35
+                  description: "<p>Product Identification</p><p>Used by Debiting Agent to 
+                  inform customer of the Merchant's Product identification, 
+                  send Merchant Identification if it does not contain a separate Product Identification</p>"
+                merchantCategoryCode:
+                  type: string
+                  maxLength: 4
+                  description: Merchant Category Code, follows ISO 18245
+
+            debtor:
+              required: 
+                - name
+              properties:
+                name :
+                  type: string
+                  description: "Debtor name  <br/> Populate the cardholder name from QR code"
+                  maxLength: 140
+            debtorAccount:
+              required: 
+                - id
+                - type
+              properties:
+                id :
+                  type: string
+                  description: "Debtor account identification <br/>Populate with Primary Account Reference from QR Code"  
+                  maxLength: 140
+                'type':
+                  type: string
+                  description: " Debtor account type <br/> Populate with Transaction Category Code from QR Code "
+                  enum: ["CACC","SVGS", "CCRD", "WALL"]
+
+            debtorAgent:
+              required: 
+                - id
+              properties:
+                id :
+                  maxLength: 35
+                  type: string
+                  description: " Debtor agent identification <br/> Populate with Issuer Identification Number"
+
+            qr:
+              required: 
+               - code
+               - acceptedPaymentType
+               - preauthorisation
+              properties:
+                code :
+                  type : string
+                  description: QR Code
+                  maxLength: 2000
+                category :
+                  type : string
+                  description: QR Category
+                  enum: ["01","02", "03"]
+                acceptedPaymentType :
+                  type: array
+                  description: Accepted Source of fund/Line of credit
+                  items: 
+                    type: string
+                    enum: ["01","02", "03", "04", "11"]
+                preauthorisation:
+                  required: 
+                   - amount
+                   - expiryDate
+                  properties:
+                    amount:
+                      type: number
+                      format: "0.00"
+                      description: Pre-Authorised Amount. Must be within the limit of max pre-auth amount configured at RPP
+                    expiryDate:
+                      type: string
+                      description: Pre-Authorisation Expiry Date
+                    id: 
+                      type: string
+                      maxLength: 35
+                      description: "Pre-authorisation identification. To be generated by RPP. 
+                      \n Format YYYYMMDDQRPTSSSSSSSS where:      
+                        <li>YYYYMMDD = Date </li>
+                       <li>SSSSSSSS = Running Serial Number</li>
+                       For 880: RPP will populate this field <br/>
+                       For 250: this field must be populated with the Pre-Auth ID from 880"
+      example:
+        data:
+          businessMessageId: 20221221DMMMYKL3880OQR77543694
+          endToEndId: 20221221DMMMYKL3880OQR77543694
+          interbankSettlementAmount: 10.67
+          creditor:
+            name: Maxis
+          creditorAccount:
+            id: '762372362785'
+            type: DFLT
+          creditorAccountInfo:
+            merchantId: '00000000000000000000000000000000001'
+            merchantCategoryCode: '5331'    
+          debtor:
+            name: Kumar
+          debtorAccount:
+            id: '0000001004'
+            type: SVGS
+          debtorAgent:
+            id: '123456'     
+          qr:
+            code: 00020201021126470014A0000006150001010611111302155202469930102035204000053034585502015802MY5910CB Sdn Bhd6002MY8216C9A86150A485EDC863045333
+            category: '03'
+            acceptedPaymentType:
+              - '04'
+            preauthorisation:
+              amount: 1.01
+              expiryDate: "2022-12-21T10:50:23.223"
+          
+    errorResponse:
+      type: object
+      required: 
+        - data
+      properties: 
+        data:
+          allOf: 
+            - $ref: "#/components/schemas/baseDataResponse"
+            - type: object
+              required: 
+                - code
+              
+    baseDataResponse:
+      type: object
+      required: 
+        - businessMessageId
+      properties: 
+        businessMessageId:
+          type: string
+          maxLength: 35
+          description: Unique business message identification.
+        code:
+          type: string
+          description: response code identification
+        reason:
+          type: string
+          description: response status information
+          
+  securitySchemes:
+    bearerAuth:     
+      type: http
+      scheme: bearer
+      bearerFormat: JWT  
+      description: |
+        This API supports JWS for authenticating all API requests <b>except for Webhook APIs.</b> For more information, please read our <a href="https://docs.developer.paynet.my/docs/general/jws"><b style="color:blue;">JWS</b></a> specification.
+    

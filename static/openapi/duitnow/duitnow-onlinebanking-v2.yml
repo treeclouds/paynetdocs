@@ -1,0 +1,1002 @@
+openapi: 3.1.0
+info:
+  title: DuitNow Online Banking/Wallets (Merchant)
+  description: |
+    > **Attention!** These APIs are still in the beta stage and are not yet available to the general public. Stay tuned for updates on when they will be ready for everyone to explore!
+    Flexible payment option that complements existing payment methods, and enjoying the benefits from digital payments.
+
+    ### Before Getting Started
+    Participant needs to identify the role it plans to participate before deciding which API to build. The roles include:
+      - Participant acts as the Merchant which is the sender of the payment instruction. OFI is expected to manage their customer’s account balances and able to debit the fund from their customer’s account. In such scenario, Participant needs to make API request to RPP host to initiate the payment instruction.
+
+    ### V2 API
+    This API version is made available in JSON format and request can be called via HTTP. 
+    
+    It only supports connectivity over the internet. MPLS line is not supported.
+    
+    Currently, this API only supports for Participant that wishes to join as Merchant.
+
+    ### Endpoints
+    - Retrieve Bank List – It is not necessary to make an API call to this before every Initiate Payment API. It is recommended to call periodically instead e.g. every 5 minutes.
+    - Cancel Payment – The request may be rejected in the event the transaction has been processed before this API is received by RPP host. Hence it is not guaranteed the payment instruction can be terminated.
+    - Status Inquiry – Participant is advised to not make excessive API calls as it may take up to 10 minutes for the customer to complete the payment using their internet banking account.
+  version: v2
+servers:
+- url: https://mock.developer.paynet.my/merchants/v2/payments
+
+
+paths:
+  /lists/bank:
+    get:
+      description: This API allows the Merchant to retrieve the list of participants
+        supporting DuitNow Online Banking/Wallets along with the necessary information
+        for Merchant to initiate subsequent steps e.g. redirect customer to the their
+        selected debiting bank.
+      operationId: Retrieve Bank List
+      parameters:
+        - name: pageKey
+          in: query
+          description: <b>banks.code</b> of the last element in the previous page, used
+            to fetch next page. If blank or not present, indicates to fetch first page
+          schema:
+            maxLength: 35
+            pattern: ^[a-zA-Z0-9]*$
+            type: string
+        - name: X-Business-Message-Id
+          in: header
+          description: <b>Business Message Identification</b><br></br> Unique message identification. Format YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS
+            where <li>YYYYMMDD – Current Date</li>
+            <li>BBBBBBBB – BIC Code</li>
+            <li>XXX – Transaction Code. Set to <b>650</b>. Refer to <a href="https://docs.developer.paynet.my/docs/duitnowqr/transactiontype/index.html" target="_blank"> <b style="color:blue;">Transaction Code</b> </a> </li>
+            <li>O – Originator. Refer to <a href="https://docs.developer.paynet.my/docs/duitnow/mappingtable#originator-code" target="_blank"> <b style="color:blue;">Originator</b> </a> </li>
+            <li>CC – Channel Code. Refer to <a href="https://docs.developer.paynet.my/docs/duitnow/mappingtable#channel-code" target="_blank"> <b style="color:blue;">Channel Code</b> </a> </li>
+            <li>SSSSSSSS – Sequence Number</li>
+            <br>Originator can be any of the following:</b>
+            <li>O – OFI</li>
+            <li>H – RPP</li>
+            <li>R – RFI</li>
+            <br>Channel code can be any of the following:</b>
+            <li>BA – Mobile Application</li>
+            <li>BW – Web Browser</li>
+            <li>RB – Retail Internet Banking</li>
+          required: true
+          schema:
+            type: string
+            maxLength: 35
+          example: "20200630RPPEMYKL650HRB00000000"
+        - $ref: "./base.yml#/components/parameters/X-Client-Id"
+        - $ref: "./base.yml#/components/parameters/X-Ip-Address"
+        - $ref: "./base.yml#/components/parameters/X-Gps-Coordinates"
+
+      responses:
+        200:
+          description: ""
+          headers:
+            Authorization:
+              required: true
+              $ref: "./base.yml#/components/headers/Authorization"
+            X-Business-Message-Id:
+              required: true
+              $ref: "./base.yml#/components/headers/X-Business-Message-Id"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/retrieveBankListResponse"
+              example:
+                data:
+                  businessMessageId: "20200630RPPEMYKL650HRB00000000"
+                  code: "ACTC"
+                  reason: "U000"
+                  pageKey: "BNKCMYKL"
+                  banks:
+                    - code: BNKAMYKL
+                      name: Bank A
+                      active: true
+                      browser: Firefox 68+, Microsoft Edge 80+, Chrome 80+, Safari 13+
+                      iosApplicationId: IOS6
+                      androidApplicationId: AND10
+                      redirectUrls:
+                        - type: RET
+                          url: www.banka.com.my
+                        - type: COR
+                          url: www.banka.com.my
+                    - code: BNKBMYKL
+                      name: Bank B
+                      active: true
+                      browser: Firefox 68+, Microsoft Edge 80+, Chrome 80+, Safari 13+
+                      iosApplicationId: IOS6
+                      androidApplicationId: AND10
+                      redirectUrls:
+                        - type: RET
+                          url: www.bankb.com.my
+                        - type: COR
+                          url: www.bankb.com.my
+                    - code: BNKCMYKL
+                      name: Bank C
+                      active: false
+                      redirectUrls:
+                        - type: RET
+                          url: www.bankc.com.my
+                        - type: COR
+                          url: www.bankc.com.my
+        400:
+          description: ""
+          headers:
+            X-Business-Message-Id:
+              required: true
+              $ref: "./base.yml#/components/headers/X-Business-Message-Id"
+          content:
+            application/json:
+              schema:
+                $ref: "./base.yml#/components/schemas/errorResponse"
+              example:
+                data:
+                  businessMessageId: "20200630RPPEMYKL650HRB00000001"
+                  code: "API.002"
+                  reason: "X-Business-Message-Id - Invalid format"
+        401:
+          description: ""
+          headers:
+            X-Business-Message-Id:
+              required: true
+              $ref: "./base.yml#/components/headers/X-Business-Message-Id"
+          content:
+            application/json:
+              schema:
+                $ref: "./base.yml#/components/schemas/errorResponse"
+              example:
+                data:
+                  businessMessageId: "20200630RPPEMYKL650HRB00000002"
+                  code: "API.007"
+                  reason: "Unauthorized request"
+        500:
+          description: ""
+          headers:
+            X-Business-Message-Id:
+              required: true
+              $ref: "./base.yml#/components/headers/X-Business-Message-Id"
+          content:
+            application/json:
+              schema:
+                $ref: "./base.yml#/components/schemas/errorResponse"
+              example:
+                data:
+                  businessMessageId: "20200630RPPEMYKL650HRB000000003"
+                  code: "API.500"
+                  reason: "Internal Server Error"
+
+      security:
+        - bearerAuth: [ ]
+      x-codegen-request-body-name: generated
+
+  /redirect:
+    post:
+      description: This API allows Merchant to create a payment request. The created
+        payment request contains all the necessary information related to the transaction
+        e.g. purchase details, transaction amount, payment reference and etc prior
+        to Merchant redirecting the Customer to their internet banking.
+      operationId: Initiate Payment
+      parameters:
+        - name: X-Business-Message-Id
+          in: header
+          description: <b>Business Message Identification</b><br></br> Unique message identification. Format YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS
+            where <li>YYYYMMDD – Current Date</li>
+            <li>BBBBBBBB – BIC Code</li>
+            <li>XXX – Transaction Code. Set to <b>861</b>. Refer to <a href="https://docs.developer.paynet.my/docs/duitnowqr/transactiontype/index.html" target="_blank"> <b style="color:blue;">Transaction Code</b> </a> </li>
+            <li>O – Originator. Refer to <a href="https://docs.developer.paynet.my/docs/duitnow/mappingtable#originator-code" target="_blank"> <b style="color:blue;">Originator</b> </a> </li>
+            <li>CC – Channel Code. Refer to <a href="https://docs.developer.paynet.my/docs/duitnow/mappingtable#channel-code" target="_blank"> <b style="color:blue;">Channel Code</b> </a> </li>
+            <li>SSSSSSSS – Sequence Number</li>
+            <br>Originator can be any of the following:</b>
+            <li>O – OFI</li>
+            <li>H – RPP</li>
+            <li>R – RFI</li>
+            <br>Channel code can be any of the following:</b>
+            <li>BA – Mobile Application</li>
+            <li>BW – Web Browser</li>
+            <li>RB – Retail Internet Banking</li>
+          required: true
+          schema:
+            type: string
+            maxLength: 35
+          example: "20200630APGWMYKL861ORB00000000"
+        - $ref: "./base.yml#/components/parameters/X-Client-Id"
+        - $ref: "./base.yml#/components/parameters/X-Ip-Address"
+        - $ref: "./base.yml#/components/parameters/X-Gps-Coordinates"
+
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/initiatePaymentRequest"
+            example:
+              data:
+                businessMessageId: "20200630APGWMYKL861ORB00000000"
+                date: "2020-06-30T11:00:00.000"
+                expiryDate: "2020-12-31T23:59:59.000"
+                customer:
+                  name: "John Doe"
+                  bankType: "RET"
+                  identificationType: "01"
+                  identification: "1234567890"
+                merchant:
+                  name: "WindUp"
+                  accountType: "RET"
+                  identificationType: "04"
+                  identification: "1234567890"
+                consent:
+                  effectiveDate: "2020-01-01"
+                  expiryDate: "2020-12-31"
+                  frequency: "01"
+                  maximumPaymentCurrency: "MYR"
+                  maximumPaymentAmount: 1000.00
+                amount: 100.00
+                currency: "MYR"
+                productId: "APIGW"
+                sourceOfFunds:
+                  - "01"
+                recipientReference: "1234567890"
+                paymentDescription: "Bill Payment"
+
+      responses:
+        200:
+          description: ""
+          headers:
+            Authorization:
+              required: true
+              $ref: "./base.yml#/components/headers/Authorization"
+            X-Business-Message-Id:
+              required: true
+              $ref: "./base.yml#/components/headers/X-Business-Message-Id"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/initiatePaymentResponse"
+              example:
+                data:
+                  businessMessageId: "20200630RPPEMYKL861HRB00000000"
+                  code: "ACTC"
+                  reason: "U000"
+                  endToEndId: "20200630RPPEMYKL861HRB00000000"
+                  endToEndIdSignature: "tzfOJ+HLie3Ouhhd62ipQaNuH2BUXF/6seHEcKGtwBT1BxeOI7WLFqDybUms/C5eJH5VG+mc3mVUSrVa0W4Za58IWt0A21jqml1wg5mKts4wwmBeKJqXB5eQsfFlMC5KBB69ekOQDajuAvDaZhalme9msWnzoYgjW2BgZVE25U0U3oJqF+gRCwXcdoHcAxnpLp7lcYhFs8BLloYyY5BWQtMF63eVS8z7I8UxWM7hgg1TtqvX3SBV7D0vX9z28S16UCsGfICFdaUrre0aSWVPV0EVsoOQXCL2bQ1/S+hnDPXCnJTYwjjcbikhXROGG4zzheLLxV4eX+ptL70j9NXyig=="
+        400:
+          description: ""
+          headers:
+            X-Business-Message-Id:
+              required: true
+              $ref: "./base.yml#/components/headers/X-Business-Message-Id"
+          content:
+            application/json:
+              schema:
+                $ref: "./base.yml#/components/schemas/errorResponse"
+              example:
+                data:
+                  businessMessageId: "20200630RPPEMYKL861HRB00000001"
+                  code: "API.002"
+                  reason: "X-Business-Message-Id - Invalid format"
+        401:
+          description: ""
+          headers:
+            X-Business-Message-Id:
+              required: true
+              $ref: "./base.yml#/components/headers/X-Business-Message-Id"
+          content:
+            application/json:
+              schema:
+                $ref: "./base.yml#/components/schemas/errorResponse"
+              example:
+                data:
+                  businessMessageId: "20200630RPPEMYKL861HRB00000002"
+                  code: "API.007"
+                  reason: "Unauthorized request"
+        500:
+          description: ""
+          headers:
+            X-Business-Message-Id:
+              required: true
+              $ref: "./base.yml#/components/headers/X-Business-Message-Id"
+          content:
+            application/json:
+              schema:
+                $ref: "./base.yml#/components/schemas/errorResponse"
+              example:
+                data:
+                  businessMessageId: "20200630RPPEMYKL861HRB00000003"
+                  code: "API.500"
+                  reason: "Internal Server Error"
+
+      security:
+        - bearerAuth: [ ]
+      x-codegen-request-body-name: generated
+
+  /payment/cancel:
+    put:
+      description: This API can be used in the event Merchant wishes to cancel a transaction.
+        Though, if the Debiting Participant has already updated the transaction status
+        as successful, the cancellation request will be rejected. The system practices
+        first come first serve basis policy during request processing.
+      operationId: Cancel Payment
+      parameters:
+        - name: X-Business-Message-Id
+          in: header
+          description: <b>Business Message Identification</b><br></br> Unique message identification. Format YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS
+            where <li>YYYYMMDD – Current Date</li>
+            <li>BBBBBBBB – BIC Code</li>
+            <li>XXX – Transaction Code. Set to <b>865</b>. Refer to <a href="https://docs.developer.paynet.my/docs/duitnowqr/transactiontype/index.html" target="_blank"> <b style="color:blue;">Transaction Code</b> </a> </li>
+            <li>O – Originator. Refer to <a href="https://docs.developer.paynet.my/docs/duitnow/mappingtable#originator-code" target="_blank"> <b style="color:blue;">Originator</b> </a> </li>
+            <li>CC – Channel Code. Refer to <a href="https://docs.developer.paynet.my/docs/duitnow/mappingtable#channel-code" target="_blank"> <b style="color:blue;">Channel Code</b> </a> </li>
+            <li>SSSSSSSS – Sequence Number</li>
+            <br>Originator can be any of the following:</b>
+            <li>O – OFI</li>
+            <li>H – RPP</li>
+            <li>R – RFI</li>
+            <br>Channel code can be any of the following:</b>
+            <li>BA – Mobile Application</li>
+            <li>BW – Web Browser</li>
+            <li>RB – Retail Internet Banking</li>
+          required: true
+          schema:
+            type: string
+            maxLength: 35
+          example: "20200630APGWMYKL865ORB00000000"
+        - $ref: "./base.yml#/components/parameters/X-Client-Id"
+        - $ref: "./base.yml#/components/parameters/X-Ip-Address"
+        - $ref: "./base.yml#/components/parameters/X-Gps-Coordinates"
+
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/cancelPaymentRequest"
+            example:
+              data:
+                businessMessageId: "20200630APGWMYKL865ORB00000000"
+                endToEndId: "20200630APGWMYKL865ORB00000000"
+                productId: "APIGW"
+
+      responses:
+        200:
+          description: ""
+          headers:
+            Authorization:
+              required: true
+              $ref: "./base.yml#/components/headers/Authorization"
+            X-Business-Message-Id:
+              required: true
+              $ref: "./base.yml#/components/headers/X-Business-Message-Id"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/cancelPaymentResponse"
+              example:
+                data:
+                  businessMessageId: "20200630RPPEMYKL865HRB00000000"
+                  code: "ACTC"
+                  reason: "U000"
+                  endToEndId: "20200630RPPEMYKL865HRB00000000"
+        400:
+          description: ""
+          headers:
+            X-Business-Message-Id:
+              required: true
+              $ref: "./base.yml#/components/headers/X-Business-Message-Id"
+          content:
+            application/json:
+              schema:
+                $ref: "./base.yml#/components/schemas/errorResponse"
+              example:
+                data:
+                  businessMessageId: "20200630RPPEMYKL865HRB00000001"
+                  code: "API.002"
+                  reason: "X-Business-Message-Id - Invalid format"
+        401:
+          description: ""
+          headers:
+            X-Business-Message-Id:
+              required: true
+              $ref: "./base.yml#/components/headers/X-Business-Message-Id"
+          content:
+            application/json:
+              schema:
+                $ref: "./base.yml#/components/schemas/errorResponse"
+              example:
+                data:
+                  businessMessageId: "20200630RPPEMYKL865HRB00000002"
+                  code: "API.007"
+                  reason: "Unauthorized request"
+        500:
+          description: ""
+          headers:
+            X-Business-Message-Id:
+              required: true
+              $ref: "./base.yml#/components/headers/X-Business-Message-Id"
+          content:
+            application/json:
+              schema:
+                $ref: "./base.yml#/components/schemas/errorResponse"
+              example:
+                data:
+                  businessMessageId: "20200630RPPEMYKL865HRB00000003"
+                  code: "API.500"
+                  reason: "Internal Server Error"
+
+      security:
+        - bearerAuth: [ ]
+      x-codegen-request-body-name: generated
+
+  /payment/status/{endToEndId}:
+    get:
+      description: In the event where Merchant does not receive status of the payment
+        request, this API can be used to enquire the status of the transaction. Though,
+        Merchant is advised to use this sparingly as PayNet may rate limit and throttle
+        the request. The current setting permits the same transaction with the same
+        same endToEndId to be queried once every 30 seconds. Otherwise, timeout error
+        will be thrown.
+      operationId: Status Inquiry
+      parameters:
+        - name: endToEndId
+          in: path
+          description: <b>endToEndId</b> from the original payment request
+          required: true
+          schema:
+            type: string
+            maxLength: 35
+            pattern: ^[a-zA-Z0-9]*$
+        - name: X-Business-Message-Id
+          in: header
+          description: <b>Business Message Identification</b><br></br> Unique message identification. Format YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS
+            where <li>YYYYMMDD – Current Date</li>
+            <li>BBBBBBBB – BIC Code</li>
+            <li>XXX – Transaction Code. Set to <b>630</b>. Refer to <a href="https://docs.developer.paynet.my/docs/duitnowqr/transactiontype/index.html" target="_blank"> <b style="color:blue;">Transaction Code</b> </a> </li>
+            <li>O – Originator. Refer to <a href="https://docs.developer.paynet.my/docs/duitnow/mappingtable#originator-code" target="_blank"> <b style="color:blue;">Originator</b> </a> </li>
+            <li>CC – Channel Code. Refer to <a href="https://docs.developer.paynet.my/docs/duitnow/mappingtable#channel-code" target="_blank"> <b style="color:blue;">Channel Code</b> </a> </li>
+            <li>SSSSSSSS – Sequence Number</li>
+            <br>Originator can be any of the following:</b>
+            <li>O – OFI</li>
+            <li>H – RPP</li>
+            <li>R – RFI</li>
+            <br>Channel code can be any of the following:</b>
+            <li>BA – Mobile Application</li>
+            <li>BW – Web Browser</li>
+            <li>RB – Retail Internet Banking</li>
+          required: true
+          schema:
+            type: string
+            maxLength: 35
+          example: "20200630RPPEMYKL630HRB00000000"
+        - $ref: "./base.yml#/components/parameters/X-Client-Id"
+        - $ref: "./base.yml#/components/parameters/X-Ip-Address"
+        - $ref: "./base.yml#/components/parameters/X-Gps-Coordinates"
+
+      responses:
+        200:
+          description: ""
+          headers:
+            Authorization:
+              required: true
+              $ref: "./base.yml#/components/headers/Authorization"
+            X-Business-Message-Id:
+              required: true
+              $ref: "./base.yml#/components/headers/X-Business-Message-Id"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/statusInquiryResponse"
+              example:
+                data:
+                  businessMessageId: "20200630RPPEMYKL630HRB00000000"
+                  code: "ACTC"
+                  reason: "U000"
+                  endToEndId: "20200630RPPEMYKL630HRB00000000"
+                  transactionStatus: "PENDING AUTHORISATION"
+        400:
+          description: ""
+          headers:
+            X-Business-Message-Id:
+              required: true
+              $ref: "./base.yml#/components/headers/X-Business-Message-Id"
+          content:
+            application/json:
+              schema:
+                $ref: "./base.yml#/components/schemas/errorResponse"
+              example:
+                data:
+                  businessMessageId: "20200630RPPEMYKL630HRB00000001"
+                  code: "API.002"
+                  reason: "X-Business-Message-Id - Invalid format"
+        401:
+          description: ""
+          headers:
+            X-Business-Message-Id:
+              required: true
+              $ref: "./base.yml#/components/headers/X-Business-Message-Id"
+          content:
+            application/json:
+              schema:
+                $ref: "./base.yml#/components/schemas/errorResponse"
+              example:
+                data:
+                  businessMessageId: "20200630RPPEMYKL630HRB00000002"
+                  code: "API.007"
+                  reason: "Unauthorized request"
+        500:
+          description: ""
+          headers:
+            X-Business-Message-Id:
+              required: true
+              $ref: "./base.yml#/components/headers/X-Business-Message-Id"
+          content:
+            application/json:
+              schema:
+                $ref: "./base.yml#/components/schemas/errorResponse"
+              example:
+                data:
+                  businessMessageId: "20200630RPPEMYKL630HRB00000003"
+                  code: "API.500"
+                  reason: "Internal Server Error"
+
+      security:
+        - bearerAuth: [ ]
+      x-codegen-request-body-name: generated
+
+components:
+  schemas:
+    retrieveBankListResponse:
+      type: object
+      required:
+        - data
+      properties:
+        data:
+          type: object
+          required:
+            - businessMessageId
+            - code
+            - reason
+            - pageKey
+            - banks
+          properties:
+            businessMessageId:
+              type: string
+              maxLength: 35
+              format: YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS
+              description: <b>Business Message Identification</b><br></br> Unique message identification. Format YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS
+                where <li>YYYYMMDD – Current Date</li>
+                <li>BBBBBBBB – BIC Code</li>
+                <li>XXX – Transaction Code. Refer to <a href="https://docs.developer.paynet.my/docs/duitnowqr/transactiontype/index.html" target="_blank"> <b style="color:blue;">Transaction Code</b> </a> </li>
+                <li>O – Originator. Refer to <a href="https://docs.developer.paynet.my/docs/duitnow/mappingtable#originator-code" target="_blank"> <b style="color:blue;">Originator</b> </a> </li>
+                <li>CC – Channel Code. Refer to <a href="https://docs.developer.paynet.my/docs/duitnow/mappingtable#channel-code" target="_blank"> <b style="color:blue;">Channel Code</b> </a> </li>
+                <li>SSSSSSSS – Sequence Number</li>
+            code:
+              maxLength: 4
+              type: string
+              description: |
+                Status code
+                <li>ACSP – Accepted</li>
+                <li>ACTC – Accepted with Completion of Technical Validation</li>
+                <li>RJCT – Rejected</li>
+            reason:
+              maxLength: 35
+              type: string
+              description: Reason code
+            pageKey:
+              title: Pagination Key
+              maxLength: 35
+              type: string
+              description: |
+                <b>Conditional</b><br />
+                If present, is same as <b>banks.code</b> of last entry returned in results list. Used to retrieve next page of results. If absent, means this is the last page                
+            banks:
+              type: array
+              allOf:
+                - $ref: "#/components/schemas/bank"
+
+    initiatePaymentRequest:
+      type: object
+      required:
+        -  data
+      properties:
+        data:
+          required:
+            - businessMessageId
+            - customer
+            - merchant
+            - currency
+            - amount
+            - productId
+            - recipientReference
+          properties:
+            businessMessageId:
+              type: string
+              maxLength: 35
+              format: YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS
+              description: <b>Business Message Identification</b><br></br> Unique message identification. Format YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS
+                where <li>YYYYMMDD – Current Date</li>
+                <li>BBBBBBBB – BIC Code</li>
+                <li>XXX – Transaction Code. Refer to <a href="https://docs.developer.paynet.my/docs/duitnowqr/transactiontype/index.html" target="_blank"> <b style="color:blue;">Transaction Code</b> </a> </li>
+                <li>O – Originator. Refer to <a href="https://docs.developer.paynet.my/docs/duitnow/mappingtable#originator-code" target="_blank"> <b style="color:blue;">Originator</b> </a> </li>
+                <li>CC – Channel Code. Refer to <a href="https://docs.developer.paynet.my/docs/duitnow/mappingtable#channel-code" target="_blank"> <b style="color:blue;">Channel Code</b> </a> </li>
+                <li>SSSSSSSS – Sequence Number</li>
+            date:
+              type: string
+              description: Transaction date and time in MYT using YYYY-MM-DDTHH:MM:SSS
+                format<br /><br />System to default to current date and time if field
+                is not sent
+              pattern: ^([0-9]{4}-[0-9]{2}-[0-9]{2})[T][0-9]{2}:[0-9]{2}:[0-9]{2}[.][0-9]{3}?
+            expiryDate:
+              type: string
+              description: Date and time in MYT the request shall expire if no action
+                is taken by customer<br /><br /> System to default appropriately if field
+                is not sent
+              pattern: ^([0-9]{4}-[0-9]{2}-[0-9]{2})[T][0-9]{2}:[0-9]{2}:[0-9]{2}[.][0-9]{3}?
+            customer:
+              $ref: "#/components/schemas/customer"
+            merchant:
+              $ref: "#/components/schemas/merchant"
+            consent:
+              $ref: "#/components/schemas/consent"
+            currency:
+              maxLength: 3
+              type: string
+              description: Set currency code to <b>MYR</b>
+              pattern: .*^[A-Za-z0-9 _.,?-]+$
+            amount:
+              type: number
+              description: Transaction amount
+            productId:
+              maxLength: 35
+              type: string
+              description: Product identification assigned by PayNet during registration
+              pattern: .*^[A-Za-z0-9 _.,?-]+$
+            sourceOfFunds:
+              type: array
+              description: |
+                Acceptable source of funds by Merchant
+                <li>01 – CASA</li>
+                <li>02 – Credit Card</li>
+                <li>03 – eWallet</li>
+            recipientReference:
+              maxLength: 140
+              type: string
+              description: Payment reference to recipient
+              pattern: .*^[A-Za-z0-9 +'_\\-.,\\\\()/:?@]+$
+            paymentDescription:
+              maxLength: 140
+              type: string
+              description: Additional payment description
+              pattern: .*^[A-Za-z0-9 +'_\\-.,\\\\()/:?@]+$
+
+    initiatePaymentResponse:
+      type: object
+      required:
+        -  data
+      properties:
+        data:
+          required:
+            - businessMessageId
+            - code
+            - reason
+            - endToEndId
+            - endToEndIdSignature
+          properties:
+            businessMessageId:
+              type: string
+              maxLength: 35
+              format: YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS
+              description: <b>Business Message Identification</b><br></br> Unique message identification. Format YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS
+                where <li>YYYYMMDD – Current Date</li>
+                <li>BBBBBBBB – BIC Code</li>
+                <li>XXX – Transaction Code. Refer to <a href="https://docs.developer.paynet.my/docs/duitnowqr/transactiontype/index.html" target="_blank"> <b style="color:blue;">Transaction Code</b> </a> </li>
+                <li>O – Originator. Refer to <a href="https://docs.developer.paynet.my/docs/duitnow/mappingtable#originator-code" target="_blank"> <b style="color:blue;">Originator</b> </a> </li>
+                <li>CC – Channel Code. Refer to <a href="https://docs.developer.paynet.my/docs/duitnow/mappingtable#channel-code" target="_blank"> <b style="color:blue;">Channel Code</b> </a> </li>
+                <li>SSSSSSSS – Sequence Number</li>
+            code:
+              maxLength: 4
+              type: string
+              description: |
+                Status code
+                <li>ACSP – Accepted</li>
+                <li>ACTC – Accepted with Completion of Technical Validation</li>
+                <li>RJCT – Rejected</li>
+            reason:
+              maxLength: 35
+              type: string
+              description: Reason code
+            endToEndId:
+              maxLength: 35
+              type: string
+            endToEndIdSignature:
+              maxLength: 1024
+              type: string
+              description: Signed End-to-End ID
+
+    cancelPaymentRequest:
+      type: object
+      required:
+        -  data
+      properties:
+        data:
+          required:
+            - businessMessageId
+            - endToEndId
+            - productId
+          properties:
+            businessMessageId:
+              type: string
+              maxLength: 35
+              format: YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS
+              description: <b>Business Message Identification</b><br></br> Unique message identification. Format YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS
+                where <li>YYYYMMDD – Current Date</li>
+                <li>BBBBBBBB – BIC Code</li>
+                <li>XXX – Transaction Code. Refer to <a href="https://docs.developer.paynet.my/docs/duitnowqr/transactiontype/index.html" target="_blank"> <b style="color:blue;">Transaction Code</b> </a> </li>
+                <li>O – Originator. Refer to <a href="https://docs.developer.paynet.my/docs/duitnow/mappingtable#originator-code" target="_blank"> <b style="color:blue;">Originator</b> </a> </li>
+                <li>CC – Channel Code. Refer to <a href="https://docs.developer.paynet.my/docs/duitnow/mappingtable#channel-code" target="_blank"> <b style="color:blue;">Channel Code</b> </a> </li>
+                <li>SSSSSSSS – Sequence Number</li>
+              pattern: .*^[A-Za-z0-9 _.,?-]+$
+            endToEndId:
+              type: string
+              maxLength: 35
+              description: <b>endToEndId</b> from original Initiate Payment request
+              pattern: .*^[A-Za-z0-9 _.,?-]+$
+            productId:
+              type: string
+              maxLength: 35
+              description: Product identification assigned by PayNet during registration
+              pattern: .*^[A-Za-z0-9 _.,?-]+$
+
+    cancelPaymentResponse:
+      type: object
+      required:
+        -  data
+      properties:
+        data:
+          required:
+            - businessMessageId
+            - code
+            - reason
+            - endToEndId
+          properties:
+            businessMessageId:
+              type: string
+              maxLength: 35
+              format: YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS
+              description: <b>Business Message Identification</b><br></br> Unique message identification. Format YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS
+                where <li>YYYYMMDD – Current Date</li>
+                <li>BBBBBBBB – BIC Code</li>
+                <li>XXX – Transaction Code. Refer to <a href="https://docs.developer.paynet.my/docs/duitnowqr/transactiontype/index.html" target="_blank"> <b style="color:blue;">Transaction Code</b> </a> </li>
+                <li>O – Originator. Refer to <a href="https://docs.developer.paynet.my/docs/duitnow/mappingtable#originator-code" target="_blank"> <b style="color:blue;">Originator</b> </a> </li>
+                <li>CC – Channel Code. Refer to <a href="https://docs.developer.paynet.my/docs/duitnow/mappingtable#channel-code" target="_blank"> <b style="color:blue;">Channel Code</b> </a> </li>
+                <li>SSSSSSSS – Sequence Number</li>
+            code:
+              maxLength: 4
+              type: string
+              description: |
+                Status code
+                <li>ACSP – Accepted</li>
+                <li>ACTC – Accepted with Completion of Technical Validation</li>
+                <li>RJCT – Rejected</li>
+            reason:
+              maxLength: 35
+              type: string
+              description: Reason code
+            endToEndId:
+              maxLength: 35
+              type: string
+
+    statusInquiryResponse:
+      type: object
+      required:
+        -  data
+      properties:
+        data:
+          required:
+            - businessMessageId
+            - code
+            - reason
+            - endToEndId
+            - transactionStatus
+          properties:
+            businessMessageId:
+              type: string
+              maxLength: 35
+              format: YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS
+              description: <b>Business Message Identification</b><br></br> Unique message identification. Format YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS
+                where <li>YYYYMMDD – Current Date</li>
+                <li>BBBBBBBB – BIC Code</li>
+                <li>XXX – Transaction Code. Refer to <a href="https://docs.developer.paynet.my/docs/duitnowqr/transactiontype/index.html" target="_blank"> <b style="color:blue;">Transaction Code</b> </a> </li>
+                <li>O – Originator. Refer to <a href="https://docs.developer.paynet.my/docs/duitnow/mappingtable#originator-code" target="_blank"> <b style="color:blue;">Originator</b> </a> </li>
+                <li>CC – Channel Code. Refer to <a href="https://docs.developer.paynet.my/docs/duitnow/mappingtable#channel-code" target="_blank"> <b style="color:blue;">Channel Code</b> </a> </li>
+                <li>SSSSSSSS – Sequence Number</li>
+            code:
+              maxLength: 4
+              type: string
+              description: |
+                Status code
+                <li>ACSP – Accepted</li>
+                <li>ACTC – Accepted with Completion of Technical Validation</li>
+                <li>RJCT – Rejected</li>
+            reason:
+              maxLength: 35
+              type: string
+              description: Reason code
+            endToEndId:
+              maxLength: 35
+              type: string
+            transactionStatus:
+              maxLength: 35
+              type: string
+              description: |
+                Transaction status
+                <li>CLEARED – Transaction has been cleared</li>
+                <li>RETRIEVED – Pending received</li>
+                <li>PENDING AUTHORISATION – Pending approval</li>
+                <li>RECEIVED – Pending status</li>
+                <li>CANCELLED – Transaction has been cancelled</li>
+                <li>REJECT – Transaction has been rejected</li>  
+
+
+
+    customer:
+      type: object
+      required:
+        - name
+        - bankType
+      properties:
+        name:
+          maxLength: 140
+          type: string
+          description: Customer name
+          pattern: .*^[a-zA-Z0-9 \\[@'/&()._\\-,\\\\`*\\]:#+!;$%^{}~\\t\\n]+$
+        bankType:
+          maxLength: 3
+          type: string
+          description: <b>banks.redirectUrls.type</b> from Retrieve Bank List API
+          pattern: .*^[A-Za-z0-9 _.,?-]+$
+        identificationType:
+          maxLength: 2
+          type: string
+          description: |
+            Identification type. When field is sent, Debiting Bank to ensure the <b>identification</b> field matches with their internal record before allowing to debit from the account<br /><br />
+            Refer to <a style="color:blue;" href="https://docs.developer.paynet.my/docs/duitnow/mappingtable/index.html#identification-type" target="_blank"><b>Identification Type</b></a>
+        identification:
+          maxLength: 140
+          type: string
+          description: Identification value
+          pattern: ^[a-zA-Z0-9 _.,?-]*$
+        identityValidation:
+          maxLength: 2
+          type: string
+          description: |
+            Indicates if Debiting Bank should perform validation on customer information<br /><br />
+            Refer to <a style="color:blue;" href="https://docs.developer.paynet.my/docs/duitnow/mappingtable/index.html#identity-validation" target="_blank"><b>Identity Validation</b></a>  
+
+
+    merchant:
+      type: object
+      required:
+        - name
+        - accountType
+      properties:
+        name:
+          maxLength: 140
+          type: string
+          description: Customer name
+          pattern: .*^[a-zA-Z0-9 \\[@'/&()._\\-,\\\\`*\\]:#+!;$%^{}~\\t\\n]+$
+        accountType:
+          maxLength: 35
+          type: string
+          description: |
+            Account type
+            <li>CACC – Current</li>
+            <li>SVGS – Savings</li>
+            <li>CCRD – Credit Card</li>
+            <li>WALL – eWallet</li>
+        identificationType:
+          maxLength: 2
+          type: string
+          description: |
+            Identification type. Only supports <b>04</b> for Business Registration Number <br/><br/>
+            When field is sent, Crediting Bank to ensure the <b>identification</b> field matches with their internal record before allowing to credit into the account
+        identification:
+          maxLength: 140
+          type: string
+          description: Identification value
+          pattern: ^[a-zA-Z0-9 _.,?-]*$
+
+    consent:
+      type: object
+      required:
+        - effectiveDate
+        - expiryDate
+        - frequency
+        - maximumPaymentCurrency
+        - maximumPaymentAmount
+      properties:
+        effectiveDate:
+          type: string
+          description: |
+            <b>Conditional</b><br />
+            Consent effective date in YYYY-MM-DD format
+        expiryDate:
+          type: string
+          description: |
+            <b>Conditional</b><br />
+            Consent expiry date in YYYY-MM-DD format
+        frequency:
+          maxLength: 2
+          type: string
+          description: "<b>Conditional</b><br />\nFrequency mode<br /><br />\n\
+            Refer to <a style=\"color:blue;\" href=\"https://docs.developer.paynet.my/docs/duitnow/mappingtable/index.html#frequency-mode\"\
+            \ target=\"_blank\"><b>Frequency Mode</b></a> \n"
+        maximumPaymentCurrency:
+          maxLength: 3
+          type: string
+          description: |
+            <b>Conditional</b><br />
+            Set currency code to <b>MYR</b>
+          pattern: .*^[A-Za-z0-9 _.,?-]+$
+        maximumPaymentAmount:
+          type: number
+          description: |-
+            <b>Conditional</b><br />
+            Maximum payment amount    
+
+
+    bank:
+      type: object
+      description: "Bank"
+      required:
+        - code
+        - name
+      properties:
+        code:
+          maxLength: 35
+          type: string
+          description: Bank identification code
+        name:
+          type: string
+          maxLength: 35
+          description: Bank Name
+        active:
+          type: boolean
+          description: |
+            DuitNow services status
+            <li>True – Bank is online</li>
+            <li>False – Bank is offline</li>
+        browser:
+          type: string
+          maxLength: 140
+          description: Browser information and version
+        iosApplicationId:
+          type: string
+          maxLength: 140
+          description: Application identifier for iOS platform
+        androidApplicationId:
+          type: string
+          maxLength: 140
+          description: Application identifier for Andoid platform
+        redirectUrls:
+          type: array
+          allOf:
+            - $ref: "#/components/schemas/redirectUrls"
+
+    redirectUrls:
+      type: object
+      description: "Redirect Urls"
+      required:
+        - type
+        - url
+      properties:
+        type:
+          maxLength: 3
+          type: string
+          description: |
+            Redirection URL type
+            <li>RET – Retail channel</li>
+            <li>COR – Corporate channel</li>
+        url:
+          maxLength: 140
+          type: string
+          description: Bank URL to be redirected to
+
+  securitySchemes:
+    bearerAuth:
+      $ref: './base.yml#/components/securitySchemes/bearerAuth'

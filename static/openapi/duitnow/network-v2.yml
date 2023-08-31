@@ -1,0 +1,471 @@
+openapi: 3.0.0
+info:
+  title: Network Administration
+  description: |
+    > **Attention!** These APIs are still in the beta stage and are not yet available to the general public. Stay tuned for updates on when they will be ready for everyone to explore!
+    ### Who Should Use
+    This API should only be used by banks to ensure connectivity is healthy between Banks and RPP.
+  version: v2
+servers:
+- url: https://mock.developer.paynet.my/banks/network/v2
+paths:
+  /echo:
+    post:
+      summary: Echo
+      description: This API is used to perform handshake to either RPP or Participant to ensure message exchanges and connectivity can be established successfully
+      operationId: network_echo
+      parameters:
+      - $ref: "./base.yml#/components/parameters/X-Business-Message-Id"
+      - $ref: "./base.yml#/components/parameters/X-Client-Id"
+      - $ref: "./base.yml#/components/parameters/X-Ip-Address"
+      - $ref: "./base.yml#/components/parameters/X-Gps-Coordinates"
+
+      requestBody: 
+        content: 
+          application/json:
+            schema: 
+              $ref: "#/components/schemas/echoRequest"
+
+      responses: 
+        200:
+          description: ""
+          headers:
+            Authorization:
+              required: true
+              $ref: "./base.yml#/components/headers/Authorization"
+            X-Business-Message-Id:
+              required: true
+              $ref: "./base.yml#/components/headers/X-Business-Message-Id"
+          content: 
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/echoResponse"
+        400:
+          description: ""
+          headers: 
+            X-Business-Message-Id:
+              required: true
+              $ref: "./base.yml#/components/headers/X-Business-Message-Id"
+          content: 
+            application/json:
+              schema: 
+                $ref: "./base.yml#/components/schemas/errorResponse"
+              example: 
+                data:
+                  businessMessageId: "20230120DMMMYKL4720ORB01162512"
+                  code: "API.002"
+                  reason: "data.businessMessageId - Invalid format"
+        401:
+          description: ""
+          headers: 
+            X-Business-Message-Id:
+              required: true
+              $ref: "./base.yml#/components/headers/X-Business-Message-Id"
+          content: 
+            application/json:
+              schema: 
+                $ref: "./base.yml#/components/schemas/errorResponse"
+              example: 
+                data:
+                  businessMessageId: "20230120DMMMYKL4720ORB01162512"
+                  code: "API.007"
+                  reason: "Unauthorized request"
+        500:
+          description: ""
+          headers: 
+            X-Business-Message-Id:
+              required: true
+              $ref: "./base.yml#/components/headers/X-Business-Message-Id"
+          content: 
+            application/json:
+              schema: 
+                $ref: "./base.yml#/components/schemas/errorResponse"
+              example: 
+                data:
+                  businessMessageId: "20230120DMMMYKL4720ORB01162512"
+                  code: "API.500"
+                  reason: "Internal Server Error"
+
+      security:
+        - bearerAuth: []
+      x-codegen-request-body-name: generated
+      
+      
+  /signon:
+    post:
+      summary: Sign-On
+      description: This API is used to sign-on to RPP network. Once a Participant is sign-on, then Participant is considered online and will be able to receive payment to it
+      operationId: network_v2_signon
+      parameters:
+      - $ref: "./base.yml#/components/parameters/X-Business-Message-Id"
+      - $ref: "./base.yml#/components/parameters/X-Client-Id"
+      - $ref: "./base.yml#/components/parameters/X-Ip-Address"
+      - $ref: "./base.yml#/components/parameters/X-Gps-Coordinates"
+
+      responses: 
+        200:
+          description: ""
+          headers:
+            Authorization:
+              required: true
+              $ref: "./base.yml#/components/headers/Authorization"
+            X-Business-Message-Id:
+              required: true
+              $ref: "./base.yml#/components/headers/X-Business-Message-Id"
+          content: 
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/signonResponse"
+        400:
+          description: ""
+          headers: 
+            X-Business-Message-Id:
+              required: true
+              $ref: "./base.yml#/components/headers/X-Business-Message-Id"
+          content: 
+            application/json:
+              schema: 
+                $ref: "./base.yml#/components/schemas/errorResponse"
+              example: 
+                data:
+                  businessMessageId: "20230120DMMMYKL4720ORB01162512"
+                  code: "API.002"
+                  reason: "data.businessMessageId - Invalid format"
+        401:
+          description: ""
+          headers: 
+            X-Business-Message-Id:
+              required: true
+              $ref: "./base.yml#/components/headers/X-Business-Message-Id"
+          content: 
+            application/json:
+              schema: 
+                $ref: "./base.yml#/components/schemas/errorResponse"
+              example: 
+                data:
+                  businessMessageId: "20230120DMMMYKL4720ORB01162512"
+                  code: "API.007"
+                  reason: "Unauthorized request"
+        500:
+          description: ""
+          headers: 
+            X-Business-Message-Id:
+              required: true
+              $ref: "./base.yml#/components/headers/X-Business-Message-Id"
+          content: 
+            application/json:
+              schema: 
+                $ref: "./base.yml#/components/schemas/errorResponse"
+              example: 
+                data:
+                  businessMessageId: "20230120DMMMYKL4720ORB01162512"
+                  code: "API.500"
+                  reason: "Internal Server Error"
+
+      security:
+        - bearerAuth: []
+      x-codegen-request-body-name: generated
+
+  /signoff:
+    post:
+      summary: Sign-Off
+      description: This API is used to sign-off from RPP network. Once a Participant is sign-off, then Participant is considered offline and will no longer be able to receive payment
+      operationId: network_v2_signoff
+      parameters:
+      - $ref: "./base.yml#/components/parameters/X-Business-Message-Id"
+      - $ref: "./base.yml#/components/parameters/X-Client-Id"
+      - $ref: "./base.yml#/components/parameters/X-Ip-Address"
+      - $ref: "./base.yml#/components/parameters/X-Gps-Coordinates"
+
+      responses: 
+        200:
+          description: ""
+          headers:
+            Authorization:
+              required: true
+              $ref: "./base.yml#/components/headers/Authorization"
+            X-Business-Message-Id:
+              required: true
+              $ref: "./base.yml#/components/headers/X-Business-Message-Id"
+          content: 
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/signonResponse"
+        400:
+          description: ""
+          headers: 
+            X-Business-Message-Id:
+              required: true
+              $ref: "./base.yml#/components/headers/X-Business-Message-Id"
+          content: 
+            application/json:
+              schema: 
+                $ref: "./base.yml#/components/schemas/errorResponse"
+              example: 
+                data:
+                  businessMessageId: "20230120DMMMYKL4720ORB01162512"
+                  code: "API.002"
+                  reason: "data.businessMessageId - Invalid format"
+        401:
+          description: ""
+          headers: 
+            X-Business-Message-Id:
+              required: true
+              $ref: "./base.yml#/components/headers/X-Business-Message-Id"
+          content: 
+            application/json:
+              schema: 
+                $ref: "./base.yml#/components/schemas/errorResponse"
+              example: 
+                data:
+                  businessMessageId: "20230120DMMMYKL4720ORB01162512"
+                  code: "API.007"
+                  reason: "Unauthorized request"
+        500:
+          description: ""
+          headers: 
+            X-Business-Message-Id:
+              required: true
+              $ref: "./base.yml#/components/headers/X-Business-Message-Id"
+          content: 
+            application/json:
+              schema: 
+                $ref: "./base.yml#/components/schemas/errorResponse"
+              example: 
+                data:
+                  businessMessageId: "20230120DMMMYKL4720ORB01162512"
+                  code: "API.500"
+                  reason: "Internal Server Error"
+
+      security:
+        - bearerAuth: []
+      x-codegen-request-body-name: generated
+
+  /webhook/v2/echo:
+    post:
+      summary: Echo Webhook
+      description: For Receiving Participant, it is expected to publish an API based on this specification that allow the participant to receive a Echo request from RPP
+      operationId: network_v2_echo_webhook
+      servers:
+        - url: https://test.sandbox1.nonprod.c0.paynet.my/banks/network
+          description: Override base path for all operations with the webhook path
+      tags: 
+        -  Webhook
+      parameters: 
+      - $ref: "./base.yml#/components/parameters/X-Business-Message-Id"
+
+      requestBody: 
+        content: 
+          application/json:
+            schema: 
+              $ref: "#/components/schemas/echoRequest"
+
+      responses: 
+        200:
+          description: ""
+          headers:
+            Authorization:
+              required: true
+              $ref: "./base.yml#/components/headers/Authorization"
+            X-Business-Message-Id:
+              required: true
+              $ref: "./base.yml#/components/headers/X-Business-Message-Id"
+          content: 
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/echoResponse"
+        400:
+          description: "Failed response"
+          content: {}
+
+      security:
+        - bearerAuth: []
+      x-codegen-request-body-name: generated
+
+components:
+  schemas:
+    signonRequest:
+      type: object
+      required: 
+        -  data
+      properties: 
+        data:
+          required: 
+            - businessMessageId
+          properties: 
+            businessMessageId:
+              maxLength: 35
+              type: string
+              description: <b>Business Message Identification</b><br></br> Unique message identification. Format YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS
+                where <li>YYYYMMDD – Current Date</li>
+                <li>BBBBBBBB – BIC Code</li>
+                <li>XXX – Transaction Code. Set to <b>000</b>. Refer to <a href="https://docs.developer.paynet.my/docs/duitnowqr/transactiontype/index.html" target="_blank"> <b style="color:blue;">Transaction Code</b> </a> </li>
+                <li>O – Originator. Refer to <a href="https://docs.developer.paynet.my/docs/duitnow/mappingtable#originator-code" target="_blank"> <b style="color:blue;">Originator</b> </a> </li>
+                <li>CC – Channel Code. Refer to <a href="https://docs.developer.paynet.my/docs/duitnow/mappingtable#channel-code" target="_blank"> <b style="color:blue;">Channel Code</b> </a> </li>
+                <li>SSSSSSSS – Sequence Number</li>
+            createdDateTime :
+              type: string
+              description: <b>Creation Date Time </b> <br></br> Must be in Malaysia Standard Time format of message creation date and time.
+              format : yyyy-MM-ddTHH:mm:ss.SSS
+            
+      example :
+        data:
+          businessMessageId: 20230120RPPEMYKL000ORB73101243
+
+    signonResponse:
+      type: object
+      required: 
+        -  data
+      properties: 
+        data:
+          required: 
+            - businessMessageId
+            - code
+            - reason
+          properties: 
+            businessMessageId:
+              maxLength: 35
+              type: string
+              description: <b>Business Message Identification</b><br></br> Unique message identification. Format YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS
+                where <li>YYYYMMDD – Current Date</li>
+                <li>BBBBBBBB – BIC Code</li>
+                <li>XXX – Transaction Code. Set to <b>000</b>. Refer to <a href="https://docs.developer.paynet.my/docs/duitnowqr/transactiontype/index.html" target="_blank"> <b style="color:blue;">Transaction Code</b> </a> </li>
+                <li>O – Originator. Refer to <a href="https://docs.developer.paynet.my/docs/duitnow/mappingtable#originator-code" target="_blank"> <b style="color:blue;">Originator</b> </a> </li>
+                <li>CC – Channel Code. Refer to <a href="https://docs.developer.paynet.my/docs/duitnow/mappingtable#channel-code" target="_blank"> <b style="color:blue;">Channel Code</b> </a> </li>
+                <li>SSSSSSSS – Sequence Number</li>
+            createdDateTime :
+              type: string
+              description: <b>Creation Date Time </b> <br></br> Must be in Malaysia Standard Time format of message creation date and time.
+              format : yyyy-MM-ddTHH:mm:ss.SSS
+            code:
+              type: string
+              description: <b>Transaction Status</b><br></br> Refer to <a style="color:blue;" href="https://docs.developer.paynet.my/docs/duitnow/mappingtable/index.html##externalpaymenttransactionstatus1code-txsts" target="_blank"><b style="color:blue;">External Payment Transaction Status Code</b></a>
+            reason:
+              type: string
+              description: <b>Reason Code</b><br></br> Refer to <a style="color:blue;" href="https://docs.developer.paynet.my/docs/duitnow/responsecodes/index.html#reason-codes" target="_blank"><b style="color:blue;">Reason Code</b></a>
+      example :
+        data:
+          businessMessageId: 20230120RPPEMYKL000ORB73101243
+          code: ACSP
+          reason: U000
+    
+    echoRequest:
+      type: object
+      required: 
+        -  data
+      properties: 
+        data:
+          required: 
+            - businessMessageId
+            - clientMessage
+          properties: 
+            businessMessageId:
+              maxLength: 35
+              type: string
+              description: <b>Business Message Identification</b><br></br> Unique message identification. Format YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS
+                where <li>YYYYMMDD – Current Date</li>
+                <li>BBBBBBBB – BIC Code</li>
+                <li>XXX – Transaction Code. Set to <b>000</b>. Refer to <a href="https://docs.developer.paynet.my/docs/duitnowqr/transactiontype/index.html" target="_blank"> <b style="color:blue;">Transaction Code</b> </a> </li>
+                <li>O – Originator. Refer to <a href="https://docs.developer.paynet.my/docs/duitnow/mappingtable#originator-code" target="_blank"> <b style="color:blue;">Originator</b> </a> </li>
+                <li>CC – Channel Code. Refer to <a href="https://docs.developer.paynet.my/docs/duitnow/mappingtable#channel-code" target="_blank"> <b style="color:blue;">Channel Code</b> </a> </li>
+                <li>SSSSSSSS – Sequence Number</li>
+            createdDateTime :
+              type: string
+              description: <b>Creation Date Time </b> <br></br> Must be in Malaysia Standard Time format of message creation date and time.
+              format : yyyy-MM-ddTHH:mm:ss.SSS
+                
+            clientMessage:
+              type: string
+              description: Message to echo in the response.
+            
+      example :
+        data:
+          businessMessageId: 20230120RPPEMYKL000ORB73101243
+          clientMessage: client message
+          
+        
+    echoResponse:
+      type: object
+      required: 
+        -  data
+      properties: 
+        data:
+          required: 
+            - businessMessageId
+            - code
+            - reason
+            - clientMessage
+          properties: 
+            businessMessageId:
+              maxLength: 35
+              type: string
+              description: <b>Business Message Identification</b><br></br> Unique message identification. Format YYYYMMDDBBBBBBBBXXXOCCSSSSSSSS
+                where <li>YYYYMMDD – Current Date</li>
+                <li>BBBBBBBB – BIC Code</li>
+                <li>XXX – Transaction Code. Set to <b>000</b>. Refer to <a href="https://docs.developer.paynet.my/docs/duitnowqr/transactiontype/index.html" target="_blank"> <b style="color:blue;">Transaction Code</b> </a> </li>
+                <li>O – Originator. Refer to <a href="https://docs.developer.paynet.my/docs/duitnow/mappingtable#originator-code" target="_blank"> <b style="color:blue;">Originator</b> </a> </li>
+                <li>CC – Channel Code. Refer to <a href="https://docs.developer.paynet.my/docs/duitnow/mappingtable#channel-code" target="_blank"> <b style="color:blue;">Channel Code</b> </a> </li>
+                <li>SSSSSSSS – Sequence Number</li>
+            createdDateTime :
+              type: string
+              description: <b>Creation Date Time </b> <br></br> Must be in Malaysia Standard Time format of message creation date and time.
+              format : yyyy-MM-ddTHH:mm:ss.SSS
+            clientMessage:
+              type: string
+              description: Message received in the request.
+            serverMessage:
+              type: string
+              description: Server message, independent of the <b>clientMessage</b> being echoed.
+            code:
+              type: string
+              description: <b>Transaction Status</b><br></br> Refer to <a style="color:blue;" href="https://docs.developer.paynet.my/docs/duitnow/mappingtable/index.html##externalpaymenttransactionstatus1code-txsts" target="_blank"><b style="color:blue;">External Payment Transaction Status Code</b></a>
+            reason:
+              type: string
+              description: <b>Reason Code</b><br></br> Refer to <a style="color:blue;" href="https://docs.developer.paynet.my/docs/duitnow/responsecodes/index.html#reason-codes" target="_blank"><b style="color:blue;">Reason Code</b></a>
+      example :
+        data:
+          businessMessageId: 20230120RPPEMYKL000ORB73101243
+          clientMessage : client message
+          serverMessage : server message
+          code: ACSP
+          reason: U000
+            
+    
+
+    
+          
+    errorResponse:
+      type: object
+      required: 
+        - data
+      properties: 
+        data:
+          allOf: 
+            - $ref: "#/components/schemas/baseDataResponse"
+            - type: object
+              required: 
+                - code
+              
+    baseDataResponse:
+      type: object
+      required: 
+        - businessMessageId
+      properties: 
+        businessMessageId:
+          type: string
+          maxLength: 35
+          description: Unique business message identification.
+        createdDateTime :
+          type: string
+          description: <b>Creation Date Time </b> <br></br> Must be in Malaysia Standard Time format of message creation date and time.
+          format : yyyy-MM-ddTHH:mm:ss.SSS
+        code:
+          type: string
+          description: response code identification
+        reason:
+          type: string
+          description: response status information
+
+  securitySchemes:
+    bearerAuth:
+      $ref: './base.yml#/components/securitySchemes/bearerAuth'

@@ -1,0 +1,659 @@
+openapi: 3.0.1
+info:
+  title: Tokenisation Services for Issuer
+  description: |
+    PayNet TSP allows Issuer to interconnect with the system in two way, via JSON API directly with PayNet TSP and via existing ISO-8583 connectivity in MyDebit switch
+    This will enable easy Issuer on-boarding in order to participate in PayNet Tokenisation Platform.
+
+    ### Who Should Use
+    This API should only be used by banks as the Issuer.
+     
+  version: v2
+servers:
+- url: https://mock.developer.paynet.my/issuer-api/v1
+paths:
+  /card: {}
+  /card/suspend:
+    post:
+      description: This API can be used by Issuer to suspend a FPAN.
+      operationId: Suspend Card
+      parameters:
+      - name: Authorization
+        in: header
+        description: Authorization Header with format apiVersion:apiKey:timestamp:signature
+        required: true
+        schema:
+          pattern: ^[a-zA-Z0-9]*$
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/cardSuspendRequestSchema'
+        required: false
+      responses:
+        200:
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/cardSuspendResponseSchema'
+          x-amf-mediaType: application/json
+        401:
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error401'
+          x-amf-mediaType: application/json
+        403:
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: object
+          x-amf-mediaType: application/json
+        404:
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: object
+          x-amf-mediaType: application/json
+        500:
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error500'
+                type: object
+          x-amf-mediaType: application/json
+        503:
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: object
+          x-amf-mediaType: application/json
+      x-codegen-request-body-name: generated
+  /card/resume:
+    post:
+      description: This API can be used by Issuer to resume a suspended FPAN.
+      operationId: Resume Card
+      parameters:
+      - name: Authorization
+        in: header
+        description: Authorization Header with format apiVersion:apiKey:timestamp:signature
+        required: true
+        schema:
+          pattern: ^[a-zA-Z0-9]*$
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/cardSuspendRequestSchema'
+        required: false
+      responses:
+        200:
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/cardResumeResponseSchema'
+          x-amf-mediaType: application/json
+        401:
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error401'
+          x-amf-mediaType: application/json
+        403:
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: object
+          x-amf-mediaType: application/json
+        404:
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error404'
+                type: object
+          x-amf-mediaType: application/json
+        500:
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error500'
+                type: object
+          x-amf-mediaType: application/json
+        503:
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: object
+          x-amf-mediaType: application/json
+      x-codegen-request-body-name: generated
+  /card/delete:
+    post:
+      description: This API can be used by Issuer to delete a FPAN.
+      operationId: Delete Card
+      parameters:
+      - name: Authorization
+        in: header
+        description: Authorization Header with format apiVersion:apiKey:timestamp:signature
+        required: true
+        schema:
+          pattern: ^[a-zA-Z0-9]*$
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/cardSuspendRequestSchema'
+        required: false
+      responses:
+        200:
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/cardDeleteResponseSchema'
+          x-amf-mediaType: application/json
+        401:
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error401'
+          x-amf-mediaType: application/json
+        403:
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: object
+          x-amf-mediaType: application/json
+        404:
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error404'
+                type: object
+          x-amf-mediaType: application/json
+        500:
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error500'
+                type: object
+          x-amf-mediaType: application/json
+        503:
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: object
+          x-amf-mediaType: application/json
+      x-codegen-request-body-name: generated
+  /card/pan-update:
+    post:
+      description: This API can be used by Issuer to update card PAN and expiry date.
+      operationId: Update Card PAN
+      parameters:
+      - name: Authorization
+        in: header
+        description: Authorization Header with format apiVersion:apiKey:timestamp:signature
+        required: true
+        schema:
+          pattern: ^[a-zA-Z0-9]*$
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/cardPanUpdateRequestSchema'
+        required: false
+      responses:
+        200:
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/cardPanUpdateResponseSchema'
+          x-amf-mediaType: application/json
+        401:
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error401'
+          x-amf-mediaType: application/json
+        403:
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: object
+          x-amf-mediaType: application/json
+        404:
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error404'
+                type: object
+          x-amf-mediaType: application/json
+        500:
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error500'
+                type: object
+          x-amf-mediaType: application/json
+        503:
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: object
+          x-amf-mediaType: application/json
+      x-codegen-request-body-name: generated
+
+  /CNP/MY/Notification: {}
+  /CNP/MY/Notification/TokenProvisionStatus:
+    post:
+      description: Issuer needs to provide a callback endpoint to receive notification
+        on new token provision requests.
+      tags:
+        - Webhook
+      operationId: Token Provision Notification
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/tokenProvisionNotificationRequestSchema'
+        required: false
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/tokenProvisionNotificationResponseSchema'
+          x-amf-mediaType: application/json
+      x-outbound: true
+      x-outboundUrl: https://<domain>
+      x-codegen-request-body-name: generated
+webhooks:
+  Token Provision Notification:
+    post:
+      description: Issuer needs to provide a callback endpoint to receive notification
+        on new token provision requests.
+      operationId: Token Provision Notification
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/tokenProvisionNotificationRequestSchema'
+        required: false
+      responses:
+        200:
+          description: ""
+          content: {}
+      x-outbound: true
+      x-outboundUrl: https://<domain>
+      x-codegen-request-body-name: generated
+
+components:
+  schemas:
+    cardSuspendRequestSchema:
+      required:
+      - enc_pan
+      - issuer_identifier
+      - request_id
+      type: object
+      properties:
+        request_id:
+          maxLength: 36
+          type: string
+          description: Unique request identification number
+        issuer_identifier:
+          maxLength: 11
+          type: string
+          description: Issuer identification code
+        enc_pan:
+          maxLength: 44
+          type: string
+          description: Funding PAN (between 16 to 19 digits)
+      example:
+        request_id: REQ0001585041757788
+        issuer_identifier: ISS70000007
+        enc_pan: kSujsskcBMX6gMU2ypATdZPZXGbtFBWCfsVj/yBUTss=
+    cardSuspendResponseSchema:
+      required:
+      - message
+      - pan_status
+      - response_id
+      - status
+      type: object
+      properties:
+        status:
+          maxLength: 3
+          type: string
+          description: Response code
+        message:
+          type: string
+          description: Response message
+        response_id:
+          maxLength: 36
+          type: string
+          description: Unique response identification number
+        pan_status:
+          maxLength: 30
+          type: string
+          description: |
+            PAN status
+            <li>ACTIVE</li>
+            <li>SUSPENDED</li>
+            <li>DELETED</li>
+            <li>NOT_EXIST</li>
+      example:
+        status: "200"
+        message: Success
+        response_id: TSP1FZF3Y5GThRcZMTlQ
+        pan_status: SUSPENDED
+    cardResumeResponseSchema:
+      required:
+      - message
+      - pan_status
+      - response_id
+      - status
+      type: object
+      properties:
+        status:
+          maxLength: 3
+          type: string
+          description: Response code
+        message:
+          type: string
+          description: Response message
+        response_id:
+          maxLength: 36
+          type: string
+          description: Unique response identification number
+        pan_status:
+          maxLength: 30
+          type: string
+          description: |
+            PAN status
+            <li>ACTIVE</li>
+            <li>SUSPENDED</li>
+            <li>DELETED</li>
+            <li>NOT_EXIST</li>
+      example:
+        status: "200"
+        message: Success
+        response_id: TSP1FZF3Y5GThRcZMTlQ
+        pan_status: ACTIVE
+    cardDeleteResponseSchema:
+      required:
+      - message
+      - pan_status
+      - response_id
+      - status
+      type: object
+      properties:
+        status:
+          maxLength: 3
+          type: string
+          description: Response code
+        message:
+          type: string
+          description: Response message
+        response_id:
+          maxLength: 36
+          type: string
+          description: Unique response identification number
+        pan_status:
+          maxLength: 30
+          type: string
+          description: |
+            PAN status
+            <li>ACTIVE</li>
+            <li>SUSPENDED</li>
+            <li>DELETED</li>
+            <li>NOT_EXIST</li>
+      example:
+        status: "200"
+        message: Success
+        response_id: TSP1FZF3Y5GThRcZMTlQ
+        pan_status: DELETED
+    error401:
+      required:
+      - message
+      - status
+      type: object
+      properties:
+        status:
+          type: string
+          description: Error code
+        message:
+          type: string
+          description: Error code description
+      example:
+        status: "601"
+        message: Invalid API key
+    error404:
+      required:
+      - status
+      - error
+      - path
+      - timestamp
+      type: object
+      properties:
+        timestamp:
+          type: string
+          description: Time Stamp      
+        status:
+          type: string
+          description: Error code
+        error:
+          type: string
+          description: Error code description
+        path:
+          type: string
+          description: API url Path          
+      example:
+        timestamp: "2023-07-10T08:02:26.855+00:00"
+        status: "404"
+        error: Not Found
+        path: /nnn-/v1/nnn        
+    error500:
+      required:
+      - status
+      - error
+      - path
+      - timestamp
+      type: object
+      properties:
+        timestamp:
+          type: string
+          description: Time Stamp      
+        status:
+          type: string
+          description: Error code
+        error:
+          type: string
+          description: Error code description
+        path:
+          type: string
+          description: API url Path          
+      example:
+        timestamp: "2023-07-10T08:02:26.855+00:00"
+        status: "500"
+        error: Internal Server Error
+        path: /nnn-/v1/nnn
+    cardPanUpdateRequestSchema:
+      required:
+      - enc_new_pan
+      - enc_pan
+      - issuer_identifier
+      - new_pan_expiry_date
+      - request_id
+      type: object
+      properties:
+        request_id:
+          maxLength: 36
+          type: string
+          description: Unique request identification number
+        issuer_identifier:
+          maxLength: 11
+          type: string
+          description: Issuer identification code
+        enc_pan:
+          maxLength: 44
+          type: string
+          description: Funding PAN (between 16 to 19 digits)
+        enc_new_pan:
+          maxLength: 44
+          type: string
+          description: Encrypted new Funding PAN
+        new_pan_expiry_date:
+          maxLength: 6
+          type: string
+          description: New expiry date to be set to the Funding PAN in YYYYMM format
+      example:
+        request_id: REQ0001585041757788
+        issuer_identifier: ISS00000001
+        enc_pan: TWNLG6CYRq56ikpblczoqr20ueP8QQgOrVGcKql2Yio=
+        enc_new_pan: Wj3W2IhlVjyvgDqsW9a/7u1uc3nPDik/EHPZOYV7icQ=
+        new_pan_expiry_date: "202511"
+    cardPanUpdateResponseSchema:
+      required:
+      - message
+      - new_pan_expiry_date
+      - old_pan_expiry_date
+      - response_id
+      - status
+      type: object
+      properties:
+        status:
+          maxLength: 3
+          type: string
+          description: Response code
+        message:
+          type: string
+          description: Response message
+        response_id:
+          maxLength: 36
+          type: string
+          description: Unique response identification number
+        new_pan_expiry_date:
+          maxLength: 6
+          type: string
+          description: New expiry date of the Funding PAN in YYYYMM format
+        old_pan_expiry_date:
+          maxLength: 6
+          type: string
+          description: Old expiry date of the Funding PAN in YYYYMM format
+      example:
+        status: "200"
+        message: Success
+        response_id: TSP1FZF3Y5GThRcZMTlQ
+        new_pan_expiry_date: "202511"
+        old_pan_expiry_date: "202011"
+    tokenProvisionNotificationRequestSchema:
+      required:
+      - notification_data
+      - notification_id
+      - notification_type
+      type: object
+      properties:
+        notification_id:
+          maxLength: 36
+          type: string
+          description: Unique notification identification number
+        notification_type:
+          maxLength: 30
+          type: string
+          description: Default to <b>TOKEN_PROVISION</b>
+        notification_data:
+          required:
+          - enc_pan
+          - message
+          - pan_expiry_date
+          - status
+          - token_pan
+          - token_pan_expiry_date
+          - token_requestor_id
+          type: object
+          properties:
+            status:
+              maxLength: 3
+              type: string
+              description: Response code for the Token Provision request
+            message:
+              type: string
+              description: Response message for the Token Provision request
+            enc_pan:
+              maxLength: 44
+              type: string
+              description: Funding PAN (between 16 to 19 digits)
+            token_requestor_id:
+              maxLength: 11
+              type: string
+              description: Merchant’s Token Requestor ID (TR_ID) 
+            token_pan:
+              maxLength: 19
+              type: string
+              description: Token PAN
+            pan_expiry_date:
+              maxLength: 6
+              type: string
+              description: Card expiry date in YYYYMM format
+            token_pan_expiry_date:
+              maxLength: 6
+              type: string
+              description: Token expiry date in YYYYMM format
+          description: Notification Data
+      example:
+        notification_id: fb165f04-58b9-409f-b6f5-d6a02d10c14f
+        notification_type: TOKEN_PROVISION
+        notification_data:
+          status: "200"
+          message: Success
+          enc_pan: 4QF72F9AX3N2t9pL7vHQ5qhXZU5D71RD9yzVpxQgW5Q=
+          token_requestor_id: MER00000001
+          token_pan: "5412340000000181702"
+          pan_expiry_date: "202110"
+          token_pan_expiry_date: "202110"
+    tokenProvisionNotificationResponseSchema:
+      required:
+      - notification_id
+      - notification_type
+      type: object
+      properties:
+        notification_id:
+          maxLength: 36
+          type: string
+          description: Unique notification identification number
+        notification_type:
+          maxLength: 30
+          type: string
+          description: Default to <b>TOKEN_PROVISION</b>
+      example:
+        notification_id: fb165f04-58b9-409f-b6f5-d6a02d10c14f
+        notification_type: TOKEN_PROVISION
+x-urlparameters:
+  sit: https://api.tsp.sit.inet.paynet.my
+x-typeofdeployment:
+  types: cloud

@@ -1,0 +1,2880 @@
+openapi: 3.0.3
+info:
+  title: Trade Finance
+  description: PayNet Trade Finance Platform Description.
+  version: v1
+  contact: {}
+servers:
+  - url: https://api.account.uat.inet.paynet.my
+    description: Sandbox server (uses test data)
+  - url: https://api.portal.paynet.my
+    description: Production server (uses live data)
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+paths:
+  /v1/invoice/invoices:
+    get:
+      summary: Enquiry Invoice
+      description: Retrieve the information of the invoice. There is 2 types of enquiry i.e. `Exact Match` using the following fields invoice number, date, currency and amount, or `General Enquiry` based on creator.
+      operationId: exactEnquiry
+      security:
+        - BearerAuth: [user]
+      parameters:
+        - name: enquiryType
+          in: query
+          required: true
+          description: Enquiry type, can be General Enquiry or Exact Match. Default to <b>Exact Match</b>
+          schema:
+            type: string
+            example: Exact Match
+        - name: type
+          in: query
+          required: true
+          description:  |
+            Invoice type to search:
+            <li>P – Purchase / Import</li>
+            <li>S – Sales / Export</li><br /><br />
+          schema:
+            type: string
+            example: P
+            maxLength: 1
+        - name: currency
+          in: query
+          required: true
+          description: |
+            <b>Conditional</b><br />
+            Invoice currency to search based on ISO 4217.
+          schema:
+            type: string
+            example: MYR
+            maxLength: 3
+        - name: date
+          in: query
+          required: true
+          description: |
+            <b>Conditional</b><br />
+            Invoice date to be searched in DD/MM/YYYY format.
+          schema:
+            type: string
+            example: 01/12/2022
+            maxLength: 10
+        - name: amount
+          in: query
+          required: true
+          description: |
+            <b>Conditional</b><br />
+            Invoice amount with 2 decimal points.
+          schema:
+            type: string
+            example: '5000.00'
+        - name: number
+          in: query
+          description: Invoice number to search.
+          schema:
+            type: string
+            example: ABMBINVOICE011220220001
+            maxLength: 45
+        - name: bankreferencenumber
+          in: query
+          description: Bank input reference number to search.
+          schema:
+            type: string
+            example: 010TR22121316560
+        - name: brn
+          description: Business registration number.
+          in: query
+          schema:
+            type: string
+            example: 1723612783612
+        - name: x-api-key
+          description: >-
+            Paynet will distribute API keys to API user. API user need to
+            pass the API key as the X-API-Key header of each incoming request.
+          in: header
+          schema:
+            type: string
+            example: '{{x-api-key}}'
+      responses:
+        '200':
+          description: 200 OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        amount:
+                          type: number
+                          example: 50000
+                        brn:
+                          type: string
+                          example: BRN00001
+                        company:
+                          type: string
+                          example: Example Corp
+                        country:
+                          type: string
+                          example: MYS
+                        countryName:
+                          type: string
+                          example: Malaysia
+                        currency:
+                          type: string
+                          example: MYR
+                        currencyName:
+                          type: string
+                          example: Malaysia Ringgit
+                        date:
+                          type: string
+                          example: 13/01/2021
+                        financeEndDate:
+                          type: string
+                          example: 01/03/2022
+                        financeStartDate:
+                          type: string
+                          example: 01/02/2022
+                        fundingAmount:
+                          type: number
+                          example: 50000
+                        fundingCurrency:
+                          type: string
+                          example: MYR
+                        fundingCurrencyName:
+                          type: string
+                          example: Malaysia Ringgit
+                        id:
+                          type: string
+                          example: 20220414TFPAP0000001500
+                        issuer:
+                          type: string
+                          example: User 01
+                        number:
+                          type: string
+                          example: INV00000001
+                        sameBic:
+                          type: boolean
+                          example: false
+                        status:
+                          type: string
+                          example: DRAFT
+                        transportDocumentNumber:
+                          type: string
+                          example: DO123456
+                        transportDocumentType:
+                          type: string
+                          example: Delivery Order
+                        transportDocumentTypeName:
+                          type: string
+                          example: Delivery Order
+                        type:
+                          type: string
+                          example: P
+                        typeName:
+                          type: string
+                          example: Purchase / Import
+                    example:
+                      - amount: 50000
+                        brn: BRN00001
+                        company: Example Corp
+                        country: MYS
+                        countryName: Malaysia
+                        currency: MYR
+                        currencyName: Malaysia Ringgit
+                        date: 13/01/2021
+                        financeEndDate: 01/03/2022
+                        financeStartDate: 01/02/2022
+                        fundingAmount: 50000
+                        fundingCurrency: MYR
+                        fundingCurrencyName: Malaysia Ringgit
+                        id: 20220414TFPAP0000001500
+                        issuer: User 01
+                        number: INV00000001
+                        sameBic: false
+                        status: DRAFT
+                        transportDocumentNumber: DO123456
+                        transportDocumentType: Delivery Order
+                        transportDocumentTypeName: Delivery Order
+                        type: P
+                        typeName: Purchase / Import
+                      - amount: 50000
+                        brn: BRN00001
+                        company: Example Corp
+                        country: MYS
+                        countryName: Malaysia
+                        currency: MYR
+                        currencyName: Malaysia Ringgit
+                        date: 13/01/2021
+                        financeEndDate: 01/03/2022
+                        financeStartDate: 01/02/2022
+                        fundingAmount: 50000
+                        fundingCurrency: MYR
+                        fundingCurrencyName: Malaysia Ringgit
+                        id: 20220414TFPAP0000001499
+                        issuer: User 01
+                        number: INV00000001
+                        sameBic: true
+                        status: PENDING_APPROVAL
+                        transportDocumentNumber: DO123456
+                        transportDocumentType: Delivery Order
+                        transportDocumentTypeName: Delivery Order
+                        type: P
+                        typeName: Purchase / Import
+                      - amount: 50000
+                        brn: BRN00001
+                        company: Example Corp
+                        country: MYS
+                        countryName: Malaysia
+                        currency: MYR
+                        currencyName: Malaysia Ringgit
+                        date: 13/01/2021
+                        financeEndDate: 01/03/2022
+                        financeStartDate: 01/02/2022
+                        fundingAmount: 50000
+                        fundingCurrency: MYR
+                        fundingCurrencyName: Malaysia Ringgit
+                        id: 20220414TFPAP0000001498
+                        issuer: User 01
+                        number: INV00000001
+                        sameBic: true
+                        status: PENDING_APPROVAL
+                        transportDocumentNumber: DO123456
+                        transportDocumentType: Delivery Order
+                        transportDocumentTypeName: Delivery Order
+                        type: P
+                        typeName: Purchase / Import
+                      - amount: 50000
+                        brn: BRN00001
+                        company: Example Corp
+                        country: MYS
+                        countryName: Malaysia
+                        currency: MYR
+                        currencyName: Malaysia Ringgit
+                        date: 13/01/2021
+                        financeEndDate: 01/03/2022
+                        financeStartDate: 01/02/2022
+                        fundingAmount: 50000
+                        fundingCurrency: MYR
+                        fundingCurrencyName: Malaysia Ringgit
+                        id: 20220414TFPAP0000001497
+                        issuer: User 01
+                        number: INV00000001
+                        sameBic: true
+                        status: PENDING_APPROVAL
+                        transportDocumentNumber: DO123456
+                        transportDocumentType: Delivery Order
+                        transportDocumentTypeName: Delivery Order
+                        type: P
+                        typeName: Purchase / Import
+                  page:
+                    type: number
+                    example: 1
+                  size:
+                    type: number
+                    example: 10
+                  totalEnquiry:
+                    type: number
+                    example: 1
+                  totalPages:
+                    type: number
+                    example: 1
+              examples:
+                200 OK:
+                  value:
+                    data:
+                      - amount: 50000
+                        brn: BRN00001
+                        company: Example Corp
+                        country: MYS
+                        countryName: Malaysia
+                        currency: MYR
+                        currencyName: Malaysia Ringgit
+                        date: 13/01/2021
+                        financeEndDate: 01/03/2022
+                        financeStartDate: 01/02/2022
+                        fundingAmount: 50000
+                        fundingCurrency: MYR
+                        fundingCurrencyName: Malaysia Ringgit
+                        id: 20220414TFPAP0000001500
+                        issuer: User 01
+                        number: INV00000001
+                        sameBic: false
+                        status: DRAFT
+                        transportDocumentNumber: DO123456
+                        transportDocumentType: Delivery Order
+                        transportDocumentTypeName: Delivery Order
+                        type: P
+                        typeName: Purchase / Import
+                      - amount: 50000
+                        brn: BRN00001
+                        company: Example Corp
+                        country: MYS
+                        countryName: Malaysia
+                        currency: MYR
+                        currencyName: Malaysia Ringgit
+                        date: 13/01/2021
+                        financeEndDate: 01/03/2022
+                        financeStartDate: 01/02/2022
+                        fundingAmount: 50000
+                        fundingCurrency: MYR
+                        fundingCurrencyName: Malaysia Ringgit
+                        id: 20220414TFPAP0000001499
+                        issuer: User 01
+                        number: INV00000001
+                        sameBic: true
+                        status: PENDING_APPROVAL
+                        transportDocumentNumber: DO123456
+                        transportDocumentType: Delivery Order
+                        transportDocumentTypeName: Delivery Order
+                        type: P
+                        typeName: Purchase / Import
+                      - amount: 50000
+                        brn: BRN00001
+                        company: Example Corp
+                        country: MYS
+                        countryName: Malaysia
+                        currency: MYR
+                        currencyName: Malaysia Ringgit
+                        date: 13/01/2021
+                        financeEndDate: 01/03/2022
+                        financeStartDate: 01/02/2022
+                        fundingAmount: 50000
+                        fundingCurrency: MYR
+                        fundingCurrencyName: Malaysia Ringgit
+                        id: 20220414TFPAP0000001498
+                        issuer: User 01
+                        number: INV00000001
+                        sameBic: true
+                        status: PENDING_APPROVAL
+                        transportDocumentNumber: DO123456
+                        transportDocumentType: Delivery Order
+                        transportDocumentTypeName: Delivery Order
+                        type: P
+                        typeName: Purchase / Import
+                      - amount: 50000
+                        brn: BRN00001
+                        company: Example Corp
+                        country: MYS
+                        countryName: Malaysia
+                        currency: MYR
+                        currencyName: Malaysia Ringgit
+                        date: 13/01/2021
+                        financeEndDate: 01/03/2022
+                        financeStartDate: 01/02/2022
+                        fundingAmount: 50000
+                        fundingCurrency: MYR
+                        fundingCurrencyName: Malaysia Ringgit
+                        id: 20220414TFPAP0000001497
+                        issuer: User 01
+                        number: INV00000001
+                        sameBic: true
+                        status: PENDING_APPROVAL
+                        transportDocumentNumber: DO123456
+                        transportDocumentType: Delivery Order
+                        transportDocumentTypeName: Delivery Order
+                        type: P
+                        typeName: Purchase / Import
+                    page: 1
+                    size: 10
+                    totalEnquiry: 1
+                    totalPages: 1
+        '401':
+          description: 401 Unauthorized
+        '500':
+          description: 500 Internal Server Error
+        '503':
+          description: 503 Service Unavailable
+        '504':
+          description: 504 Gateway Timeout
+    post:
+      summary: Submit Invoice
+      description:  >-
+        This API is used to create and submit new invoice record. Invoice
+        must be unique and does not exist in TFP. Submitted invoice will
+        be in DRAFT mode before being updated to FINANCED status.
+        Invoice could be submitted in single or multiple transactions.
+      operationId: submitInvoice
+      security:
+        - BearerAuth: [user]
+      parameters:
+        - name: x-api-key
+          description: >-
+            Paynet will distribute API keys to API user. API user need to
+            pass the API key as the X-API-Key header of each incoming request.
+          in: header
+          schema:
+            type: string
+            example: '{{x-api-key}}'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                allowDuplicate:
+                  type: boolean
+                  example: true
+                amount:
+                  type: number
+                  example: 50000
+                bankReferenceNumber:
+                  type: string
+                  example: RNO00001
+                brn:
+                  type: string
+                  example: BRN00001
+                company:
+                  type: string
+                  example: Example Corp
+                country:
+                  type: string
+                  example: MYS
+                currency:
+                  type: string
+                  example: MYR
+                date:
+                  type: string
+                  example: 13/01/2022
+                duplicateReason:
+                  type: string
+                  example: DUR001
+                financeEndDate:
+                  type: string
+                  example: 01/03/2022
+                financeStartDate:
+                  type: string
+                  example: 01/02/2022
+                fundingAmount:
+                  type: number
+                  example: 50000
+                fundingCurrency:
+                  type: string
+                  example: MYR
+                issuer:
+                  type: string
+                  example: User 01
+                localAmount:
+                  type: number
+                  example: 50000
+                number:
+                  type: string
+                  example: TINV00000003
+                transportDocumentNumber:
+                  type: string
+                  example: DO123456
+                transportDocumentType:
+                  type: string
+                  example: TDT001
+                type:
+                  type: string
+                  example: P
+            example:
+              allowDuplicate: true
+              amount: 50000
+              bankReferenceNumber: RNO00001
+              brn: BRN00001
+              company: Example Corp
+              country: MYS
+              currency: MYR
+              date: 13/01/2022
+              duplicateReason: DUR001
+              financeEndDate: 01/03/2022
+              financeStartDate: 01/02/2022
+              fundingAmount: 50000
+              fundingCurrency: MYR
+              issuer: User 01
+              localAmount: 50000
+              number: TINV00000003
+              transportDocumentNumber: DO123456
+              transportDocumentType: TDT001
+              type: P
+      responses:
+        '201':
+          description: 201 Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  amount:
+                    type: number
+                    example: 50000
+                  brn:
+                    type: string
+                    example: BRN00001
+                  company:
+                    type: string
+                    example: Example Corp
+                  country:
+                    type: string
+                    example: MYS
+                  countryName:
+                    type: string
+                    example: Malaysia
+                  currency:
+                    type: string
+                    example: MYR
+                  currencyName:
+                    type: string
+                    example: Malaysia Ringgit
+                  date:
+                    type: string
+                    example: 13/01/2021
+                  financeEndDate:
+                    type: string
+                    example: 01/03/2022
+                  financeStartDate:
+                    type: string
+                    example: 01/02/2022
+                  fundingAmount:
+                    type: number
+                    example: 50000
+                  fundingCurrency:
+                    type: string
+                    example: MYR
+                  fundingCurrencyName:
+                    type: string
+                    example: Malaysia Ringgit
+                  id:
+                    type: string
+                    example: 20220414TFPAP0000001500
+                  issuer:
+                    type: string
+                    example: User 01
+                  number:
+                    type: string
+                    example: INV00000001
+                  status:
+                    type: string
+                    example: DRAFT
+                  transportDocumentNumber:
+                    type: string
+                    example: DO123456
+                  transportDocumentType:
+                    type: string
+                    example: Delivery Order
+                  transportDocumentTypeName:
+                    type: string
+                    example: Delivery Order
+                  type:
+                    type: string
+                    example: P
+                  typeName:
+                    type: string
+                    example: Purchase / Import
+              examples:
+                201 Created:
+                  value:
+                    amount: 50000
+                    brn: BRN00001
+                    company: Example Corp
+                    country: MYS
+                    countryName: Malaysia
+                    currency: MYR
+                    currencyName: Malaysia Ringgit
+                    date: 13/01/2021
+                    financeEndDate: 01/03/2022
+                    financeStartDate: 01/02/2022
+                    fundingAmount: 50000
+                    fundingCurrency: MYR
+                    fundingCurrencyName: Malaysia Ringgit
+                    id: 20220414TFPAP0000001500
+                    issuer: User 01
+                    number: INV00000001
+                    status: DRAFT
+                    transportDocumentNumber: DO123456
+                    transportDocumentType: Delivery Order
+                    transportDocumentTypeName: Delivery Order
+                    type: P
+                    typeName: Purchase / Import
+        '400':
+          description: 400 Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  constraints:
+                    type: object
+                    properties:
+                      date:
+                        type: array
+                        items:
+                          type: string
+                          example: invalid date format must be dd/MM/yyyy
+                        example:
+                          - invalid date format must be dd/MM/yyyy
+                  message:
+                    type: string
+                    example: validation failure
+                  status:
+                    type: number
+                    example: 400
+              examples:
+                400 Invalid date format:
+                  value:
+                    constraints:
+                      date:
+                        - invalid date format must be dd/MM/yyyy
+                    message: validation failure
+                    status: 400
+        '401':
+          description: 401 Unauthorized
+        '500':
+          description: 500 Internal Server Error
+        '503':
+          description: 503 Service Unavailable
+        '504':
+          description: 504 Gateway Timeout
+  /v1/invoice/invoices/batch:
+    post:
+      summary: Submit Batch Invoices
+      description: Submit Batch Invoices to create a single invoice or a batch of invoices. 
+      operationId: submitBatchInvoices
+      security:
+        - BearerAuth: [user]
+      parameters:
+        - name: x-api-key
+          description: >-
+            Paynet will distribute API keys to API user. API user need to
+            pass the API key as the X-API-Key header of each incoming request.
+          in: header
+          schema:
+            type: string
+            example: '{{x-api-key}}'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: object
+                properties:
+                  allowDuplicate:
+                    type: boolean
+                    example: true
+                  amount:
+                    type: number
+                    example: 50000
+                  brn:
+                    type: string
+                    example: BRN00001
+                  company:
+                    type: string
+                    example: Example Corp
+                  country:
+                    type: string
+                    example: MYS
+                  currency:
+                    type: string
+                    example: MYR
+                  date:
+                    type: string
+                    example: 15/01/2022
+                  duplicateReason:
+                    type: string
+                    example: DUR001
+                  financeEndDate:
+                    type: string
+                    example: 01/03/2022
+                  financeStartDate:
+                    type: string
+                    example: 01/02/2022
+                  fundingAmount:
+                    type: number
+                    example: 50000
+                  fundingCurrency:
+                    type: string
+                    example: MYR
+                  issuer:
+                    type: string
+                    example: User 01
+                  number:
+                    type: string
+                    example: INV00000002
+                  transportDocumentNumber:
+                    type: string
+                    example: DO123456
+                  transportDocumentType:
+                    type: string
+                    example: TDT001
+                  type:
+                    type: string
+                    example: P
+              example:
+                - allowDuplicate: true
+                  amount: 50000
+                  brn: BRN00001
+                  company: Example Corp
+                  country: MYS
+                  currency: MYR
+                  date: 15/01/2022
+                  duplicateReason: DUR001
+                  financeEndDate: 01/03/2022
+                  financeStartDate: 01/02/2022
+                  fundingAmount: 50000
+                  fundingCurrency: MYR
+                  issuer: User 01
+                  number: INV00000002
+                  transportDocumentNumber: DO123456
+                  transportDocumentType: TDT001
+                  type: P
+                - allowDuplicate: true
+                  amount: 50000
+                  brn: BRN00001
+                  company: Example Corp
+                  country: MYS
+                  currency: MYR
+                  date: 16/01/2022
+                  duplicateReason: DUR001
+                  financeEndDate: 01/03/2022
+                  financeStartDate: 01/02/2022
+                  fundingAmount: 50000
+                  fundingCurrency: MYR
+                  issuer: User 01
+                  number: INV00000003
+                  transportDocumentNumber: DO123456
+                  transportDocumentType: TDT001
+                  type: P
+            example:
+              - allowDuplicate: true
+                amount: 50000
+                brn: BRN00001
+                company: Example Corp
+                country: MYS
+                currency: MYR
+                date: 15/01/2022
+                duplicateReason: DUR001
+                financeEndDate: 01/03/2022
+                financeStartDate: 01/02/2022
+                fundingAmount: 50000
+                fundingCurrency: MYR
+                issuer: User 01
+                number: INV00000002
+                transportDocumentNumber: DO123456
+                transportDocumentType: TDT001
+                type: P
+              - allowDuplicate: true
+                amount: 50000
+                brn: BRN00001
+                company: Example Corp
+                country: MYS
+                currency: MYR
+                date: 16/01/2022
+                duplicateReason: DUR001
+                financeEndDate: 01/03/2022
+                financeStartDate: 01/02/2022
+                fundingAmount: 50000
+                fundingCurrency: MYR
+                issuer: User 01
+                number: INV00000003
+                transportDocumentNumber: DO123456
+                transportDocumentType: TDT001
+                type: P
+      responses:
+        '201':
+          description: 201 Created
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    amount:
+                      type: number
+                      example: 50000
+                    batchId:
+                      type: string
+                      example: 20220414164002143TFP
+                    brn:
+                      type: string
+                      example: BRN00001
+                    company:
+                      type: string
+                      example: Example Corp
+                    country:
+                      type: string
+                      example: MYS
+                    countryName:
+                      type: string
+                      example: Malaysia
+                    currency:
+                      type: string
+                      example: MYR
+                    currencyName:
+                      type: string
+                      example: Malaysia Ringgit
+                    date:
+                      type: string
+                      example: 15/01/2022
+                    financeEndDate:
+                      type: string
+                      example: 01/03/2022
+                    financeStartDate:
+                      type: string
+                      example: 01/02/2022
+                    fundingAmount:
+                      type: number
+                      example: 50000
+                    fundingCurrency:
+                      type: string
+                      example: MYR
+                    fundingCurrencyName:
+                      type: string
+                      example: Malaysia Ringgit
+                    id:
+                      type: string
+                      example: 20220414TFPBA0000001504
+                    issuer:
+                      type: string
+                      example: User 01
+                    number:
+                      type: string
+                      example: INV00000002
+                    status:
+                      type: string
+                      example: DRAFT
+                    transportDocumentNumber:
+                      type: string
+                      example: DO123456
+                    transportDocumentType:
+                      type: string
+                      example: TDT001
+                    transportDocumentTypeName:
+                      type: string
+                      example: Air Waybill
+                    type:
+                      type: string
+                      example: P
+                    typeName:
+                      type: string
+                      example: Purchase / Import
+                example:
+                  - amount: 50000
+                    batchId: 20220414164002143TFP
+                    brn: BRN00001
+                    company: Example Corp
+                    country: MYS
+                    countryName: Malaysia
+                    currency: MYR
+                    currencyName: Malaysia Ringgit
+                    date: 15/01/2022
+                    financeEndDate: 01/03/2022
+                    financeStartDate: 01/02/2022
+                    fundingAmount: 50000
+                    fundingCurrency: MYR
+                    fundingCurrencyName: Malaysia Ringgit
+                    id: 20220414TFPBA0000001504
+                    issuer: User 01
+                    number: INV00000002
+                    status: DRAFT
+                    transportDocumentNumber: DO123456
+                    transportDocumentType: TDT001
+                    transportDocumentTypeName: Air Waybill
+                    type: P
+                    typeName: Purchase / Import
+                  - amount: 50000
+                    batchId: 20220414164002143TFP
+                    brn: BRN00001
+                    company: Example Corp
+                    country: MYS
+                    countryName: Malaysia
+                    currency: MYR
+                    currencyName: Malaysia Ringgit
+                    date: 16/01/2022
+                    financeEndDate: 01/03/2022
+                    financeStartDate: 01/02/2022
+                    fundingAmount: 50000
+                    fundingCurrency: MYR
+                    fundingCurrencyName: Malaysia Ringgit
+                    id: 20220414TFPBA0000001505
+                    issuer: User 01
+                    number: INV00000003
+                    status: DRAFT
+                    transportDocumentNumber: DO123456
+                    transportDocumentType: TDT001
+                    transportDocumentTypeName: Air Waybill
+                    type: P
+                    typeName: Purchase / Import
+              examples:
+                201 Created:
+                  value:
+                    - amount: 50000
+                      batchId: 20220414164002143TFP
+                      brn: BRN00001
+                      company: Example Corp
+                      country: MYS
+                      countryName: Malaysia
+                      currency: MYR
+                      currencyName: Malaysia Ringgit
+                      date: 15/01/2022
+                      financeEndDate: 01/03/2022
+                      financeStartDate: 01/02/2022
+                      fundingAmount: 50000
+                      fundingCurrency: MYR
+                      fundingCurrencyName: Malaysia Ringgit
+                      id: 20220414TFPBA0000001504
+                      issuer: User 01
+                      number: INV00000002
+                      status: DRAFT
+                      transportDocumentNumber: DO123456
+                      transportDocumentType: TDT001
+                      transportDocumentTypeName: Air Waybill
+                      type: P
+                      typeName: Purchase / Import
+                    - amount: 50000
+                      batchId: 20220414164002143TFP
+                      brn: BRN00001
+                      company: Example Corp
+                      country: MYS
+                      countryName: Malaysia
+                      currency: MYR
+                      currencyName: Malaysia Ringgit
+                      date: 16/01/2022
+                      financeEndDate: 01/03/2022
+                      financeStartDate: 01/02/2022
+                      fundingAmount: 50000
+                      fundingCurrency: MYR
+                      fundingCurrencyName: Malaysia Ringgit
+                      id: 20220414TFPBA0000001505
+                      issuer: User 01
+                      number: INV00000003
+                      status: DRAFT
+                      transportDocumentNumber: DO123456
+                      transportDocumentType: TDT001
+                      transportDocumentTypeName: Air Waybill
+                      type: P
+                      typeName: Purchase / Import
+        '400':
+          description: 400 Bad Request
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    amount:
+                      type: number
+                      example: 50000
+                    brn:
+                      type: string
+                      example: BRN00001
+                    company:
+                      type: string
+                      example: Example Corp
+                    country:
+                      type: string
+                      example: MYS
+                    countryName:
+                      type: string
+                      example: Malaysia
+                    currency:
+                      type: string
+                      example: MYR
+                    currencyName:
+                      type: string
+                      example: Malaysia Ringgit
+                    date:
+                      type: string
+                      example: 16/01/2022
+                    financeEndDate:
+                      type: string
+                      example: 01/03/2022
+                    financeStartDate:
+                      type: string
+                      example: 01/02/2022
+                    fundingAmount:
+                      type: number
+                      example: 50000
+                    fundingCurrency:
+                      type: string
+                      example: MYR
+                    fundingCurrencyName:
+                      type: string
+                      example: Malaysia Ringgit
+                    issuer:
+                      type: string
+                      example: User 01
+                    message:
+                      type: string
+                      example: 'date: invalid date format must be dd/MM/yyyy'
+                    number:
+                      type: string
+                      example: INV00000003
+                    status:
+                      type: number
+                      example: 400
+                    transportDocumentNumber:
+                      type: string
+                      example: DO123456
+                    transportDocumentType:
+                      type: string
+                      example: TDT001
+                    transportDocumentTypeName:
+                      type: string
+                      example: Air Waybill
+                    type:
+                      type: string
+                      example: P
+                    typeName:
+                      type: string
+                      example: Purchase / Import
+                example:
+                  - message: 'date: invalid date format must be dd/MM/yyyy'
+                    status: 400
+                  - amount: 50000
+                    brn: BRN00001
+                    company: Example Corp
+                    country: MYS
+                    countryName: Malaysia
+                    currency: MYR
+                    currencyName: Malaysia Ringgit
+                    date: 16/01/2022
+                    financeEndDate: 01/03/2022
+                    financeStartDate: 01/02/2022
+                    fundingAmount: 50000
+                    fundingCurrency: MYR
+                    fundingCurrencyName: Malaysia Ringgit
+                    issuer: User 01
+                    number: INV00000003
+                    transportDocumentNumber: DO123456
+                    transportDocumentType: TDT001
+                    transportDocumentTypeName: Air Waybill
+                    type: P
+                    typeName: Purchase / Import
+              examples:
+                400 Bad Request:
+                  value:
+                    - message: 'date: invalid date format must be dd/MM/yyyy'
+                      status: 400
+                    - amount: 50000
+                      brn: BRN00001
+                      company: Example Corp
+                      country: MYS
+                      countryName: Malaysia
+                      currency: MYR
+                      currencyName: Malaysia Ringgit
+                      date: 16/01/2022
+                      financeEndDate: 01/03/2022
+                      financeStartDate: 01/02/2022
+                      fundingAmount: 50000
+                      fundingCurrency: MYR
+                      fundingCurrencyName: Malaysia Ringgit
+                      issuer: User 01
+                      number: INV00000003
+                      transportDocumentNumber: DO123456
+                      transportDocumentType: TDT001
+                      transportDocumentTypeName: Air Waybill
+                      type: P
+                      typeName: Purchase / Import
+        '401':
+          description: 401 Unauthorized
+        '500':
+          description: 500 Internal Server Error
+        '503':
+          description: 503 Service Unavailable
+        '504':
+          description: 504 Gateway Timeout
+  /v1/invoice/invoices/{id}:
+    put:
+      summary: Update Invoice
+      description: >-
+        This API can be used to update invoice with <b>DRAFT</b> status. The update
+        process will be applied to all fields.
+      operationId: updateInvoice
+      security:
+        - BearerAuth: [user]
+      parameters:
+        - name: x-api-key
+          in: header
+          schema:
+            type: string
+            example: '{{x-api-key}}'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                brn:
+                  type: string
+                  example: BRN00001
+                company:
+                  type: string
+                  example: Example Corp
+                country:
+                  type: string
+                  example: MYS
+                financeEndDate:
+                  type: string
+                  example: 01/03/2022
+                financeStartDate:
+                  type: string
+                  example: 01/02/2022
+                fundingAmount:
+                  type: number
+                  example: 50000
+                fundingCurrency:
+                  type: string
+                  example: MYR
+                issuer:
+                  type: string
+                  example: User 01
+                transportDocumentNumber:
+                  type: string
+                  example: DO123456
+                transportDocumentType:
+                  type: string
+                  example: TDT001
+            example:
+              brn: BRN00001
+              company: Example Corp
+              country: MYS
+              financeEndDate: 01/03/2022
+              financeStartDate: 01/02/2022
+              fundingAmount: 50000
+              fundingCurrency: MYR
+              issuer: User 01
+              transportDocumentNumber: DO123456
+              transportDocumentType: TDT001
+      responses:
+        '200':
+          description: 200 OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  amount:
+                    type: number
+                    example: 50000
+                  brn:
+                    type: string
+                    example: BRN00001
+                  company:
+                    type: string
+                    example: Example Corp
+                  country:
+                    type: string
+                    example: MYS
+                  countryName:
+                    type: string
+                    example: Malaysia
+                  currency:
+                    type: string
+                    example: MYR
+                  currencyName:
+                    type: string
+                    example: Malaysia Ringgit
+                  date:
+                    type: string
+                    example: 13/01/2022
+                  financeEndDate:
+                    type: string
+                    example: 01/03/2022
+                  financeStartDate:
+                    type: string
+                    example: 01/02/2022
+                  fundingAmount:
+                    type: number
+                    example: 50000
+                  fundingCurrency:
+                    type: string
+                    example: MYR
+                  fundingCurrencyName:
+                    type: string
+                    example: Malaysia Ringgit
+                  id:
+                    type: string
+                    example: 20220414TFPAP0000001501
+                  issuer:
+                    type: string
+                    example: User 01
+                  number:
+                    type: string
+                    example: INV00000001
+                  status:
+                    type: string
+                    example: DRAFT
+                  transportDocumentNumber:
+                    type: string
+                    example: DO123456
+                  transportDocumentType:
+                    type: string
+                    example: TDT001
+                  transportDocumentTypeName:
+                    type: string
+                    example: Air Waybill
+                  type:
+                    type: string
+                    example: P
+                  typeName:
+                    type: string
+                    example: Purchase / Import
+              examples:
+                200 OK:
+                  value:
+                    amount: 50000
+                    brn: BRN00001
+                    company: Example Corp
+                    country: MYS
+                    countryName: Malaysia
+                    currency: MYR
+                    currencyName: Malaysia Ringgit
+                    date: 13/01/2022
+                    financeEndDate: 01/03/2022
+                    financeStartDate: 01/02/2022
+                    fundingAmount: 50000
+                    fundingCurrency: MYR
+                    fundingCurrencyName: Malaysia Ringgit
+                    id: 20220414TFPAP0000001501
+                    issuer: User 01
+                    number: INV00000001
+                    status: DRAFT
+                    transportDocumentNumber: DO123456
+                    transportDocumentType: TDT001
+                    transportDocumentTypeName: Air Waybill
+                    type: P
+                    typeName: Purchase / Import
+        '400':
+          description: 400 Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  constraints:
+                    type: object
+                    properties:
+                      financeStartDate:
+                        type: array
+                        items:
+                          type: string
+                          example: invalid date format must be dd/MM/yyyy
+                        example:
+                          - invalid date format must be dd/MM/yyyy
+                  message:
+                    type: string
+                    example: validation failure
+                  status:
+                    type: number
+                    example: 400
+              examples:
+                400 Bad Request:
+                  value:
+                    constraints:
+                      financeStartDate:
+                        - invalid date format must be dd/MM/yyyy
+                    message: validation failure
+                    status: 400
+        '401':
+          description: 401 Unauthorized
+        '404':
+          description: 404 Not Found
+        '500':
+          description: 500 Internal Server Error
+        '503':
+          description: 503 Service Unavailable
+        '504':
+          description: 504 Gateway Timeout
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          example: 20221114TFPAP0000060466
+  /v1/invoice/invoices/{invoiceId}:
+    get:
+      summary: Get invoice
+      description: Retrieve the information of the invoice via invoice id.
+      operationId: getInvoice
+      security:
+        - BearerAuth: [user]
+      parameters:
+        - name: x-api-key
+          in: header
+          schema:
+            type: string
+            example: '{{x-api-key}}'
+      responses:
+        '200':
+          description: 200 OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  amount:
+                    type: number
+                    example: 50000
+                  brn:
+                    type: string
+                    example: BRN00001
+                  company:
+                    type: string
+                    example: Example Corp
+                  country:
+                    type: string
+                    example: MYS
+                  countryName:
+                    type: string
+                    example: Malaysia
+                  currency:
+                    type: string
+                    example: MYR
+                  currencyName:
+                    type: string
+                    example: Malaysia Ringgit
+                  date:
+                    type: string
+                    example: 13/01/2021
+                  financeEndDate:
+                    type: string
+                    example: 01/03/2022
+                  financeStartDate:
+                    type: string
+                    example: 01/02/2022
+                  fundingAmount:
+                    type: number
+                    example: 50000
+                  fundingCurrency:
+                    type: string
+                    example: MYR
+                  fundingCurrencyName:
+                    type: string
+                    example: Malaysia Ringgit
+                  id:
+                    type: string
+                    example: 20220414TFPAP0000001500
+                  issuer:
+                    type: string
+                    example: User 01
+                  number:
+                    type: string
+                    example: INV00000001
+                  status:
+                    type: string
+                    example: DRAFT
+                  transportDocumentNumber:
+                    type: string
+                    example: DO123456
+                  transportDocumentType:
+                    type: string
+                    example: Delivery Order
+                  transportDocumentTypeName:
+                    type: string
+                    example: Delivery Order
+                  type:
+                    type: string
+                    example: P
+                  typeName:
+                    type: string
+                    example: Purchase / Import
+              examples:
+                200 OK:
+                  value:
+                    amount: 50000
+                    brn: BRN00001
+                    company: Example Corp
+                    country: MYS
+                    countryName: Malaysia
+                    currency: MYR
+                    currencyName: Malaysia Ringgit
+                    date: 13/01/2021
+                    financeEndDate: 01/03/2022
+                    financeStartDate: 01/02/2022
+                    fundingAmount: 50000
+                    fundingCurrency: MYR
+                    fundingCurrencyName: Malaysia Ringgit
+                    id: 20220414TFPAP0000001500
+                    issuer: User 01
+                    number: INV00000001
+                    status: DRAFT
+                    transportDocumentNumber: DO123456
+                    transportDocumentType: Delivery Order
+                    transportDocumentTypeName: Delivery Order
+                    type: P
+                    typeName: Purchase / Import
+        '401':
+          description: 401 Unauthorized
+        '500':
+          description: 500 Internal Server Error
+        '503':
+          description: 503 Service Unavailable
+        '504':
+          description: 504 Gateway Timeout
+    parameters:
+      - name: invoiceId
+        in: path
+        required: true
+        schema:
+          type: string
+          example: 20221114TFPAP0000060466
+  /v1/invoice/invoices/{invoiceId_or_batchInvoiceId}:
+    delete:
+      summary: Delete Invoice
+      description: >-
+        Invoice with status FINANCED can be deleted by providing deletion
+      operationId: deleteInvoice
+      security:
+        - BearerAuth: [user]
+      parameters:
+        - name: x-api-key
+          in: header
+          schema:
+            type: string
+            example: '{{x-api-key}}'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                deleteReason:
+                  type: string
+                  example: DER001
+            example:
+              deleteReason: DER001
+      responses:
+        '200':
+          description: 200 OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  amount:
+                    type: number
+                    example: 50000
+                  brn:
+                    type: string
+                    example: BRN00001
+                  company:
+                    type: string
+                    example: Example Corp
+                  country:
+                    type: string
+                    example: MYS
+                  countryName:
+                    type: string
+                    example: Malaysia
+                  currency:
+                    type: string
+                    example: MYR
+                  currencyName:
+                    type: string
+                    example: Malaysia Ringgit
+                  date:
+                    type: string
+                    example: 13/01/2022
+                  deleteReason:
+                    type: string
+                    example: I
+                  deleteReasonName:
+                    type: string
+                    example: Different invoice issuer name
+                  financeEndDate:
+                    type: string
+                    example: 01/03/2022
+                  financeStartDate:
+                    type: string
+                    example: 01/02/2022
+                  fundingAmount:
+                    type: number
+                    example: 50000
+                  fundingCurrency:
+                    type: string
+                    example: MYR
+                  fundingCurrencyName:
+                    type: string
+                    example: Malaysia Ringgit
+                  id:
+                    type: string
+                    example: 20220414TFPAP0000001501
+                  issuer:
+                    type: string
+                    example: User 01
+                  number:
+                    type: string
+                    example: INV00000001
+                  status:
+                    type: string
+                    example: DELETED
+                  transportDocumentNumber:
+                    type: string
+                    example: DO123456
+                  transportDocumentType:
+                    type: string
+                    example: TDT001
+                  transportDocumentTypeName:
+                    type: string
+                    example: Air Waybill
+                  type:
+                    type: string
+                    example: P
+                  typeName:
+                    type: string
+                    example: Purchase / Import
+              examples:
+                200 OK:
+                  value:
+                    amount: 50000
+                    brn: BRN00001
+                    company: Example Corp
+                    country: MYS
+                    countryName: Malaysia
+                    currency: MYR
+                    currencyName: Malaysia Ringgit
+                    date: 13/01/2022
+                    deleteReason: I
+                    deleteReasonName: Different invoice issuer name
+                    financeEndDate: 01/03/2022
+                    financeStartDate: 01/02/2022
+                    fundingAmount: 50000
+                    fundingCurrency: MYR
+                    fundingCurrencyName: Malaysia Ringgit
+                    id: 20220414TFPAP0000001501
+                    issuer: User 01
+                    number: INV00000001
+                    status: DELETED
+                    transportDocumentNumber: DO123456
+                    transportDocumentType: TDT001
+                    transportDocumentTypeName: Air Waybill
+                    type: P
+                    typeName: Purchase / Import
+        '400':
+          description: 400 Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  constraints:
+                    type: object
+                    properties:
+                      constraints:
+                        type: object
+                        properties:
+                          items:
+                            type: string
+                            example: invalid parameter code
+                  message:
+                    type: string
+                    example: validation failure
+                  status:
+                    type: number
+                    example: 400
+              examples:
+                400 Bad Request:
+                  value:
+                    constraints:
+                      deleteReason:
+                        - invalid parameter code
+                    message: validation failure
+                    status: 400
+        '401':
+          description: 401 Unauthorized
+        '404':
+          description: 404 Not Found
+        '500':
+          description: 500 Internal Server Error
+        '503':
+          description: 503 Service Unavailable
+        '504':
+          description: 504 Gateway Timeout
+    parameters:
+      - name: invoiceId_or_batchInvoiceId
+        in: path
+        required: true
+        schema:
+          type: string
+          example: 20221114TFPAP0000060469
+  /v1/invoice/invoices/activities/daily:
+    post:
+      summary: View Activity Report
+      description: >-
+        This API can be used to view all activities of respective user based on
+        date selections.
+      operationId: viewActivityReport
+      security:
+        - BearerAuth: [user]
+      parameters:
+        - name: x-api-key
+          in: header
+          schema:
+            type: string
+            example: '{{x-api-key}}'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                dateFrom:
+                  type: string
+                  example: 01/01/2022
+                dateTo:
+                  type: string
+                  example: 31/12/2022
+            example:
+              dateFrom: 01/01/2022
+              dateTo: 31/12/2022
+      responses:
+        '200':
+          description: 200 OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    activities:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          action:
+                            type: string
+                            example: UPDATE
+                          attempt:
+                            type: number
+                            example: 1
+                      example:
+                        - action: UPDATE
+                          attempt: 1
+                        - action: DUPLICATE_ENQUIRY
+                          attempt: 1
+                    amount:
+                      type: number
+                      example: 110.01
+                    brn:
+                      type: string
+                      example: BRN12340
+                    company:
+                      type: string
+                      example: Acme Corp
+                    country:
+                      type: string
+                      example: MYS
+                    currency:
+                      type: string
+                      example: MYR
+                    date:
+                      type: string
+                      example: 02/06/2021
+                    financeEndDate:
+                      type: string
+                      example: 31/10/2021
+                    financeStartDate:
+                      type: string
+                      example: 01/06/2021
+                    fundingAmount:
+                      type: number
+                      example: 999.99
+                    fundingCurrency:
+                      type: string
+                      example: MYR
+                    id:
+                      type: string
+                      example: 20220414TFPBA0000001493
+                    invoiceCreatedDateTime:
+                      type: string
+                      example: 14/04/2022 11:19
+                    invoiceLastUpdatedDateTime:
+                      type: string
+                      example: 14/04/2022 11:20
+                    number:
+                      type: string
+                      example: HG00000016a
+                    transportDocumentNumber:
+                      type: string
+                      example: DO123456
+                    transportDocumentType:
+                      type: string
+                      example: Delivery Order
+                    type:
+                      type: string
+                      example: P
+                example:
+                  - activities:
+                      - action: UPDATE
+                        attempt: 1
+                      - action: DUPLICATE_ENQUIRY
+                        attempt: 1
+                    amount: 110.01
+                    brn: BRN12340
+                    company: Acme Corp
+                    country: MYS
+                    currency: MYR
+                    date: 02/06/2021
+                    financeEndDate: 31/10/2021
+                    financeStartDate: 01/06/2021
+                    fundingAmount: 999.99
+                    fundingCurrency: MYR
+                    id: 20220414TFPBA0000001493
+                    invoiceCreatedDateTime: 14/04/2022 11:19
+                    invoiceLastUpdatedDateTime: 14/04/2022 11:20
+                    number: HG00000016a
+                    transportDocumentNumber: DO123456
+                    transportDocumentType: Delivery Order
+                    type: P
+                  - activities:
+                      - action: CREATE
+                        attempt: 1
+                    amount: 50000
+                    brn: BRN00001
+                    company: Example Corp
+                    country: MYS
+                    currency: MYR
+                    date: 13/01/2021
+                    financeEndDate: 01/03/2022
+                    financeStartDate: 01/02/2022
+                    fundingAmount: 50000
+                    fundingCurrency: MYR
+                    id: 20220414TFPAP0000001500
+                    invoiceCreatedDateTime: 14/04/2022 16:24
+                    invoiceLastUpdatedDateTime: 14/04/2022 16:24
+                    number: INV00000001
+                    transportDocumentNumber: DO123456
+                    transportDocumentType: Delivery Order
+                    type: P
+                  - activities:
+                      - action: CREATE
+                        attempt: 1
+                      - action: UPDATE
+                        attempt: 2
+                      - action: DELETE
+                        attempt: 1
+                    amount: 50000
+                    brn: BRN00001
+                    company: Example Corp
+                    country: MYS
+                    currency: MYR
+                    date: 13/01/2022
+                    financeEndDate: 01/03/2022
+                    financeStartDate: 01/02/2022
+                    fundingAmount: 50000
+                    fundingCurrency: MYR
+                    id: 20220414TFPAP0000001501
+                    invoiceCreatedDateTime: 14/04/2022 16:34
+                    invoiceLastUpdatedDateTime: 14/04/2022 17:15
+                    number: INV00000001
+                    transportDocumentNumber: DO123456
+                    transportDocumentType: TDT001
+                    type: P
+                  - activities:
+                      - action: DUPLICATE_CREATE
+                        attempt: 1
+                    amount: 50000
+                    brn: BRN00001
+                    company: Example Corp
+                    country: MYS
+                    currency: MYR
+                    date: 15/01/2022
+                    financeEndDate: 01/03/2022
+                    financeStartDate: 01/02/2022
+                    fundingAmount: 50000
+                    fundingCurrency: MYR
+                    id: 20220414TFPBA0000001515
+                    invoiceCreatedDateTime: 14/04/2022 16:53
+                    invoiceLastUpdatedDateTime: 14/04/2022 16:53
+                    number: INV00000002
+                    transportDocumentNumber: DO123456
+                    transportDocumentType: TDT001
+                    type: P
+                  - activities:
+                      - action: DUPLICATE_CREATE
+                        attempt: 4
+                    amount: 50000
+                    brn: BRN00001
+                    company: Example Corp
+                    country: MYS
+                    currency: MYR
+                    date: 15/01/2022
+                    financeEndDate: 01/03/2022
+                    financeStartDate: 01/02/2022
+                    fundingAmount: 50000
+                    fundingCurrency: MYR
+                    id: 20220414TFPBA0000001504
+                    invoiceCreatedDateTime: 14/04/2022 16:40
+                    invoiceLastUpdatedDateTime: 14/04/2022 16:40
+                    number: INV00000002
+                    transportDocumentNumber: DO123456
+                    transportDocumentType: TDT001
+                    type: P
+                  - activities:
+                      - action: DUPLICATE_CREATE
+                        attempt: 5
+                    amount: 50000
+                    brn: BRN00001
+                    company: Example Corp
+                    country: MYS
+                    currency: MYR
+                    date: 15/01/2022
+                    financeEndDate: 01/03/2022
+                    financeStartDate: 01/02/2022
+                    fundingAmount: 50000
+                    fundingCurrency: MYR
+                    id: 20220414TFPBA0000001502
+                    invoiceCreatedDateTime: 14/04/2022 16:35
+                    invoiceLastUpdatedDateTime: 14/04/2022 16:35
+                    number: INV00000002
+                    transportDocumentNumber: DO123456
+                    transportDocumentType: TDT001
+                    type: P
+                  - activities:
+                      - action: DUPLICATE_CREATE
+                        attempt: 3
+                    amount: 50000
+                    brn: BRN00001
+                    company: Example Corp
+                    country: MYS
+                    currency: MYR
+                    date: 15/01/2022
+                    financeEndDate: 01/03/2022
+                    financeStartDate: 01/02/2022
+                    fundingAmount: 50000
+                    fundingCurrency: MYR
+                    id: 20220414TFPBA0000001507
+                    invoiceCreatedDateTime: 14/04/2022 16:42
+                    invoiceLastUpdatedDateTime: 14/04/2022 16:42
+                    number: INV00000002
+                    transportDocumentNumber: DO123456
+                    transportDocumentType: TDT001
+                    type: P
+                  - activities:
+                      - action: DUPLICATE_CREATE
+                        attempt: 2
+                    amount: 50000
+                    brn: BRN00001
+                    company: Example Corp
+                    country: MYS
+                    currency: MYR
+                    date: 15/01/2022
+                    financeEndDate: 01/03/2022
+                    financeStartDate: 01/02/2022
+                    fundingAmount: 50000
+                    fundingCurrency: MYR
+                    id: 20220414TFPBA0000001509
+                    invoiceCreatedDateTime: 14/04/2022 16:42
+                    invoiceLastUpdatedDateTime: 14/04/2022 16:42
+                    number: INV00000002
+                    transportDocumentNumber: DO123456
+                    transportDocumentType: TDT001
+                    type: P
+                  - activities:
+                      - action: DUPLICATE_CREATE
+                        attempt: 4
+                    amount: 50000
+                    brn: BRN00001
+                    company: Example Corp
+                    country: MYS
+                    currency: MYR
+                    date: 16/01/2022
+                    financeEndDate: 01/03/2022
+                    financeStartDate: 01/02/2022
+                    fundingAmount: 50000
+                    fundingCurrency: MYR
+                    id: 20220414TFPBA0000001516
+                    invoiceCreatedDateTime: 14/04/2022 16:53
+                    invoiceLastUpdatedDateTime: 14/04/2022 16:53
+                    number: INV00000003
+                    transportDocumentNumber: DO123456
+                    transportDocumentType: TDT001
+                    type: P
+                  - activities:
+                      - action: DUPLICATE_CREATE
+                        attempt: 1
+                    amount: 50000
+                    brn: BRN00001
+                    company: Example Corp
+                    country: MYS
+                    currency: MYR
+                    date: 16/01/2022
+                    financeEndDate: 01/03/2022
+                    financeStartDate: 01/02/2022
+                    fundingAmount: 50000
+                    fundingCurrency: MYR
+                    id: 20220414TFPBA0000001520
+                    invoiceCreatedDateTime: 14/04/2022 16:58
+                    invoiceLastUpdatedDateTime: 14/04/2022 16:58
+                    number: INV00000003
+                    transportDocumentNumber: DO123456
+                    transportDocumentType: TDT001
+                    type: P
+                  - activities:
+                      - action: DUPLICATE_CREATE
+                        attempt: 12
+                    amount: 50000
+                    brn: BRN00001
+                    company: Example Corp
+                    country: MYS
+                    currency: MYR
+                    date: 16/01/2022
+                    financeEndDate: 01/03/2022
+                    financeStartDate: 01/02/2022
+                    fundingAmount: 50000
+                    fundingCurrency: MYR
+                    id: 20220414TFPBA0000001503
+                    invoiceCreatedDateTime: 14/04/2022 16:35
+                    invoiceLastUpdatedDateTime: 14/04/2022 16:35
+                    number: INV00000003
+                    transportDocumentNumber: DO123456
+                    transportDocumentType: TDT001
+                    type: P
+                  - activities:
+                      - action: DUPLICATE_CREATE
+                        attempt: 11
+                    amount: 50000
+                    brn: BRN00001
+                    company: Example Corp
+                    country: MYS
+                    currency: MYR
+                    date: 16/01/2022
+                    financeEndDate: 01/03/2022
+                    financeStartDate: 01/02/2022
+                    fundingAmount: 50000
+                    fundingCurrency: MYR
+                    id: 20220414TFPBA0000001505
+                    invoiceCreatedDateTime: 14/04/2022 16:40
+                    invoiceLastUpdatedDateTime: 14/04/2022 16:40
+                    number: INV00000003
+                    transportDocumentNumber: DO123456
+                    transportDocumentType: TDT001
+                    type: P
+                  - activities:
+                      - action: DUPLICATE_CREATE
+                        attempt: 9
+                    amount: 50000
+                    brn: BRN00001
+                    company: Example Corp
+                    country: MYS
+                    currency: MYR
+                    date: 16/01/2022
+                    financeEndDate: 01/03/2022
+                    financeStartDate: 01/02/2022
+                    fundingAmount: 50000
+                    fundingCurrency: MYR
+                    id: 20220414TFPBA0000001508
+                    invoiceCreatedDateTime: 14/04/2022 16:42
+                    invoiceLastUpdatedDateTime: 14/04/2022 16:42
+                    number: INV00000003
+                    transportDocumentNumber: DO123456
+                    transportDocumentType: TDT001
+                    type: P
+                  - activities:
+                      - action: DUPLICATE_CREATE
+                        attempt: 8
+                    amount: 50000
+                    brn: BRN00001
+                    company: Example Corp
+                    country: MYS
+                    currency: MYR
+                    date: 16/01/2022
+                    financeEndDate: 01/03/2022
+                    financeStartDate: 01/02/2022
+                    fundingAmount: 50000
+                    fundingCurrency: MYR
+                    id: 20220414TFPBA0000001510
+                    invoiceCreatedDateTime: 14/04/2022 16:42
+                    invoiceLastUpdatedDateTime: 14/04/2022 16:42
+                    number: INV00000003
+                    transportDocumentNumber: DO123456
+                    transportDocumentType: TDT001
+                    type: P
+                  - activities:
+                      - action: CREATE
+                        attempt: 1
+                      - action: DUPLICATE_CREATE
+                        attempt: 5
+                    amount: 110.01
+                    brn: BRN12340
+                    country: MYS
+                    currency: MYR
+                    date: 28/06/2022
+                    id: 20220414TFPAP0000001489
+                    invoiceCreatedDateTime: 14/04/2022 10:59
+                    invoiceLastUpdatedDateTime: 14/04/2022 10:59
+                    number: tttaaaa1234
+                    type: P
+                  - activities:
+                      - action: CREATE
+                        attempt: 1
+                      - action: DUPLICATE_CREATE
+                        attempt: 4
+                    amount: 110.01
+                    brn: BRN12340
+                    country: MYS
+                    currency: MYR
+                    date: 28/06/2022
+                    id: 20220414TFPAP0000001490
+                    invoiceCreatedDateTime: 14/04/2022 11:07
+                    invoiceLastUpdatedDateTime: 14/04/2022 11:07
+                    number: tttaaaa1234
+                    type: P
+                  - activities:
+                      - action: CREATE
+                        attempt: 1
+                      - action: DUPLICATE_CREATE
+                        attempt: 3
+                    amount: 110.01
+                    brn: BRN12340
+                    country: MYS
+                    currency: MYR
+                    date: 28/06/2022
+                    id: 20220414TFPAP0000001491
+                    invoiceCreatedDateTime: 14/04/2022 11:19
+                    invoiceLastUpdatedDateTime: 14/04/2022 11:19
+                    number: tttaaaa1234
+                    type: P
+                  - activities:
+                      - action: CREATE
+                        attempt: 1
+                      - action: UPDATE
+                        attempt: 1
+                      - action: DUPLICATE_CREATE
+                        attempt: 2
+                    amount: 110.01
+                    brn: BRN12340
+                    company: Acme Corp
+                    country: MYS
+                    currency: MYR
+                    date: 28/06/2022
+                    financeEndDate: 31/10/2021
+                    financeStartDate: 01/06/2021
+                    fundingAmount: 999.99
+                    fundingCurrency: MYR
+                    id: 20220414TFPAP0000001494
+                    invoiceCreatedDateTime: 14/04/2022 11:26
+                    invoiceLastUpdatedDateTime: 14/04/2022 11:26
+                    number: tttaaaa1234
+                    transportDocumentNumber: DO123456
+                    transportDocumentType: Delivery Order
+                    type: P
+                  - activities:
+                      - action: CREATE
+                        attempt: 1
+                      - action: DELETE
+                        attempt: 1
+                      - action: DUPLICATE_CREATE
+                        attempt: 1
+                    amount: 110.01
+                    brn: BRN12340
+                    country: MYS
+                    currency: MYR
+                    date: 28/06/2022
+                    id: 20220414TFPBO0000001495
+                    invoiceCreatedDateTime: 14/04/2022 11:26
+                    invoiceLastUpdatedDateTime: 14/04/2022 11:28
+                    number: tttaaaa1234
+                    type: P
+                  - activities:
+                      - action: CREATE
+                        attempt: 1
+                      - action: DELETE
+                        attempt: 1
+                    amount: 110.01
+                    brn: BRN12340
+                    country: MYS
+                    currency: MYR
+                    date: 28/06/2022
+                    id: 20220414TFPAP0000001496
+                    invoiceCreatedDateTime: 14/04/2022 11:33
+                    invoiceLastUpdatedDateTime: 14/04/2022 11:33
+                    number: tttaaaa1234
+                    type: P
+              examples:
+                200 OK:
+                  value:
+                    - activities:
+                        - action: UPDATE
+                          attempt: 1
+                        - action: DUPLICATE_ENQUIRY
+                          attempt: 1
+                      amount: 110.01
+                      brn: BRN12340
+                      company: Acme Corp
+                      country: MYS
+                      currency: MYR
+                      date: 02/06/2021
+                      financeEndDate: 31/10/2021
+                      financeStartDate: 01/06/2021
+                      fundingAmount: 999.99
+                      fundingCurrency: MYR
+                      id: 20220414TFPBA0000001493
+                      invoiceCreatedDateTime: 14/04/2022 11:19
+                      invoiceLastUpdatedDateTime: 14/04/2022 11:20
+                      number: HG00000016a
+                      transportDocumentNumber: DO123456
+                      transportDocumentType: Delivery Order
+                      type: P
+                    - activities:
+                        - action: CREATE
+                          attempt: 1
+                      amount: 50000
+                      brn: BRN00001
+                      company: Example Corp
+                      country: MYS
+                      currency: MYR
+                      date: 13/01/2021
+                      financeEndDate: 01/03/2022
+                      financeStartDate: 01/02/2022
+                      fundingAmount: 50000
+                      fundingCurrency: MYR
+                      id: 20220414TFPAP0000001500
+                      invoiceCreatedDateTime: 14/04/2022 16:24
+                      invoiceLastUpdatedDateTime: 14/04/2022 16:24
+                      number: INV00000001
+                      transportDocumentNumber: DO123456
+                      transportDocumentType: Delivery Order
+                      type: P
+                    - activities:
+                        - action: CREATE
+                          attempt: 1
+                        - action: UPDATE
+                          attempt: 2
+                        - action: DELETE
+                          attempt: 1
+                      amount: 50000
+                      brn: BRN00001
+                      company: Example Corp
+                      country: MYS
+                      currency: MYR
+                      date: 13/01/2022
+                      financeEndDate: 01/03/2022
+                      financeStartDate: 01/02/2022
+                      fundingAmount: 50000
+                      fundingCurrency: MYR
+                      id: 20220414TFPAP0000001501
+                      invoiceCreatedDateTime: 14/04/2022 16:34
+                      invoiceLastUpdatedDateTime: 14/04/2022 17:15
+                      number: INV00000001
+                      transportDocumentNumber: DO123456
+                      transportDocumentType: TDT001
+                      type: P
+                    - activities:
+                        - action: DUPLICATE_CREATE
+                          attempt: 1
+                      amount: 50000
+                      brn: BRN00001
+                      company: Example Corp
+                      country: MYS
+                      currency: MYR
+                      date: 15/01/2022
+                      financeEndDate: 01/03/2022
+                      financeStartDate: 01/02/2022
+                      fundingAmount: 50000
+                      fundingCurrency: MYR
+                      id: 20220414TFPBA0000001515
+                      invoiceCreatedDateTime: 14/04/2022 16:53
+                      invoiceLastUpdatedDateTime: 14/04/2022 16:53
+                      number: INV00000002
+                      transportDocumentNumber: DO123456
+                      transportDocumentType: TDT001
+                      type: P
+                    - activities:
+                        - action: DUPLICATE_CREATE
+                          attempt: 4
+                      amount: 50000
+                      brn: BRN00001
+                      company: Example Corp
+                      country: MYS
+                      currency: MYR
+                      date: 15/01/2022
+                      financeEndDate: 01/03/2022
+                      financeStartDate: 01/02/2022
+                      fundingAmount: 50000
+                      fundingCurrency: MYR
+                      id: 20220414TFPBA0000001504
+                      invoiceCreatedDateTime: 14/04/2022 16:40
+                      invoiceLastUpdatedDateTime: 14/04/2022 16:40
+                      number: INV00000002
+                      transportDocumentNumber: DO123456
+                      transportDocumentType: TDT001
+                      type: P
+                    - activities:
+                        - action: DUPLICATE_CREATE
+                          attempt: 5
+                      amount: 50000
+                      brn: BRN00001
+                      company: Example Corp
+                      country: MYS
+                      currency: MYR
+                      date: 15/01/2022
+                      financeEndDate: 01/03/2022
+                      financeStartDate: 01/02/2022
+                      fundingAmount: 50000
+                      fundingCurrency: MYR
+                      id: 20220414TFPBA0000001502
+                      invoiceCreatedDateTime: 14/04/2022 16:35
+                      invoiceLastUpdatedDateTime: 14/04/2022 16:35
+                      number: INV00000002
+                      transportDocumentNumber: DO123456
+                      transportDocumentType: TDT001
+                      type: P
+                    - activities:
+                        - action: DUPLICATE_CREATE
+                          attempt: 3
+                      amount: 50000
+                      brn: BRN00001
+                      company: Example Corp
+                      country: MYS
+                      currency: MYR
+                      date: 15/01/2022
+                      financeEndDate: 01/03/2022
+                      financeStartDate: 01/02/2022
+                      fundingAmount: 50000
+                      fundingCurrency: MYR
+                      id: 20220414TFPBA0000001507
+                      invoiceCreatedDateTime: 14/04/2022 16:42
+                      invoiceLastUpdatedDateTime: 14/04/2022 16:42
+                      number: INV00000002
+                      transportDocumentNumber: DO123456
+                      transportDocumentType: TDT001
+                      type: P
+                    - activities:
+                        - action: DUPLICATE_CREATE
+                          attempt: 2
+                      amount: 50000
+                      brn: BRN00001
+                      company: Example Corp
+                      country: MYS
+                      currency: MYR
+                      date: 15/01/2022
+                      financeEndDate: 01/03/2022
+                      financeStartDate: 01/02/2022
+                      fundingAmount: 50000
+                      fundingCurrency: MYR
+                      id: 20220414TFPBA0000001509
+                      invoiceCreatedDateTime: 14/04/2022 16:42
+                      invoiceLastUpdatedDateTime: 14/04/2022 16:42
+                      number: INV00000002
+                      transportDocumentNumber: DO123456
+                      transportDocumentType: TDT001
+                      type: P
+                    - activities:
+                        - action: DUPLICATE_CREATE
+                          attempt: 4
+                      amount: 50000
+                      brn: BRN00001
+                      company: Example Corp
+                      country: MYS
+                      currency: MYR
+                      date: 16/01/2022
+                      financeEndDate: 01/03/2022
+                      financeStartDate: 01/02/2022
+                      fundingAmount: 50000
+                      fundingCurrency: MYR
+                      id: 20220414TFPBA0000001516
+                      invoiceCreatedDateTime: 14/04/2022 16:53
+                      invoiceLastUpdatedDateTime: 14/04/2022 16:53
+                      number: INV00000003
+                      transportDocumentNumber: DO123456
+                      transportDocumentType: TDT001
+                      type: P
+                    - activities:
+                        - action: DUPLICATE_CREATE
+                          attempt: 1
+                      amount: 50000
+                      brn: BRN00001
+                      company: Example Corp
+                      country: MYS
+                      currency: MYR
+                      date: 16/01/2022
+                      financeEndDate: 01/03/2022
+                      financeStartDate: 01/02/2022
+                      fundingAmount: 50000
+                      fundingCurrency: MYR
+                      id: 20220414TFPBA0000001520
+                      invoiceCreatedDateTime: 14/04/2022 16:58
+                      invoiceLastUpdatedDateTime: 14/04/2022 16:58
+                      number: INV00000003
+                      transportDocumentNumber: DO123456
+                      transportDocumentType: TDT001
+                      type: P
+                    - activities:
+                        - action: DUPLICATE_CREATE
+                          attempt: 12
+                      amount: 50000
+                      brn: BRN00001
+                      company: Example Corp
+                      country: MYS
+                      currency: MYR
+                      date: 16/01/2022
+                      financeEndDate: 01/03/2022
+                      financeStartDate: 01/02/2022
+                      fundingAmount: 50000
+                      fundingCurrency: MYR
+                      id: 20220414TFPBA0000001503
+                      invoiceCreatedDateTime: 14/04/2022 16:35
+                      invoiceLastUpdatedDateTime: 14/04/2022 16:35
+                      number: INV00000003
+                      transportDocumentNumber: DO123456
+                      transportDocumentType: TDT001
+                      type: P
+                    - activities:
+                        - action: DUPLICATE_CREATE
+                          attempt: 11
+                      amount: 50000
+                      brn: BRN00001
+                      company: Example Corp
+                      country: MYS
+                      currency: MYR
+                      date: 16/01/2022
+                      financeEndDate: 01/03/2022
+                      financeStartDate: 01/02/2022
+                      fundingAmount: 50000
+                      fundingCurrency: MYR
+                      id: 20220414TFPBA0000001505
+                      invoiceCreatedDateTime: 14/04/2022 16:40
+                      invoiceLastUpdatedDateTime: 14/04/2022 16:40
+                      number: INV00000003
+                      transportDocumentNumber: DO123456
+                      transportDocumentType: TDT001
+                      type: P
+                    - activities:
+                        - action: DUPLICATE_CREATE
+                          attempt: 9
+                      amount: 50000
+                      brn: BRN00001
+                      company: Example Corp
+                      country: MYS
+                      currency: MYR
+                      date: 16/01/2022
+                      financeEndDate: 01/03/2022
+                      financeStartDate: 01/02/2022
+                      fundingAmount: 50000
+                      fundingCurrency: MYR
+                      id: 20220414TFPBA0000001508
+                      invoiceCreatedDateTime: 14/04/2022 16:42
+                      invoiceLastUpdatedDateTime: 14/04/2022 16:42
+                      number: INV00000003
+                      transportDocumentNumber: DO123456
+                      transportDocumentType: TDT001
+                      type: P
+                    - activities:
+                        - action: DUPLICATE_CREATE
+                          attempt: 8
+                      amount: 50000
+                      brn: BRN00001
+                      company: Example Corp
+                      country: MYS
+                      currency: MYR
+                      date: 16/01/2022
+                      financeEndDate: 01/03/2022
+                      financeStartDate: 01/02/2022
+                      fundingAmount: 50000
+                      fundingCurrency: MYR
+                      id: 20220414TFPBA0000001510
+                      invoiceCreatedDateTime: 14/04/2022 16:42
+                      invoiceLastUpdatedDateTime: 14/04/2022 16:42
+                      number: INV00000003
+                      transportDocumentNumber: DO123456
+                      transportDocumentType: TDT001
+                      type: P
+                    - activities:
+                        - action: CREATE
+                          attempt: 1
+                        - action: DUPLICATE_CREATE
+                          attempt: 5
+                      amount: 110.01
+                      brn: BRN12340
+                      country: MYS
+                      currency: MYR
+                      date: 28/06/2022
+                      id: 20220414TFPAP0000001489
+                      invoiceCreatedDateTime: 14/04/2022 10:59
+                      invoiceLastUpdatedDateTime: 14/04/2022 10:59
+                      number: tttaaaa1234
+                      type: P
+                    - activities:
+                        - action: CREATE
+                          attempt: 1
+                        - action: DUPLICATE_CREATE
+                          attempt: 4
+                      amount: 110.01
+                      brn: BRN12340
+                      country: MYS
+                      currency: MYR
+                      date: 28/06/2022
+                      id: 20220414TFPAP0000001490
+                      invoiceCreatedDateTime: 14/04/2022 11:07
+                      invoiceLastUpdatedDateTime: 14/04/2022 11:07
+                      number: tttaaaa1234
+                      type: P
+                    - activities:
+                        - action: CREATE
+                          attempt: 1
+                        - action: DUPLICATE_CREATE
+                          attempt: 3
+                      amount: 110.01
+                      brn: BRN12340
+                      country: MYS
+                      currency: MYR
+                      date: 28/06/2022
+                      id: 20220414TFPAP0000001491
+                      invoiceCreatedDateTime: 14/04/2022 11:19
+                      invoiceLastUpdatedDateTime: 14/04/2022 11:19
+                      number: tttaaaa1234
+                      type: P
+                    - activities:
+                        - action: CREATE
+                          attempt: 1
+                        - action: UPDATE
+                          attempt: 1
+                        - action: DUPLICATE_CREATE
+                          attempt: 2
+                      amount: 110.01
+                      brn: BRN12340
+                      company: Acme Corp
+                      country: MYS
+                      currency: MYR
+                      date: 28/06/2022
+                      financeEndDate: 31/10/2021
+                      financeStartDate: 01/06/2021
+                      fundingAmount: 999.99
+                      fundingCurrency: MYR
+                      id: 20220414TFPAP0000001494
+                      invoiceCreatedDateTime: 14/04/2022 11:26
+                      invoiceLastUpdatedDateTime: 14/04/2022 11:26
+                      number: tttaaaa1234
+                      transportDocumentNumber: DO123456
+                      transportDocumentType: Delivery Order
+                      type: P
+                    - activities:
+                        - action: CREATE
+                          attempt: 1
+                        - action: DELETE
+                          attempt: 1
+                        - action: DUPLICATE_CREATE
+                          attempt: 1
+                      amount: 110.01
+                      brn: BRN12340
+                      country: MYS
+                      currency: MYR
+                      date: 28/06/2022
+                      id: 20220414TFPBO0000001495
+                      invoiceCreatedDateTime: 14/04/2022 11:26
+                      invoiceLastUpdatedDateTime: 14/04/2022 11:28
+                      number: tttaaaa1234
+                      type: P
+                    - activities:
+                        - action: CREATE
+                          attempt: 1
+                        - action: DELETE
+                          attempt: 1
+                      amount: 110.01
+                      brn: BRN12340
+                      country: MYS
+                      currency: MYR
+                      date: 28/06/2022
+                      id: 20220414TFPAP0000001496
+                      invoiceCreatedDateTime: 14/04/2022 11:33
+                      invoiceLastUpdatedDateTime: 14/04/2022 11:33
+                      number: tttaaaa1234
+                      type: P
+        '401':
+          description: 401 Unauthorized
+        '500':
+          description: 500 Internal Server Error
+        '503':
+          description: 503 Service Unavailable
+        '504':
+          description: 504 Gateway Timeout
+  /v1/invoice/invoices/download/{batchInvoiceId}:
+    get:
+      summary: Download Batch Invoices
+      description: Download submited batch invoices. It will response a temporary download url to download the batch uploaded invoices.
+      operationId: downloadBatchInvoices
+      security:
+        - BearerAuth: [user]
+      parameters:
+        - name: x-api-key
+          in: header
+          schema:
+            type: string
+            example: '{{x-api-key}}'
+      responses:
+        '200':
+          description: 200 OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  url:
+                    type: string
+                    example: >-
+                      https://onestopportal-app-sandbox-35-osp-invoice-report-s3.s3.amazonaws.com/TFP/Output/TFP_CIBBMYKL_04-17-2022_14-28-03.csv?AWSAccessKeyId=ASIAUYDQ4XZFPHWPSUFW&Signature=YFLbNkqwgaya3dTTNhr6%2BVeqIhw%3D&x-amz-security-token=IQoJb3JpZ2luX2VjEBYaDmFwLXNvdXRoZWFzdC0xIkgwRgIhAPiXqzVwF5ZwVKTGdx2tOxiQ7WwO%2FAj2oiQGebYfPRtPAiEA45K%2BG670VTma5inC9MaraFtvPsn2O4b%2F9hvpoR1%2B7X0qwQIIv%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARACGgwzMjY2NTQyNzkyNDIiDLA033SALzfjZUzI9iqVAhC8xKxCFdJyz%2FBSMdLSf%2Fu7G3BhfZlLRqLHg5tmmmEvhFf%2BQAeWdI237u36MglmtXw30AcKn1UE84ieiBpU1%2FuVGXXJtHxGjpICleHPGWMd6IIlV%2BXcaITuoXq%2FolW8yBtwrcq%2FaOUCdWMuyloTGP7Ovqzb%2Fkml0M9o40UIFAaflMTkm3kEbGtypZsKWPes56T%2FhCDrpGi8Mu33umhMms5cSPsswpcsVGLL7UsU6m69x2okqdAiPZ2hQrQB85Vwsd6vNlPTlPMcYORIFe3l5tfed0t6fF2OsJDdXNXlyquo%2Fq%2BZ%2Fhts03Emo%2B%2BlGPF9LkSYhsQJ7QXA7o4IzEnv7XWJMGoKXF4u6hDMf7WsdM0RygNeEcIwt8TwkgY6mQG7wEKdAdk1KCXIfIy6EvBJra5CRpdKJ%2BApuMNsh1xkvJiPVdkCwtzfG%2FiHncWgNH3bHkMgnnjyVukvADFuEalVn80P0eZL5GSveEYQUSURElTUD3S7mzmFQnZ5ZRv%2BuvmcLFe1TZGZeUpDQq9vwiKmmsFiqO9B%2Bjbc%2Fo4bYAyblv8%2BgQHQfPnvd%2BJ7a37HBSHSTv4zWiGGXWA%3D&Expires=1650209284
+              examples:
+                200 OK:
+                  value:
+                    success: true
+                    url: >-
+                      https://onestopportal-app-sandbox-35-osp-invoice-report-s3.s3.amazonaws.com/TFP/Output/TFP_CIBBMYKL_04-17-2022_14-28-03.csv?AWSAccessKeyId=ASIAUYDQ4XZFPHWPSUFW&Signature=YFLbNkqwgaya3dTTNhr6%2BVeqIhw%3D&x-amz-security-token=IQoJb3JpZ2luX2VjEBYaDmFwLXNvdXRoZWFzdC0xIkgwRgIhAPiXqzVwF5ZwVKTGdx2tOxiQ7WwO%2FAj2oiQGebYfPRtPAiEA45K%2BG670VTma5inC9MaraFtvPsn2O4b%2F9hvpoR1%2B7X0qwQIIv%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARACGgwzMjY2NTQyNzkyNDIiDLA033SALzfjZUzI9iqVAhC8xKxCFdJyz%2FBSMdLSf%2Fu7G3BhfZlLRqLHg5tmmmEvhFf%2BQAeWdI237u36MglmtXw30AcKn1UE84ieiBpU1%2FuVGXXJtHxGjpICleHPGWMd6IIlV%2BXcaITuoXq%2FolW8yBtwrcq%2FaOUCdWMuyloTGP7Ovqzb%2Fkml0M9o40UIFAaflMTkm3kEbGtypZsKWPes56T%2FhCDrpGi8Mu33umhMms5cSPsswpcsVGLL7UsU6m69x2okqdAiPZ2hQrQB85Vwsd6vNlPTlPMcYORIFe3l5tfed0t6fF2OsJDdXNXlyquo%2Fq%2BZ%2Fhts03Emo%2B%2BlGPF9LkSYhsQJ7QXA7o4IzEnv7XWJMGoKXF4u6hDMf7WsdM0RygNeEcIwt8TwkgY6mQG7wEKdAdk1KCXIfIy6EvBJra5CRpdKJ%2BApuMNsh1xkvJiPVdkCwtzfG%2FiHncWgNH3bHkMgnnjyVukvADFuEalVn80P0eZL5GSveEYQUSURElTUD3S7mzmFQnZ5ZRv%2BuvmcLFe1TZGZeUpDQq9vwiKmmsFiqO9B%2Bjbc%2Fo4bYAyblv8%2BgQHQfPnvd%2BJ7a37HBSHSTv4zWiGGXWA%3D&Expires=1650209284
+    parameters:
+      - name: batchInvoiceId
+        in: path
+        required: true
+        schema:
+          type: string
+          example: 20221114120354294TFP
+  /v1/invoice/countries:
+    get:
+      summary: Parameters - Countries
+      description: Lists all countries, indexed by its ISO 3166 standard for country code and name listings.
+      operationId: parametersCountries
+      security:
+        - BearerAuth: [user]
+      parameters:
+        - name: x-api-key
+          in: header
+          schema:
+            type: string
+            example: '{{x-api-key}}'
+      responses:
+        '200':
+          description: 200 OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    code:
+                      type: string
+                      example: MYS
+                    name:
+                      type: string
+                      example: Malaysia
+                    id:
+                      type: number
+                      example: 3
+                example:
+                  - code: MYS
+                    name: Malaysia
+                    id: 3
+                  - code: SGP
+                    name: Singapore
+                    id: 25
+              examples:
+                200 OK:
+                  value:
+                    - code: MYS
+                      id: 3
+                      name: Malaysia
+                    - code: SGP
+                      id: 25
+                      name: Singapore
+  /v1/invoice/currencies:
+    get:
+      summary: Parameters - Currencies
+      description: Lists all currencies, indexed by its 3 letters currency code and name listings.
+      operationId: parametersCurrencies
+      security:
+        - BearerAuth: [user]
+      parameters:
+        - name: x-api-key
+          in: header
+          schema:
+            type: string
+            example: '{{x-api-key}}'
+      responses:
+        '200':
+          description: 200 OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    code:
+                      type: string
+                      example: USD
+                    id:
+                      type: number
+                      example: 30
+                    name:
+                      type: string
+                      example: US Dollar
+                example:
+                  - code: USD
+                    id: 30
+                    name: US Dollar
+                  - code: EUR
+                    id: 31
+                    name: Euro
+                  - code: MYR
+                    id: 4
+                    name: Malaysia Ringgit
+                  - code: SGD
+                    id: 24
+                    name: Singapore Dollar
+              examples:
+                200 OK:
+                  value:
+                    - code: USD
+                      id: 30
+                      name: US Dollar
+                    - code: EUR
+                      id: 31
+                      name: Euro
+                    - code: MYR
+                      id: 4
+                      name: Malaysia Ringgit
+                    - code: SGD
+                      id: 24
+                      name: Singapore Dollar
+  /v1/invoice/invoice-types:
+    get:
+      summary: Parameters - Invoice Types
+      description: Type of invoice.
+      operationId: parametersInvoiceTypes
+      security:
+        - BearerAuth: [user]
+      parameters:
+        - name: x-api-key
+          in: header
+          schema:
+            type: string
+            example: '{{x-api-key}}'
+      responses:
+        '200':
+          description: 200 OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    code:
+                      type: string
+                      example: P
+                    id:
+                      type: number
+                      example: 1
+                    name:
+                      type: string
+                      example: Purchase / Import
+                example:
+                  - code: P
+                    id: 1
+                    name: Purchase / Import
+                  - code: S
+                    id: 2
+                    name: Sales / Export
+                  - code: O
+                    id: 12
+                    name: Others
+              examples:
+                200 OK:
+                  value:
+                    - code: P
+                      id: 1
+                      name: Purchase / Import
+                    - code: S
+                      id: 2
+                      name: Sales / Export
+                    - code: O
+                      id: 12
+                      name: Others
+  /v1/invoice/transport-document-types:
+    get:
+      summary: Parameters - Transport Document Types
+      description: Type of transport document.
+      operationId: parametersTransportDocumentTypes
+      security:
+        - BearerAuth: [user]
+      parameters:
+        - name: x-api-key
+          in: header
+          schema:
+            type: string
+            example: '{{x-api-key}}'
+      responses:
+        '200':
+          description: 200 OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    code:
+                      type: string
+                      example: Delivery Order
+                    id:
+                      type: number
+                      example: 5
+                    name:
+                      type: string
+                      example: Delivery Order
+                example:
+                  - code: O1
+                    id: 14
+                    name: Others
+                  - code: TDT003
+                    id: 15
+                    name: Delivery Order
+                  - code: TDT004
+                    id: 16
+                    name: Dock Receipt
+                  - code: TDT002
+                    id: 7
+                    name: Bill of Lading
+                  - code: TDT001
+                    id: 9
+                    name: Air Waybill
+                  - code: TDT006
+                    id: 17
+                    name: Shipping Guarantee
+                  - code: TDT005
+                    id: 18
+                    name: Packing Note or List
+              examples:
+                200 OK:
+                  value:
+                    - code: TDT001
+                      id: 9
+                      name: Air Waybill
+                    - code: TDT002
+                      id: 7
+                      name: Bill of Lading
+                    - code: TDT003
+                      id: 15
+                      name: Delivery Order
+                    - code: TDT004
+                      id: 16
+                      name: Dock Receipt
+                    - code: TDT005
+                      id: 18
+                      name: Packing Note or List
+                    - code: TDT006
+                      id: 17
+                      name: Shipping Guarantee
+  /v1/invoice/invoice-duplicate-reasons:
+    get:
+      summary: Parameters - Duplicate Reasons
+      description: Duplicate Reason is required when you submit a duplicate invoice.
+      operationId: parametersDuplicateReasons
+      security:
+        - BearerAuth: [user]
+      parameters:
+        - name: x-api-key
+          in: header
+          schema:
+            type: string
+            example: '{{x-api-key}}'
+      responses:
+        '200':
+          description: 200 OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    code:
+                      type: string
+                      example: DUR001
+                    id:
+                      type: number
+                      example: 19
+                    name:
+                      type: string
+                      example: Partial Financing
+                example:
+                  - code: DUR001
+                    id: 19
+                    name: Partial Financing
+                  - code: DUR002
+                    id: 20
+                    name: Different Issuer/Seller
+                  - code: DUR003
+                    id: 21
+                    name: Different Customer/Borrower
+                  - code: DUR004
+                    id: 22
+                    name: Internal Criteria Met
+                  - code: DUR005
+                    id: 23
+                    name: Others
+              examples:
+                200 OK:
+                  value:
+                    - code: DUR001
+                      id: 19
+                      name: Partial Financing
+                    - code: DUR002
+                      id: 20
+                      name: Different Issuer/Seller
+                    - code: DUR003
+                      id: 21
+                      name: Different Customer/Borrower
+                    - code: DUR004
+                      id: 22
+                      name: Internal Criteria Met
+                    - code: DUR005
+                      id: 23
+                      name: Others
+  /v1/invoice/invoice-delete-reasons:
+    get:
+      summary: Parameters - Delete Reasons
+      description: Delete Reasons is required when you delete an invoice.
+      operationId: parametersDeleteReasons
+      security:
+        - BearerAuth: [user]
+      parameters:
+        - name: x-api-key
+          in: header
+          schema:
+            type: string
+            example: '{{x-api-key}}'
+      responses:
+        '200':
+          description: 200 OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    code:
+                      type: string
+                      example: I
+                    id:
+                      type: number
+                      example: 29
+                    name:
+                      type: string
+                      example: Different invoice issuer name
+                example:
+                  - code: I
+                    id: 29
+                    name: Different invoice issuer name
+              examples:
+                200 OK:
+                  value:
+                    - code: I
+                      id: 29
+                      name: Different invoice issuer name
+tags: []

@@ -1,0 +1,586 @@
+openapi: 3.0.1
+info:
+  title: Biller Validation Services
+  description: |
+    "Payer Bank Interface to the NBPS Biller Validation Module\_ \n"
+
+    ### Who Should Use
+    This API should only be used by merchants.    
+  version: v1
+servers:
+- url: https://sandbox.api.paynet.my/JomPAY/{version}/bank
+paths:
+  /validatepayment:
+    post:
+      description: This API is used to validate that the payment details are valid
+        and to return information of the billing to facilitate the further processing
+        of the transaction
+      operationId: Validate Payment
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/validatePaymentRequest'
+        required: false
+      responses:
+        200:
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/validatePaymentResponse'
+          x-amf-mediaType: application/json
+        400:
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error400'
+          x-amf-mediaType: application/json
+        401:
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error401'
+          x-amf-mediaType: application/json
+      x-codegen-request-body-name: generated
+  /notifycompletion:
+    post:
+      description: Payer Bank will call this API to notify the successful completion
+        of the bill payment transaction. PayNet will only deliver the notification
+        to the Biller if the Biller opted for such online notification
+      operationId: Notify Completion
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/notifyCompletionRequest'
+        required: false
+      responses:
+        200:
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/notifyCompletionResponse'
+          x-amf-mediaType: application/json
+        400:
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error400'
+          x-amf-mediaType: application/json
+        401:
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error401'
+          x-amf-mediaType: application/json
+      x-outbound: true
+      x-outboundUrl: https://<domain>
+      x-codegen-request-body-name: generated
+components:
+  schemas:
+    validatePaymentRequest:
+      required:
+      - body
+      - header
+      type: object
+      properties:
+        header:
+          required:
+          - sig
+          - timestamp
+          type: object
+          properties:
+            sig:
+              maxLength: 100
+              type: string
+              description: |
+                Message signature<br /><br />
+                Refer to <a style="color:blue;" href="https://developer.paynet.my/jompay-authentication-n-encryption#signature/" target="_blank"><b>Message Signature</b></a>
+            timestamp:
+              maxLength: 25
+              type: string
+              description: |
+                String representation of the UTC time of the operation in ISO 8601 format. If this time differs from the current time by more than 15 minutes, the Biller should ignore the request
+        body:
+          required:
+          - accounttype
+          - amount
+          - billercode
+          - channel
+          - currencycode
+          - ori
+          - rrn
+          - sourceid
+          type: object
+          properties:
+            sourceid:
+              maxLength: 20
+              type: string
+              description: Source identification of the Payer Bank
+            ori:
+              maxLength: 10
+              type: string
+              description: |
+                Payer Bank IBG routing code<br /><br />
+                Refer to <a style="color:blue;" href="https://developer.paynet.my/jompay-request-response-mapping-codes#data/bankNumber" target="_blank"><b>Bank Routing Number</b></a>
+            channel:
+              maxLength: 5
+              type: string
+              description: |
+                Channel code used by the Payer to perform the transaction<br /><br />
+                Refer to <a style="color:blue;" href="https://developer.paynet.my/jompay-request-response-mapping-codes#data/paymentChannel" target="_blank"><b>Channel Code</b></a>
+            billercode:
+              maxLength: 10
+              type: string
+              description: Biller code
+            rrn:
+              maxLength: 50
+              type: string
+              description: Recipient Reference Number (RRN) entered by the Payer
+            rrn2:
+              maxLength: 50
+              type: string
+              description: Additional reference information (RRN2) entered by the
+                Payer if displayed on the Bill
+            accounttype:
+              maxLength: 5
+              type: string
+              description: |
+                Payer account type<br /><br />
+                Refer to <a style="color:blue;" href="https://developer.paynet.my/jompay-request-response-mapping-codes#data/accountType" target="_blank"><b>Account Type</b></a>
+            currencycode:
+              maxLength: 3
+              type: string
+              description: ISO 4217 currency code of the payment
+            amount:
+              type: number
+              description: Payment amount in cents
+            lang:
+              maxLength: 2
+              type: string
+              description: Language code for return messages
+            bankrefcode:
+              maxLength: 50
+              type: string
+              description: Reference code (if any) of the Payer Bank
+            extdata:
+              maxLength: 250
+              type: string
+              description: Reserved for future expansion
+      example:
+        header:
+          sig: nc0Jtc2PeG0GxzKJlUZj/7r2gd3omnwqLOGMvClIBfQ=
+          timestamp: 2015-04-08T09:15:24Z
+        body:
+          accounttype: "1"
+          amount: 9652
+          bankrefcode: QcmGioyK8K
+          billercode: "3343"
+          channel: "1"
+          currencycode: MYR
+          extdata: ""
+          lang: en
+          ori: "900000001"
+          rrn: "1230"
+          rrn2: ""
+          sourceid: NBPS0001
+    validatePaymentResponse:
+      required:
+      - body
+      - header
+      type: object
+      properties:
+        header:
+          required:
+          - sig
+          - timestamp
+          type: object
+          properties:
+            sig:
+              maxLength: 100
+              type: string
+              description: |
+                Message signature<br /><br />
+                Refer to <a style="color:blue;" href="https://developer.paynet.my/jompay-authentication-n-encryption#signature/" target="_blank"><b>Message Signature</b></a>
+            timestamp:
+              maxLength: 25
+              type: string
+              description: |
+                String representation of the UTC time of the operation in ISO 8601 format. If this time differs from the current time by more than 15 minutes, the Biller should ignore the request
+        body:
+          required:
+          - success
+          type: object
+          properties:
+            success:
+              maxLength: 1
+              type: string
+              description: Indicates if the request is successful. Valid values are
+                'Y' or 'N'
+            errorcode:
+              maxLength: 10
+              type: string
+              description: Error code if the request is not successful
+            erroruimessage:
+              maxLength: 200
+              type: string
+              description: Error UI message if the request message is not successful
+            erroruimessagelang:
+              maxLength: 2
+              type: string
+              description: Language code of the <b>erroruimessage</b> if the request
+                message is not successful
+            systemref:
+              maxLength: 50
+              type: string
+              description: |
+                NBPS system reference number:yyyyMMdd-BillerCode-XXXXXXXX
+            validatedatetime:
+              maxLength: 25
+              type: string
+              description: String representation of the UTC time of the BVM validation
+                operation in ISO 8601 format
+            nbpsref:
+              maxLength: 20
+              type: string
+              description: NBPS reference number. This is the reference number that
+                is displayed to the Payer and eventually passed to the Biller
+            rtnrequired:
+              maxLength: 1
+              type: string
+              description: Indicator whether Biller Code requires real time notification
+                (RTN) for successful payment or not. Valid values are 'Y' or 'N'
+            rrndynamic:
+              maxLength: 1
+              type: string
+              description: Is the RRN dynamic or not. Valid values are 'Y' or 'N'
+            rrninfo:
+              maxLength: 60
+              type: string
+              description: Information from the Biller (if available) related to RRN
+                to be displayed to the Payer (e.g. LHDN may provide the customer name
+                associated with their Tax Number contained in RRN)
+            billername:
+              maxLength: 50
+              type: string
+              description: Name of the Biller who owns the Biller Code e.g. "Telekom
+                Malaysia"
+            billercode:
+              maxLength: 10
+              type: string
+              description: Biller Code from the request message
+            billercodename:
+              maxLength: 50
+              type: string
+              description: Description of the Biller Code, i.e. name of the service
+                that the Biller Code is for e.g. "TM Unifi"
+            billeraccount:
+              maxLength: 40
+              type: string
+              description: Biller’s Bank Account Number to be used to receive payment
+            rfi:
+              maxLength: 10
+              type: string
+              description: Biller Bank IBG routing code
+            msic:
+              maxLength: 20
+              type: string
+              description: MSIC business category of the Biller
+            validatesig:
+              maxLength: 100
+              type: string
+              description: Validation signature to be included in the subsequent NotifyCompletion
+                call (if any)
+            bankrefcode:
+              maxLength: 50
+              type: string
+              description: Reference code (if any) of the Payer Bank
+            extdata:
+              maxLength: 250
+              type: string
+              description: Reserved for future expansion
+      example:
+        header:
+          sig: HdhiwsurruVqsWIiDdv23o9JKeP4664xqVlYzLBPfHw=
+          timestamp: 2015-04-08T09:15:12.190Z
+        body:
+          success: Y
+          errorcode: ""
+          erroruimessage: ""
+          erroruimessagelang: ""
+          nbpsref: 248IC9P7
+          systemref: 20150408-3343-248IC9P7
+          validatedatetime: 2015-04-08T09:15:12.190Z
+          rfi: "900000002"
+          rtnrequired: Y
+          rrndynamic: N
+          rrninfo: ""
+          billercode: "3343"
+          billercodename: Bravo Home
+          billername: Bravo Home
+          billeraccount: "12345678"
+          msic: "12000"
+          bankrefcode: QcmGioyK8K
+          validatesig: tNp3hM73uO1Fod8wCf5qwA2FA9HroF3vv32A4bs4Pt8=
+          extdata: ""
+    error400:
+      required:
+      - message
+      - status
+      type: object
+      properties:
+        status:
+          type: string
+          description: Error code
+        message:
+          type: string
+          description: Error code description
+      example:
+        status: "606"
+        message: Invalid card status
+    error401:
+      required:
+      - message
+      - status
+      type: object
+      properties:
+        status:
+          type: string
+          description: Error code
+        message:
+          type: string
+          description: Error code description
+      example:
+        status: "601"
+        message: Invalid API key
+    notifyCompletionRequest:
+      required:
+      - body
+      - header
+      type: object
+      properties:
+        header:
+          required:
+          - sig
+          - timestamp
+          type: object
+          properties:
+            sig:
+              maxLength: 100
+              type: string
+              description: |
+                Message signature<br /><br />
+                Refer to <a style="color:blue;" href="https://developer.paynet.my/jompay-authentication-n-encryption#signature/" target="_blank"><b>Message Signature</b></a>
+            timestamp:
+              maxLength: 25
+              type: string
+              description: |
+                String representation of the UTC time of the operation in ISO 8601 format. If this time differs from the current time by more than 15 minutes, the Biller should ignore the request
+        body:
+          required:
+          - accounttype
+          - amount
+          - billercode
+          - channel
+          - currencycode
+          - debittimestamp
+          - ori
+          - payeraccountnumber
+          - payeridtype
+          - payername
+          - payertype
+          - rrn
+          - sourceid
+          - systemref
+          - validatesig
+          type: object
+          properties:
+            sourceid:
+              maxLength: 20
+              type: string
+              description: Source identification of the Payer Bank
+            ori:
+              maxLength: 10
+              type: string
+              description: |
+                Payer Bank IBG routing code<br /><br />
+                Refer to <a style="color:blue;" href="https://developer.paynet.my/jompay-request-response-mapping-codes#data/bankNumber" target="_blank"><b>Bank Routing Number</b></a>
+            channel:
+              maxLength: 5
+              type: string
+              description: |
+                Channel code used by the Payer to perform the transaction<br /><br />
+                Refer to <a style="color:blue;" href="https://developer.paynet.my/jompay-request-response-mapping-codes#data/paymentChannel" target="_blank"><b>Channel Code</b></a>
+            billercode:
+              maxLength: 10
+              type: string
+              description: Biller code
+            rrn:
+              maxLength: 50
+              type: string
+              description: Recipient Reference Number (RRN) entered by the Payer
+            rrn2:
+              maxLength: 50
+              type: string
+              description: Additional reference information (RRN2) entered by the
+                Payer if displayed on the Bill
+            debittimestamp:
+              maxLength: 25
+              type: string
+              description: String representation of the UTC time of the debiting in
+                ISO 8601 format:YYYY-MM-DDThh:mm:ssZ
+            accounttype:
+              maxLength: 5
+              type: string
+              description: |
+                Payer account type<br /><br />
+                Refer to <a style="color:blue;" href="https://developer.paynet.my/jompay-request-response-mapping-codes#data/accountType" target="_blank"><b>Account Type</b></a>
+            currencycode:
+              maxLength: 3
+              type: string
+              description: ISO 4217 currency code of the payment
+            amount:
+              type: number
+              description: Payment amount in cents
+            lang:
+              maxLength: 2
+              type: string
+              description: Language code for return messages
+            repeatmsg:
+              maxLength: 1
+              type: string
+              description: If this NotifyCompletion request has been sent before.
+                Valid values are 'Y' or 'N'
+            systemref:
+              maxLength: 50
+              type: string
+              description: NBPS system reference number:yyyyMMdd-BillerCode-XXXXXXXX
+            validatesig:
+              maxLength: 100
+              type: string
+              description: Validation signature
+            bankrefcode:
+              maxLength: 50
+              type: string
+              description: Reference code (if any) of the Payer Bank
+            payeraccountnumber:
+              maxLength: 50
+              type: string
+              description: Payer’s account number
+            payerid:
+              maxLength: 50
+              type: string
+              description: Payer’s identification
+            payeridtype:
+              maxLength: 1
+              type: string
+              description: Payer’s identification type
+            payername:
+              maxLength: 80
+              type: string
+              description: Payer’s name
+            payertype:
+              maxLength: 1
+              type: string
+              description: Payer type
+            extdata:
+              maxLength: 250
+              type: string
+              description: Reserved for future expansion
+      example:
+        header:
+          sig: RA9zh86IW5mmKxjI4Mjdh1HrhUMyxqjZw1HrpmOPNL8=
+          timestamp: 2015-04-08T09:15:43Z
+        body:
+          accounttype: "1"
+          amount: 9652
+          bankrefcode: QcmGioyK8K
+          billercode: "3344"
+          channel: "1"
+          currencycode: MYR
+          debittimestamp: 2015-04-08T09:14:23Z
+          extdata: ""
+          lang: EN
+          ori: "900000001"
+          payeraccountnumber: "629523729472666"
+          payerid: A73592373
+          payeridtype: "3"
+          payername: Luke Cage
+          payertype: C
+          repeatmsg: N
+          rrn: "1230"
+          rrn2: ""
+          sourceid: NBPS0001
+          systemref: 20150408-3343-248IC9P7
+          validatesig: tNp3hM73uO1Fod8wCf5qwA2FA9HroF3vv32A4bs4Pt8=
+    notifyCompletionResponse:
+      required:
+      - body
+      - header
+      type: object
+      properties:
+        header:
+          required:
+          - sig
+          - timestamp
+          type: object
+          properties:
+            sig:
+              maxLength: 100
+              type: string
+              description: |
+                Message signature<br /><br />
+                Refer to <a style="color:blue;" href="https://developer.paynet.my/jompay-authentication-n-encryption#signature/" target="_blank"><b>Message Signature</b></a>
+            timestamp:
+              maxLength: 25
+              type: string
+              description: |
+                String representation of the UTC time of the operation in ISO 8601 format. If this time differs from the current time by more than 15 minutes, the Biller should ignore the request
+        body:
+          required:
+          - success
+          type: object
+          properties:
+            success:
+              maxLength: 1
+              type: string
+              description: Indicate if the request is successful. Valid values are
+                'Y' or 'N'
+            errorcode:
+              maxLength: 10
+              type: string
+              description: Error code if the request message is not successful
+            erroruimessage:
+              maxLength: 200
+              type: string
+              description: Error UI message if the request message is not successful
+            erroruimessagelang:
+              maxLength: 2
+              type: string
+              description: Language code of the <b>erroruimessage</b> if the request
+                message was not successful
+            bankrefcode:
+              maxLength: 50
+              type: string
+              description: Reference code (if any) of the Payer Bank
+            extdata:
+              maxLength: 250
+              type: string
+              description: Reserved for future expansion
+      example:
+        header:
+          sig: SESfOtUEQmajAW8a+UPSsQLaiKn33yM5bAsSbGWwC5A=
+          timestamp: 2015-04-08T09:15:31.846Z
+        body:
+          success: Y
+          errorcode: ""
+          erroruimessage: ""
+          erroruimessagelang: ""
+          bankrefcode: QcmGioyK8K
+          extdata: ""
