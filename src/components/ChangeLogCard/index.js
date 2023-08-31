@@ -41,13 +41,13 @@ const HelloCard = () => {
             </ChangelogCardDate>
             <div className="horizontal-line"></div>
             <ChangelogCardStatus>
-              <ChangelogPill>{value.type}</ChangelogPill>
+              <ChangelogPill type={value.type}>{value.type}</ChangelogPill>
               <p className="t14sm-t16lg font-gray-600">{value.description}</p>
               {value.additional.length > 0
               ? value.additional.map((additional, index2) => {
                   return (
                     <ChangelogCardStatus key={index2}>
-                      <ChangelogPill>
+                      <ChangelogPill type={additional.type_additional}>
                         {additional.type_additional}
                       </ChangelogPill>
 
