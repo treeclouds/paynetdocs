@@ -77,7 +77,8 @@ const sidebars = {
         "example-component/resource-card",
       ],
       className: 'icon__link api__link',
-    },
+    }
+
   ],
   anotherSideBar: [
     {

@@ -3,6 +3,7 @@
 
 const lightCodeTheme = require("prism-react-renderer/themes/github");
 const darkCodeTheme = require("prism-react-renderer/themes/dracula");
+const { ProvidePlugin } = require("webpack");
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
@@ -60,6 +61,36 @@ const config = {
     ],
   ],
   plugins: [
+    () => ({
+      name: "custom-webpack-config",
+      configureWebpack: () => {
+        return {
+          module: {
+            rules: [
+              {
+                test: /\.m?js/,
+                resolve: {
+                  fullySpecified: false,
+                },
+              },
+            ],
+          },
+          plugins: [
+            new ProvidePlugin({
+              process: require.resolve("process/browser"),
+            }),
+          ],
+          resolve: {
+            fallback: {
+              buffer: require.resolve("buffer"),
+              stream: false,
+              path: false,
+              process: false,
+            }
+          },
+        };
+      },
+    }),
     [
       '@docusaurus/plugin-ideal-image',
       {
