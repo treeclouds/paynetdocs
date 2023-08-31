@@ -143,6 +143,8 @@ a:hover {
   margin-left: 0.5rem;
 }
 
+.mr-3 {margin-right: 1.5rem; }
+
 .d-flex {
   display: flex;
 }
@@ -292,7 +294,9 @@ a:hover {
     padding: 1.77rem;
   }
 }
-
+.hidden {
+border: 1px solid blue !important;
+  }
 /* Back to top */
 .backToTopButtonShow_node_modules-\@docusaurus-theme-classic-lib-theme-BackToTopButton-styles-module {
   position: relative;
@@ -404,7 +408,9 @@ a:hover {
 }
 
 /* Top Nav bar */
-
+.getting-started-now {
+  border: 1px solid blue;
+}
 /* on mobile */
 .tocCollapsible_node_modules-\@docusaurus-theme-classic-lib-theme-TOCCollapsible-styles-module {
   background: var(--base-white) !important;
@@ -424,12 +430,18 @@ a:hover {
 .menu__list div.menu__list-item:last-child {
   display: none;
 }
+/*  */
 
 .navbar__items--right div.navbar__item {
   display: flex;
 }
 
 @media(min-width: 1024px) {
+
+  .navbar__inner {
+    column-gap: 3%;
+  }
+
   .navbar__items--right div.navbar__item {
     display: none;
   }
@@ -464,14 +476,23 @@ a:hover {
 .navbar__logo {
   display: flex;
   align-items: center;
+
+  margin-right: 0;
 }
 
 .navbar__logo img {
   height: unset;
 }
 
-.navbar__items {
+.navbar__items:not(.navbar__items--right) {
+  display: grid;
+  grid-template-columns: max-content max-content max-content minmax(auto, 370px);
+
   column-gap: 1.33rem;
+}
+
+.navbar__brand {
+  margin-right: 0;
 }
 
 @media(min-width: 1440px) {
@@ -502,7 +523,7 @@ a:hover {
   content: "";
   position: absolute;
   left: 0;
-  bottom: -0.44rem;
+  bottom: -9px;
   
   border-top-left-radius: 8px;
   border-top-right-radius: 8px;
@@ -522,6 +543,45 @@ a:hover {
 }
 
 /* Search */
+/* On navbar */
+@media(min-width: 1024px) {
+  .searchBox_node_modules-\@docusaurus-theme-classic-lib-theme-Navbar-Search-styles-module {
+    display: flex;
+    align-items: center;
+    box-sizing: border-box;
+    
+    height: 47px;
+    background: var(--gray-100);
+    border-radius: 8px;
+    padding: 10px 14px !important;
+  }
+
+  .DocSearch-Button {
+    padding: 0 !important;
+  }
+  
+  .DocSearch-Button:active, .DocSearch-Button:focus, .DocSearch-Button:hover {
+    background: none !important;
+    box-shadow: none !important;
+  }
+
+  .DocSearch-Button-Keys { display: none !important; }
+
+  .DocSearch-Button-Placeholder {
+    padding: 0 0 0 8px !important;
+    
+    color: var(--gray-600) !important;
+    font-size: 0 !important;
+   }
+
+   .DocSearch-Button-Placeholder::after {
+    content: "Search documentation";
+    font-size: 1rem !important;
+    line-height: 150%;
+   }
+}
+
+/* On modal */
 .DocSearch-Modal {
   background-color: var(--base-white) !important;
 }
@@ -684,12 +744,16 @@ a:hover {
 .theme-doc-sidebar-item-category-level-1 {
   margin-top: 0;
 }
+
 .menu__link-title {
   padding: 12px 8px;
 }
-/* .menu__back .menu__link {
+
+.menu__back .menu__link {
+  display: flex;
+  align-items: center;
   column-gap: 0.88rem;
-} */
+}
 
 .menu__back .menu__link::before {
   content: "";
@@ -1230,11 +1294,11 @@ h1 {
 }
 
 .button--small {
-  padding: 10px 16px;
+  padding: 10px 16px !important;
 }
 
 .button--extra-small {
-  padding: 8px 14px;
+  padding: 8px 14px !important;
 }
 
 .button--white {
@@ -1492,6 +1556,12 @@ button .copyButtonIcons_node_modules-\@docusaurus-theme-classic-lib-theme-CodeBl
 }
 
 /* code */
+.code-block__white pre {
+  background-color: var(--base-white);
+  border: 1px solid var(--gray-200);
+
+}
+
 code {
   background-color: var(--gray-50);
   border-radius: 6px;
@@ -1531,6 +1601,7 @@ li code {
     flex: unset;
   }
 }
+
 /* card-resource */
 .card-resource__wrapper {
   display: grid;

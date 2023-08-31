@@ -15,7 +15,6 @@ const config = {
   // Set the /<baseUrl>/ pathname under which your site is served
   // For GitHub pages deployment, it is often '/<projectName>/'
   baseUrl: "/",
-
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
   organizationName: "facebook", // Usually your GitHub org/user name.
@@ -88,11 +87,11 @@ const config = {
     ({
       // Replace with your project's social card
       image: "img/logo-paynet.svg",
-      algolia:{
+      algolia: {
         apiKey:'d202c6e09c0827e99714d9a7d679d421',
         indexName:'paynetvercel',
         contextualSearch:true,
-        appId:'L8A42RG0IL'
+        appId:'L8A42RG0IL',
       },
       navbar: {
         title: "",
@@ -104,15 +103,19 @@ const config = {
           {
             to: "/home",
             sidebarid: "sideBarHome",
+            activeBaseRoute: 'home',
             position: "left",
             label: "Documentations",
-            className: "custom-navbar__item",
           },
           {
             to: "/api-reference",
             label: "API Reference",
-            className: "custom-navbar__item",
+            className: "mr-3",
             position: "left"
+          },
+          {
+            type: 'search',
+            position: 'left',
           },
           {
             to: "#",
