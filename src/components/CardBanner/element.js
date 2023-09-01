@@ -4,7 +4,7 @@ import styled from 'styled-components'
 // ============= Style ============
 // ================================
 
-export const Wrapper = styled.a`
+export const Wrapper = styled.div`
   z-index: 1;
 
   display: flex;

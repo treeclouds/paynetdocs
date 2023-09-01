@@ -1,50 +1,90 @@
 import styled from 'styled-components'
 
+export const HeaderBannerWrapper = styled.div`
+  position: relative;
+  
+  .accent {
+    position: absolute;
+  }
+
+  .accent-right {
+    top: -100px;
+    right: -150px;
+
+    transform: scaleX(-1);
+  }
+
+  .accent-left {
+    bottom: -165px;
+    left: -150px;
+  }
+
+  canvas {
+    position: relative;
+    z-index: 1;
+    
+    margin-right: auto;
+    margin-left: auto;
+
+    width: 300px;
+    height: 250px;
+    object-fit: cover;
+  }
+  
+  @media(min-width: 1024px) {
+    .accent-left {
+      bottom: -215px;
+    }
+
+    .accent-right {
+      top: -5px;
+    }
+
+    canvas {
+      width: 400px;
+      height: 400px;
+      margin-right: 0;
+    }
+  }
+
+  @media(min-width: 1024px) {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+  }
+`
 export const Wrapper = styled.section`
   position: relative;
 
-  display: grid;
-  row-gap: 8px;
+  overflow: hidden;
 
   padding: 0.88rem;
 
+  p {
+    margin: 0;
+  }
+
   @media (min-width: 768px) {
-    padding: 6.75rem 5% 0;
+    padding: 0 5% 0;
   }
 
   @media (min-width: 1440px) {
-    padding: 6.75rem 8.5rem 0;
-  }
-`
-export const BgWrapper = styled.div `
-  position: absolute;
-
-  @media (min-width: 1440px) {
-    left: 0;
-    right: 0;
+    padding: 0 8.5rem 0;
   }
 `
 
 export const BannerCaptionWrapper = styled.div `
-  min-height: 20.4rem;
-  
+  position: relative;
+  z-index: 1;
+
   h1 {
     margin-bottom: 8px !important;
   }
-
+  
   @media (min-width: 768px) {
-    width: 60%;
-    min-height: 10rem;
-
     h1 {
       margin-bottom: 16px !important;
     }
-  
-  }
-
-  @media (min-width: 1440px) {
-    width: 50%;
-    min-height: 11rem;
   }
 `
 export const CardBannerWrapper = styled.div `
@@ -108,11 +148,6 @@ export const DesktopOnly = styled.div `
 
   @media (min-width: 768px) {
     display: block !important;
-  }
-  .canvas-container{
-    display:flex;
-    width:70vw;
-    flex-direction: row-reverse;
   }
 `
 export const TextBesidesIcon = styled.div `

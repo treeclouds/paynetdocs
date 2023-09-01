@@ -15,7 +15,7 @@ export const Wrapper = styled.div`
 
   text-decoration: none !important;
 
-  p {
+  h4, p {
     margin-bottom: 0;
   }
 

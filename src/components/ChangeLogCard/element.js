@@ -34,13 +34,13 @@ export const Capsule = styled.div`
 `;
 
 export const ChangelogPill = styled.div `
-  background-color: #eaf5fb;
+  background-color: ${props => props.type == "Added" ? "#EBF8ED" : "#eaf5fb"};
   padding: 2px 10px;
   width: max-content;
   border-radius: 16px;
 
   font-size: 0.77rem;
-  color: var(--blue-600);
+  color: ${props => props.type == "Added" ? "#226C2C" : "#1A6198"};;
   font-style: normal;
   font-weight: 700;
   line-height: 21px;

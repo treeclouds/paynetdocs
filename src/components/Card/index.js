@@ -3,6 +3,7 @@ import React from 'react'
 import {Wrapper, CardHeader, CardHeaderLeft, CardHeaderRight} from './element'
 
 import FileGray from "@site/static/img/file-gray.svg"
+import FileBlue from "@site/static/img/file-blue.svg"
 import ArrowRightBlue from "@site/static/img/arrow-right-blue.svg"
 
 const Card = (props) => {
@@ -11,7 +12,8 @@ const Card = (props) => {
     <Wrapper>
       <CardHeader>
         <CardHeaderLeft>
-          <FileGray />
+          <FileGray className='icon-default'/>
+          <FileBlue className='icon-active'/>
           <h4 className='t16sm-t18lg bold font-gray-700'>{props.title}</h4>
         </CardHeaderLeft>
         <CardHeaderRight>

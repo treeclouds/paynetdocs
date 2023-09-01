@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 
-export const Wrapper = styled.a`
+export const Wrapper = styled.div`
   display: grid;
   row-gap: 0.88rem;
 
@@ -14,12 +14,24 @@ export const Wrapper = styled.a`
   * {
     margin-bottom: 0;
   }
-  
+
+  .icon-active {
+    display: none;
+  }
+
   &:hover {
     box-shadow: 0px 4px 6px -2px rgba(16, 24, 40, 0.03), 0px 12px 16px -4px rgba(16, 24, 40, 0.08);
 
     h4 {
       color: #2179BE;
+    }
+
+    .icon-default {
+      display: none;
+    }
+  
+    .icon-active {
+      display: block;
     }
   }
 `

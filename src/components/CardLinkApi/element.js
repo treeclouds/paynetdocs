@@ -37,7 +37,7 @@ export const CardLinkLeft = styled.div `
   @media (min-width: 768px) {
     display: flex;
     align-items: center;
-    column-gap: 8px;
+    column-gap: 12px;
   }
 `
 export const CardLinkRight = styled.div `
@@ -46,4 +46,8 @@ export const CardLinkRight = styled.div `
   column-gap: 8px;
 
   cursor: pointer;
+
+  a:hover {
+    color: var(--blue-600);
+  }
 `

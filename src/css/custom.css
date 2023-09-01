@@ -27,6 +27,7 @@
   --ifm-alert-border-radius: 12px;
   --ifm-alert-background-color: #EAF5FB;
   --prism-background-color : #F4FAFD;
+  --ifm-toc-padding-horizontal: 24px; /* 24px */
   --docsearch-hit-active-color: #475467 !important;
   /* For typography base = 18px */
   font-size: 112.5%;
@@ -130,7 +131,10 @@ a:hover {
   text-decoration: none;
   color: inherit;
 }
-
+.mx-auto {
+  margin-left: auto;
+  margin-right: auto;
+}
 .mb-0 {
   margin-bottom: 0 !important;
 }
@@ -138,6 +142,8 @@ a:hover {
 .ml-2 {
   margin-left: 0.5rem;
 }
+
+.mr-3 {margin-right: 1.5rem; }
 
 .d-flex {
   display: flex;
@@ -213,14 +219,22 @@ a:hover {
 /* Badge */
 .badge {
   border-radius: 16px;
+  padding: 2px 10px;
 }
+
 .badge--success {
   background-color: var(--green-50);
   color: var(--green-700);
   border: 1px solid var(--green-50);
 }
 
-.container {
+.badge--info {
+  background-color: var(--blue-50);
+  color: var(--blue-600);
+  border: 1px solid var(--blue-50);
+}
+
+.docs-wrapper .container {
   padding: 0 var(--custom-section-padding) !important;
 }
 
@@ -281,7 +295,9 @@ a:hover {
     padding: 1.77rem;
   }
 }
-
+.hidden {
+border: 1px solid blue !important;
+  }
 /* Back to top */
 .backToTopButtonShow_node_modules-\@docusaurus-theme-classic-lib-theme-BackToTopButton-styles-module {
   position: relative;
@@ -336,14 +352,16 @@ a:hover {
 /* Markdown */
 .markdown > h1 {
   margin-bottom: 1.1rem;
+
+  color: var(--blue-500);
 }
 
 .markdown > h2 {
   margin: 0 0 8px;
 }
 
-.markdown > h3 {
-  margin: 0 0 8px;
+.markdown > h3, .markdown > h4 {
+  margin: 0 0 0.88rem;
 }
 
 .markdown p {
@@ -365,12 +383,18 @@ a:hover {
 
 /* Explicit on home */
 .docs-doc-id-home .docMainContainer_node_modules-\@docusaurus-theme-classic-lib-theme-DocPage-Layout-Main-styles-module{
-  background: linear-gradient(170deg, #fff 11%, #F9FAFB 11%);
+  background: linear-gradient(175deg, #fff 11%, #F9FAFB 11%);
 }
 
 @media (min-width: 1024px) {
   .docs-doc-id-home .docMainContainer_node_modules-\@docusaurus-theme-classic-lib-theme-DocPage-Layout-Main-styles-module{
-    background: linear-gradient(170deg, #fff 15%, #F9FAFB 15%);
+    background: linear-gradient(175deg, #fff 15%, #F9FAFB 15%);
+  }
+}
+
+@media (min-width: 1024px) {
+  .docs-doc-id-home .docMainContainer_node_modules-\@docusaurus-theme-classic-lib-theme-DocPage-Layout-Main-styles-module{
+    background: linear-gradient(175deg, #fff 18.5%, #F9FAFB 18.5%);
   }
 }
 
@@ -387,7 +411,9 @@ a:hover {
 }
 
 /* Top Nav bar */
-
+.getting-started-now {
+  border: 1px solid blue;
+}
 /* on mobile */
 .tocCollapsible_node_modules-\@docusaurus-theme-classic-lib-theme-TOCCollapsible-styles-module {
   background: var(--base-white) !important;
@@ -407,12 +433,18 @@ a:hover {
 .menu__list div.menu__list-item:last-child {
   display: none;
 }
+/*  */
 
 .navbar__items--right div.navbar__item {
   display: flex;
 }
 
 @media(min-width: 1024px) {
+
+  .navbar__inner {
+    column-gap: 3%;
+  }
+
   .navbar__items--right div.navbar__item {
     display: none;
   }
@@ -447,19 +479,32 @@ a:hover {
 .navbar__logo {
   display: flex;
   align-items: center;
+
+  margin-right: 0;
 }
 
 .navbar__logo img {
   height: unset;
 }
 
-.navbar__items {
-  column-gap: 1.33rem;
+.navbar__items:not(.navbar__items--right) {
+  display: grid;
+  grid-template-columns: max-content max-content max-content minmax(auto, 370px);
+
+  column-gap: 0.75rem;
+}
+
+.navbar__brand {
+  margin-right: 0;
 }
 
 @media(min-width: 1440px) {
   .navbar__brand {
     margin-right: 4.8rem;
+  }
+
+  .navbar__items:not(.navbar__items--right) {
+    column-gap: 1.33rem;
   }
 }
 
@@ -485,11 +530,11 @@ a:hover {
   content: "";
   position: absolute;
   left: 0;
-  bottom: -0.44rem;
+  bottom: -9px;
   
   border-top-left-radius: 8px;
   border-top-right-radius: 8px;
-  width: 95%;
+  width: 100%;
   height: 4px;
   background-color: var(--blue-500);
 }
@@ -505,8 +550,180 @@ a:hover {
 }
 
 /* Search */
+
+/* On navbar */
+
+.DocSearch-Help {
+  display: flex;
+  flex-direction: column;
+
+  color: var(--gray-700) !important;
+  font-weight: 700 !important;
+}
+
+.DocSearch-Help::after {
+  content: "Recent searches items will be shown here";
+  font-size: 0.78rem;
+  font-weight: 400;
+	line-height: 150%;
+  color: var(--gray-600) !important;
+}
+
+.DocSearch-NoResults .DocSearch-Screen-Icon svg {
+  display: none;
+}
+.DocSearch-NoResults p, .DocSearch-NoResults p strong {
+  font-size: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.DocSearch-NoResults p::before {
+  content: "Result not found";
+  margin-bottom: 8px;
+
+  font-size: 0.88rem;
+  line-height: 150%;
+  color: var(--gray-700);
+  font-weight: 700;
+}
+
+.DocSearch-NoResults p::after {
+  content: "Recent searches items will be shown here";
+  font-size: 0.78rem;
+  line-height: 150%;
+  color: var(--gray-600);
+}
+
+.DocSearch-Help::before, .DocSearch-NoResults .DocSearch-Screen-Icon {
+  content: "";
+
+  display: flex;
+
+  margin: 0 auto 0.88rem;
+  width: 36px;
+  height: 36px;
+  background: url(../../static/img/search-gray.svg) no-repeat;
+  background-position: center;
+  background-size: cover;
+}
+
 .DocSearch-Modal {
   background-color: var(--base-white) !important;
+}
+
+.DocSearch-Cancel {
+  display: inline-block !important;
+
+  border: none;
+  background: transparent;
+  
+  cursor: pointer;
+
+  margin-left: 0.88rem !important;
+  color: var(--blue-500) !important;
+  font-weight: 700 !important;
+}
+
+.DocSearch-Cancel, .DocSearch-Input {
+  font-size: 0.78rem !important;
+	line-height: 150%;
+}
+
+@media(min-width: 1024px) {
+  .DocSearch-Cancel {
+    font-size: 1rem;
+    line-height: 133%;
+  }
+}
+
+.DocSearch-NoResults-Prefill-List {
+  display: none !important;
+}
+
+@media(min-width: 1024px) {
+  .DocSearch-Container {
+    background: rgba(208, 213, 221, 0.70) !important  ;
+    backdrop-filter: blur(4px);
+  }
+
+  .searchBox_node_modules-\@docusaurus-theme-classic-lib-theme-Navbar-Search-styles-module {
+    display: flex;
+    align-items: center;
+    box-sizing: border-box;
+    
+    height: 47px;
+    background: var(--gray-100);
+    border-radius: 8px;
+    padding: 10px 14px !important;
+  }
+
+  .DocSearch-Button {
+    padding: 0 !important;
+    width: 100%;
+  }
+  
+  .DocSearch-Button:active, .DocSearch-Button:focus, .DocSearch-Button:hover {
+    background: none !important;
+    box-shadow: none !important;
+  }
+
+  .DocSearch-Button-Keys { display: none !important; }
+
+  .DocSearch-Button-Placeholder {
+    padding: 0 0 0 8px !important;
+    
+    color: var(--gray-600) !important;
+    font-size: 0 !important;
+   }
+
+   .DocSearch-Button-Placeholder::after {
+    content: "Search documentation";
+    font-size: 1rem !important;
+    line-height: 150%;
+   }
+
+   .DocSearch-Help::before, .DocSearch-NoResults .DocSearch-Screen-Icon {
+    content: "";
+
+    width: 48px;
+    height: 48px;
+    background-position: center;
+    background-size: cover;
+  }
+
+  .DocSearch-NoResults p::before {
+    font-size: 1rem;
+  }
+  
+  .DocSearch-NoResults p::after {
+    font-size: 0.88rem;
+  }
+
+   .DocSearch-Help::after {
+    margin-top: 8px;
+
+    font-size: 0.88rem;
+  }
+
+  .DocSearch-Cancel {
+    font-size: 1rem !important;
+  }
+
+  .DocSearch-Modal {
+    background-color: transparent !important;
+    box-shadow: none !important;
+  }
+  
+  .DocSearch-Dropdown {
+    background-color: var(--base-white) !important;
+    border-radius: 12px;
+  }
+}
+
+.DocSearch-Footer {
+  display: none !important;
+  box-shadow: none;
 }
 
 .DocSearch-Hit-source {
@@ -515,6 +732,7 @@ a:hover {
   font-weight: 400 !important;
   color: var(--gray-500) !important;
 }
+
 .DocSearch-Hit {
   padding-bottom: 8px !important;
 }
@@ -522,26 +740,22 @@ a:hover {
 .DocSearch-Hit[aria-selected=true] {
   color: var(--gray-600) !important;
 }
-/* .DocSearch-Hit-icon svg {
-  display: none;
-} */
-/* .DocSearch-Hit-icon {
-  width: 20px;
-  height: 20px;
-  background: url(../../static/img/file-gray.svg);
-} */
+
 .DocSearch-Hit a {
   background: var(--gray-50) !important;
   box-shadow: none !important;
   border-radius: 8px !important;
 }
+
 .DocSearch-Hit-title {
   color: var(--gray-600);
   font-weight: 700;
 }
+
 .DocSearch-Hit-path {
   color: var(--gray-500) !important;
 }
+
 .DocSearch-MagnifierLabel {
   width: 20px;
   height: 20px;
@@ -558,35 +772,100 @@ a:hover {
   box-shadow: none !important;
   border: 1px solid var(--gray-300);
 }
-/* .DocSearch-Form input::placeholder {
-  color: var(--gray-600) !important;
-  font-weight: 300 !important;
-} */
+
 .DocSearch-SearchBar {
   padding: 1.33rem 0.88rem !important;
+}
+
+@media(min-width: 1024px) {
+  .DocSearch-SearchBar {
+    padding: 0 0 0.88rem !important;
+  }
 }
 
 .DocSearch-Button {
   background-color: transparent !important;
 }
 
-.DocSearch-Cancel, .DocSearch-Input {
-  font-size: 0.78rem !important;
-	line-height: 150%;
+/* Search show all */
+
+.container.margin-vert--lg h1 {
+  font-size: 0 !important;
+  margin-bottom: 0.88rem;
 }
 
-.DocSearch-Cancel {
-  margin-left: 0.88rem !important;
-  color: var(--blue-500) !important;
-  font-weight: 700 !important;
+
+.container.margin-vert--lg h1::after {
+  content: "Search documentation here";
+  font-size: 1.27rem;
+  line-height: 150%;
+  color: var(--gray-600);
+}
+
+.searchResultsColumn_node_modules-\@docusaurus-theme-search-algolia-lib-theme-SearchPage-styles-module {
+  padding: 0;
+  font-size: 0.78rem !important;
+  line-height: 150%;
+  letter-spacing: 0.32px;
 }
 
 @media(min-width: 1024px) {
-  .DocSearch-Cancel {
-    font-size: 1rem;
-    line-height: 133%;
+  .container.margin-vert--lg {
+    width: 70%;
+  }
+
+  .container.margin-vert--lg h1 {
+    margin-bottom: 1.78rem;
+  }
+  .container.margin-vert--lg h1::after {
+    font-size: 2.33rem;
+    line-height: 44px; /* 104.762% */
+    letter-spacing: -0.42px;
   }
 }
+
+.searchLogoColumn_node_modules-\@docusaurus-theme-search-algolia-lib-theme-SearchPage-styles-module {
+  display: none;
+}
+
+.searchQueryColumn_node_modules-\@docusaurus-theme-search-algolia-lib-theme-SearchPage-styles-module {
+  padding: 0;
+}
+
+.searchResultItem_node_modules-\@docusaurus-theme-search-algolia-lib-theme-SearchPage-styles-module nav {
+  display: none;
+}
+
+.searchResultItemHeading_node_modules-\@docusaurus-theme-search-algolia-lib-theme-SearchPage-styles-module a {
+  font-size: 0.88rem !important;
+  line-height: 150%;
+  color: var(--gray-600);
+  font-weight: 700 !important;
+}
+
+.searchResultItemSummary_node_modules-\@docusaurus-theme-search-algolia-lib-theme-SearchPage-styles-module {
+  font-size: 0.88rem !important;
+  line-height: 150%;
+  font-style: normal !important;
+  color: var(--gray-500);
+}
+
+.searchQueryColumn_node_modules-\@docusaurus-theme-search-algolia-lib-theme-SearchPage-styles-module input {
+  font-size: 0.78rem;
+  line-height: 150%;
+}
+
+.searchResultItem_node_modules-\@docusaurus-theme-search-algolia-lib-theme-SearchPage-styles-module {
+  border-bottom: 1px solid var(--gray-200) !important;
+  padding: 1.33rem 0 !important;
+}
+
+.container.margin-vert--lg div.row {
+  margin-bottom: 0.66rem;
+  padding-bottom: 0.66rem;
+  border-bottom: 1px solid var(--gray-200) !important;
+}
+
 
 /* Breadcrumbs  */
 .theme-doc-breadcrumbs {
@@ -643,6 +922,11 @@ a:hover {
 
 
 /* Side bar Left */
+.navbar-sidebar__brand {
+  flex-direction: row-reverse;
+  justify-content: start;
+  column-gap: 0.88rem;
+}
 
 .navbar-sidebar__back {
   display: none; /* To hide: <-- Back to main menu */
@@ -667,12 +951,16 @@ a:hover {
 .theme-doc-sidebar-item-category-level-1 {
   margin-top: 0;
 }
+
 .menu__link-title {
   padding: 12px 8px;
 }
-/* .menu__back .menu__link {
+
+.menu__back .menu__link {
+  display: flex;
+  align-items: center;
   column-gap: 0.88rem;
-} */
+}
 
 .menu__back .menu__link::before {
   content: "";
@@ -769,20 +1057,61 @@ li > a.menu__link {
 }
 
 /* Table of content - Right navbar */
-.table-of-contents li {
-  margin: 0;
+.table-of-contents {
+  padding: 8px 0;
+}
+
+
+.table-of-contents> ul {
+  padding: 8px 0 !important;
+}
+
+.tocCollapsibleContent_node_modules-\@docusaurus-theme-classic-lib-theme-TOCCollapsible-styles-module ul li {
+  margin: 0 !important;
+}
+
+.table-of-contents li a {
+  line-height: 24px; /* 150% */
+}
+
+.table-of-contents > li > a {
+  font-size: 0.88rem;
+  letter-spacing: 0.32px;
+  
+  color: var(--gray-600);
+}
+
+.table-of-contents > li > ul > li > a,
+.table-of-contents > li > ul > li > ul > li > a,
+.table-of-contents > li > ul > li > ul > li > ul > li > a  {
+  font-size: 0.78rem;
+  color: var(--gray-500);
 }
 
 .table-of-contents__link {
-  padding: 8px;
-  font-size: 0.88rem;
-  line-height: 24px; /* 150% */
-  letter-spacing: 0.32px;
+  padding: 8px 0.88rem;
 }
 
 .table-of-contents__link--active {
-  color: var(--blue-500);
+  color: var(--blue-500) !important;
   font-weight: 700 !important;
+}
+
+@media(min-width: 768px) {
+  .table-of-contents {
+    padding: 1.33rem 8px 0 0;
+  }
+
+  .table-of-contents ul {
+    padding-left: 0 !important;
+  }
+
+  .table-of-contents li {
+    margin: 4px 0 4px var(--ifm-toc-padding-horizontal);
+  }
+  .table-of-contents__link {
+    padding: 8px 0;
+  }
 }
 
 /* Typography */
@@ -795,18 +1124,14 @@ li > a.menu__link {
 }
 
 h1, h2, h3, h4 {
-  margin-bottom: 0;
-  font-weight: 700;
+  font-weight: 700 !important;
   color: var(--gray-700);
 }
 
 /* 26px */
-h1 {
-  color: var(--blue-500);
-}
 
 .heading-2, h1 {
-	font-size: 1.44rem;
+	font-size: 1.44rem !important;
 	line-height: 123%;
   font-weight: 700;
 	/* font-family: "Gotham Rounded"; */
@@ -849,15 +1174,24 @@ h1 {
 }
 
 /* 21px */
+.t21sm-t35lg, h2 {
+	font-size: 1.167rem !important;
+	line-height: 28px;
+}
 
-.t21sm-t26lg, h2 {
-	font-size: 1.167rem;
+.t21sm-t26lg, h3 {
+	font-size: 1.167rem !important;
 	line-height: 28px;
 }
 
 .t21sm-t23lg {
 	font-size: 1.167rem;
 	line-height: 28px;
+}
+
+.t21, h4 {
+  font-size: 1.44rem !important;
+  line-height: 123%;
 }
 
 .t18sm-t23lg {
@@ -885,7 +1219,7 @@ h1 {
 	line-height: 150%;
 }
 
-.t16sm-t18lg, .DocSearch-Hit-source {
+.t16sm-t18lg, .DocSearch-Hit-source, .DocSearch-Help {
 	font-size: 0.88rem !important;
 	line-height: 150% !important;
 }
@@ -901,7 +1235,7 @@ h1 {
   letter-spacing: 0.32px;
 }
 
-.t14sm-t16lg, .markdown p, .markdown li, strong  {
+.t14sm-t16lg, .docs-wrapper:not(.docs-doc-id-home) .markdown p, .markdown li, strong  {
   font-size: 0.78rem;
 	line-height: 150%;
 }
@@ -919,7 +1253,7 @@ h1 {
 @media(min-width: 1024px) {
   /* 48px */
   .heading-2, h1 {
-    font-size: 2.67rem;
+    font-size: 2.67rem !important;
     letter-spacing: -0.48px;
     line-height: 60px;
   }
@@ -958,13 +1292,18 @@ h1 {
     line-height: 123%;
   }
 
-  .t21sm-t26lg, h2 {
-    font-size: 1.44rem;
+  .t21sm-t26lg, h3 {
+    font-size: 1.44rem !important;
+    line-height: 123%;
+  }
+
+  .t21sm-t35lg, h2 {
+    font-size: 1.94rem !important;
     line-height: 123%;
   }
 
   h3 {
-    font-size: 1.278rem;
+    font-size: 1.278rem !important;
     line-height: 34.5px;
 
   }
@@ -995,18 +1334,18 @@ h1 {
     line-height: 150%;
   }
   
-  .t16sm-t18lg, .DocSearch-Hit-source {
+  .t16sm-t18lg, .DocSearch-Hit-source, .DocSearch-Help {
 		font-size: 1rem !important;
 		line-height: 133% !important;
   }
 
-  .t14sm-t16lg, .markdown p, .markdown li, strong {
+  .t14sm-t16lg, .docs-wrapper:not(.docs-doc-id-home) .markdown p, .markdown li, strong {
     font-size: 0.88rem;
     line-height: 150%;
   }
 
   .t12sm-t14lg {
-    font-size: 0.88rem;
+    font-size: 0.78rem;
   }
   
 }
@@ -1173,11 +1512,11 @@ h1 {
 }
 
 .button--small {
-  padding: 10px 16px;
+  padding: 10px 16px !important;
 }
 
 .button--extra-small {
-  padding: 8px 14px;
+  padding: 8px 14px !important;
 }
 
 .button--white {
@@ -1435,11 +1774,50 @@ button .copyButtonIcons_node_modules-\@docusaurus-theme-classic-lib-theme-CodeBl
 }
 
 /* code */
+.code-block__white pre {
+  background-color: var(--base-white);
+  border: 1px solid var(--gray-200);
+
+}
+
 code {
   background-color: var(--gray-50);
   border-radius: 6px;
   border: 1px solid var(--gray-200);
   padding: 2px 6px;
+}
+
+.markdown ul:not(.tabs) {
+  display: flex;
+  flex-direction: column;
+  row-gap: 0.88rem;
+}
+
+.ul__wrapper li::before {
+  content:"•";
+}
+
+.ul__wrapper ul {
+  padding-left: 0 !important;
+}
+
+.ul__wrapper li {
+  display: flex;
+  align-items: center;
+  column-gap: 8px;
+}
+
+li code {
+  flex: 1;
+
+  white-space: nowrap;
+  overflow: auto;
+}
+
+@media(min-width: 1024px) {
+  li code {
+    flex: unset;
+  }
 }
 
 /* card-resource */
