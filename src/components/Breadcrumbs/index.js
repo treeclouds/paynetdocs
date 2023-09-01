@@ -27,10 +27,10 @@ pathSegments.unshift("home");
 const BreadcrumbItem = ({ segment }) => (
   <a
     className="breadcrumb-segment d-flex t14sm-t16lg font-gray-600"
-    href={segment === "home" ? "/getting-started" : null}
+    href={segment === "home" ? "/documentation/getting-started" : null}
   >
     {segment === "home" ? (
-    <a className="breadcrumb-segment d-flex" href="/getting-started">
+    <a className="breadcrumb-segment d-flex" href="/documentation/getting-started">
     <HomeImage />
   </a>
     ) : (
@@ -55,7 +55,7 @@ const BreadcrumbItem = ({ segment }) => (
   if (isMobileView && pathSegments.length > 2) {
     const shortBreadcrumb = (
       <React.Fragment>
-        <a className="breadcrumb-segment d-flex" href="/getting-started">
+        <a className="breadcrumb-segment d-flex" href="/documentation/getting-started">
         <HomeImage />
         </a>
         <div className="breadcrumb-separator"></div> ... <div className="breadcrumb-separator"></div> <p className="font-blue-500 bold mb-0">{pathSegments[pathSegments.length - 1]}</p> 
