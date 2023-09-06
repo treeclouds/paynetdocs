@@ -86,6 +86,10 @@ const sidebars = {
         "example-component/resource-table-2",
         "example-component/codes",
         "example-component/resource-card",
+        "example-component/duid-now-resource",
+        "example-component/duid-now-signature",
+        "example-component/mapping-table",
+        "example-component/fi-server",
       ],
       className: 'icon__link api__link',
     }
