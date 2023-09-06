@@ -369,8 +369,14 @@ border: 1px solid blue !important;
 }
 
 .markdown ul:not(.tabs) {
+  display: flex;
+  flex-direction: column;
+  row-gap: 0.88rem;
+
+  list-style: disc;
   padding-left: 16px;
 }
+
 
 @media (min-width: 1024px) {
   .markdown > h1 {
@@ -1226,7 +1232,6 @@ h1, h2, h3, h4 {
 
 .t16,
 .tabs__item,
-.blue-link,
 .docItemContainer_node_modules-\@docusaurus-theme-classic-lib-theme-DocItem-Layout-styles-module th,
 .docItemContainer_node_modules-\@docusaurus-theme-classic-lib-theme-DocItem-Layout-styles-module td
 {
@@ -1235,12 +1240,12 @@ h1, h2, h3, h4 {
   letter-spacing: 0.32px;
 }
 
-.t14sm-t16lg, .docs-wrapper:not(.docs-doc-id-home) .markdown p, .markdown li, strong  {
+.t14sm-t16lg, .docs-wrapper:not(.docs-doc-id-home) .markdown p, .markdown li, strong, .blue-link  {
   font-size: 0.78rem;
 	line-height: 150%;
 }
 
-.t14, .token, .DocSearch-Hit-title {
+.t14, .token, .DocSearch-Hit-title  {
   font-size: 0.78rem !important;
 	line-height: 150% !important;
 }
@@ -1652,7 +1657,7 @@ table {
 
 @media(min-width: 1024px) {
   .table__wrapper {
-    width: fit-content;
+    width: 100%;
   }
 }
 
@@ -1785,12 +1790,6 @@ code {
   border-radius: 6px;
   border: 1px solid var(--gray-200);
   padding: 2px 6px;
-}
-
-.markdown ul:not(.tabs) {
-  display: flex;
-  flex-direction: column;
-  row-gap: 0.88rem;
 }
 
 .ul__wrapper li::before {
