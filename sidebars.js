@@ -141,9 +141,14 @@ const sidebars = {
     "duitnow-transfer/response-codes",
     "duitnow-transfer/connectivity-requirements",
   ],
-  // creditTransferSideBar : [
-    
-  // ]
+  sideBarApiReference: [
+    {
+      type: "link",
+      label: "Home",
+      href:"/api-reference/home",
+      className: 'icon__link api-home__link',
+    },
+  ]
 };
 
 module.exports = sidebars;

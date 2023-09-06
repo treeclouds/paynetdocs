@@ -18,12 +18,12 @@ import Rocket from "@site/static/img/rocket-gray.svg"
 import Code from "@site/static/img/api-gray.svg"
 const DashboardHome = () => {
   const rive = require("@rive-app/canvas");
-  const canvasRef = useRef(null);
+  const canvasRefDoc = useRef(null);
   useEffect(() => {
-    if (canvasRef.current) {
+    if (canvasRefDoc.current) {
       const r = new rive.Rive({
         src: 'img/paynet_docs.riv',
-        canvas: canvasRef.current,
+        canvas: canvasRefDoc.current,
         stateMachines: 'State Machine 1',
         autoplay: true,
         onLoad: () => {
@@ -41,7 +41,7 @@ const DashboardHome = () => {
             <h1 className='t26sm-t42lg'>Documentations</h1>
             <p className='t16sm-t23lg font-gray-500'>See guides, references and resources to help you build with PayNet</p>
           </BannerCaptionWrapper>
-          <canvas className='d-flex' ref={canvasRef} width={500} height={500}></canvas>
+          <canvas className='d-flex' ref={canvasRefDoc} width={500} height={500}></canvas>
           <AccentLeft className='accent accent-left'/>
           <AccentRight className='accent accent-right'/>
         </HeaderBannerWrapper>
