@@ -1,7 +1,112 @@
 ---
 title: Repeat Handling
+hide_title: true
+description: Repeat Handling
 slug: /credit-transfer/repeat-handling
-sidebar_position: 4
+custom_edit_url: null
 ---
+import Breadcrumbs from '@site/src/components/Breadcrumbs'; 
+import CardLinkApi from '@site/src/components/CardLinkApi'; 
 
-# Repeat Handling page
+<Breadcrumbs/>
+
+# Repeat Handling
+
+## How It Works
+
+In the event the Sender fails to receive a response from RPP, the transaction status may fall into the state of unknown. In such scenario, the Sender could resend the request, but it may cause a duplicate posting as the original request could have been processed successfully in RPP
+
+To mitigate such situation, RPP introduces a repeat request feature to support the Sender to resend the original request but indicating the request could be a retry attempt. This helps RPP to filter our any possible duplicate attempt. However, such feature should only be used during exceptional scenario and shall not be used as a default option to all requests
+
+In the API Business Application Header, **<PssblDplct\>** shall be set to true to indicate the request is a retry (REPEAT) attempt to prevent duplicate payment. Though, not all APIs are supporting this retry feature. User shall refer to the respective API specification for more information
+
+### How to handle REPEAT request
+
+Whenever RPP receives a REPEAT request, it will:
+
+- Check if both the original request and response messages have been received
+- If both original request and response messages are found:
+  - RPP will not send a Credit Transfer message request
+  - RPP will return to the OFI with the original message response
+- If only the original message request is found:
+  - RPP will place the REPEAT request into a REPEAT queue
+  - The REPEAT request will be picked up and send to RFI for processing
+  - RPP will return to the OFI with the REPEAT message response from RFI
+
+Whenever RFI receives a REPEAT request, it will:
+
+- If the original transaction has been posted successfully by the RFI, RFI will respond with the original transaction response instead of rejecting the REPEAT request as duplicate
+- If the original transaction has not been processed previously, RFI will process the transaction and return the appropriate response to RPP
+
+:::info
+
+Participant is advised to perform a Transaction Enquiry first before initiating a retry attempt. Such inquiry allows Participant to confirm on the stage of the payment and reduces the frictions in performing a transaction retry immediately
+
+:::
+
+## Exception Flows
+
+### RPP Failed to Receive Request from OFI
+
+![An image from the static](/img/repeat-handling/rpp-failed.png)
+
+<div className= "table__wrapper table__long-text vertical-align-baseline">
+
+| Condition	                  | Actions                            | Alternatives                           |
+| --------------------------- | ---------------------------------- | -------------------------------------- |
+| OFI sent a request to RPP. However, RPP did not receive the request <br/> <br/> As no response is received from RPP after x period of time, OFI eventually timeout |  RPP shall: <ul><li>Timeout</li><li>Return a NEGATIVE response with timeout reason</li></ul> <br/>RPP shall: <ul><li>Display an appropriate error message to the Customer</li><li>Stop processing</li><li>Initiate a Transaction Enquiry separately to confirm on the payment status</li></ul> | If retry is configured, OFI shall: <ul><li>If retry count has not exceeded the maximum number of retries</li><ul><li>Send a repeat request</li><li>Continue processing</li></ul><li>If retry count has exceeded the maximum number of retries</li><ul><li>Display an ACCEPTED status message to Customer</li><li>Stop processing</li><li>Confirm the payment manually via Back Office portal</li></ul></ul> |
+
+</div>
+
+### OFI Failed to Receive Response from RPP
+
+![An image from the static](/img/repeat-handling/ofi-failed.png)
+
+<div className= "table__wrapper table__long-text vertical-align-baseline">
+
+| Condition	                  | Actions                            | Alternatives                           |
+| --------------------------- | ---------------------------------- | -------------------------------------- |
+| OFI sent a request to RPP. However, RPP did not receive the request <br/> <br/> As no response is received from RPP after x period of time, OFI eventually timeout |  RPP shall: <ul><li>Timeout</li><li>Return a NEGATIVE response with timeout reason</li></ul> <br/>RPP shall: <ul><li>Display an appropriate error message to the Customer</li><li>Stop processing</li><li>Initiate a Transaction Enquiry separately to confirm on the payment status</li></ul> | If retry is configured, OFI shall: <ul><li>If retry count has not exceeded the maximum number of retries</li><ul><li>Send a repeat request</li><li>Continue processing</li></ul><li>If retry count has exceeded the maximum number of retries</li><ul><li>Display an ACCEPTED status message to Customer</li><li>Stop processing</li><li>Confirm the payment manually via Back Office portal</li></ul></ul> |
+
+</div>
+
+### OFI Timeout due to Longer Processing Time at RFI
+
+![An image from the static](/img/repeat-handling/ofi-timeout.png)
+
+<div className= "table__wrapper table__long-text vertical-align-baseline">
+
+| Condition	                  | Actions                            | Alternatives                           |
+| --------------------------- | ---------------------------------- | -------------------------------------- |
+| OFI sent a request to RPP. However, RPP did not receive the request <br/> <br/> As no response is received from RPP after x period of time, OFI eventually timeout |  RPP shall: <ul><li>Timeout</li><li>Return a NEGATIVE response with timeout reason</li></ul> <br/>RPP shall: <ul><li>Display an appropriate error message to the Customer</li><li>Stop processing</li><li>Initiate a Transaction Enquiry separately to confirm on the payment status</li></ul> | If retry is configured, OFI shall: <ul><li>If retry count has not exceeded the maximum number of retries</li><ul><li>Send a repeat request</li><li>Continue processing</li></ul><li>If retry count has exceeded the maximum number of retries</li><ul><li>Display an ACCEPTED status message to Customer</li><li>Stop processing</li><li>Confirm the payment manually via Back Office portal</li></ul></ul> |
+
+</div>
+
+### OFI Timeout while Response from RPP is in Transit to OFI
+
+![An image from the static](/img/repeat-handling/ofi-timeout-2.png)
+
+<div className= "table__wrapper table__long-text vertical-align-baseline">
+
+| Condition	                  | Actions                            | Alternatives                           |
+| --------------------------- | ---------------------------------- | -------------------------------------- |
+| OFI sent a request to RPP. However, RPP did not receive the request <br/> <br/> As no response is received from RPP after x period of time, OFI eventually timeout |  RPP shall: <ul><li>Timeout</li><li>Return a NEGATIVE response with timeout reason</li></ul> <br/>RPP shall: <ul><li>Display an appropriate error message to the Customer</li><li>Stop processing</li><li>Initiate a Transaction Enquiry separately to confirm on the payment status</li></ul> | If retry is configured, OFI shall: <ul><li>If retry count has not exceeded the maximum number of retries</li><ul><li>Send a repeat request</li><li>Continue processing</li></ul><li>If retry count has exceeded the maximum number of retries</li><ul><li>Display an ACCEPTED status message to Customer</li><li>Stop processing</li><li>Confirm the payment manually via Back Office portal</li></ul></ul> |
+
+</div>
+
+### OFI Initiated Credit Transfer and REPEAT of the Same Credit Transfer
+
+![An image from the static](/img/repeat-handling/ofi-initiated.png)
+
+<div className= "table__wrapper table__long-text vertical-align-baseline">
+
+| Condition	                  | Actions                            | Alternatives                           |
+| --------------------------- | ---------------------------------- | -------------------------------------- |
+| OFI sent a request to RPP. However, RPP did not receive the request <br/> <br/> As no response is received from RPP after x period of time, OFI eventually timeout |  RPP shall: <ul><li>Timeout</li><li>Return a NEGATIVE response with timeout reason</li></ul> <br/>RPP shall: <ul><li>Display an appropriate error message to the Customer</li><li>Stop processing</li><li>Initiate a Transaction Enquiry separately to confirm on the payment status</li></ul> | If retry is configured, OFI shall: <ul><li>If retry count has not exceeded the maximum number of retries</li><ul><li>Send a repeat request</li><li>Continue processing</li></ul><li>If retry count has exceeded the maximum number of retries</li><ul><li>Display an ACCEPTED status message to Customer</li><li>Stop processing</li><li>Confirm the payment manually via Back Office portal</li></ul></ul> |
+
+</div>
+
+## See also
+
+- <a href="#" className="blue-link bold">Recommended validations</a>  
+- <a href="#" className="blue-link bold">How to use Transaction Enquiry to check on transaction status</a>  

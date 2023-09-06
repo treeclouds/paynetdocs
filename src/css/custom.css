@@ -377,6 +377,13 @@ border: 1px solid blue !important;
   padding-left: 16px;
 }
 
+.markdown ul:not(.tabs) li ul {
+  row-gap: 0;
+}
+
+.markdown ul:not(.tabs) li ul li {
+  list-style: circle;
+}
 
 @media (min-width: 1024px) {
   .markdown > h1 {
@@ -1653,6 +1660,14 @@ table {
   border-radius: 6px;
   border: 1px solid var(--gray-300);
   margin-bottom: 1.78rem;
+}
+
+.table__wrapper table tbody ul {
+  row-gap: 0 !important;
+}
+
+.vertical-align-baseline td {
+  vertical-align: baseline;
 }
 
 @media(min-width: 1024px) {
