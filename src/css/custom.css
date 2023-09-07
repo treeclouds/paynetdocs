@@ -148,6 +148,10 @@ a:hover {
   }
 }
 
+.mr-2 {
+  margin-right: 0.5rem;
+}
+
 .d-flex {
   display: flex;
 }
@@ -300,13 +304,13 @@ a:hover {
 }
 
 /* Changelog */
-.docs-wrapper:not(.docs-doc-id-home) .row .col:not(.col--3) {
+.docs-wrapper:not(.docs-doc-id-home, .docs-doc-id-API\/api-reference) .row .col:not(.col--3) {
   padding: 0.88rem 5% 3.1rem;
   font-size: 0.78rem;
 }
 
 @media (min-width: 1024px) {
-  .docs-wrapper:not(.docs-doc-id-home) .row .col:not(.col--3) {
+  .docs-wrapper:not(.docs-doc-id-home, .docs-doc-id-API\/api-reference) .row .col:not(.col--3) {
     padding: 1.77rem;
   }
 }
@@ -377,7 +381,7 @@ a:hover {
   margin: 0 0 0.88rem;
 }
 
-.markdown p {
+.docs-wrapper:not(.docs-doc-id-home, .docs-doc-id-API\/api-reference) .markdown p {
   margin-bottom: 0.88rem;
 }
 
@@ -436,7 +440,7 @@ ul.list-style-number li {
   display: none;
 }
 
-.docs-doc-id-home .row .col {
+.docs-doc-id-home .row .col, .docs-doc-id-API\/api-reference .row .col {
   padding: 0 var(--custom-section-padding);
 }
 
@@ -624,7 +628,9 @@ ul.list-style-number li {
 /* Search */
 
 /* On navbar */
-
+.menu_src-theme-DocSidebar-Desktop-Content-styles-module {
+  padding: 1.33rem 8px !important;
+}
 .DocSearch-Help {
   display: flex;
   flex-direction: column;
@@ -1222,7 +1228,7 @@ li > a.menu__link {
 	font-size: 1rem;
 }
 
-h1, h2, h3, h4 {
+h1, h2, h3, h4:not(.docs-doc-id-API\/api-reference) {
   font-weight: 700 !important;
   color: var(--gray-700);
 }
@@ -1437,7 +1443,7 @@ h1, h2, h3, h4 {
 		line-height: 133% !important;
   }
 
-  .t14sm-t16lg, .docs-wrapper:not(.docs-doc-id-home) .markdown p, .markdown li, strong {
+  .t14sm-t16lg, .docs-wrapper:not(.docs-doc-id-home, .docs-doc-id-API\/api-reference) .markdown p, .markdown li, strong {
     font-size: 0.88rem;
     line-height: 150%;
   }
@@ -1940,3 +1946,11 @@ li code {
     column-gap: 3%;
   }
 }
+
+/* .menu-documentation {
+  background-color: orange;
+}
+
+.menu-api-reference {
+  background-color: lightblue;
+} */
