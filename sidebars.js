@@ -145,6 +145,34 @@ const sidebars = {
     "duitnow-transfer/response-codes",
     "duitnow-transfer/connectivity-requirements",
   ],
+  sideBarDuitNowQr: [
+    {
+      type: "link",
+      label: "Back",
+      href: "/documentation",
+      className: "menu__back",
+    },
+    {
+      type: "html",
+      value: "DuitNow QR",
+      className: "menu__link-title t16sm-t23lg bold font-gray-700",
+    },
+    {
+      type: "category",
+      label: "Overview",
+      items: [
+        {
+          type: "category",
+          label: "Merchant Presented QR",
+          items: [
+            "merchant-presented-qr/domestic-qr",
+            "merchant-presented-qr/cross-border-outward-qr",
+            "merchant-presented-qr/cross-border-inward-qr"
+          ],
+        },
+      ],
+    },
+  ],
   sideBarApiReference: [
     {
       type: "link",
