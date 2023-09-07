@@ -133,7 +133,6 @@ const config = {
         items: [
           {
             to: "/documentation",
-            sidebarid: "sideBarHome",
             activeBaseRoute: 'home',
             position: "left",
             label: "Documentation",
@@ -141,8 +140,14 @@ const config = {
           {
             to: "/api-reference",
             label: "API Reference",
-            className: "mr-3",
+            className: "mr-3-desktop",
             position: "left"
+          },
+          {
+            to: "#",
+            label: "Go to Sandbox",
+            className: "button button--small button--white mobile-only w-100 mt-24px mr-16px",
+            position: "right"
           },
           {
             type: 'search',
@@ -153,8 +158,7 @@ const config = {
             label: "Go to Sandbox",
             className: "button button--small button--white desktop-only",
             position: "right"
-          }
-
+          },
           // {to: '/blog', label: 'Blog', position: 'left'},
           // {
           //   href: 'https://github.com/facebook/docusaurus',
