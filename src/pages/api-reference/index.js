@@ -5,7 +5,6 @@ import { API } from '@stoplight/elements';
 import '@stoplight/elements/styles.min.css';
 
 export default function Hello() {
-  console.log(window.location.pathname);
   return (
     <Layout title="Hello" description="Hello React Page">
       <Wrapper>
