@@ -385,6 +385,14 @@ border: 1px solid blue !important;
   list-style: circle;
 }
 
+.markdown ul:not(.tabs) li ul li ul li {
+  list-style: square;
+}
+
+ul.list-style-number li {
+  list-style: decimal;
+}
+
 @media (min-width: 1024px) {
   .markdown > h1 {
     margin-bottom: 1.77rem;
@@ -1265,9 +1273,9 @@ h1, h2, h3, h4 {
 @media(min-width: 1024px) {
   /* 48px */
   .heading-2, h1 {
-    font-size: 2.67rem !important;
-    letter-spacing: -0.48px;
-    line-height: 60px;
+    font-size: 2.33rem !important;
+    letter-spacing: -0.42px;
+    line-height: 44px;
   }
 
   .t32sm-t42lg {
@@ -1644,6 +1652,12 @@ h1, h2, h3, h4 {
   min-width: 660px;
 }
 
+@media(min-width: 1024px) {
+  .table__long-text table {
+    width: 100%;
+  }
+}
+
 table {
   display: table;
   
@@ -1672,7 +1686,7 @@ table {
 
 @media(min-width: 1024px) {
   .table__wrapper {
-    width: 100%;
+    width: fit-content;
   }
 }
 
