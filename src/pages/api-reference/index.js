@@ -9,7 +9,7 @@ export default function Hello() {
     <Layout title="Hello" description="Hello React Page">
       <Wrapper>
         <API
-          apiDescriptionUrl="/openapi/duitnow/consent-bank-v2.yml"
+          apiDescriptionUrl="/openapi/duitnow/duitnow-payment-v2.yml"
           router="memory"
         />
       </Wrapper>
