@@ -1010,7 +1010,7 @@ ul.list-style-number li {
   display: flex;
   align-items: center;
   background: var(--base-white);
-  padding: 0.6rem 8px;
+  padding: 0.6rem calc(8px + 0.88rem);
   font-size: 0; /* to delete: <-- Back to Main Menu ; */
 }
 
@@ -1339,7 +1339,7 @@ h1, h2, h3, h4:not(.docs-doc-id-API\/api-reference) {
   letter-spacing: 0.32px;
 }
 
-.t14sm-t16lg, .docs-wrapper:not(.docs-doc-id-home) .markdown p, .markdown li, strong, .blue-link  {
+.t14sm-t16lg, .docs-wrapper:not(.docs-doc-id-home, .docs-doc-id-API\/api-reference) .markdown p, .markdown li, strong, .blue-link  {
   font-size: 0.78rem;
 	line-height: 150%;
 }
@@ -1732,12 +1732,12 @@ h1, h2, h3, h4:not(.docs-doc-id-API\/api-reference) {
 }
 
 /* Table */
-.table__long-text table {
+.table__wrapper.table__long-text table {
   min-width: 660px;
 }
 
 @media(min-width: 1024px) {
-  .table__long-text table {
+  .table__wrapper.table__long-text {
     width: 100%;
   }
 }
