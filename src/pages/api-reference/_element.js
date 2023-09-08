@@ -2,6 +2,26 @@ import styled from "styled-components";
 
 export const Wrapper = styled.div
 `
+  // sidebar schema
+  .sl-flex.sl-overflow-y-auto.sl-flex-col.sl-flex-grow.sl-flex-shrink div {
+    padding: unset;
+  }
+  
+  // sidebar dropdown
+  .sl-flex.sl-items-center.sl-h-md.sl-pr-4.sl-pl-4.sl-bg-canvas-100.sl-cursor-pointer.sl-select-none:has( > div:nth-child(2) > div > svg.fa-chevron-right ),
+  .sl-flex.sl-items-center.sl-h-md.sl-pr-4.sl-pl-4.sl-bg-canvas-100.sl-cursor-pointer.sl-select-none:has( > div:nth-child(2) > div > svg.fa-chevron-down ) {
+    margin: 1.75rem 0 0.75rem;
+    padding: 0 1rem !important;
+    color: #475467;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 150%;
+    text-transform: none;
+  }
+
+  // end //
+
   .sl-uppercase {
     text-transform: uppercase;
   }
@@ -16,10 +36,6 @@ export const Wrapper = styled.div
 
   .ElementsTableOfContentsItem .sl-bg-primary-tint div:nth-child(2) div {
     color: #344054 !important;
-  }
-
-  .sl-flex.sl-overflow-y-auto.sl-flex-col.sl-flex-grow.sl-flex-shrink div {
-    padding: unset;
   }
 
   .ElementsTableOfContentsItem .sl-bg-canvas-100 div:nth-child(2) div svg {
@@ -60,13 +76,15 @@ export const Wrapper = styled.div
 
   //default badge state
   .ElementsTableOfContentsItem .sl-bg-canvas-100 div:nth-child(2) .sl-uppercase.sl-text-warning,
-  .ElementsTableOfContentsItem .sl-bg-canvas-100 div:nth-child(2) .sl-uppercase.sl-text-success {
-    color: #344054;
+  .ElementsTableOfContentsItem .sl-bg-canvas-100 div:nth-child(2) .sl-uppercase.sl-text-success ,
+  .ElementsTableOfContentsItem .sl-bg-canvas-100 div:nth-child(2) .sl-uppercase.sl-text-primary{
+    color: #344054 !important;
     text-align: center;
     font-size: 14px;
     font-style: normal;
     font-weight: 400;
-    line-height: 150%
+    line-height: 150%;
+    text-transform: uppercase;
   }
 
   .ElementsTableOfContentsItem .sl-bg-canvas-100 div:nth-child(2) .sl-uppercase.sl-text-warning {
@@ -74,8 +92,6 @@ export const Wrapper = styled.div
     border-radius: 6px;
     border: 1px solid #FECDCA;
     background: #FEF3F2;
-    color: #344054 !important;
-    text-transform: uppercase;
   }
 
   .ElementsTableOfContentsItem .sl-bg-canvas-100 div:nth-child(2) .sl-uppercase.sl-text-success {
@@ -83,19 +99,26 @@ export const Wrapper = styled.div
     border-radius: 6px;
     border: 1px solid #AFE1B6;
     background: #EBF8ED;
-    color: #344054 !important;
-    text-transform: uppercase;
+  }
+
+  .ElementsTableOfContentsItem .sl-bg-canvas-100 div:nth-child(2) .sl-text-primary {
+    padding: 2px 6px !important;
+    border-radius: 6px;
+    border: 1px solid #A6C9E5;
+    background: #E9F2F9;
   }
 
   //highlighted badge state
   .ElementsTableOfContentsItem .sl-bg-primary-tint div:nth-child(2) .sl-uppercase.sl-text-warning,
-  .ElementsTableOfContentsItem .sl-bg-primary-tint div:nth-child(2) .sl-uppercase.sl-text-success {
-    color: #344054;
+  .ElementsTableOfContentsItem .sl-bg-primary-tint div:nth-child(2) .sl-uppercase.sl-text-success,
+  .ElementsTableOfContentsItem .sl-bg-primary-tint div:nth-child(2) .sl-uppercase.sl-text-primary {
+    color: #344054 !important;
     text-align: center;
     font-size: 14px;
     font-style: normal;
     font-weight: 400;
-    line-height: 150%
+    line-height: 150%;
+    text-transform: uppercase;
   }
 
   .ElementsTableOfContentsItem .sl-bg-primary-tint div:nth-child(2) .sl-uppercase.sl-text-warning {
@@ -103,8 +126,6 @@ export const Wrapper = styled.div
     border-radius: 6px;
     border: 1px solid #FECDCA;
     background: #FEF3F2;
-    color: #344054 !important;
-    text-transform: uppercase;
   }
 
   .ElementsTableOfContentsItem .sl-bg-primary-tint div:nth-child(2) .sl-uppercase.sl-text-success {
@@ -112,8 +133,13 @@ export const Wrapper = styled.div
     border-radius: 6px;
     border: 1px solid #AFE1B6;
     background: #EBF8ED;
-    color: #344054 !important;
-    text-transform: uppercase;
+  }
+
+  .ElementsTableOfContentsItem .sl-bg-primary-tint div:nth-child(2) .sl-uppercase.sl-text-primary {
+    padding: 2px 6px !important;
+    border-radius: 6px;
+    border: 1px solid #A6C9E5;
+    background: #E9F2F9;
   }
 
   // higlighted state link
@@ -222,20 +248,11 @@ export const Wrapper = styled.div
 
   .sl-overflow-y-auto.sl-flex-1.sl-w-full.sl-px-24.sl-bg-canvas {
     padding-left: 32px;
+    padding-right: 32px;
   }
 
   .sl-overflow-y-auto.sl-flex-1.sl-w-full.sl-px-24.sl-bg-canvas div.sl-py-16 {
     padding-top: 32px;
-  }
-
-  // content title
-  .sl-leading-tight.sl-text-heading {
-    color: #2179BE;
-    font-size: 42px !important;
-    font-style: normal;
-    font-weight: 700 !important;
-    line-height: 105%;
-    letter-spacing: -0.42px;
   }
 
   // content panel wrapper
@@ -398,14 +415,91 @@ export const Wrapper = styled.div
     line-height: 123%;
   }
 
-  // This API should only be used by bank as the Issuer. wrapper
-  .sl-prose.sl-markdown-viewer p {
+  // default global state
+  .sl-leading-tight.sl-text-heading {
+    color: #2179BE;
+    font-size: 42px !important;
+    font-style: normal;
+    font-weight: 700 !important;
+    line-height: 105%;
+    letter-spacing: -0.42px;
+  }
+
+  .sl-prose.sl-markdown-viewer p,
+  .sl-prose.sl-markdown-viewer ul li {
     color: #475467;
     font-size: 16px;
     font-style: normal;
     font-weight: 400;
     line-height: 150%;
     letter-spacing: 0.32px;
+  }
+
+  // dropdown global state
+  .sl-overflow-y-auto.sl-flex-1.sl-w-full.sl-px-24.sl-bg-canvas > 
+  div > div > div:nth-child(1) > div:nth-child(2) > button {
+    column-gap: 8px;
+    height: max-content;
+    padding: .5rem .875rem;
+    border-radius: 8px;
+    border: unset;
+    outline: 1px solid #D0D5DD;
+
+    color: #344054;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 150%;
+    letter-spacing: 0.32px;
+  }
+
+  .sl-overflow-y-auto.sl-flex-1.sl-w-full.sl-px-24.sl-bg-canvas > 
+  div > div > div:nth-child(1) > div:nth-child(2) > button:hover {
+    background: unset;
+  }
+
+  .sl-overflow-y-auto.sl-flex-1.sl-w-full.sl-px-24.sl-bg-canvas > 
+  div > div > div:nth-child(1) > div:nth-child(2) > button[aria-expanded="true"] {
+    outline: 1px solid #7AAFD8;
+  }
+
+  .sl-popover.sl-inline-flex {
+    border-radius: 8px;
+    background: #FFF;
+    box-shadow: 0px 4px 6px -2px rgba(16, 24, 40, 0.05), 0px 12px 16px -4px rgba(16, 24, 40, 0.10);
+
+    overflow: hidden;
+    --tw-drop-shadow: none;
+  }
+
+  .sl-popover.sl-inline-flex > div:nth-child(2) {
+    opacity: 0;
+  }
+
+  .sl-popover.sl-inline-flex > div:nth-child(1) {
+    display: grid;
+    row-gap: .5rem;
+    padding: .875rem;
+  }
+
+  .sl-popover.sl-inline-flex > div:nth-child(1) > .sl-menu-item {
+    padding: .625rem .875rem;
+  }
+
+  .sl-popover.sl-inline-flex > div:nth-child(1) > .sl-menu-item:hover {
+    background: #E9F2F9;
+  }
+
+  .sl-popover.sl-inline-flex > div:nth-child(1) > .sl-menu-item:hover > div > div {
+    color: #2179BE;
+  }
+
+  .sl-popover.sl-inline-flex > div:nth-child(1) > .sl-menu-item > div > div {
+    color: #101828;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 150%;
   }
 
   // badge wrapper 
@@ -507,6 +601,21 @@ export const Wrapper = styled.div
     line-height: 150%
   }
 
+  .sl-relative .sl-stack.sl-stack--horizontal.sl-stack--3 .sl-text-lg.sl-bg-primary.sl-text-on-primary.sl-rounded-lg {
+    padding: 2px 6px !important;
+    border-radius: 6px;
+    border: 1px solid #A6C9E5;
+    background: #E9F2F9;
+
+    color: #344054 !important;
+    text-transform: uppercase;
+    text-align: center;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 150%
+  }
+
   .sl-relative .sl-stack.sl-stack--horizontal.sl-stack--3 .sl-flex.sl-text-lg.sl-select-all div:nth-child(1) {
     color: #475467;
     font-size: 16px;
@@ -528,6 +637,7 @@ export const Wrapper = styled.div
   // Heading 3
   .sl-prose.sl-markdown-viewer.HttpOperation__Description p {
     color: #344054;
+    font-family: unset;
     font-size: 21px;
     font-style: normal;
     font-weight: 700;
@@ -671,7 +781,7 @@ export const Wrapper = styled.div
   .sl-stack.sl-stack--vertical.sl-stack--1.sl-flex.sl-flex-1.sl-flex-col > 
   div:nth-child(2) > p > a {
     color: #2179BE !important;
-    font-size: 13px;
+    font-size: 14px;
     font-style: normal;
     font-weight: 700;
     line-height: 150%;
@@ -871,7 +981,9 @@ export const Wrapper = styled.div
   }
   
   .sl-stack.sl-stack--vertical.sl-stack--8.sl-flex.sl-flex-col.sl-items-stretch.sl-pt-8 >
-  div:nth-child(3) > div > div > div:nth-child(1) > div {
+  div:nth-child(3) > div > div > div:nth-child(1) > div,
+  .sl-stack.sl-stack--vertical.sl-stack--8.sl-flex.sl-flex-col.sl-items-stretch.sl-pt-8 >
+  div:nth-child(3) > div > div > div:nth-child(1) > div > div {
     color: #475467;
     font-size: 14px;
     font-style: normal;
@@ -1009,9 +1121,59 @@ export const Wrapper = styled.div
   .sl-stack.sl-stack--vertical.sl-stack--8.sl-flex.sl-flex-col.sl-items-stretch.sl-pt-8 > 
   div:nth-child(3) > div > div > div:nth-child(3) > 
   div:nth-child(2) > div[data-test="schema-row"] > div:nth-child(2).sl-stack.sl-stack--vertical >
-  div > div:nth-child(2) > div:nth-child(1) {
+  div:nth-child(3) > div > span {
+    padding: 2px 6px;
+    border-radius: 6px;
+    border: 1px solid #EAECF0;
+    background: #F9FAFB;
+    
+    color: #344054;
+    text-align: center;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 150%;
+  }
+  
+  .sl-stack.sl-stack--vertical.sl-stack--8.sl-flex.sl-flex-col.sl-items-stretch.sl-pt-8 > 
+  div:nth-child(3) > div > div > div:nth-child(3) > 
+  div:nth-child(2) > div[data-test="schema-row"] > div:nth-child(2).sl-stack.sl-stack--vertical >
+  div:nth-child(1) > div:nth-child(2) > div {
     color: #475467;
     font-family: unset;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 150%;
+  }
+  
+  .sl-stack.sl-stack--vertical.sl-stack--8.sl-flex.sl-flex-col.sl-items-stretch.sl-pt-8 > 
+  div:nth-child(3) > div > div > div:nth-child(3) > 
+  div:nth-child(2) > div[data-test="schema-row"] > div:nth-child(2).sl-stack.sl-stack--vertical >
+  div:nth-child(1) > div:nth-child(2) > span {
+    color: #475467;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 300;
+    line-height: 150%;
+  }
+  
+  .sl-stack.sl-stack--vertical.sl-stack--8.sl-flex.sl-flex-col.sl-items-stretch.sl-pt-8 > 
+  div:nth-child(3) > div > div > div:nth-child(3) > 
+  div:nth-child(2) > div[data-test="schema-row"] > div:nth-child(2).sl-stack.sl-stack--vertical >
+  div:nth-child(2) > p > span {
+    color: #475467;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 150%;
+  }
+  
+  .sl-stack.sl-stack--vertical.sl-stack--8.sl-flex.sl-flex-col.sl-items-stretch.sl-pt-8 > 
+  div:nth-child(3) > div > div > div:nth-child(3) > 
+  div:nth-child(2) > div[data-test="schema-row"] > div:nth-child(2).sl-stack.sl-stack--vertical >
+  div:nth-child(2) > p > a {
+    color: #2179BE !important;
     font-size: 14px;
     font-style: normal;
     font-weight: 700;
@@ -1027,5 +1189,682 @@ export const Wrapper = styled.div
     font-style: normal;
     font-weight: 400;
     line-height: 150%;
+  }
+
+  // First Body content wrapper
+  .sl-stack.sl-stack--vertical.sl-stack--6.sl-flex.sl-flex-col > 
+  div:nth-child(1) > h3 > a > div:nth-child(1) {
+    color: #344054;
+    font-size: 21px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 134%;
+  }
+
+  .sl-stack.sl-stack--vertical.sl-stack--6.sl-flex.sl-flex-col > 
+  div:nth-child(1) > div:nth-child(2) > div > div > div:nth-child(2) >
+  button > div:nth-child(1) > div,
+  .sl-stack.sl-stack--vertical.sl-stack--6.sl-flex.sl-flex-col > 
+  div:nth-child(1) > div:nth-child(2) > div > div > div:nth-child(3) >
+  button > div:nth-child(1) > div {
+    color: #475467;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 150%;
+  }
+
+  .sl-stack.sl-stack--vertical.sl-stack--6.sl-flex.sl-flex-col > 
+  div:nth-child(2) > div > div > div:nth-child(2) >
+  div[data-test="schema-row"] > div:nth-child(2) > div > div:nth-child(2) > div,
+  .sl-stack.sl-stack--vertical.sl-stack--6.sl-flex.sl-flex-col > 
+  div:nth-child(2) > div > div > div:nth-child(3) >
+  div[data-test="schema-row"] > div:nth-child(2) > div > div:nth-child(2) > div {
+    color: #475467;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 150%;
+  }
+
+  .sl-stack.sl-stack--vertical.sl-stack--6.sl-flex.sl-flex-col > 
+  div:nth-child(2) > div > div > div:nth-child(2) >
+  div[data-test="schema-row"] > div:nth-child(2) > div > div:nth-child(2) > span,
+  .sl-stack.sl-stack--vertical.sl-stack--6.sl-flex.sl-flex-col > 
+  div:nth-child(2) > div > div > div:nth-child(3) >
+  div[data-test="schema-row"] > div:nth-child(2) > div > div:nth-child(2) > span {
+    color: #475467;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 300;
+    line-height: 150%;
+  }
+
+  .sl-stack.sl-stack--vertical.sl-stack--6.sl-flex.sl-flex-col > 
+  div:nth-child(2) > div > div > div:nth-child(2) >
+  div[data-test="schema-row"] > div:nth-child(2) > div > span,
+  .sl-stack.sl-stack--vertical.sl-stack--6.sl-flex.sl-flex-col > 
+  div:nth-child(2) > div > div > div:nth-child(3) >
+  div[data-test="schema-row"] > div:nth-child(2) > div > span {
+    color: #D92D20;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 300;
+    line-height: 150%;
+  }
+
+  .sl-stack.sl-stack--vertical.sl-stack--6.sl-flex.sl-flex-col > 
+  div:nth-child(2) > div > div > div:nth-child(2) >
+  div:nth-child(2) > div[data-test="schema-row"] > div:nth-child(2) > 
+  div:nth-child(1) > div:nth-child(1) > div,
+  .sl-stack.sl-stack--vertical.sl-stack--6.sl-flex.sl-flex-col > 
+  div:nth-child(2) > div > div > div:nth-child(3) >
+  div:nth-child(2) > div[data-test="schema-row"] > div:nth-child(2) > 
+  div:nth-child(1) > div:nth-child(1) > div {
+    color: #475467;
+    font-family: unset;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 150%;
+  }
+  
+  .sl-stack.sl-stack--vertical.sl-stack--6.sl-flex.sl-flex-col > 
+  div:nth-child(2) > div > div > div:nth-child(2) >
+  div:nth-child(2) > div[data-test="schema-row"] > div:nth-child(2) > 
+  div:nth-child(1) > div:nth-child(1) > span,
+  .sl-stack.sl-stack--vertical.sl-stack--6.sl-flex.sl-flex-col > 
+  div:nth-child(2) > div > div > div:nth-child(3) >
+  div:nth-child(2) > div[data-test="schema-row"] > div:nth-child(2) > 
+  div:nth-child(1) > div:nth-child(1) > span {
+    color: #475467;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 300;
+    line-height: 150%;
+  }
+  
+  .sl-stack.sl-stack--vertical.sl-stack--6.sl-flex.sl-flex-col > 
+  div:nth-child(2) > div > div > div:nth-child(2) >
+  div:nth-child(2) > div[data-test="schema-row"] > div:nth-child(2) > 
+  div:nth-child(1) > span,
+  .sl-stack.sl-stack--vertical.sl-stack--6.sl-flex.sl-flex-col > 
+  div:nth-child(2) > div > div > div:nth-child(3) >
+  div:nth-child(2) > div[data-test="schema-row"] > div:nth-child(2) > 
+  div:nth-child(1) > span {
+    color: #D92D20;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 300;
+    line-height: 150%;
+  }
+  
+  .sl-stack.sl-stack--vertical.sl-stack--6.sl-flex.sl-flex-col > 
+  div:nth-child(2) > div > div > div:nth-child(2) >
+  div:nth-child(2) > div[data-test="schema-row"] > div:nth-child(2) > 
+  div:nth-child(3) > span,
+  .sl-stack.sl-stack--vertical.sl-stack--6.sl-flex.sl-flex-col > 
+  div:nth-child(2) > div > div > div:nth-child(3) >
+  div:nth-child(2) > div[data-test="schema-row"] > div:nth-child(2) > 
+  div:nth-child(3) > span {
+    padding: 2px 6px;
+    border-radius: 6px;
+    border: 1px solid #EAECF0;
+    background: #F9FAFB;
+
+    color: #344054;
+    text-align: center;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 150%;
+  }
+  
+  .sl-stack.sl-stack--vertical.sl-stack--6.sl-flex.sl-flex-col > 
+  div:nth-child(2) > div > div > div:nth-child(2) >
+  div:nth-child(2) > div[data-test="schema-row"] > div:nth-child(2) > 
+  div:nth-child(2) > p,
+  .sl-stack.sl-stack--vertical.sl-stack--6.sl-flex.sl-flex-col > 
+  div:nth-child(2) > div > div > div:nth-child(3) >
+  div:nth-child(2) > div[data-test="schema-row"] > div:nth-child(2) > 
+  div:nth-child(2) > p {
+    color: #475467;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 150%;
+  }
+  
+  .sl-stack.sl-stack--vertical.sl-stack--6.sl-flex.sl-flex-col > 
+  div:nth-child(2) > div > div > div:nth-child(2) >
+  div:nth-child(2) > div[data-test="schema-row"] > div:nth-child(2) > 
+  div:nth-child(2) > p > b,
+  .sl-stack.sl-stack--vertical.sl-stack--6.sl-flex.sl-flex-col > 
+  div:nth-child(2) > div > div > div:nth-child(3) >
+  div:nth-child(2) > div[data-test="schema-row"] > div:nth-child(2) > 
+  div:nth-child(2) > p > b {
+    color: #475467;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 150%;
+  }
+  
+  .sl-stack.sl-stack--vertical.sl-stack--6.sl-flex.sl-flex-col > 
+  div:nth-child(2) > div > div > div:nth-child(2) >
+  div:nth-child(2) > div[data-test="schema-row"] > div:nth-child(2) > 
+  div:nth-child(2) > li,
+  .sl-stack.sl-stack--vertical.sl-stack--6.sl-flex.sl-flex-col > 
+  div:nth-child(2) > div > div > div:nth-child(3) >
+  div:nth-child(2) > div[data-test="schema-row"] > div:nth-child(2) > 
+  div:nth-child(2) > li {
+    color: #475467;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 150%;
+  }
+  
+  .sl-stack.sl-stack--vertical.sl-stack--6.sl-flex.sl-flex-col > 
+  div:nth-child(2) > div > div > div:nth-child(2) >
+  div:nth-child(2) > div[data-test="schema-row"] > div:nth-child(2) > 
+  div:nth-child(2) > li > a > b,
+  .sl-stack.sl-stack--vertical.sl-stack--6.sl-flex.sl-flex-col > 
+  div:nth-child(2) > div > div > div:nth-child(3) >
+  div:nth-child(2) > div[data-test="schema-row"] > div:nth-child(2) > 
+  div:nth-child(2) > li > a > b {
+    color: #2179BE!important;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 150%;
+  }
+
+  .sl-stack.sl-stack--vertical.sl-stack--6.sl-flex.sl-flex-col > 
+  div:nth-child(2) > div > div > div:nth-child(2) >
+  div:nth-child(2) > div[data-test="schema-row"] > div:nth-child(2) > 
+  div:nth-child(2) > p > span,
+  .sl-stack.sl-stack--vertical.sl-stack--6.sl-flex.sl-flex-col > 
+  div:nth-child(2) > div > div > div:nth-child(3) >
+  div:nth-child(2) > div[data-test="schema-row"] > div:nth-child(2) > 
+  div:nth-child(2) > p > span {
+    color: #475467;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 150%;
+  }
+
+  .sl-stack.sl-stack--vertical.sl-stack--6.sl-flex.sl-flex-col > 
+  div:nth-child(2) > div > div > div:nth-child(2) >
+  div:nth-child(2) > div[data-test="schema-row"] > div:nth-child(2) > 
+  div:nth-child(2) > p > a,
+  .sl-stack.sl-stack--vertical.sl-stack--6.sl-flex.sl-flex-col > 
+  div:nth-child(2) > div > div > div:nth-child(3) >
+  div:nth-child(2) > div[data-test="schema-row"] > div:nth-child(2) > 
+  div:nth-child(2) > p > a {
+    color: #2179BE!important;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 150%;
+  }
+  
+  .sl-stack.sl-stack--vertical.sl-stack--6.sl-flex.sl-flex-col > 
+  div:nth-child(2) > div > div > div:nth-child(2) >
+  div:nth-child(2) > div[data-test="schema-row"] > div:nth-child(2) > 
+  div:nth-child(1) > div:nth-child(2) > div,
+  .sl-stack.sl-stack--vertical.sl-stack--6.sl-flex.sl-flex-col > 
+  div:nth-child(2) > div > div > div:nth-child(3) >
+  div:nth-child(2) > div[data-test="schema-row"] > div:nth-child(2) > 
+  div:nth-child(1) > div:nth-child(2) > div {
+    color: #475467;
+    font-family: unset;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 150%;
+  }
+  
+  .sl-stack.sl-stack--vertical.sl-stack--6.sl-flex.sl-flex-col > 
+  div:nth-child(2) > div > div > div:nth-child(2) >
+  div:nth-child(2) > div[data-test="schema-row"] > div:nth-child(2) > 
+  div:nth-child(1) > div:nth-child(2) > span,
+  .sl-stack.sl-stack--vertical.sl-stack--6.sl-flex.sl-flex-col > 
+  div:nth-child(2) > div > div > div:nth-child(3) >
+  div:nth-child(2) > div[data-test="schema-row"] > div:nth-child(2) > 
+  div:nth-child(1) > div:nth-child(2) > span {
+    color: #475467;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 300;
+    line-height: 150%;
+  }
+
+  // schemas item content
+  // data no required
+  .sl-stack.sl-stack--vertical.sl-stack--8.Model.sl-flex.sl-flex-col.sl-items-stretch.sl-w-full {
+    margin-top: 0;
+  }
+
+  .sl-stack.sl-stack--vertical.sl-stack--8.Model.sl-flex.sl-flex-col.sl-items-stretch.sl-w-full >
+  div:nth-child(2) > div:nth-child(1) > div > div > div > div >
+  div:nth-child(2) > div:nth-child(1) > div > div > 
+  div:nth-child(2) > div,
+  .sl-stack.sl-stack--vertical.sl-stack--8.Model.sl-flex.sl-flex-col.sl-items-stretch.sl-w-full >
+  div:nth-child(2) > div:nth-child(1) > div > div > div > div >
+  div:nth-child(2) > div:nth-child(2) > div[data-test="schema-row"] >
+  div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div,
+  .sl-stack.sl-stack--vertical.sl-stack--8.Model.sl-flex.sl-flex-col.sl-items-stretch.sl-w-full >
+  div:nth-child(2) > div:nth-child(1) > div > div > div > div >
+  div:nth-child(2) > div:nth-child(2) > div[data-test="schema-row"] >
+  div:nth-child(2) > div:nth-child(2) > p > b,
+  .sl-stack.sl-stack--vertical.sl-stack--8.Model.sl-flex.sl-flex-col.sl-items-stretch.sl-w-full >
+  div:nth-child(2) > div:nth-child(1) > div > div > div > div >
+  div:nth-child(2) > div:nth-child(2) > div[data-test="schema-row"] >
+  div:nth-child(2) > div:nth-child(1) > div:nth-child(2) > div {
+    color: #475467;
+    font-family: unset;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 150%;
+  }
+
+  .sl-stack.sl-stack--vertical.sl-stack--8.Model.sl-flex.sl-flex-col.sl-items-stretch.sl-w-full >
+  div:nth-child(2) > div:nth-child(1) > div > div > div > div >
+  div:nth-child(2) > div:nth-child(1) > div > div > 
+  div:nth-child(2) > span,
+  .sl-stack.sl-stack--vertical.sl-stack--8.Model.sl-flex.sl-flex-col.sl-items-stretch.sl-w-full >
+  div:nth-child(2) > div:nth-child(1) > div > div > div > div >
+  div:nth-child(2) > div:nth-child(2) > div[data-test="schema-row"] >
+  div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > span,
+  .sl-stack.sl-stack--vertical.sl-stack--8.Model.sl-flex.sl-flex-col.sl-items-stretch.sl-w-full >
+  div:nth-child(2) > div:nth-child(1) > div > div > div > div >
+  div:nth-child(2) > div:nth-child(2) > div[data-test="schema-row"] >
+  div:nth-child(2) > div:nth-child(2) > p,
+  .sl-stack.sl-stack--vertical.sl-stack--8.Model.sl-flex.sl-flex-col.sl-items-stretch.sl-w-full >
+  div:nth-child(2) > div:nth-child(1) > div > div > div > div >
+  div:nth-child(2) > div:nth-child(2) > div[data-test="schema-row"] >
+  div:nth-child(2) > div:nth-child(2) > li,
+  .sl-stack.sl-stack--vertical.sl-stack--8.Model.sl-flex.sl-flex-col.sl-items-stretch.sl-w-full >
+  div:nth-child(2) > div:nth-child(1) > div > div > div > div >
+  div:nth-child(2) > div:nth-child(2) > div[data-test="schema-row"] >
+  div:nth-child(2) > div:nth-child(2) > p > span,
+  .sl-stack.sl-stack--vertical.sl-stack--8.Model.sl-flex.sl-flex-col.sl-items-stretch.sl-w-full >
+  div:nth-child(2) > div:nth-child(1) > div > div > div > div >
+  div:nth-child(2) > div:nth-child(2) > div[data-test="schema-row"] >
+  div:nth-child(2) > div:nth-child(1)> div:nth-child(2) > span  {
+    color: #475467;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 300;
+    line-height: 150%;
+  }
+
+  .sl-stack.sl-stack--vertical.sl-stack--8.Model.sl-flex.sl-flex-col.sl-items-stretch.sl-w-full >
+  div:nth-child(2) > div:nth-child(1) > div > div > div > div >
+  div:nth-child(2) > div:nth-child(2) > div[data-test="schema-row"] >
+  div:nth-child(2) > div:nth-child(1) > span {
+    color: #D92D20;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 300;
+    line-height: 150%;
+  }
+
+  .sl-stack.sl-stack--vertical.sl-stack--8.Model.sl-flex.sl-flex-col.sl-items-stretch.sl-w-full >
+  div:nth-child(2) > div:nth-child(1) > div > div > div > div >
+  div:nth-child(2) > div:nth-child(2) > div[data-test="schema-row"] >
+  div:nth-child(2) > div:nth-child(2) > li > a > b,
+  .sl-stack.sl-stack--vertical.sl-stack--8.Model.sl-flex.sl-flex-col.sl-items-stretch.sl-w-full >
+  div:nth-child(2) > div:nth-child(1) > div > div > div > div >
+  div:nth-child(2) > div:nth-child(2) > div[data-test="schema-row"] >
+  div:nth-child(2) > div:nth-child(2) > p > a {
+    color: #2179BE !important;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 150%;
+  }
+
+  .sl-stack.sl-stack--vertical.sl-stack--8.Model.sl-flex.sl-flex-col.sl-items-stretch.sl-w-full >
+  div:nth-child(2) > div:nth-child(1) > div > div > div > div >
+  div:nth-child(2) > div:nth-child(2) > div[data-test="schema-row"] >
+  div:nth-child(2) > div:nth-child(3) > span {
+    padding: 2px 6px;
+    border-radius: 6px;
+    border: 1px solid #EAECF0;
+    background: #F9FAFB;
+
+    color: #344054;
+    text-align: center;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 150%;
+  }
+
+  // businessMessageId first
+  .sl-stack.sl-stack--vertical.sl-stack--8.Model.sl-flex.sl-flex-col.sl-items-stretch.sl-w-full >
+  div:nth-child(2) > div:nth-child(1) > div > div > div > div >
+  div:nth-child(2) > div[data-test="schema-row"] > div > 
+  div:nth-child(1) > div:nth-child(1) > div,
+  .sl-stack.sl-stack--vertical.sl-stack--8.Model.sl-flex.sl-flex-col.sl-items-stretch.sl-w-full >
+  div:nth-child(2) > div:nth-child(1) > div > div > div > div >
+  div:nth-child(2) > div[data-test="schema-row"] > div
+  div:nth-child(2) > p > b,
+  .sl-stack.sl-stack--vertical.sl-stack--8.Model.sl-flex.sl-flex-col.sl-items-stretch.sl-w-full >
+  div:nth-child(2) > div:nth-child(1) > div > div > div > div >
+  div:nth-child(2) > div[data-test="schema-row"] > div
+  div:nth-child(1) > div:nth-child(2) > div,
+  .sl-stack.sl-stack--vertical.sl-stack--8.Model.sl-flex.sl-flex-col.sl-items-stretch.sl-w-full >
+  div:nth-child(2) > div:nth-child(1) > div > div > div > div >
+  div:nth-child(2) > div[data-level="1"] div[data-test="schema-row"] > div:nth-child(2)
+  div:nth-child(1) > div:nth-child(1) > div {
+    color: #475467;
+    font-family: unset;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 150%;
+  }
+
+  .sl-stack.sl-stack--vertical.sl-stack--8.Model.sl-flex.sl-flex-col.sl-items-stretch.sl-w-full >
+  div:nth-child(2) > div:nth-child(1) > div > div > div > div >
+  div:nth-child(2) > div[data-test="schema-row"] > div > 
+  div:nth-child(1) > div:nth-child(1) > span,
+  .sl-stack.sl-stack--vertical.sl-stack--8.Model.sl-flex.sl-flex-col.sl-items-stretch.sl-w-full >
+  div:nth-child(2) > div:nth-child(1) > div > div > div > div >
+  div:nth-child(2) > div[data-test="schema-row"] > div
+  div:nth-child(2) > p,
+  .sl-stack.sl-stack--vertical.sl-stack--8.Model.sl-flex.sl-flex-col.sl-items-stretch.sl-w-full >
+  div:nth-child(2) > div:nth-child(1) > div > div > div > div >
+  div:nth-child(2) > div[data-test="schema-row"] > div
+  div:nth-child(2) > li,
+  .sl-stack.sl-stack--vertical.sl-stack--8.Model.sl-flex.sl-flex-col.sl-items-stretch.sl-w-full >
+  div:nth-child(2) > div:nth-child(1) > div > div > div > div >
+  div:nth-child(2) > div[data-test="schema-row"] > div
+  div:nth-child(2) > p > span,
+  .sl-stack.sl-stack--vertical.sl-stack--8.Model.sl-flex.sl-flex-col.sl-items-stretch.sl-w-full >
+  div:nth-child(2) > div:nth-child(1) > div > div > div > div >
+  div:nth-child(2) > div[data-test="schema-row"] > div
+  div:nth-child(1) > div:nth-child(2) > span,
+  .sl-stack.sl-stack--vertical.sl-stack--8.Model.sl-flex.sl-flex-col.sl-items-stretch.sl-w-full >
+  div:nth-child(2) > div:nth-child(1) > div > div > div > div >
+  div:nth-child(2) > div[data-level="1"] div[data-test="schema-row"] > div:nth-child(2) > 
+  div:nth-child(1) > div:nth-child(1) > span,
+  .sl-stack.sl-stack--vertical.sl-stack--8.Model.sl-flex.sl-flex-col.sl-items-stretch.sl-w-full >
+  div:nth-child(2) > div:nth-child(1) > div > div > div > div >
+  div:nth-child(2) > div[data-level="1"] div[data-test="schema-row"] > div:nth-child(2) >
+  div:nth-child(2) > p,
+  .sl-stack.sl-stack--vertical.sl-stack--8.Model.sl-flex.sl-flex-col.sl-items-stretch.sl-w-full >
+  div:nth-child(2) > div:nth-child(1) > div > div > div > div >
+  div:nth-child(2) > div[data-level="1"] div[data-test="schema-row"] > div
+  div:nth-child(4) > span,
+  .sl-stack.sl-stack--vertical.sl-stack--8.Model.sl-flex.sl-flex-col.sl-items-stretch.sl-w-full >
+  div:nth-child(2) > div:nth-child(1) > div > div > div > div >
+  div:nth-child(2) > div[data-level="1"] div[data-test="schema-row"] > div:nth-child(2) >
+  div:nth-child(2) > p > span {
+    color: #475467;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 300;
+    line-height: 150%;
+  }
+  
+  .sl-stack.sl-stack--vertical.sl-stack--8.Model.sl-flex.sl-flex-col.sl-items-stretch.sl-w-full >
+  div:nth-child(2) > div:nth-child(1) > div > div > div > div >
+  div:nth-child(2) > div[data-test="schema-row"] > div > 
+  div:nth-child(1) > span,
+  .sl-stack.sl-stack--vertical.sl-stack--8.Model.sl-flex.sl-flex-col.sl-items-stretch.sl-w-full >
+  div:nth-child(2) > div:nth-child(1) > div > div > div > div >
+  div:nth-child(2) > div[data-level="1"] div[data-test="schema-row"] > div:nth-child(2) > 
+  div:nth-child(1) > span {
+    color: #D92D20;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 300;
+    line-height: 150%;
+  }
+
+  .sl-stack.sl-stack--vertical.sl-stack--8.Model.sl-flex.sl-flex-col.sl-items-stretch.sl-w-full >
+  div:nth-child(2) > div:nth-child(1) > div > div > div > div >
+  div:nth-child(2) > div[data-test="schema-row"] > div
+  div:nth-child(2) > li > a > b,
+  .sl-stack.sl-stack--vertical.sl-stack--8.Model.sl-flex.sl-flex-col.sl-items-stretch.sl-w-full >
+  div:nth-child(2) > div:nth-child(1) > div > div > div > div >
+  div:nth-child(2) > div[data-test="schema-row"] > div
+  div:nth-child(2) > p > a,
+  .sl-stack.sl-stack--vertical.sl-stack--8.Model.sl-flex.sl-flex-col.sl-items-stretch.sl-w-full >
+  div:nth-child(2) > div:nth-child(1) > div > div > div > div >
+  div:nth-child(2) > div[data-level="1"] div[data-test="schema-row"] > div:nth-child(2) >
+  div:nth-child(2) > p > a {
+    color: #2179BE !important;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 150%;
+  }
+
+  .sl-stack.sl-stack--vertical.sl-stack--8.Model.sl-flex.sl-flex-col.sl-items-stretch.sl-w-full >
+  div:nth-child(2) > div:nth-child(1) > div > div > div > div >
+  div:nth-child(2) > div[data-test="schema-row"] > div
+  div:nth-child(3) > span,
+  .sl-stack.sl-stack--vertical.sl-stack--8.Model.sl-flex.sl-flex-col.sl-items-stretch.sl-w-full > 
+  div:nth-child(2) > div:nth-child(1) > div > div > div > div > 
+  div:nth-child(2) > div:nth-child(2) > div[data-test="schema-row"] > 
+  div:nth-child(2) > div:nth-child(3) > div > span,
+  .sl-stack.sl-stack--vertical.sl-stack--8.Model.sl-flex.sl-flex-col.sl-items-stretch.sl-w-full >
+  div:nth-child(2) > div:nth-child(1) > div > div > div > div >
+  div:nth-child(2) > div[data-level="1"] div[data-test="schema-row"] > div
+  div:nth-child(3) > span,
+  .sl-stack.sl-stack--vertical.sl-stack--8.Model.sl-flex.sl-flex-col.sl-items-stretch.sl-w-full >
+  div:nth-child(2) > div:nth-child(1) > div > div > div > div >
+  div:nth-child(2) > div[data-level="1"] div[data-test="schema-row"] > div
+  div:nth-child(3) > div > span,
+  .sl-stack.sl-stack--vertical.sl-stack--8.Model.sl-flex.sl-flex-col.sl-items-stretch.sl-w-full >
+  div:nth-child(2) > div:nth-child(1) > div > div > div > div >
+  div:nth-child(2) > div[data-level="1"] div[data-test="schema-row"] > div
+  div:nth-child(4) > div > span {
+    padding: 2px 6px;
+    border-radius: 6px;
+    border: 1px solid #EAECF0;
+    background: #F9FAFB;
+
+    color: #344054;
+    text-align: center;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 150%;
+  }
+
+  // right sidebar
+  .sl-stack.sl-stack--vertical.sl-stack--8.sl-flex.sl-flex-col.sl-items-stretch.sl-w-full > 
+  div:nth-child(2) > div:nth-child(2) > div > 
+  div:nth-child(1) > div > div {
+    background: #1D2939;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  
+  .sl-stack.sl-stack--vertical.sl-stack--8.sl-flex.sl-flex-col.sl-items-stretch.sl-w-full > 
+  div:nth-child(2) > div:nth-child(2) > div > 
+  div:nth-child(1) > div > div > div.sl-panel.sl-outline-none.sl-w-full >
+  div:nth-child(1) {
+    background-color: #1D2939;
+  }
+  
+  .sl-stack.sl-stack--vertical.sl-stack--8.sl-flex.sl-flex-col.sl-items-stretch.sl-w-full > 
+  div:nth-child(2) > div:nth-child(2) > div > 
+  div:nth-child(1) > div > div > div.sl-panel.sl-outline-none.sl-w-full >
+  div:nth-child(2), 
+  .sl-stack.sl-stack--vertical.sl-stack--8.sl-flex.sl-flex-col.sl-items-stretch.sl-w-full > 
+  div:nth-child(2) > div:nth-child(2) > div > 
+  div:nth-child(1) > div > div > div.SendButtonHolder {
+    background-color: #344054;
+  }
+
+  .sl-stack.sl-stack--vertical.sl-stack--8.sl-flex.sl-flex-col.sl-items-stretch.sl-w-full > 
+  div:nth-child(2) > div:nth-child(2) > div > 
+  div:nth-child(1) > div > div > div.SendButtonHolder {
+    margin: 0;
+    padding: 1rem;
+  }
+  
+  .sl-stack.sl-stack--vertical.sl-stack--8.sl-flex.sl-flex-col.sl-items-stretch.sl-w-full > 
+  div:nth-child(2) > div:nth-child(2) > div > 
+  div:nth-child(1) > div > div > div.sl-panel.sl-outline-none.sl-w-full >
+  div:nth-child(2) > div {
+    margin: 0;
+    padding: 1rem .75rem;
+  }
+  
+  .sl-stack.sl-stack--vertical.sl-stack--8.sl-flex.sl-flex-col.sl-items-stretch.sl-w-full > 
+  div:nth-child(2) > div:nth-child(2) > div > 
+  div:nth-child(1) > div > div > div.sl-panel.sl-outline-none.sl-w-full >
+  div:nth-child(1) > div {
+    color: #D0D5DD;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 150%;
+  }
+  
+  .sl-stack.sl-stack--vertical.sl-stack--8.sl-flex.sl-flex-col.sl-items-stretch.sl-w-full > 
+  div:nth-child(2) > div:nth-child(2) > div > 
+  div:nth-child(1) > div > div > div.sl-panel.sl-outline-none.sl-w-full >
+  div:nth-child(2) > div > label,
+  .sl-stack.sl-stack--vertical.sl-stack--8.sl-flex.sl-flex-col.sl-items-stretch.sl-w-full > 
+  div:nth-child(2) > div:nth-child(2) > div > 
+  div:nth-child(1) > div > div > div.sl-panel.sl-outline-none.sl-w-full >
+  div:nth-child(2) > div > span,
+  .sl-stack.sl-stack--vertical.sl-stack--8.sl-flex.sl-flex-col.sl-items-stretch.sl-w-full > 
+  div:nth-child(2) > div:nth-child(2) > div > 
+  div:nth-child(1) > div > div > div.sl-panel.sl-outline-none.sl-w-full >
+  div:nth-child(2) > div > div > div > input,
+  .sl-stack.sl-stack--vertical.sl-stack--8.sl-flex.sl-flex-col.sl-items-stretch.sl-w-full > 
+  div:nth-child(2) > div:nth-child(2) > div > 
+  div:nth-child(1) > div > div > div.sl-panel.sl-outline-none.sl-w-full >
+  div:nth-child(2) > div > div > div > div > input {
+    color: #D0D5DD;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 150%;
+  }
+
+  .sl-stack.sl-stack--vertical.sl-stack--8.sl-flex.sl-flex-col.sl-items-stretch.sl-w-full > 
+  div:nth-child(2) > div:nth-child(2) > div > 
+  div:nth-child(1) > div > div > div.sl-panel.sl-outline-none.sl-w-full >
+  div:nth-child(2) > div > div > div > 
+  pre > div > div.sl-flex > div:nth-child(1),
+  .sl-stack.sl-stack--vertical.sl-stack--8.sl-flex.sl-flex-col.sl-items-stretch.sl-w-full > 
+  div:nth-child(2) > div:nth-child(2) > div > 
+  div:nth-child(1) > div > div > div.sl-panel.sl-outline-none.sl-w-full >
+  div:nth-child(2) > div > div > div > 
+  pre > div > div.sl-flex > div:nth-child(2) > span.token.punctuation {
+    color: #D0D5DD !important;
+    font-size: 14px !important;
+    font-style: normal;
+    font-weight: 400;
+    opacity: 1;
+  }
+
+  button.sl-button.sl-h-sm.sl-font-medium.sl-bg-primary.sl-text-on-primary.sl-rounded.sl-border-transparent.sl-border {
+    display: flex;
+    padding: .5rem .875rem;
+    justify-content: center;
+    align-items: center;
+
+    height: max-content;
+    border-radius: 8px;
+    border: 1px solid #2179BE;
+    background: #2179BE;
+    box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
+
+    color: #FFF;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 150%;
+    letter-spacing: 0.32px;
+  }
+
+  // white rightside panel content
+  .sl-stack.sl-stack--vertical.sl-stack--8.sl-flex.sl-flex-col.sl-items-stretch.sl-w-full > 
+  div:nth-child(2) > div:nth-child(2) > div > 
+  div.sl-panel.sl-outline-none.sl-w-full.sl-rounded-lg {
+    border-radius: 8px;
+    border-right: 1px solid #D0D5DD;
+  }
+
+  .sl-stack.sl-stack--vertical.sl-stack--8.sl-flex.sl-flex-col.sl-items-stretch.sl-w-full > 
+  div:nth-child(2) > div:nth-child(2) > div > 
+  div.sl-panel.sl-outline-none.sl-w-full.sl-rounded-lg > div:nth-child(1),
+  .sl-stack.sl-stack--vertical.sl-stack--8.sl-flex.sl-flex-col.sl-items-stretch.sl-w-full > 
+  div:nth-child(2) > div:nth-child(2) > div.sl-panel.sl-outline-none.sl-w-full.sl-rounded-lg > 
+  div:nth-child(1) {
+    background: #F2F4F7;
+  }
+
+  .sl-stack.sl-stack--vertical.sl-stack--8.sl-flex.sl-flex-col.sl-items-stretch.sl-w-full > 
+  div:nth-child(2) > div:nth-child(2) > div > 
+  div.sl-panel.sl-outline-none.sl-w-full.sl-rounded-lg > div:nth-child(2),
+  .sl-stack.sl-stack--vertical.sl-stack--8.sl-flex.sl-flex-col.sl-items-stretch.sl-w-full > 
+  div:nth-child(2) > div:nth-child(2) > div.sl-panel.sl-outline-none.sl-w-full.sl-rounded-lg > 
+  div:nth-child(2) {
+    background: #F9FAFB;
+  }
+
+  .sl-stack.sl-stack--vertical.sl-stack--8.sl-flex.sl-flex-col.sl-items-stretch.sl-w-full > 
+  div:nth-child(2) > div:nth-child(2) > div > 
+  div.sl-panel.sl-outline-none.sl-w-full.sl-rounded-lg > div:nth-child(1) > div:nth-child(1) >
+  div > button,
+  .sl-stack.sl-stack--vertical.sl-stack--8.sl-flex.sl-flex-col.sl-items-stretch.sl-w-full > 
+  div:nth-child(2) > div:nth-child(2) > div > 
+  div.sl-panel.sl-outline-none.sl-w-full.sl-rounded-lg > div:nth-child(1) > div:nth-child(1) >
+  span,
+  .sl-stack.sl-stack--vertical.sl-stack--8.sl-flex.sl-flex-col.sl-items-stretch.sl-w-full > 
+  div:nth-child(2) > div:nth-child(2) > div.sl-panel.sl-outline-none.sl-w-full.sl-rounded-lg > 
+  div:nth-child(1) > div:nth-child(1) > span {
+    column-gap: .5rem;
+    flex-direction: row-reverse;
+
+    color: #344054;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 150%;
+  }
+
+  // overview content
+  h3#before-getting-started > 
+  a > div {
+    color: #344054;
+    font-size: 35px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 109%;
+    letter-spacing: 0.35px;
+  }
+
+  h3#v2-api > 
+  a > div {
+    color: #344054;
+    font-size: 26px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 123%;
+  }
+  
+  h3#endpoints > 
+  a > div {
+    color: #344054;
+    font-size: 21px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 133%;
   }
 `;
