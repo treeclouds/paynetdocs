@@ -91,6 +91,7 @@ const config = {
         };
       },
     }),
+    'plugin-image-zoom',
     [
       '@docusaurus/plugin-ideal-image',
       {
@@ -208,6 +209,19 @@ const config = {
         `
         © ${new Date().getFullYear()} Payments Network Malaysia Sdn Bhd (PayNet) 200801035403 (836743-D). All Rights Reserved.
         `,
+      },
+      zoom: {
+        // CSS selector to apply the plugin to, defaults to '.markdown img'
+        selector: '.markdown img',
+        // Optional medium-zoom options
+        // see: https://www.npmjs.com/package/medium-zoom#options
+        options: {
+          margin: 24,
+          background: '#rgba(208, 213, 221, 0.70);',
+          scrollOffset: 0,
+          container: '#zoom-container',
+          template: '#zoom-template',
+        },
       },
       prism: {
         theme: lightCodeTheme,
