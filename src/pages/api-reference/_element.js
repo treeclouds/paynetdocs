@@ -1260,6 +1260,14 @@ export const Wrapper = styled.div
   .sl-stack.sl-stack--vertical.sl-stack--6.sl-flex.sl-flex-col > 
   div:nth-child(2) > div > div > div:nth-child(3) >
   div:nth-child(2) > div[data-test="schema-row"] > div:nth-child(2) > 
+  div:nth-child(1) > div:nth-child(1) > div,
+  .sl-stack.sl-stack--vertical.sl-stack--6.sl-flex.sl-flex-col > 
+  div:nth-child(2) > div > div > div:nth-child(2) >
+  div:nth-child(2) > div[data-level="2"] > div[data-test="schema-row"] > div:nth-child(2) > 
+  div:nth-child(1) > div:nth-child(1) > div,
+  .sl-stack.sl-stack--vertical.sl-stack--6.sl-flex.sl-flex-col > 
+  div:nth-child(2) > div > div > div:nth-child(3) >
+  div:nth-child(2) > div[data-level="2"] > div[data-test="schema-row"] > div:nth-child(2) > 
   div:nth-child(1) > div:nth-child(1) > div {
     color: #475467;
     font-family: unset;
@@ -1276,6 +1284,14 @@ export const Wrapper = styled.div
   .sl-stack.sl-stack--vertical.sl-stack--6.sl-flex.sl-flex-col > 
   div:nth-child(2) > div > div > div:nth-child(3) >
   div:nth-child(2) > div[data-test="schema-row"] > div:nth-child(2) > 
+  div:nth-child(1) > div:nth-child(1) > span,
+  .sl-stack.sl-stack--vertical.sl-stack--6.sl-flex.sl-flex-col > 
+  div:nth-child(2) > div > div > div:nth-child(2) >
+  div:nth-child(2) > div[data-level="2"] > div[data-test="schema-row"] > div:nth-child(2) > 
+  div:nth-child(1) > div:nth-child(1) > span,
+  .sl-stack.sl-stack--vertical.sl-stack--6.sl-flex.sl-flex-col > 
+  div:nth-child(2) > div > div > div:nth-child(3) >
+  div:nth-child(2) > div[data-level="2"] > div[data-test="schema-row"] > div:nth-child(2) > 
   div:nth-child(1) > div:nth-child(1) > span {
     color: #475467;
     font-size: 14px;
@@ -1291,6 +1307,14 @@ export const Wrapper = styled.div
   .sl-stack.sl-stack--vertical.sl-stack--6.sl-flex.sl-flex-col > 
   div:nth-child(2) > div > div > div:nth-child(3) >
   div:nth-child(2) > div[data-test="schema-row"] > div:nth-child(2) > 
+  div:nth-child(1) > span,
+  .sl-stack.sl-stack--vertical.sl-stack--6.sl-flex.sl-flex-col > 
+  div:nth-child(2) > div > div > div:nth-child(2) >
+  div:nth-child(2) > div[data-level="2"] > div[data-test="schema-row"] > div:nth-child(2) > 
+  div:nth-child(1) > span,
+  .sl-stack.sl-stack--vertical.sl-stack--6.sl-flex.sl-flex-col > 
+  div:nth-child(2) > div > div > div:nth-child(3) >
+  div:nth-child(2) > div[data-level="2"] > div[data-test="schema-row"] > div:nth-child(2) > 
   div:nth-child(1) > span {
     color: #D92D20;
     font-size: 14px;
@@ -1306,7 +1330,31 @@ export const Wrapper = styled.div
   .sl-stack.sl-stack--vertical.sl-stack--6.sl-flex.sl-flex-col > 
   div:nth-child(2) > div > div > div:nth-child(3) >
   div:nth-child(2) > div[data-test="schema-row"] > div:nth-child(2) > 
-  div:nth-child(3) > span {
+  div:nth-child(3) > span,
+  .sl-stack.sl-stack--vertical.sl-stack--6.sl-flex.sl-flex-col > 
+  div:nth-child(2) > div > div > div:nth-child(2) >
+  div:nth-child(2) > div[data-level="2"] > div[data-test="schema-row"] > div:nth-child(2) > 
+  div:nth-child(3) > span,
+  .sl-stack.sl-stack--vertical.sl-stack--6.sl-flex.sl-flex-col > 
+  div:nth-child(2) > div > div > div:nth-child(3) >
+  div:nth-child(2) > div[data-level="2"] > div[data-test="schema-row"] > div:nth-child(2) > 
+  div:nth-child(3) > span,
+  .sl-stack.sl-stack--vertical.sl-stack--6.sl-flex.sl-flex-col > 
+  div:nth-child(2) > div > div > div:nth-child(2) >
+  div:nth-child(2) > div[data-level="2"] > div[data-test="schema-row"] > div:nth-child(2) > 
+  div:nth-child(3) > div > span,
+  .sl-stack.sl-stack--vertical.sl-stack--6.sl-flex.sl-flex-col > 
+  div:nth-child(2) > div > div > div:nth-child(3) >
+  div:nth-child(2) > div[data-level="2"] > div[data-test="schema-row"] > div:nth-child(2) > 
+  div:nth-child(3) > div > span,
+  .sl-stack.sl-stack--vertical.sl-stack--6.sl-flex.sl-flex-col > 
+  div:nth-child(2) > div > div > div:nth-child(2) >
+  div:nth-child(2) > div[data-level="2"] > div[data-test="schema-row"] > div:nth-child(2) > 
+  div:nth-child(4) > div > span,
+  .sl-stack.sl-stack--vertical.sl-stack--6.sl-flex.sl-flex-col > 
+  div:nth-child(2) > div > div > div:nth-child(3) >
+  div:nth-child(2) > div[data-level="2"] > div[data-test="schema-row"] > div:nth-child(2) > 
+  div:nth-child(4) > div > span {
     padding: 2px 6px;
     border-radius: 6px;
     border: 1px solid #EAECF0;
@@ -1327,7 +1375,31 @@ export const Wrapper = styled.div
   .sl-stack.sl-stack--vertical.sl-stack--6.sl-flex.sl-flex-col > 
   div:nth-child(2) > div > div > div:nth-child(3) >
   div:nth-child(2) > div[data-test="schema-row"] > div:nth-child(2) > 
-  div:nth-child(2) > p {
+  div:nth-child(2) > p,
+  .sl-stack.sl-stack--vertical.sl-stack--6.sl-flex.sl-flex-col > 
+  div:nth-child(2) > div > div > div:nth-child(2) >
+  div:nth-child(2) > div[data-level="2"] > div[data-test="schema-row"] > div:nth-child(2) > 
+  div:nth-child(2) > p,
+  .sl-stack.sl-stack--vertical.sl-stack--6.sl-flex.sl-flex-col > 
+  div:nth-child(2) > div > div > div:nth-child(3) >
+  div:nth-child(2) > div[data-level="2"] > div[data-test="schema-row"] > div:nth-child(2) > 
+  div:nth-child(2) > p,
+  .sl-stack.sl-stack--vertical.sl-stack--6.sl-flex.sl-flex-col > 
+  div:nth-child(2) > div > div > div:nth-child(2) >
+  div:nth-child(2) > div[data-level="2"] > div[data-test="schema-row"] > div:nth-child(2) > 
+  div:nth-child(2) p > span,
+  .sl-stack.sl-stack--vertical.sl-stack--6.sl-flex.sl-flex-col > 
+  div:nth-child(2) > div > div > div:nth-child(3) >
+  div:nth-child(2) > div[data-level="2"] > div[data-test="schema-row"] > div:nth-child(2) > 
+  div:nth-child(2) p > span,
+  .sl-stack.sl-stack--vertical.sl-stack--6.sl-flex.sl-flex-col > 
+  div:nth-child(2) > div > div > div:nth-child(2) >
+  div:nth-child(2) > div[data-level="2"] > div[data-test="schema-row"] > div:nth-child(2) > 
+  div:nth-child(4) > span,
+  .sl-stack.sl-stack--vertical.sl-stack--6.sl-flex.sl-flex-col > 
+  div:nth-child(2) > div > div > div:nth-child(3) >
+  div:nth-child(2) > div[data-level="2"] > div[data-test="schema-row"] > div:nth-child(2) > 
+  div:nth-child(4) > span {
     color: #475467;
     font-size: 14px;
     font-style: normal;
@@ -1342,6 +1414,14 @@ export const Wrapper = styled.div
   .sl-stack.sl-stack--vertical.sl-stack--6.sl-flex.sl-flex-col > 
   div:nth-child(2) > div > div > div:nth-child(3) >
   div:nth-child(2) > div[data-test="schema-row"] > div:nth-child(2) > 
+  div:nth-child(2) > p > b,
+  .sl-stack.sl-stack--vertical.sl-stack--6.sl-flex.sl-flex-col > 
+  div:nth-child(2) > div > div > div:nth-child(2) >
+  div:nth-child(2) > div[data-level="2"] > div[data-test="schema-row"] > div:nth-child(2) > 
+  div:nth-child(2) > p > b,
+  .sl-stack.sl-stack--vertical.sl-stack--6.sl-flex.sl-flex-col > 
+  div:nth-child(2) > div > div > div:nth-child(3) >
+  div:nth-child(2) > div[data-level="2"] > div[data-test="schema-row"] > div:nth-child(2) > 
   div:nth-child(2) > p > b {
     color: #475467;
     font-size: 14px;
@@ -1357,6 +1437,14 @@ export const Wrapper = styled.div
   .sl-stack.sl-stack--vertical.sl-stack--6.sl-flex.sl-flex-col > 
   div:nth-child(2) > div > div > div:nth-child(3) >
   div:nth-child(2) > div[data-test="schema-row"] > div:nth-child(2) > 
+  div:nth-child(2) > li,
+  .sl-stack.sl-stack--vertical.sl-stack--6.sl-flex.sl-flex-col > 
+  div:nth-child(2) > div > div > div:nth-child(2) >
+  div:nth-child(2) > div[data-level="2"] > div[data-test="schema-row"] > div:nth-child(2) > 
+  div:nth-child(2) > li,
+  .sl-stack.sl-stack--vertical.sl-stack--6.sl-flex.sl-flex-col > 
+  div:nth-child(2) > div > div > div:nth-child(3) >
+  div:nth-child(2) > div[data-level="2"] > div[data-test="schema-row"] > div:nth-child(2) > 
   div:nth-child(2) > li {
     color: #475467;
     font-size: 14px;
@@ -1372,7 +1460,23 @@ export const Wrapper = styled.div
   .sl-stack.sl-stack--vertical.sl-stack--6.sl-flex.sl-flex-col > 
   div:nth-child(2) > div > div > div:nth-child(3) >
   div:nth-child(2) > div[data-test="schema-row"] > div:nth-child(2) > 
-  div:nth-child(2) > li > a > b {
+  div:nth-child(2) > li > a > b,
+  .sl-stack.sl-stack--vertical.sl-stack--6.sl-flex.sl-flex-col > 
+  div:nth-child(2) > div > div > div:nth-child(2) >
+  div:nth-child(2) > div[data-level="2"] > div[data-test="schema-row"] > div:nth-child(2) > 
+  div:nth-child(2) > li > a > b,
+  .sl-stack.sl-stack--vertical.sl-stack--6.sl-flex.sl-flex-col > 
+  div:nth-child(2) > div > div > div:nth-child(3) >
+  div:nth-child(2) > div[data-level="2"] > div[data-test="schema-row"] > div:nth-child(2) > 
+  div:nth-child(2) > li > a > b,
+  .sl-stack.sl-stack--vertical.sl-stack--6.sl-flex.sl-flex-col > 
+  div:nth-child(2) > div > div > div:nth-child(2) >
+  div:nth-child(2) > div[data-level="2"] > div[data-test="schema-row"] > div:nth-child(2) > 
+  div:nth-child(2) p > a,
+  .sl-stack.sl-stack--vertical.sl-stack--6.sl-flex.sl-flex-col > 
+  div:nth-child(2) > div > div > div:nth-child(3) >
+  div:nth-child(2) > div[data-level="2"] > div[data-test="schema-row"] > div:nth-child(2) > 
+  div:nth-child(2) p > a {
     color: #2179BE!important;
     font-size: 14px;
     font-style: normal;
