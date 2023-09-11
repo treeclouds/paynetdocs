@@ -181,8 +181,8 @@ const sidebars = {
     },
     {
       type: "html",
-      value: "<a href='/api-reference/credit-transfer'>Credit Transfer</a>",
-      className: 'theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-1 menu__link icon__link',
+      value: "<a href='/api-reference/credit-transfer' class='menu__link'>Credit Transfer</a>",
+      className: 'theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-1  icon__link',
     },
   ]
 };
