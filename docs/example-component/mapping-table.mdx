@@ -1,0 +1,438 @@
+---
+title: Mapping Table
+description: Mapping Table
+slug: /documentation/example/mapping-table
+displayed_sidebar: sideBarHome
+
+hide_title: true
+hide_table_of_contents: false
+custom_edit_url: null
+---
+import Breadcrumbs from '@site/src/components/Breadcrumbs'; 
+
+<Breadcrumbs/>
+
+# Mapping Tables
+
+## Charge Bearer Code <span className="badge badge--info t16sm-t26lg">ChargeBearerType1Code</span>
+
+<div className= "table__wrapper table__long-text">
+
+| Code  | Name           | Definition |
+| - | --------- | -------------------------- |
+| DEBT| Debtor         | Borne by Debtor                         |
+| CRED| Creditor       | Borne by Creditor                       |
+| SHAR| Shared         | In a credit transfer context, means that transaction charges on the sender side are to be borne by the debtor, transaction charges on the receiver side are to be borne by the creditor. In a Debit context, means that transaction charges on the sender side are to be borne by the creditor, transaction charges on the receiver side are to be borne by the debtor |
+| SLEV| Service Level  | Following Service Level (charges are to be applied following the rules agreed in the service level and/or scheme) |
+
+</div>
+
+## Category Purpose Code  <span className="badge badge--info t16sm-t26lg">ExternalCategoryPurpose1Code</span>
+
+<div className= "table__wrapper table__long-text">
+
+| Code  | Name           | Definition |
+| - | --------- | -------------------------- |
+| BONU| BonusPayment         | Transaction is the payment of a bonus.                      |
+| CASH| CashManagementTransfer       | Transaction is a general cash management instruction.                   |
+| CBLK| Card Bulk Clearing         | A Service that is settling money for a bulk of card transactions, while referring to a specific transaction file or other information like terminal ID, card acceptor ID or other transaction details. |
+| CCRD| Credit Card Payment  | 	Transaction is related to a payment of credit card. |
+| CORT| TradeSettlementPayment       | Transaction is related to settlement of a trade, eg a foreign exchange deal or a securities transaction                       |
+| DCRD| Debit Card Payment       |Transaction is related to a payment of debit card.    |
+| DIVI| Dividend       | Transaction is the payment of dividends.                       |
+| DVPM| DeliverAgainstPayment       | Code used to pre-advise the account servicer of a forthcoming deliver against payment instruction.                       |
+| EPAY| Epayment       | Transaction is related to ePayment.                       |
+| FCOL| Fee Collection       | A Service that is settling card transaction related fees between two parties.                       |
+| GOVT| GovernmentPayment       | Transaction is a payment to or from a government department.                       |
+| HEDG| Hedging       | Transaction is related to the payment of a hedging operation.                       |
+| ICCP| Irrevocable Debit Card Payment       | Transaction is reimbursement of credit card payment.                       |
+| INTC| IntraCompanyPayment       | Transaction is an intra-company payment, ie, a payment between two companies belonging to the same group.                       |
+| INTE| Interest       | Transaction is the payment of interest.                       |
+| LOAN| Loan       | Transaction is related to the transfer of a loan to a borrower.                       |
+| OTHR| OtherPayment       | 	Other payment purpose.                       |
+| PENS| PensionPayment       | Transaction is the payment of pension.                       |
+| RVPM| ReceiveAgainstPayment       | Code used to pre-advise the account servicer of a forthcoming receive against payment instruction.                       |
+| SALA| SalaryPayment       | Transaction is the payment of salaries.                       |
+| SECU| Securities       | Transaction is the payment of securities.                       |
+| SSBE| SocialSecurityBenefit       | Transaction is a social security benefit, ie payment made by a government to support individuals.                       |
+| SUPP| SupplierPayment       | Transaction is related to a payment to a supplier.                       |
+| TAXS| TaxPayment       | Transaction is the payment of taxes.                       |
+| TRAD| Trade       | Transaction is related to the payment of a trade finance transaction.                       |
+| TREA| TreasuryPayment       | Transaction is related to treasury operations. E.g. financial contract settlement.                       |
+| VATX| ValueAddedTaxPayment       | Transaction is the payment of value added tax.                       |
+| WHLD| WithHolding       | Transaction is the payment of withholding tax.                       |
+
+
+
+</div>
+
+## Identification Type  <span className="badge badge--info t16sm-t26lg">IdTp</span>
+
+<div className= "table__wrapper table__long-text">
+
+| Code          | Name           | Definition                 |
+| -------        | -------------- | --------------------------- |
+| 01      | New IC Number | The Identification Type used is IC Number |
+| 02| Army Number  | The Identification Type used is Army Number            |
+| 03      | Passport Number | The Identification Type used is Passport Number |
+| 04      | Registration Number  | The Identification Type used is Registration Number |
+| 05  | Mobile Number  | The Identification Type used is Mobile Phone |
+
+</div>
+
+## Resident Status  <span className="badge badge--info t16sm-t26lg">RsdntSts</span>
+
+<div className= "table__wrapper table__long-text">
+
+| Code          | Name           | Definition                 |
+| -------        | -------------- | --------------------------- |
+| 01      | Resident | The Account owner is a Resident |
+| 02| Non-Resident  | The Account owner is a Non-Resident            |
+| 03      | Unavailable | Status is not available |
+
+</div>
+
+## Product Type  <span className="badge badge--info t16sm-t26lg">PrdTp</span>
+
+<div className= "table__wrapper table__long-text">
+
+| Code          | Name           | Definition                 |
+| -------        | -------------- | --------------------------- |
+| I      | Islamic | The Product Type is Islamic | 
+| C| Conventional | The Product Type is Conventional      |
+
+
+</div>
+
+## Sharia Compliant  <span className="badge badge--info t16sm-t26lg">ShariaCmpl</span>
+
+<div className= "table__wrapper table__long-text">
+
+| Code          | Name           | Definition                 |
+| -------        | -------------- | --------------------------- |
+| Y      | Yes | Sharia Compliant | 
+| N | No | Non-Sharia Compliant      |
+| U | Unknown | Unknown      |
+
+</div>
+
+## Account Owner Type  <span className="badge badge--info t16sm-t26lg">Dtls</span>
+
+<div className= "table__wrapper table__long-text">
+
+| Code          | Name           | Definition                 |
+| -------        | -------------- | --------------------------- |
+| 1      | Single | Single Account | 
+| 2 | Joint | Joint Account      |
+| 3 | Government | Government Account      |
+| 3 | Corporate | Corporate Account      |
+| 3 | NGO | NGO Account      |
+
+</div>
+
+## Proxy Registration Code  <span className="badge badge--info t16sm-t26lg">ProxyRegistrationType1Code</span>
+
+<div className= "table__wrapper table__long-text">
+
+| Code          | Name           | Definition                 |
+| -------        | -------------- | --------------------------- |
+| ACTV      | Activate | To activate the proxy after suspending it | 
+| AMND | Amend | To Amend an existing proxy registration    |
+| DEAC | Deregister |To deregister an existing proxy  |
+| NEWR | New Registration |To register a new proxy      |
+| PORT | Port | To transfer proxy to another bank      |
+| SUSP | Suspend | To suspend an active proxy     |
+
+
+</div>
+
+## Proxy Account Type  <span className="badge badge--info t16sm-t26lg">ProxyAccountType</span>
+
+<div className= "table__wrapper table__long-text">
+
+| Code  | Name            | Definition                                      |
+| ----- | --------------- | ------------------------------------------------ |
+| CACC| Current Account | If Account tied to the proxy is a current account (CA) |
+| SVGS| Savings Account | If Account tied to the proxy is a savings account (SA) |
+
+
+</div>
+
+## Proxy Type  <span className="badge badge--info t16sm-t26lg">Prxy/Tp</span>
+
+<div className= "table__wrapper table__long-text">
+
+| Code  | Name                            | Definition                                         |
+| ----- | ------------------------------- | --------------------------------------------------- |
+| NRIC  | NRIC Number                     | Proxy used to register is NRIC                      |
+| PSPT  | Passport Number                 | Proxy used to register is Passport Number           |
+| BREG  | Business Registration Number    | Proxy used to register is Business Registration Number |
+| MBNO  | Mobile Number                   | Proxy used to register is Mobile Number             |
+| ARMN  | Army Number                     | Proxy used to register is Army Number (can also be classified as NRIC) |
+
+</div>
+
+## Proxy Registration Status Code  <span className="badge badge--info t16sm-t26lg">ProxyRegistrationStatusCode</span>
+
+<div className= "table__wrapper table__long-text">
+
+| Code  | Name               | Definition                                                                                  |
+| ----- | ------------------ | -------------------------------------------------------------------------------------------- |
+| ACTV  | Active             | Proxy is active and can be used for payment. Proxy can also be modified, suspended, and transferred to another bank. |
+| SUSP  | Suspended          | Proxy is suspended and cannot be used for payment. Proxy cannot be amended, but can be re-activated again. |
+| ICTV  | Inactive           | Proxy has been deregistered and cannot be used for payment. No other change can be performed to an inactive proxy. |
+| SUSB  | Suspended by Bank  | This suspension is done at the back office, and can only be activated by the back office.   |
+
+</div>
+
+## Proxy Status Code  <span className="badge badge--info t16sm-t26lg">ProxyStatusCode</span>
+
+<div className= "table__wrapper table__long-text">
+
+| Code  | Name       | Definition         |
+| ----- | ---------- | ------------------- |
+| ACTC  | Accepted   | Changes are accepted |
+| RJCT  | Rejected   | Changes are rejected |
+
+</div>
+
+## Special Character 
+
+<div className= "table__wrapper table__long-text">
+
+| Type                | Description                                  |
+| ------------------- | -------------------------------------------- |
+| Identification (ID) | +'-/ *                                       |
+| Name                | [@'/&()._-,`*]:#+!;$%^{}~ space character  |
+| IP Address          | .:                                           |
+| Proxy               | +*                                           |
+| URL                 | ./:+-?=&                                     |
+| Reference           | +'-.,()/:? space character                   |
+
+
+</div>
+
+## Identity Validation
+
+<div className= "table__wrapper table__long-text">
+
+| Code  | Name                                       | Definition                                   |
+| ----- | ------------------------------------------ | -------------------------------------------- |
+| 00    | No Validation                              | No Validation                                |
+| 01    | Debtor Name Check                         | Debtor Name Check                            |
+| 02    | Debtor Identification Check (NRIC, Passport or etc) | Debtor Identification Check (NRIC, Passport or etc) |
+| 03    | Debtor Name and Identification Check      | Debtor Name and Identification Check        |
+
+</div>
+
+## Source of Funds
+
+<div className= "table__wrapper table__long-text">
+
+| Code  | Name          | Definition  |
+| ----- | ------------- | ----------- |
+| 01    | CASA          | CASA        |
+| 02    | Credit Card   | Credit Card |
+| 03    | eWallet       | eWallet     |
+
+
+</div>
+
+## Account Type
+
+<div className= "table__wrapper table__long-text">
+
+| Code  | Name         | Definition   |
+| ----- | ------------ | ------------ |
+| CACC  | Current      | Current      |
+| SVGS  | Savings      | Savings      |
+| CCRD  | Credit Card  | Credit Card  |
+| WALL  | eWallet      | eWallet      |
+
+</div>
+
+## Frequency Mode
+
+<div className= "table__wrapper table__long-text">
+
+| Code  | Name       | Definition  |
+| ----- | ---------- | ----------- |
+| 01    | Unlimited  | Unlimited   |
+| 02    | Daily      | Daily       |
+| 03    | Weekly     | Weekly      |
+| 04    | Monthly    | Monthly     |
+| 05    | Quarterly  | Quarterly   |
+| 06    | Yearly     | Yearly      |
+
+</div>
+
+## Substate Code
+
+<div className= "table__wrapper table__long-text">
+
+| Code          | Name                | Definition                                  |
+| ------------- | ------------------- | -------------------------------------------- |
+| CLEARED       | CLEARED             | Successfully Transaction                    |
+| RETRIEVED     | RECEIVED            | Pending Received                             |
+| PENDING AUTHORISATION | ACCEPTED     | Pending Authorisation by Debiting Agent     |
+| CANCELLED     | CANCELLED           | Cancel transaction by merchant               |
+| REJECT        | REJECTED            | Transaction is rejected (Fail)              |
+
+</div>
+
+
+## Channel Code
+
+<div className= "table__wrapper table__long-text">
+
+| Code  | Name                  | Definition                                             |
+| ----- | --------------------- | ------------------------------------------------------- |
+| RB    | RB                    | Retail Internet Banking                                |
+| CB    | CB                    | Corporate Internet Banking                             |
+| RM    | RM                    | Retail Mobile Banking                                  |
+| CM    | CM                    | Corporate Mobile Banking                               |
+| OT    | OT                    | Other                                                  |
+| BW    | BW                    | Business Web (To be used for FI initiated Merchant Transactions or Merchant Initiated Transactions) |
+| BA    | BA                    | Business App (To be used for FI initiated Merchant Transactions or Merchant Initiated Transactions) |
+
+</div>
+
+## Originator Code
+
+<div className= "table__wrapper table__long-text">
+
+| Code  | Name                            | Definition                          |
+| ----- | ------------------------------- | ----------------------------------- |
+| O     | O                               | Originating Financial Institution   |
+| H     | H                               | Retail Payments Platform            |
+| R     | R                               | Receiving Financial Institution     |
+
+</div>
+
+## Reason Codes for Consent Termination
+
+<div className= "table__wrapper table__long-text">
+
+| Code  | Description                   |
+| ----- | ----------------------------- |
+| 01    | Not using service anymore     |
+| 02    | Dispute on payment details     |
+| 03    | Not interested                 |
+| 04    | Fraud                         |
+| 05    | Early settlement of contract  |
+| 99    | Other                         |
+
+</div>
+
+## Settlement Method Code <span className="badge badge--info t16sm-t26lg">SettlementMethod1Code</span>
+
+<div className= "table__wrapper table__long-text">
+
+| Code  | Name            | Definition                                      |
+| ----- | --------------- | ---------------------------------------------- |
+| CLRG  | ClearingSystem  | Settlement is done through a payment clearing system. |
+
+
+</div>
+
+## Payment Transaction Status Code <span className="badge badge--info t16sm-t26lg">ExternalPaymentTransactionStatus1Code</span>
+
+<div className= "table__wrapper table__long-text">
+
+| Code  | Name                            | Definition                                                                                                               | Used by RPP |
+| ----- | ------------------------------- | ------------------------------------------------------------------------------------------------------------------------ | ----------- |
+| ACCP  | AcceptedCustomerProfile         | Preceding check of technical validation was successful. Customer profile check was also successful.                      | No          |
+| ACSC  | AcceptedSettlementCompleted     | Settlement on the debtor's account has been completed. Usage: this can be used by the first agent to report to the debtor that the transaction has been completed. Warning: this status is provided for transaction status reasons, not for financial information. It can only be used after bilateral agreement. | No          |
+| ACSP  | AcceptedSettlementInProcess     | All preceding checks such as technical validation and customer profile were successful and therefore the payment initiation has been accepted for execution. | Yes         |
+| ACTC  | AcceptedTechnicalValidation      | Authentication and syntactical and semantical validation are successful.                                                 | Yes         |
+| ACWC  | AcceptedWithChange              | Instruction is accepted but a change will be made, such as date or remittance not sent.                                  | No          |
+| PNDG  | Pending                         | Payment initiation or individual transaction included in the payment initiation is pending. Further checks and status update will be performed. | No          |
+| RJCT  | Rejected                        | Payment initiation or individual transaction included in the payment initiation has been rejected.                     | Yes         |
+
+</div>
+
+## Cash Account Code <span className="badge badge--info t16sm-t26lg">ExternalCashAccountType1Code</span>
+
+<div className= "table__wrapper table__long-text">
+
+| Code  | Name                     | Definition                                            |
+| ----- | ------------------------ | ----------------------------------------------------- |
+| CACC  | Current                  | Account used to post debits and credits when no specific account has been nominated. |
+| LOAN  | Loan                     | Account used for loans.                               |
+| SVGS  | Savings                  | Account used for savings.                             |
+| CCRD  | Credit Card/Hire Purchase | Account used for payment of Credit Card or Hire Purchase. |
+| DFLT  | Default                  | Default Accounts (can either be Savings or Current).   |
+
+</div>
+
+## Event Code <span className="badge badge--info t16sm-t26lg">EvtCd</span>
+
+<div className= "table__wrapper table__long-text">
+
+| Code   | Name                                | Definition                                              |
+| ------ | ----------------------------------- | ------------------------------------------------------- |
+| 2001   | Bank Availability Status            | Alarm when a Participant changes status to active or inactive. |
+| 2003   | Liquidity Position Limit Breached   | Alarm when a Participant’s Liquidity Position Limit is breached. |
+| 2004   | Settlement Notification             | Notification when Settlement cycle is changed.          |
+| CMN001 | Consent Update                      | Used to notify Merchant of Consent Update.             |
+| CMN002 | Consent Termination                 | Used to notify Merchant of Consent Termination.        |
+| PMT001 | Payment Status                      | Used to inform Merchant of Payment Status.              |
+| CRN001 | Consent Update Status               | Used to inform Merchant of Consent Update Status.      |
+| RED001 | RTP Redirect                        | Used to send End-to-End ID and signature in RTP Redirect. |
+| RED002 | Consent Registration Redirect       | Used to send End-to-End ID and signature in Consent Registration Redirect. |
+
+</div>
+
+## Function Code <span className="badge badge--info t16sm-t26lg">FnctnCd</span>
+
+<div className= "table__wrapper table__long-text">
+
+| Code  | Name               | Definition                                 |
+| ----- | ------------------ | ------------------------------------------ |
+| 1001  | Sign On Request    | Code when signing on to RPP                |
+| 1002  | Sign Off Request   | Code when signing off from RPP             |
+| 1003  | Echo               | Code when sending echo request             |
+
+</div>
+
+## Proxy Registration Type Code <span className="badge badge--info t16sm-t26lg">ProxyRegistrationType1Code</span>
+
+<div className= "table__wrapper table__long-text">
+
+| Code  | Name             | Definition                                |
+| ----- | ---------------- | ----------------------------------------- |
+| ACTV  | Activate         | To activate the proxy after suspending it |
+| AMND  | Amend            | To Amend an existing proxy registration   |
+| DEAC  | Deregister       | To deregister an existing proxy           |
+| NEWR  | New Registration | To register a new proxy                   |
+| PORT  | Port             | To transfer proxy to another bank         |
+| SUSP  | Suspend          | To suspend an active proxy                |
+
+</div>
+
+## Submitter Code <span className="badge badge--info t16sm-t26lg">SubmitterType1Code</span>
+
+<div className= "table__wrapper table__long-text">
+
+| Code  | Name  | Definition                         |
+| ----- | ----- | ---------------------------------- |
+| BANK  | Bank  | Bank sends the lookup request      |
+
+</div>
+
+## Consent Status
+
+<div className= "table__wrapper table__long-text">
+
+| Code  | Name                   | Definition                         |
+| ----- | ---------------------- | ---------------------------------- |
+| ACTV  | Active                 | Consent is active                   |
+| ICTV  | Inactive               | Consent is inactive                 |
+| SUSP  | Suspend                | Suspended by Customer               |
+| SUSB  | Active                 | Suspended by Bank                   |
+| ACTB  | Active                 | Activated by Bank                   |
+| PNDG  | Pending                | Pending                             |
+| PDAU  | Pending Authorization  | Pending Authorization               |
+| CANC  | Cancelled              | Cancelled                           |
+
+</div>

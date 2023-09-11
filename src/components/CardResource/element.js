@@ -60,4 +60,7 @@ export const DownloadWrapper = styled.div `
   column-gap: 8px;
 
   cursor: pointer;
+  p {
+    margin-bottom: 0 !important;
+  }
 `

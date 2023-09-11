@@ -91,6 +91,7 @@ const config = {
         };
       },
     }),
+    'plugin-image-zoom',
     [
       '@docusaurus/plugin-ideal-image',
       {
@@ -133,7 +134,6 @@ const config = {
         items: [
           {
             to: "/documentation",
-            sidebarid: "sideBarHome",
             activeBaseRoute: 'home',
             position: "left",
             label: "Documentation",
@@ -141,8 +141,14 @@ const config = {
           {
             to: "/api-reference",
             label: "API Reference",
-            className: "mr-3",
+            className: "mr-3-desktop",
             position: "left"
+          },
+          {
+            to: "#",
+            label: "Go to Sandbox",
+            className: "button button--small button--white mobile-only w-100 mt-24px mr-16px",
+            position: "right"
           },
           {
             type: 'search',
@@ -153,8 +159,7 @@ const config = {
             label: "Go to Sandbox",
             className: "button button--small button--white desktop-only",
             position: "right"
-          }
-
+          },
           // {to: '/blog', label: 'Blog', position: 'left'},
           // {
           //   href: 'https://github.com/facebook/docusaurus',
@@ -204,6 +209,19 @@ const config = {
         `
         © ${new Date().getFullYear()} Payments Network Malaysia Sdn Bhd (PayNet) 200801035403 (836743-D). All Rights Reserved.
         `,
+      },
+      zoom: {
+        // CSS selector to apply the plugin to, defaults to '.markdown img'
+        selector: '.markdown img',
+        // Optional medium-zoom options
+        // see: https://www.npmjs.com/package/medium-zoom#options
+        options: {
+          margin: 24,
+          background: '#rgba(208, 213, 221, 0.70);',
+          scrollOffset: 0,
+          container: '#zoom-container',
+          template: '#zoom-template',
+        },
       },
       prism: {
         theme: lightCodeTheme,

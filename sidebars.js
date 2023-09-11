@@ -32,7 +32,6 @@ const sidebars = {
       type: "category",
       label: "API",
       items: [
-      "API/InsideAPI/Inside",
       "intro",
       "API/rate-limit",
       "API/http-status-codes",
@@ -86,6 +85,10 @@ const sidebars = {
         "example-component/resource-table-2",
         "example-component/codes",
         "example-component/resource-card",
+        "example-component/duitnow-resource",
+        "example-component/duitnow-signature",
+        "example-component/mapping-table",
+        "example-component/fi-server",
       ],
       className: 'icon__link api__link',
     }
@@ -141,9 +144,42 @@ const sidebars = {
     "duitnow-transfer/response-codes",
     "duitnow-transfer/connectivity-requirements",
   ],
-  // creditTransferSideBar : [
-    
-  // ]
+  sideBarDuitNowQr: [
+    {
+      type: "link",
+      label: "Back",
+      href: "/documentation",
+      className: "menu__back",
+    },
+    {
+      type: "html",
+      value: "DuitNow QR",
+      className: "menu__link-title t16sm-t23lg bold font-gray-700",
+    },
+    {
+      type: "category",
+      label: "Overview",
+      items: [
+        {
+          type: "category",
+          label: "Merchant Presented QR",
+          items: [
+            "merchant-presented-qr/domestic-qr",
+            "merchant-presented-qr/cross-border-outward-qr",
+            "merchant-presented-qr/cross-border-inward-qr"
+          ],
+        },
+      ],
+    },
+  ],
+  sideBarApiReference: [
+    {
+      type: "link",
+      label: "Home",
+      href:"/api-reference/home",
+      className: 'icon__link api-home__link',
+    },
+  ]
 };
 
 module.exports = sidebars;

@@ -1,0 +1,114 @@
+---
+title: Cross Border Outward QR
+slug: /documentation/duitnow-qr/overview/merchant-present-qr/cross-border-outward-qr
+displayed_sidebar: sideBarDuitNowQr
+
+hide_title: true
+hide_table_of_contents: false
+custom_edit_url: null
+---
+import Breadcrumbs from '@site/src/components/Breadcrumbs'; 
+
+<Breadcrumbs/>
+
+# Cross Border Outward QR
+
+## Introduction
+
+**Supported Regions**
+
+<div className="table__wrapper">
+
+| China | Indonesia |    Korea    | Philipines  | Singapore | Thailand |
+| ----- | --------- | ----------- | ----------- | --------- | -------- |
+|   ✔   |    ✔     | Coming soon | Coming soon |      ✔    |    ✔    |
+
+</div>
+
+KEY ✔ Available ✖ Not Available
+
+DuitNow Outward Cross-Border QR enables Malaysians abroad to make payments via their mobile banking or e-payment application by scanning the merchants' QR code.
+
+The figure below shows the end-to-end process of DuitNow Outward Cross-Border QR.
+
+![An image from the static](/img/cross-border/cross-border-1.png)
+
+## Account Enquiry Flow (Steps 1 - 8)
+
+![An image from the static](/img/cross-border/cross-border-2.png)
+
+<div className= "table__wrapper table__long-text vertical-align-baseline">
+
+| Step | Sender       | Receiver          | Process                          |
+| ---- | ------------ | ----------------- | ---------------------------------|
+| 1    | Customer     | Issuer	          | Customer scans a Cross Border merchant’s QR code via Issuer’s Mobile App and initiates a QR Payment request. |
+| 2    | Issuer       | RPP   	          | Issuer performs the following: <br/> <ul><li>Authorize and validate the QR Payment request</li><li>Parse the QR code to extract:<ul><li>Application Identifier (AID)</li><li>Acquirer ID</li><li>Merchant Name</li><li>QR ID</li><li>Transaction Amount</li></ul></li><li>Any other validations</li></ul> <br/> If all validations are successful: <br/> <ul><li>If AID belongs to PayNet, Issuer will:<ul><li>For On-Us Merchant<ul><li>**NOT** route the request to RPP</li></ul></li><li>For Off-Us Merchant<ul><li>Send Account Enquiry request to RPP</li></ul></li></ul></li><li>If AID does not belong to PayNet or QR code is not parse-able, Issuer will:<ul><li>Send Account Enquiry request to RPP using transaction code 521</li></ul></li></ul> <br/> Notes: <br/> 1. Issuer to set timeout as 60 seconds. |
+| 3    | RPP	        | CB Clearing House	| RPP performs the following: <ul><li><a href="#" className="blue-link">Message Validations</a></li><li><a href="#" className="blue-link">Business Validations</a></li></ul> <br/> If any Message Validation fails, RPP will send a **REJECT** response to Issuer. <br/><br/> If any Business Validation fails, RPP will send a **NEGATIVE** response to Issuer. <br/> <br/>If all validations are successful, RPP will: <ul><li>Send the Account Enquiry request to CB Clearing House</li></ul> |
+| 4    | CB Clearing House | Acquirer/RFI | <ul><li>Sends Account Enquiry request to Acquirer bank</li></ul> |
+| 5    | Acquirer	    | CB Clearing House | Acquirer performs the following: <br/><ul><li><a href="#" className="blue-link">Message Validations</a></li><li><a href="#" className="blue-link">Business Validations</a></li></ul> <br/> If any Message Validation fails, Acquirer will send a **REJECT** response to Issuer. <br/><br/> If any Business Validation fails, Acquirer will send a **NEGATIVE** response to Issuer. <br/> <br/> If all validations are successful, Acquirer will: <ul><li>Send a **SUCCESSFUL** response to CB Clearing House.</li></ul> <br/>Notes: <br/> <ul className="list-style-number"><li>Acquirer shall validate the QR string, validation can be done via:<ul><li>Hash validation</li><li>Key fields comparison (i.e. Merchant Account Information, Merchant Category Code, Merchant Name, Transaction Amount, etc)</li><li>Entire QR string comparison</li></ul></li><li>For Dynamic QR, Acquirer will need to check for validity period</li></ul> |
+| 6    | CB Clearing House | RPP	       | CB Clearing House performs the following: <br/> <ul><li>Send response to RPP</li></ul> |
+| 7    | RPP               | Issuer	     | RPP performs the following: <br/> <ul><li><a href="#" className="blue-link">Message Validations</a></li></ul> <br/> If all validations are successful, RPP will: <br/><ul><li>Send a **SUCCESSFUL** response to Issuer</li><li>A **SUCCESSFUL** Account Enquiry response shall contain the following information for subsequent process/validation:<ul><li>Merchant Name</li><li>Type of QR Payment</li><li>Acceptable Source of Fund</li></ul></li></ul> |
+| 8    | Issuer       | Customer	       | Issuer performs the following: <ul><li><a href="#" className="blue-link">Message Validations</a></li></ul> <br/>If all validations are successful, Issuer will: <br/> <ul><li>For **SUCCESSFUL** Account Enquiry response received:<ul><li>Display Merchant Name</li><li>Identify Type of QR Payment and Acceptable Source of Fund</li></ul></li><li>For **UNSUCCESSFUL ** Account Enquiry response received:<ul><li>Display an error message on the customer screen</li></ul></li></ul> |
+
+</div>
+
+### Exception Handling
+
+<div className= "table__wrapper table__long-text vertical-align-baseline">
+
+| Step  | Receiver                       | Process                          |
+| ----  | ------------------------------ | -------------------------------- |
+| 2     | Timeout - No response from RPP | RPP: <br/> <ul><li> If RPP received the request and processed it but RPP's response failed to return to Issuer, then the transaction is logged</li><li> If RPP never received the request, no action on RPP's side</li></ul> <br/>Issuer:<br/> <ul> <li> Stop timer </li><li> Display an error message on the customer screen </li></ul> |
+| 2     | Rejection - Rejected by RPP    | RPP: <br/> <ul><li> Send the relevant Reject Response Code (refer to <a href="#" className="blue-link bold">Response Codes</a>)</li><li> Include a copy of the request message in FULL in the response message under the AddtlData field for the Sender to investigate the issue</li></ul> <br/>Issuer:<br/> <ul> <li> Stop timer </li><li> Message Validation </li></ul> |
+| 3     | Timeout - No response from CB Clearing House | When no response is received from CB Clearing House after X period of time, the following steps should be taken: <br/> <br/> RPP performs the following: <br/> <br/> <ul><li> Transaction Logging </li><li> Message Validation - if any fail, send **REJECT** response to Issuer</li><li> Business Validation - if any fail, send NEGATIVE response to Issuer </li></ul> <br/> Issuer performs the following: <br/> <ul><li> Stop timer </li><li> Message Validation </li><li> If all validations are successful, display an error message on the customer screen </li></ul> |
+| 3     | Rejection - Rejected by CB Clearing House    | CB Clearing House: <br/> <ul><li> If any validation fails, send a NEGATIVE response to RPP </li></ul> <br/> RPP: <br/> <ul><li>Stop timer </li><li>Message Validation</li><li>If all validations are successful, send the **Account Enquiry** response to Issuer</li></ul> <br/> Issuer: <br/> <ul><li>Stop timer </li><li>Message Validation</li><li>If all validations are successful, display an error message on the customer screen</li></ul> |
+| 4     | Timeout - No response from Acquirer	  | When no response is received from Acquirer after X period of time, the following steps should be taken: <br/><br/> CB Clearing House performs the following: <br/> <ul><li>Stop timer</li><li>Send a **NEGATIVE** response to RPP</li></ul> <br/> RPP performs the following: <br/> <ul><li>Transaction Logging</li><li>Message Validation - if any fail, send **REJECT** response to Issuer</li><li>Business Validation - if any fail, send **NEGATIVE** response to Issuer</li></ul> <br/> Issuer performs the following: <br/> <ul><li>Stop timer</li><li>Message Validation</li><li>If all validations are successful, display an error message on the customer screen</li></ul> |
+| 4     | Rejection - Rejected by Acquirer	    | Acquirer: <br/> <ul><li>If any Message Validation fails, send a **REJECT** response to CB Clearing House</li><li>If any Business Validation fails, send a **NEGATIVE** response to CB Clearing House</li><li>Include a copy of the request message in FULL in the response message under the AddtlData field for the Sender to investigate the issue</li></ul> <br/> CB Clearing House: <br/> <ul><li>Stop timer</li><li>Send response to RPP</li></ul> <br/> RPP: <br/> <ul><li>Stop timer</li><li>Message Validation</li><li>If all validations are successful, send the **Account Enquiry** response to Issuer</li></ul> <br/> Issuer: <br/> <ul> <li>Stop timer</li><li>Message Validation</li><li>If all validations are successful, display an error message on the customer screen</li></ul> |
+
+</div>
+
+## Credit Transfer Flow (Steps 9 - 19)
+
+![An image from the static](/img/cross-border/cross-border-2.png)
+
+<div className= "table__wrapper table__long-text vertical-align-baseline">
+
+| Step | Sender            | Receiver             | Process                                         |
+| ---- | ----------------- | -------------------- | ----------------------------------------------- |
+| 9    | Customer          | Issuer	              | Customer confirms the QR Payment.               |
+| 10   | Issuer            | RPP   	              | Issuer performs the following: <br/> <ul><li>Authorize and validate the Credit Transfer request</li><li>Any other validations</li></ul> <br/> If all validations are successful, Issuer will: <br/> <ul> <li>Send Credit Transfer request to RPP</li></ul> <br/> Notes: <br/> <ul className="list-style-number"><li>Issuer to set timeout as 60 seconds.</li></ul> |
+| 11   | RPP               | CB Clearing House    | RPP performs the following: <ul><li><a href="#" className="blue-link">Message Validations</a></li><li><a href="#" className="blue-link">Business Validations</a></li></ul> <br/> If any Message Validation fails, RPP will send a **REJECT** response to Issuer. <br/><br/> If any Business Validation fails, RPP will send a **NEGATIVE** response to Issuer. <br/> <br/>If all validations are successful, RPP will: <ul><li>Send the QR Payment request to CB Clearing House</li></ul> |
+| 12   | CB Clearing House | Acquirer             | CB Clearing House performs the following: <br/> <ul><li>Send request to Acquirer</li></ul> |
+| 13   | Acquirer          | CB Clearing House    | Acquirer performs the following: <ul><li><a href="#" className="blue-link">Message Validations</a></li><li><a href="#" className="blue-link">Business Validations</a></li></ul> <br/> If any Message Validation fails, Acquirer will send a **REJECT** response to CB Clearing House. <br/> <br/> If any Business Validation fails, Acquirer will send a **NEGATIVE** response to CB Clearing House. <br/><br/> If all validations are successful, Acquirer will: <ul><li>Send **SUCCESSFUL** response to CB Clearing House</li></ul> |
+| 14   | Acquirer          | Merchant             | Acquirer notifies Merchant on QR Payment status. |
+| 15   | CB Clearing House | CB Settlement Bank   | Confirmation of Debit based on EOD Report.       |
+| 16   | CB Clearing House | Local Settlement Bank| CB Clearing House performs the following: <ul><li>Send response to RPP</li></ul> |
+| 17   | RPP               | Merchant             | Confirmation of Credit based on EOD Report.      |
+| 18   | RPP               | Issuer               | RPP performs the following: <ul><li><a href="#" className="blue-link">Message Validations</a></li></ul> <br/> If all validations are successful, RPP will: <ul><li>Set Settlement Date and Cycle</li><li>Update liquidity positions of both Issuer and Acquirer</li><li>Update settlement totals</li><li>Notify settlement bank on credit confirmation status</li><li>Send **SUCCESSFUL** response to Issuer</li></ul> <br/> Notes: <br/> <ul className="list-style-number"><li>If the signature received from Acquirer could not be verified, RPP will send an **ACCEPTED** (Signature error) response to the Issuer regardless of transaction response from Acquirer. This should take care of any message manipulation done within the data when a signature cannot be verified.</li></ul> |
+| 19   | Issuer            | Merchant             | Issuer performs the following: <ul><li><a href="#" className="blue-link">Message Validations</a></li></ul> <br/> If all validations are successful, Issuer will: <br/> <ul><li>Display a successful message on the customer screen</li></ul> |
+
+</div>
+
+### Exception Handling
+
+<div className= "table__wrapper table__long-text vertical-align-baseline">
+
+| Step  | Receiver                       | Process                          |
+| ----  | ------------------------------ | -------------------------------- |
+| 10    | Timeout - No response from RPP | When no response is received from RPP after x period of time, the following steps should be taken: <br/> <br/> Issuer performs the following: <br/> <ul><li>Send a Single **Transaction Enquiry** request to RPP</li><li>Start timer</li> </ul> <br/> RPP performs the following: <ul><li>Transaction Logging</li><li>Message Validation - if any fail, send **REJECT** response</li> <li>If all validations are successful, send the **Transaction Enquiry** response to Issuer</li></ul> <br/> Issuer performs the following: <br/> <ul><li>Stop timer</li><li>Message Validation</li> <li>If all validations are successful, display a successful message on the customer screen</li></ul> |
+| 10    | Rejection - Rejected by RPP	   | RPP: <ul><li>If any Message Validation fails, send **REJECT** response to Issuer</li><li>If any Business Validation fails, send **NEGATIVE** response to Issuer</li> <li>Include a copy of the request message in FULL in the response message under the AddtlData field for the Sender to investigate the issue</li></ul> <br/>  Issuer <br/> <ul><li>Stop timer</li><li>Message Validation</li> <li>If all validations are successful, display an error message on the customer screen</li></ul> |
+| 11    | Timeout - No response from CB Clearing House | When no response is received from CB Clearing House after x period of time, the following steps should be taken: <br/> <br/> RPP performs the following: <ul><li>Timeout</li><li>Stop timer</li> <li>Set Settlement Date and Cycle</li><li>Update liquidity positions of both Issuer and CB Clearing House</li><li>Update settlement totals</li><li>Send an ACCEPTED response back to Issuer</li><li>Trigger Transaction Status Enquiry via SAF</li></ul> <br/> Issuer performs the following: <ul><li>Stop timer</li><li>Message Validation</li> <li>If all validations are successful, display **ACCEPTED** message on customer screen</li></ul> |
+| 12    | Timeout - No response from Acquirer | When no response is received from Acquirer after x period of time, the following steps should be taken: <br/><br/> CB Clearing House performs the following: <ul><li>Timeout</li><li>Store the Credit Transfer Transaction in SAF</li> <li>Update liquidity positions of both Acquirer and Local Settlement Bank</li><li>Stop timer</li><li>Send an ACCEPTED (Timeout reason) response back to RPP</li></ul> <br/>RPP performs the following: <ul><li>Stop timer</li><li>Message Validation</li> <li>If all validations are successful:<ul><li>Not update liquidity and settlement positions of both Issuer and Acquirer</li><li>For **NEGATIVE** response, send **NEGATIVE** response to Issuer</li><li>For **REJECT** response, send **REJECT** response to Issuer</li></ul></li></ul> <br/> Issuer performs the following: <ul><li>Stop timer</li><li>Message Validation</li> <li>If all validations are successful, display **ACCEPTED** message on customer screen</li></ul>|
+| 12    | Rejection - Rejected by Acquirer | Acquirer: <ul><li>If any Message Validation fails, send a **REJECT** response to CB Clearing House</li><li>If any Business Validation fails, send a **NEGATIVE** response to CB Clearing House</li> <li>Include a copy of the request message in FULL in the response message under the AddtlData field for the Sender to investigate the issue (might not be applicable)</li></ul> <br/> CB Clearing House performs the following: <ul><li>Stop timer</li><li>Send response to RPP</li> </ul> <br/>RPP performs the following: <ul><li>Stop timer</li><li>Message Validation</li><li>If all validations are successful:<ul><li>Not update liquidity and settlement positions of both Issuer and Acquirer</li><li>For **NEGATIVE** response, send **NEGATIVE** response to Issuer</li><li>For **REJECT** response, send **REJECT** response to Issuer</li></ul></li></ul> <br/>Issuer: <br/> <ul><li>Stop timer</li><li>Message Validation</li><li>If all validations are successful, display an error message on the customer screen</li></ul> |
+
+</div>
+
+## Validation Rules
+
+<div className="table__wrapper">
+
+| Message Validation	 | Business Validation | 
+| -------------------- | ------------------- |
+| <ul><li>Message Format Validation</li><li>Digital Signature Verification</li></ul> | **RPP:** <ul><li>Mandatory and conditional fields validation</li><li>Business Message Identifier validation</li><li>Issuer Check</li><li>Acquirer Check</li><li>Repeat Check</li><li>Date Tolerance Check</li><li>Minimum & Maximum Amount Check</li><li>Liquidity Position Check</li><li>Account Enquiry Exist Check (only in Step 11)</li></ul> <br/> **Acquirer:** <ul><li>Mandatory and conditional fields validation</li><li>QR Validation (Only in Step 5)</li><li>Beneficiary Account Validation (Only in Step 5)</li><li>Any other validations</li></ul> |
+
+</div>

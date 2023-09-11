@@ -32,6 +32,10 @@ export const HeaderBannerWrapper = styled.div`
   }
   
   @media(min-width: 1024px) {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+
     .accent-left {
       bottom: -215px;
     }
@@ -41,16 +45,18 @@ export const HeaderBannerWrapper = styled.div`
     }
 
     canvas {
-      width: 400px;
-      height: 400px;
+      width: 300px;
+      height: 300px;
       margin-right: 0;
     }
   }
 
-  @media(min-width: 1024px) {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    align-items: center;
+  @media(min-width: 1440px) {
+    canvas {
+      width: 400px;
+      height: 400px;
+      margin-right: 0;
+    }
   }
 `
 export const Wrapper = styled.section`
