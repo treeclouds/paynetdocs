@@ -32,7 +32,6 @@ const sidebars = {
       type: "category",
       label: "API",
       items: [
-      "API/InsideAPI/Inside",
       "intro",
       "API/rate-limit",
       "API/http-status-codes",
@@ -86,8 +85,8 @@ const sidebars = {
         "example-component/resource-table-2",
         "example-component/codes",
         "example-component/resource-card",
-        "example-component/duid-now-resource",
-        "example-component/duid-now-signature",
+        "example-component/duitnow-resource",
+        "example-component/duitnow-signature",
         "example-component/mapping-table",
         "example-component/fi-server",
       ],

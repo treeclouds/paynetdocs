@@ -1,4 +1,7 @@
 ---
+title: Intro
+slug: /documentation//intro
+displayed_sidebar: sideBarHome
 sidebar_position: 3
 ---
 
