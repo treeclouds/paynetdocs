@@ -37,7 +37,7 @@ const DashboardApiReference = () => {
         <HeaderBannerWrapper>
           <BannerCaptionWrapper>
             <h1 className='t26sm-t42lg'>API Reference</h1>
-            <p className='t16sm-t23lg font-gray-500'>This is your go-to resource for unlocking the full potential of PayNet. Here you'll find all the information you need to integrate PayNet's API</p>
+            <p className='t16sm-t23lg font-gray-500'>Unlocking the full potential of PayNet. Find all the information you need to integrate Paynet's API</p>
           </BannerCaptionWrapper>
           <canvas className='d-flex' ref={canvasRefApi} width={500} height={500}></canvas>
           <AccentLeftMobile className='mobile-only accent accent-left'/>
