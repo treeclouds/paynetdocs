@@ -19,7 +19,7 @@ The report server enables participants to access reports available for download.
 <div className="table__wrapper">
 
 | Environment  | IP Address(es)  |
-| ------------ | ---------------  |
+| ------------ | --------------- |
 | SIT          | 103.145.216.162 |
 | UAT          | 103.145.216.162 |
 | Production   | 103.145.216.86  |
@@ -33,111 +33,146 @@ This section outlines how to generate SSH keys and transfer a public key to PayN
 
 ### Pre-Requisite
 
-  **1.** Download and install PuTTYgen from https://www.puttygen.com/ depending on your client OS type.
-  
-  **2.** PuTTYgen installed successfully.
+<div className="list-style-number">
 
-### Instructions (Windows 10)
-
- **1.** Start PuTTYgen which can be found in Windows Start menu.
-  
-  ![Example banner](../../static/img/ins-win-1.png)
-
-
- **2.** Ensure Key Type is set to **ECDSA** and click **Generate.** Please see **Step 3i** If your infrastructure does not support ECDSA.
-  
-  ![Example banner](../../static/img/ins-win-2.png)
-
- **3.** Move your mouse cursor until green progress bar is full
-  
-  ![Example banner](../../static/img/ins-win-3.png)
-
-  <ul>
-    <li> i. Move your mouse cursor until green progress bar is full</li>
-  </ul>
-
-  ![Example banner](../../static/img/ins-win-3a.png)
-
- **4.** Save the public key as **authorized_keys** and private key (passphrase is optional) in a secured location and copy all the contents of public key in PuTTYGen.
-
-  ![Example banner](../../static/img/ins-win-4.png)
- 
- **5.** Navigate to where authorized_keys is saved and open with Notepad. Replace the public key string in authorized_keys file and save the file.
-
-  ![Example banner](../../static/img/ins-win-5.png)
-
- **6.** Use PuTTY to initiate first SSH connectivity to Reports server infrastructure with new user account and OTP issued by PayNet SAC. For internet connectivity, please ensure PayNet IP is whitelisted in your company firewall.
- 
- **7.** Open a Command Prompt in your Windows machine and navigate to the location where the public key is saved.
-
- **8.** The commands for connecting to different infrastructures are listed below. Run the command for the infrastructure you wish to connect to:
-
-
-<div className="ul__wrapper">
-
-  - UAT internet: `scp authorized_keys <username>@reports.uat.inet.paynet.my:.ssh/`
-  - PRD internet: `scp authorized_keys <username>@reports.prod.inet.paynet.my:.ssh/`
-  - UAT MPLS: `scp authorized_keys <username>@reports.uat.mpls.paynet.my:.ssh/`
-  - PRD  MPLS: `scp authorized_keys <username>@reports.prod.mpls.paynet.my:.ssh/`
+- Download and install PuTTYgen from <a href="/documentation" className="blue-link bold">https://www.puttygen.com/</a>  
+- PuTTYgen installed successfully.
 
 </div>
 
- **9.** You will be prompted to enter a password. Enter the password provided by PayNet SAC in email and upload of public key will start.
- 
+### Instructions (Windows 10)
+
+<div className="list-style-number">
+
+- Start PuTTYgen which can be found in Windows Start menu.
+  <div className="img-50-for-desktop">
+
+  ![Example banner](../../static/img/ins-win-1.png)
+
+  </div>
+- Ensure Key Type is set to **ECDSA** and click **Generate.** Please see **Step 3i** If your infrastructure does not support ECDSA.
+  <div className="img-50-for-desktop">
+
+  ![Example banner](../../static/img/ins-win-1.png)
+
+  </div>
+- Move your mouse cursor until green progress bar is full.
+  <div className="img-50-for-desktop">
+
+  ![Example banner](../../static/img/ins-win-3.png)
+
+  </div>
+
+  - Use **RSA** with **4096** bit in case your infrastructure does not support ECDSA 521
+    <div className="img-50-for-desktop">
+
+    ![Example banner](../../static/img/ins-win-3a.png)
+
+    </div>
+- Save the public key as **authorized_keys** and private key (passphrase is optional) in a secured location and copy all the contents of public key in PuTTYGen.
+  <div className="img-50-for-desktop">
+
+    ![Example banner](../../static/img/ins-win-4.png)
+
+  </div>
+- Navigate to where authorized_keys is saved and open with Notepad. Replace the public key string in authorized_keys file and save the file.
+  <div className="img-50-for-desktop">
+
+    ![Example banner](../../static/img/ins-win-5.png)
+
+  </div>
+- Use PuTTY to initiate first SSH connectivity to Reports server infrastructure with new user account and OTP issued by PayNet SAC. For internet connectivity, please ensure PayNet IP is whitelisted in your company firewall.
+- Open a Command Prompt in your Windows machine and navigate to the location where the public key is saved.
+- The commands for connecting to different infrastructures are listed below. Run the command for the infrastructure you wish to connect to:
+  <div className="list__wrapper list-code__wrapper">
+
+    - UAT internet: `scp authorized_keys <username>@reports.uat.inet.paynet.my:.ssh/`
+    - PRD internet: `scp authorized_keys <username>@reports.prod.inet.paynet.my:.ssh/`
+    - UAT MPLS: `scp authorized_keys <username>@reports.uat.mpls.paynet.my:.ssh/`
+    - PRD  MPLS: `scp authorized_keys <username>@reports.prod.mpls.paynet.my:.ssh/`
+
+  </div>
+
+- You will be prompted to enter a password. Enter the password provided by PayNet SAC in email and upload of public key will start.
   ![Example banner](../../static/img/ins-win-9.png)
 
- **10.** Once done, you will be able to login to PayNet Reports server. You will need to ensure PayNet internet IP is whitelisted in your company firewall. Please see <a href="/documentation/fi-server" className="blue-link">Connecting to SFTP with PuTTY and SSH key.</a>
- 
- 
+- Once done, you will be able to login to PayNet Reports server. You will need to ensure PayNet internet IP is whitelisted in your company firewall. Please see <a href="#" className="blue-link bold">Connecting to SFTP with PuTTY and SSH key.</a>
+
+</div>
+
 ### Instructions (Linux)
 
- **1.** Run command `ssh-keygen -t ecdsa -b 521` and press enter until public and private keys are generated.
- 
+<div className="list-style-number">
+
+- Run command `ssh-keygen -t ecdsa -b 521` and press enter until public and private keys are generated.
+  <div className="img-50-for-desktop">
+
   ![Example banner](../../static/img/linux-1.png)
 
-  <ul>
-    <li> i. Use **RSA** with **4096** bit in case your infrastructure does not support ECDSA 521</li>
-  </ul>
+  </div>
 
-  ![Example banner](../../static/img/linux-1a.png)
+  - Use **RSA** with **4096** bit in case your infrastructure does not support ECDSA 521
+    <div className="img-50-for-desktop">
 
+      ![Example banner](../../static/img/linux-1a.png)
 
- **2.** The commands for different infrastructures are listed below. Paynet SAC will provide username and password in email for this step.
-
-<div className="ul__wrapper">
+    </div>
+- The commands for different infrastructures are listed below. Paynet SAC will provide username and password in email for this step.
+  <div className="list__wrapper list-code__wrapper">
 
   - UAT internet: `ssh-copy-id -i ~/.ssh/id_ecdsa.pub username@reports.uat.inet.paynet.my`
   - PRD internet: `ssh-copy-id -i ~/.ssh/id_ecdsa.pub username@reports.prod.inet.paynet.my`
   - UAT MPLS: `ssh-copy-id -i ~/.ssh/id_ecdsa.pub username@reports.uat.mpls.paynet.my`
   - PRD  MPLS: `ssh-copy-id -i ~/.ssh/id_ecdsa.pub username@reports.prod.mpls.paynet.my`
 
-</div>
-
- **3.** Public key copied to SFTP server successfully.
+  </div>
+- Public key copied to SFTP server successfully.
 
   ![Example banner](../../static/img/linux-3.png)
 
+</div>
 
 ## Connecting to SFTP with PuTTY and SSH Key
 
 Introduction for variant content of table with the link
 
- **1.** Start PuTTY and insert your username in **Auto-login username.**
+<div className="list-style-number">
 
-  ![Example banner](../../static/img/putty-1.png)
+- Start PuTTY and insert your username in **Auto-login username.**
+  <div className="img-50-for-desktop">
 
- **2.** Locate SSH > Auth and click **Browse** to locate your private key and click **Open.** You are now connected to SFTP server.
+    ![Example banner](../../static/img/putty-1.png)
 
-  ![Example banner](../../static/img/putty-2.png)
+  </div>
 
- **3.** Run command `ssh-i <private key> <username>@<sftp>` to connect from terminal.
+- Locate SSH > Auth and click **Browse** to locate your private key and click **Open.** You are now connected to SFTP server.
+  <div className="img-50-for-desktop">
+
+    ![Example banner](../../static/img/putty-2.png)
+
+  </div>
+- Run command `ssh-i <private key> <username>@<sftp>` to connect from terminal.
+
+</div>
 
 ## Connecting to SFTP with WinSCP and SSH Key
 
- **1.** Start up WinSCP and enter **Host name** and **User name** and click **Advance.**
+<div className="list-style-number">
 
-  ![Example banner](../../static/img/winscp-1.png)
+- Start up WinSCP and enter **Host name** and **User name** and click **Advance.**
+  <div className="img-50-for-desktop">
+
+    ![Example banner](../../static/img/winscp-1.png)
+
+  </div>
+  
+- Locate SSH > Authentication and click on … to location where private key is saved and click **OK.**
+  <div className="img-50-for-desktop">
+
+    ![Example banner](../../static/img/winscp-2.png)
+
+  </div>
+
+</div>
 
  **2.** Locate SSH > Authentication and click on … to location where private key is saved and click **OK.**
-
-  ![Example banner](../../static/img/winscp-2.png)
