@@ -1,7 +1,6 @@
 import styled from "styled-components";
 
-export const Wrapper = styled.div
-` 
+export const Wrapper = styled.div`
   button[aria-expanded="true"].navbar__toggle.clean-btn + div.sl-elements-api.sl-flex.sl-h-full>div:nth-child(1) {
     display: flex;
   }
@@ -27,7 +26,15 @@ export const Wrapper = styled.div
     line-height: 150%;
   }
 
-  .sl-tooltip.sl-bg-canvas-dialog > div:nth-child(1):after {
+  .sl-tooltip.sl-bg-canvas-dialog > div:nth-child(1):has(> svg.fa-check ):after {
+    content: "";
+    display: block;
+    width: 24px;
+    height: 24px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 20 20' fill='none'%3E%3Cpath d='M16.6663 5L7.49967 14.1667L3.33301 10' stroke='%2338B449' stroke-width='1.67' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  }
+
+  .sl-tooltip.sl-bg-canvas-dialog > div:nth-child(1):has(> svg.fa-copy ):after {
     content: "";
     display: block;
     width: 24px;
