@@ -15,6 +15,7 @@ info:
 
     ### Endpoints
     The APIs listed under Webhook are using the same specifications under the prior section. Participant is expected to expose an endpoint to act as the RFI to receive the API from RPP host.
+    
   version: v2
 servers:
 - url: https://mock.developer.paynet.my/banks/duitnow-payment/v2
