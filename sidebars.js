@@ -179,6 +179,11 @@ const sidebars = {
       href:"/api-reference/home",
       className: 'icon__link api-home__link',
     },
+    {
+      type: "html",
+      value: "<a href='/api-reference/credit-transfer'>Credit Transfer</a>",
+      className: 'theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-1 menu__link icon__link',
+    },
   ]
 };
 

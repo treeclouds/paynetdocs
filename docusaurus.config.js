@@ -139,7 +139,7 @@ const config = {
             label: "Documentation",
           },
           {
-            to: "/api-reference",
+            to: "/api-reference/home",
             label: "API Reference",
             className: "mr-3-desktop",
             position: "left"
