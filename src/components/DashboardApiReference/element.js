@@ -213,6 +213,9 @@ export const TextBesidesIcon = styled.div `
   display: flex;
   align-items: center;
   column-gap: 8px;
+
+  cursor: pointer;
+  
   p {
     margin-bottom: 0;
   }
