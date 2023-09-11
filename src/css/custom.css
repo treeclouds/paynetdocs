@@ -133,6 +133,11 @@ a:hover {
   margin-bottom: 0 !important;
 }
 
+.my-2 {
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
 @media (min-width: 1024px) {
   .mr-3-desktop {
     margin-right: 1.5rem;
@@ -489,18 +494,18 @@ li code {
 }
 
 /* Explicit on home */
-.docs-doc-id-home .docMainContainer_node_modules-\@docusaurus-theme-classic-lib-theme-DocPage-Layout-Main-styles-module{
+.docs-doc-id-home .markdown {
   background: linear-gradient(175deg, #fff 11%, #F9FAFB 11%);
 }
 
 @media (min-width: 1024px) {
-  .docs-doc-id-home .docMainContainer_node_modules-\@docusaurus-theme-classic-lib-theme-DocPage-Layout-Main-styles-module{
-    background: linear-gradient(175deg, #fff 15%, #F9FAFB 15%);
+  .docs-doc-id-home .markdown {
+    background: linear-gradient(175deg, #fff 13%, #F9FAFB 13%);
   }
 }
 
-@media (min-width: 1024px) {
-  .docs-doc-id-home .docMainContainer_node_modules-\@docusaurus-theme-classic-lib-theme-DocPage-Layout-Main-styles-module{
+@media (min-width: 1440px) {
+  .docs-doc-id-home .markdown {
     background: linear-gradient(175deg, #fff 18.5%, #F9FAFB 18.5%);
   }
 }
