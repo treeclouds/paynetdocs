@@ -436,7 +436,7 @@ ul.list-style-number li, .markdown .list-style-number ul li p {
   .markdown > h1 {
     margin-bottom: 1.77rem;
   }
-  .markdown > h2,  .markdown > h3{
+  .markdown > h2,  .markdown > h3 {
     margin: 0 0 0.88rem;
   }
 
@@ -1356,7 +1356,7 @@ h1, h2, h3, h4:not(.docs-doc-id-API\/api-reference) {
 	line-height: 28px;
 }
 
-.t21sm-t26lg, h3 {
+.t21sm-t26lg, h3, h4 {
 	font-size: 1.167rem !important;
 	line-height: 28px;
 }
@@ -1366,7 +1366,7 @@ h1, h2, h3, h4:not(.docs-doc-id-API\/api-reference) {
 	line-height: 28px;
 }
 
-.t21, h4 {
+.t21 {
   font-size: 1.44rem !important;
   line-height: 123%;
 }
@@ -1473,20 +1473,14 @@ h1, h2, h3, h4:not(.docs-doc-id-API\/api-reference) {
     line-height: 123%;
   }
 
-  .t21sm-t26lg, h3 {
-    font-size: 1.44rem !important;
+  .t21sm-t26lg, h3, h4 {
+    font-size: 1.44rem !important; /* 26px   */
     line-height: 123%;
   }
 
   .t21sm-t35lg, h2 {
-    font-size: 1.94rem !important;
+    font-size: 1.94rem !important; /* 35px   */
     line-height: 123%;
-  }
-
-  h3 {
-    font-size: 1.278rem !important;
-    line-height: 34.5px;
-
   }
 
   .t21sm-t23lg {

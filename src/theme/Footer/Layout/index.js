@@ -28,7 +28,7 @@ export default function FooterLayout({style, links, logo, copyright}) {
               <a href={productionUrl} className='t16 font-gray-400 bold'>Terms & Conditions</a>
             </div>
           )}
-          <hr className="w-100 bg-gray-700"/>
+          {/* <hr className="w-100 bg-gray-700 my-2"/>
 
           <div className="footer__bottom">
             <p className="t16 bold font-gray-200">Technology using:</p>
@@ -54,7 +54,7 @@ export default function FooterLayout({style, links, logo, copyright}) {
                 <p className="t16 font-gray-400">GitLab</p>
               </div>
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
     </footer>
