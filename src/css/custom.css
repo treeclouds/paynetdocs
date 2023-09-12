@@ -797,7 +797,7 @@ li code {
     backdrop-filter: blur(4px);
   }
 
-  .searchBox_node_modules-\@docusaurus-theme-classic-lib-theme-Navbar-Search-styles-module {
+  nav.navbar.navbar--fixed-top > .navbar__inner > .navbar__items > div:last-child {
     display: flex;
     align-items: center;
     box-sizing: border-box;
