@@ -66,7 +66,11 @@ const sidebars = {
       type: "category",
       label: "Products",
       items: [
-        "products/duitnow-transfer",
+        {
+          type: "link",
+          label: "DuitNow Transfer",
+          href: "/documentation/credit-transfer/introduction",
+        },
         "products/duitnow-online-banking",
         "products/duitnow-qr",
         "products/duitnow-bill-payment",

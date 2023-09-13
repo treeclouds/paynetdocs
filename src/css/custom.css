@@ -133,6 +133,11 @@ a:hover {
   margin-bottom: 0 !important;
 }
 
+.my-2 {
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
 @media (min-width: 1024px) {
   .mr-3-desktop {
     margin-right: 1.5rem;
@@ -431,7 +436,7 @@ ul.list-style-number li, .markdown .list-style-number ul li p {
   .markdown > h1 {
     margin-bottom: 1.77rem;
   }
-  .markdown > h2,  .markdown > h3{
+  .markdown > h2,  .markdown > h3 {
     margin: 0 0 0.88rem;
   }
 
@@ -489,18 +494,18 @@ li code {
 }
 
 /* Explicit on home */
-.docs-doc-id-home .docMainContainer_node_modules-\@docusaurus-theme-classic-lib-theme-DocPage-Layout-Main-styles-module{
+.docs-doc-id-home .markdown {
   background: linear-gradient(175deg, #fff 11%, #F9FAFB 11%);
 }
 
 @media (min-width: 1024px) {
-  .docs-doc-id-home .docMainContainer_node_modules-\@docusaurus-theme-classic-lib-theme-DocPage-Layout-Main-styles-module{
-    background: linear-gradient(175deg, #fff 15%, #F9FAFB 15%);
+  .docs-doc-id-home .markdown {
+    background: linear-gradient(175deg, #fff 13%, #F9FAFB 13%);
   }
 }
 
-@media (min-width: 1024px) {
-  .docs-doc-id-home .docMainContainer_node_modules-\@docusaurus-theme-classic-lib-theme-DocPage-Layout-Main-styles-module{
+@media (min-width: 1440px) {
+  .docs-doc-id-home .markdown {
     background: linear-gradient(175deg, #fff 18.5%, #F9FAFB 18.5%);
   }
 }
@@ -792,7 +797,7 @@ li code {
     backdrop-filter: blur(4px);
   }
 
-  .searchBox_node_modules-\@docusaurus-theme-classic-lib-theme-Navbar-Search-styles-module {
+  nav.navbar.navbar--fixed-top > .navbar__inner > .navbar__items > div:last-child {
     display: flex;
     align-items: center;
     box-sizing: border-box;
@@ -1351,7 +1356,7 @@ h1, h2, h3, h4:not(.docs-doc-id-API\/api-reference) {
 	line-height: 28px;
 }
 
-.t21sm-t26lg, h3 {
+.t21sm-t26lg, h3, h4 {
 	font-size: 1.167rem !important;
 	line-height: 28px;
 }
@@ -1361,7 +1366,7 @@ h1, h2, h3, h4:not(.docs-doc-id-API\/api-reference) {
 	line-height: 28px;
 }
 
-.t21, h4 {
+.t21 {
   font-size: 1.44rem !important;
   line-height: 123%;
 }
@@ -1468,20 +1473,14 @@ h1, h2, h3, h4:not(.docs-doc-id-API\/api-reference) {
     line-height: 123%;
   }
 
-  .t21sm-t26lg, h3 {
-    font-size: 1.44rem !important;
+  .t21sm-t26lg, h3, h4 {
+    font-size: 1.44rem !important; /* 26px   */
     line-height: 123%;
   }
 
   .t21sm-t35lg, h2 {
-    font-size: 1.94rem !important;
+    font-size: 1.94rem !important; /* 35px   */
     line-height: 123%;
-  }
-
-  h3 {
-    font-size: 1.278rem !important;
-    line-height: 34.5px;
-
   }
 
   .t21sm-t23lg {
