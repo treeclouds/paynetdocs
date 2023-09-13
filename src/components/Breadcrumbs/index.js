@@ -24,20 +24,22 @@ const Breadcrumbs = () => {
 pathSegments.unshift("home");
 
 
-const BreadcrumbItem = ({ segment }) => (
-  <a
-    className="breadcrumb-segment d-flex t14sm-t16lg font-gray-600"
-    href={segment === "home" ? "/documentation/getting-started" : null}
-  >
-    {segment === "home" ? (
-    <a className="breadcrumb-segment d-flex" href="/documentation/getting-started">
-    <HomeImage />
-  </a>
-    ) : (
-      segment.charAt(0).toUpperCase() + segment.slice(1)
-    )}
-  </a>
-);
+const BreadcrumbItem = ({ segment }) => {
+  // Replace dashes with spaces and capitalize each word
+  const label = segment.replace(/-/g, ' ').replace(/(^\w|\s\w)/g, (m) => m.toUpperCase());
+
+  return (
+    <a className="breadcrumb-segment d-flex t14sm-t16lg font-gray-600" href={segment === "home" ? "/documentation/getting-started" : null}>
+      {segment === "home" ? (
+        <a className="breadcrumb-segment d-flex" href="/documentation/getting-started">
+          <HomeImage />
+        </a>
+      ) : (
+        label
+      )}
+    </a>
+  );
+};
 
   useEffect(() => {
     setIsMobileView(window.innerWidth <= 768);

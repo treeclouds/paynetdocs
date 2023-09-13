@@ -1,15 +1,14 @@
-import React from 'react'
-import Banner from '../../static/img/docusaurus-social-card.jpg'
-import Image from '@theme/IdealImage';
+import React from 'react';
 import Layout from '@theme/Layout';
+import { Redirect } from 'react-router-dom';
 
 const Hello = () => {
+  // Use the Redirect component to navigate to /documentation
   return (
     <Layout>
-     <Image img={Banner} />
-
+      <Redirect to="/documentation" />
     </Layout>
-  )
-}
+  );
+};
 
-export default Hello
+export default Hello;
