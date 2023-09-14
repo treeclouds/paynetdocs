@@ -8,8 +8,13 @@ hide_title: true
 hide_table_of_contents: false
 custom_edit_url: null
 ---
-import Breadcrumbs from '@site/src/components/Breadcrumbs'; 
-import CardResource from '@site/src/components/CardResource'; 
+import Breadcrumbs from '@site/src/components/Breadcrumbs'
+import CardResource from '@site/src/components/CardResource'
+
+import FileGray from '@site/static/img/file-gray.svg'
+import FileBlue from '@site/static/img/file-blue.svg'
+import ResourceIconGray from '@site/static/img/resource-icon-gray.svg'
+import ResourceIconBlue from '@site/static/img/resource-icon-blue.svg'
 
 <Breadcrumbs/>
 
@@ -23,8 +28,11 @@ At this section, you may find resources or sample apps, that able to help you ki
 
 <div className="card-resource__wrapper">
   <CardResource
+    image= {<FileGray />}
+    imageHover= {<FileBlue />}
     title="DuitNow online banking / wallet merchant sample app"
     text="Lorem ipsum dolor sit amet consectetur. Diam nunc donec turpis nulla vitae sit at id nunc. In dolor neque justo sed. Tellus nascetur semper"
+    linkText="Download resources"
   />
 </div>
 
@@ -36,20 +44,32 @@ Please find some of the contributed libraries from the community. If you wish to
 
 <div className="card-resource__wrapper">
   <CardResource
+    image= {<FileGray />}
+    imageHover= {<FileBlue />}
     title="Message signature generator"
     text="Lorem ipsum dolor sit amet consectetur. Diam nunc donec turpis nulla vitae sit at id nunc. In dolor neque justo sed. Tellus nascetur semper"
+    linkText="Download resources"
   />
 
   <CardResource
-    title="Message signature SDK (Java)"
+    image= {<ResourceIconGray />}
+    imageHover= {<ResourceIconBlue />}
+    title="Webhook simulator"
     text="Lorem ipsum dolor sit amet consectetur. Diam nunc donec turpis nulla vitae sit at id nunc. In dolor neque justo sed. Tellus nascetur semper"
+    linkText="Run Simulator"
   />
 
   <CardResource
+    image= {<FileGray />}
+    imageHover= {<FileBlue />}
     title="PSR02 (Cycle)"
+    linkText="Download resources"
   />
 
   <CardResource
+    image= {<FileGray />}
+    imageHover= {<FileBlue />}
     title="PSR02 (Daily)"
+    linkText="Download resources"
   />
 </div>
