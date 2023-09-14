@@ -1086,12 +1086,30 @@ li code {
   column-gap: 0.88rem;
 }
 
-.navbar-sidebar__back {
+/* .navbar-sidebar__back:not(.docs-doc-id-home) {
+  display: none;
+} */
+
+.navbar-sidebar__back:not(.docs-do-id-home) {
+  display: none;
+}
+
+.docs-doc-id-home .navbar-sidebar__back { /* Need to be below display: none above */
   display: flex;
   align-items: center;
   background: var(--base-white);
   padding: 0.6rem calc(8px + 0.88rem);
-  font-size: 0; /* to delete: <-- Back to Main Menu ; */
+  font-size: 0;
+}
+
+@media(min-width: 1024px) {
+  .navbar-sidebar__back {
+    display: flex;
+    align-items: center;
+    background: var(--base-white);
+    padding: 0.6rem calc(8px + 0.88rem);
+    font-size: 0;
+  }
 }
 
 .navbar-sidebar__back::after {
