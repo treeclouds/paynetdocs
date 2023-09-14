@@ -145,19 +145,13 @@ const config = {
             position: "left"
           },
           {
-            to: "#",
-            label: "Go to Sandbox",
-            className: "button button--small button--white mobile-only w-100 mt-24px mr-16px",
-            position: "right"
-          },
-          {
             type: 'search',
             position: 'left',
           },
           {
             to: "#",
             label: "Go to Sandbox",
-            className: "button button--small button--white desktop-only",
+            className: "button button--small button--white",
             position: "right"
           },
           // {to: '/blog', label: 'Blog', position: 'left'},
