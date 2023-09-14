@@ -32,7 +32,10 @@ export const Wrapper = styled.div`
 export const CardLinkLeft = styled.div `
   display: grid;
   row-gap: 0.67rem;
-
+  
+  p {
+    margin-bottom: 0 !important;
+  }
     
   @media (min-width: 768px) {
     display: flex;
