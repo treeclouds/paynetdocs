@@ -180,7 +180,7 @@ const sidebars = {
     {
       type: "link",
       label: "Home",
-      href:"/api-reference/home",
+      href:"/api-reference",
       className: 'icon__link api-home__link',
     },
     {
