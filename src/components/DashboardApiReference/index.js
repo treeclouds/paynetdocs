@@ -57,7 +57,7 @@ const DashboardApiReference = () => {
             <div className='api-prod__content'>
               <p className='t16sm-t18lg font-gray-500'>Transfer your funds to any DuitNow ID including mobile number, MyKad/Passport number, Army/Police number and Business Registration number.</p>
               <TextBesidesIcon>
-                <p className='t14sm-t16lg bold font-blue-500'>See documentation</p>
+                <p> <a href="/api-reference/credit-transfer" className='t14sm-t16lg bold font-blue-500'>See documentation </a> </p>
                 <ChevronRight />
               </TextBesidesIcon>
             </div>
@@ -66,7 +66,7 @@ const DashboardApiReference = () => {
                 <div className='d-flex align-items-center'>
                   <FileGray className='icon-default'/>
                   <FileBlue className='icon-active'/>
-                  <h4 className='t16sm-t18lg ml-2'>Credit Transfer</h4>
+                  <h4> <a href="/api-reference/credit-transfer" className='t16sm-t18lg ml-2'>Credit Transfer </a> </h4>
                 </div>
                 <div className='badge badge--info t14 bold ml-2'>Beta</div>
               </ApiLinkCard>
@@ -74,7 +74,7 @@ const DashboardApiReference = () => {
                 <div className='d-flex align-items-center'>
                   <FileGray className='icon-default'/>
                   <FileBlue className='icon-active'/>
-                  <h4 className='t16sm-t18lg ml-2'>NAD</h4>
+                   <h4> <a href="/api-reference/nad" className='t16sm-t18lg ml-2'>National Addressing Database (NAD) </a> </h4> 
                 </div>
                 <div className='badge badge--info t14 bold ml-2'>Beta</div>
               </ApiLinkCard>
@@ -82,7 +82,7 @@ const DashboardApiReference = () => {
                 <div className='d-flex align-items-center'>
                   <FileGray className='icon-default'/>
                   <FileBlue className='icon-active'/>
-                  <h4 className='t16sm-t18lg ml-2'>Network administration</h4>
+                  <h4> <a href="/api-reference/network-administration" className='t16sm-t18lg ml-2'>Network administration </a> </h4>
                 </div>
                 <div className='badge badge--info t14 bold ml-2'>Beta</div>
               </ApiLinkCard>
@@ -96,7 +96,7 @@ const DashboardApiReference = () => {
             <div className='api-prod__content'>
               <p className='t16sm-t18lg font-gray-500'>A faster and more seamless checkout for individual customers on e-commerce and m-commerce platforms with simple redirection to their online banking or eWallet application.</p>
               <TextBesidesIcon>
-                <p className='t14sm-t16lg bold font-blue-500'>See documentation</p>
+                <p> <a href="/api-reference/dobw" className='t14sm-t16lg bold font-blue-500'> See documentation </a> </p>
                 <ChevronRight />
               </TextBesidesIcon>
             </div>
@@ -105,14 +105,14 @@ const DashboardApiReference = () => {
                 <div className='d-flex align-items-center'>
                   <FileGray className='icon-default'/>
                   <FileBlue className='icon-active'/>
-                  <h4 className='t16sm-t18lg ml-2'>DuitNow online banking/wallets (merchant)</h4>
+                  <h4> <a href="/api-reference/dobw" className='t16sm-t18lg ml-2'>DuitNow online banking/wallets (merchant) </a> </h4>
                 </div>
               </ApiLinkCard>
               <ApiLinkCard>
                 <div className='d-flex align-items-center'>
                   <FileGray className='icon-default'/>
                   <FileBlue className='icon-active'/>
-                  <h4 className='t16sm-t18lg ml-2'>DuitNow autodebit (merchant)</h4>
+                  <h4> <a href="/api-reference/autodebit" className='t16sm-t18lg ml-2'>DuitNow autodebit (merchant) </a> </h4>
                 </div>
                 <div className='badge badge--info t14 bold ml-2'>Beta</div>
               </ApiLinkCard>
@@ -126,7 +126,7 @@ const DashboardApiReference = () => {
             <div className='api-prod__content'>
               <p className='t16sm-t18lg font-gray-500'>An interoperable QR standard that allows Malaysians to make payments and receive funds from any participating Bank and eWallet with just one QR code.</p>
               <TextBesidesIcon>
-                <p className='t14sm-t16lg bold font-blue-500'>See documentation</p>
+                <p> <a href="/api-reference/qr" className='t14sm-t16lg bold font-blue-500'> </a> See documentation</p>
                 <ChevronRight />
               </TextBesidesIcon>
             </div>
@@ -135,7 +135,7 @@ const DashboardApiReference = () => {
                 <div className='d-flex align-items-center'>
                   <FileGray className='icon-default'/>
                   <FileBlue className='icon-active'/>
-                  <h4 className='t16sm-t18lg ml-2'>DuitNow QR API</h4>
+                  <h4> <a href="/api-reference/qr" className='t16sm-t18lg ml-2'>DuitNow QR API </a> </h4>
                 </div>
               </ApiLinkCard>
             </ApiLinkWrapper>
@@ -148,7 +148,7 @@ const DashboardApiReference = () => {
             <div className='api-prod__content'>
               <p className='t16sm-t18lg font-gray-500'>Make secure and real-time online payments for various services and product by using your Internet Banking accounts through checkout in a click.</p>
               <TextBesidesIcon>
-                <p className='t14sm-t16lg bold font-blue-500'>See documentation</p>
+                <p> <a href="/api-reference/fpx-webview-bank" className='t14sm-t16lg bold font-blue-500'>See documentation </a> </p>
                 <ChevronRight />
               </TextBesidesIcon>
             </div>
@@ -157,14 +157,14 @@ const DashboardApiReference = () => {
                 <div className='d-flex align-items-center'>
                   <FileGray className='icon-default'/>
                   <FileBlue className='icon-active'/>
-                  <h4 className='t16sm-t18lg ml-2'>Bank webview services</h4>
+                  <h4> <a href="/api-reference/fpx-webview-bank" className='t16sm-t18lg ml-2'>Bank webview services </a> </h4>
                 </div>
               </ApiLinkCard>
               <ApiLinkCard>
                 <div className='d-flex align-items-center'>
                   <FileGray className='icon-default'/>
                   <FileBlue className='icon-active'/>
-                  <h4 className='t16sm-t18lg ml-2'>FPX services</h4>
+                  <h4> <a href="/api-reference/fpx-services" className='t16sm-t18lg ml-2'>FPX services </a> </h4>
                 </div>
               </ApiLinkCard>
             </ApiLinkWrapper>
@@ -177,7 +177,7 @@ const DashboardApiReference = () => {
             <div className='api-prod__content'>
               <p className='t16sm-t18lg font-gray-500'>Electronic payment system that enables consumers to make purchases and transactions using their local bank savings or current accounts via debit cards.</p>
               <TextBesidesIcon>
-                <p className='t14sm-t16lg bold font-blue-500'>See documentation</p>
+                <p> <a href="/api-reference/tsp-issuer" className='t14sm-t16lg bold font-blue-500'> See documentation </a> </p>
                 <ChevronRight />
               </TextBesidesIcon>
             </div>
@@ -186,14 +186,14 @@ const DashboardApiReference = () => {
                 <div className='d-flex align-items-center'>
                   <FileGray className='icon-default'/>
                   <FileBlue className='icon-active'/>
-                  <h4 className='t16sm-t18lg ml-2'>Tokenisation services for issuer</h4>
+                  <h4> <a href="/api-reference/tsp-issuer" className='t16sm-t18lg ml-2'>Tokenisation services for issuer </a> </h4>
                 </div>
               </ApiLinkCard>
               <ApiLinkCard>
                 <div className='d-flex align-items-center'>
                   <FileGray className='icon-default'/>
                   <FileBlue className='icon-active'/>
-                  <h4 className='t16sm-t18lg ml-2'>Tokenisation services for acquirer/merchant</h4>
+                  <h4> <a href="/api-reference/tsp-acq" className='t16sm-t18lg ml-2'>Tokenisation services for acquirer/merchant </a> </h4>
                 </div>
               </ApiLinkCard>
             </ApiLinkWrapper>
@@ -206,7 +206,7 @@ const DashboardApiReference = () => {
             <div className='api-prod__content'>
               <p className='t16sm-t18lg font-gray-500'>Online bill payment platform that allows users to pay their bills quickly and securely through their online banking accounts.</p>
               <TextBesidesIcon>
-                <p className='t14sm-t16lg bold font-blue-500'>See documentation</p>
+                <p> <a href="/api-reference/jompay-bns" className='t14sm-t16lg bold font-blue-500'>See documentation </a> </p>
                 <ChevronRight />
               </TextBesidesIcon>
             </div>
@@ -215,21 +215,21 @@ const DashboardApiReference = () => {
                 <div className='d-flex align-items-center'>
                   <FileGray className='icon-default'/>
                   <FileBlue className='icon-active'/>
-                  <h4 className='t16sm-t18lg ml-2'>Biller notification services</h4>
+                  <h4> <a href="/api-reference/jompay-bns" className='t16sm-t18lg ml-2'>Biller notification services </a> </h4>
                 </div>
               </ApiLinkCard>
               <ApiLinkCard>
                 <div className='d-flex align-items-center'>
                   <FileGray className='icon-default'/>
                   <FileBlue className='icon-active'/>
-                  <h4 className='t16sm-t18lg ml-2'>Biller notification services</h4>
+                  <h4> <a href="/api-reference/jompay-brs" className='t16sm-t18lg ml-2'>Biller registration services </a> </h4>
                 </div>
               </ApiLinkCard>
               <ApiLinkCard>
                 <div className='d-flex align-items-center'>
                   <FileGray className='icon-default'/>
                   <FileBlue className='icon-active'/>
-                  <h4 className='t16sm-t18lg ml-2'>Biller notification services</h4>
+                  <h4> <a href="/api-reference/jompay-bvs" className='t16sm-t18lg ml-2'>Biller validation services </a> </h4>
                 </div>
               </ApiLinkCard>
             </ApiLinkWrapper>
