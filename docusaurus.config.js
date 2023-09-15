@@ -118,6 +118,7 @@ const config = {
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
       // Replace with your project's social card
+      GLOBAL_URL:"Hello",
       image: "img/logo-paynet.svg",
       algolia: {
         apiKey:'d202c6e09c0827e99714d9a7d679d421',

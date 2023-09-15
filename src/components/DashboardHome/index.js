@@ -12,8 +12,10 @@ import MyDebit from "@site/static/img/mydebit.svg"
 import Jompay from "@site/static/img/jompay.svg"
 import Rocket from "@site/static/img/rocket-gray.svg"
 import Code from "@site/static/img/api-gray.svg"
+import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 
 const DashboardHome = () => {
+  const { siteConfig } = useDocusaurusContext()
   const rive = require("@rive-app/canvas");
   const canvasRefDoc = useRef(null);
   useEffect(() => {
@@ -35,7 +37,7 @@ const DashboardHome = () => {
       <Wrapper>
         <HeaderBannerWrapper>
           <BannerCaptionWrapper>
-            <h1 className='t26sm-t42lg'>Documentations</h1>
+            <h1 className='t26sm-t42lg'>Documentations {siteConfig.themeConfig.GLOBAL_URL}</h1>
             <p className='t16sm-t23lg font-gray-500'>See guides, references and resources to help you build with PayNet</p>
           </BannerCaptionWrapper>
           <canvas className='d-flex' ref={canvasRefDoc} width={500} height={500}></canvas>
