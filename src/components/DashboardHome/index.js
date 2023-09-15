@@ -1,21 +1,18 @@
 import React, {useRef, useEffect} from 'react'
 import Image from '@theme/IdealImage';
 
-import { Wrapper, BannerTitle, CardBannerWrapper, BannerText, BannerCaptionWrapper, CardProductSection, CardProductWrapper, MobileOnly, DesktopOnly, h2, TextBesidesIcon, h3, CardProductListWrapper, HeaderBannerWrapper } from './element';
+import { Wrapper, CardBannerWrapper, BannerCaptionWrapper, CardProductSection, CardProductWrapper, TextBesidesIcon, CardProductListWrapper, HeaderBannerWrapper } from './element';
 import Card from "../Card/index.js"
 import CardBanner from "../CardBanner/index.js"
-
-import BannerMobile from "../../../static/img/banner-docs-mobile.png"
-import BannerDesktop from "../../../static/img/header.png"
 
 import DuitNow from "@site/static/img/duitnow.svg"
 import AccentLeft from "@site/static/img/accent-left.svg"
 import AccentRight from "@site/static/img/accent-right.svg"
-
 import MyDebit from "@site/static/img/mydebit.svg"
 import Jompay from "@site/static/img/jompay.svg"
 import Rocket from "@site/static/img/rocket-gray.svg"
 import Code from "@site/static/img/api-gray.svg"
+
 const DashboardHome = () => {
   const rive = require("@rive-app/canvas");
   const canvasRefDoc = useRef(null);
@@ -50,7 +47,7 @@ const DashboardHome = () => {
             image= {<Rocket />}
             title="Getting Started"
             text="See guides, references and resources to help you build with PayNet"
-            href="/getting-started"
+            href="/documentation/getting-started"
             cta="Quick start"
           />
           <CardBanner

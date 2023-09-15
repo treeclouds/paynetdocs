@@ -544,7 +544,7 @@ li code {
   display: none;
 } */
 
-.navbar-sidebar__item.menu .menu__list .menu__list-item:last-child {
+.navbar-sidebar__items:not(.navbar-sidebar__items--show-secondary) .menu__list .menu__list-item:last-child {
   margin: 1.33rem 0.88rem 0;
 }
 
