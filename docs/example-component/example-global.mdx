@@ -1,0 +1,45 @@
+---
+title: Example Global
+description: Sandbox
+slug: /example/global-variable
+
+displayed_sidebar: sideBarHome
+hide_title: true
+custom_edit_url: null
+---
+
+import Breadcrumbs from '@site/src/components/Breadcrumbs'; 
+import GlobalButton from '@site/src/components/GlobalButton'; 
+
+
+<Breadcrumbs/>
+
+
+
+### This is the code look like for this button
+
+```jsx
+import useDocusaurusContext from '@docusaurus/useDocusaurusContext'
+import React from 'react'
+
+const GlobalButton = () => {
+  const { siteConfig } = useDocusaurusContext()
+
+  return (
+    <div>
+      <a href={`/${siteConfig.themeConfig.GLOBAL_URL}`} class="button">Click Me</a>
+    </div>
+  )
+}
+export default GlobalButton
+
+```
+<GlobalButton/>
+
+ 
+:::info 
+Everything you want to put global variable put it inside react component 
+and call it inside .MDX files
+:::
+
+

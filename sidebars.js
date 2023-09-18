@@ -93,6 +93,7 @@ const sidebars = {
         "example-component/duitnow-signature",
         "example-component/mapping-table",
         "example-component/fi-server",
+        "example-component/example-global"
       ],
       className: 'icon__link api__link',
     }
