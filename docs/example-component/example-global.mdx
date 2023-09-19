@@ -9,7 +9,7 @@ custom_edit_url: null
 ---
 
 import Breadcrumbs from '@site/src/components/Breadcrumbs'; 
-import GlobalButton from '@site/src/components/GlobalButton'; 
+import DynamicUrl from '@site/src/components/DynamicUrl'; 
 
 
 <Breadcrumbs/>
@@ -23,7 +23,7 @@ import useDocusaurusContext from '@docusaurus/useDocusaurusContext'
 import React from 'react'
 import { Wrapper } from './element'
 
-const GlobalButton = ({type="button", label="Click me"}) => {
+const DynamicUrl = ({type="button", label="Click me"}) => {
   const { siteConfig } = useDocusaurusContext()
 
   return (
@@ -31,12 +31,12 @@ const GlobalButton = ({type="button", label="Click me"}) => {
       {type==="button"? 
       <a href={`/${siteConfig.themeConfig.GLOBAL_URL}`} className="button">{label}</a>
       : 
-      <a href={`/${siteConfig.themeConfig.GLOBAL_URL}`} className="word">{label}</a>
+      <a href={`/${siteConfig.themeConfig.GLOBAL_URL}`} className="text">{label}</a>
       }
     </Wrapper>
   )
 }
-export default GlobalButton
+export default DynamicUrl
 
 ```
 
@@ -50,11 +50,11 @@ and call it inside .MDX files
 ### Examples
 
 <p>
-this link for example purpose only <GlobalButton type="word" label="click here"/>
+this link for example purpose only <DynamicUrl type="text" label="click here"/>
 </p>
 
 <p>
-this link for example purpose only <GlobalButton type="button" label="click"/>
+this link for example purpose only <DynamicUrl type="button" label="click"/>
 
 </p>
 
