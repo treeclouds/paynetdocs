@@ -25,13 +25,99 @@ pathSegments.unshift("home");
 
 
 const BreadcrumbItem = ({ segment }) => {
-  // Replace dashes with spaces and capitalize each word
-  const label = segment.replace(/-/g, ' ').replace(/(^\w|\s\w)/g, (m) => m.toUpperCase());
+  const uppercaseWords = ['JWS', 'NAD'];
+
+  // Define words to exclude from capitalization
+  const lowercaseWords = ['and', 'to'];
+
+  // Handle the specific case: business-to-consumer
+  if (segment.toLowerCase().includes('b2c')) {
+    const modifiedLabel = segment
+        .replace(/b2c/i, 'Business to Consumer (B2C)')
+        .replace(/-/g, ' ')
+        .split(' ')
+        .map((word) => {
+            const lowercaseWord = word.toLowerCase();
+            if (lowercaseWords.includes(lowercaseWord)) {
+                return lowercaseWord; // Keep excluded words in lowercase
+            } else if (uppercaseWords.includes(lowercaseWord)) {
+                return word.toUpperCase(); // Keep specified words in uppercase
+            } else {
+                return word.charAt(0).toUpperCase() + word.slice(1); // Capitalize other words
+            }
+        })
+        .join(' ');;
+
+    return (
+      <a className="breadcrumb-segment d-flex t14sm-t16lg font-gray-600">
+        {modifiedLabel}
+      </a>
+    );
+  }else if (segment.toLowerCase().includes('b2b')) {
+    const modifiedLabel = segment
+        .replace(/b2b/i, 'Business to Business (B2B)')
+        .replace(/-/g, ' ')
+        .split(' ')
+        .map((word) => {
+            const lowercaseWord = word.toLowerCase();
+            if (lowercaseWords.includes(lowercaseWord)) {
+                return lowercaseWord; // Keep excluded words in lowercase
+            } else if (uppercaseWords.includes(lowercaseWord)) {
+                return word.toUpperCase(); // Keep specified words in uppercase
+            } else {
+                return word.charAt(0).toUpperCase() + word.slice(1); // Capitalize other words
+            }
+        })
+        .join(' ');;
+
+    return (
+      <a className="breadcrumb-segment d-flex t14sm-t16lg font-gray-600">
+        {modifiedLabel}
+      </a>
+    );
+  }else if (segment.toLowerCase().includes('brs')) {
+    const modifiedLabel = segment
+        .replace(/brs/i, 'Biller Registration System (BRS)')
+        .replace(/-/g, ' ')
+        .split(' ')
+        .map((word) => {
+            const lowercaseWord = word.toLowerCase();
+            if (lowercaseWords.includes(lowercaseWord)) {
+                return lowercaseWord; // Keep excluded words in lowercase
+            } else if (uppercaseWords.includes(lowercaseWord)) {
+                return word.toUpperCase(); // Keep specified words in uppercase
+            } else {
+                return word.charAt(0).toUpperCase() + word.slice(1); // Capitalize other words
+            }
+        })
+        .join(' ');;
+
+    return (
+      <a className="breadcrumb-segment d-flex t14sm-t16lg font-gray-600">
+        {modifiedLabel}
+      </a>
+    );
+  }
+
+  const label = segment
+    .replace(/-/g, ' ')
+    .split(' ')
+    .map((word) => {
+      const lowercaseWord = word.toLowerCase();
+      if (lowercaseWords.includes(lowercaseWord)) {
+        return lowercaseWord; // Keep excluded words in lowercase
+      } else if (uppercaseWords.includes(lowercaseWord)) {
+        return word.toUpperCase(); // Keep specified words in uppercase
+      } else {
+        return word.charAt(0).toUpperCase() + word.slice(1); // Capitalize other words
+      }
+    })
+    .join(' ');
 
   return (
-    <a className="breadcrumb-segment d-flex t14sm-t16lg font-gray-600" href={segment === "home" ? "/documentation/getting-started" : null}>
+    <a className="breadcrumb-segment d-flex t14sm-t16lg font-gray-600" href={segment === "home" ? "/docs/getting-started" : null}>
       {segment === "home" ? (
-        <a className="breadcrumb-segment d-flex" href="/documentation/getting-started">
+        <a className="breadcrumb-segment d-flex" href="/docs/getting-started">
           <HomeImage />
         </a>
       ) : (
@@ -39,7 +125,7 @@ const BreadcrumbItem = ({ segment }) => {
       )}
     </a>
   );
-};
+}
 
   useEffect(() => {
     setIsMobileView(window.innerWidth <= 768);
@@ -57,7 +143,7 @@ const BreadcrumbItem = ({ segment }) => {
   if (isMobileView && pathSegments.length > 2) {
     const shortBreadcrumb = (
       <React.Fragment>
-        <a className="breadcrumb-segment d-flex" href="/documentation/getting-started">
+        <a className="breadcrumb-segment d-flex" href="/docs/getting-started">
         <HomeImage />
         </a>
         <div className="breadcrumb-separator"></div> ... <div className="breadcrumb-separator"></div> <p className="font-blue-500 bold mb-0">{pathSegments[pathSegments.length - 1]}</p> 
