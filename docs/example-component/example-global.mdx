@@ -1,0 +1,64 @@
+---
+title: Example Global
+description: Sandbox
+slug: /example/global-variable
+
+displayed_sidebar: sideBarHome
+hide_title: true
+custom_edit_url: null
+---
+
+import Breadcrumbs from '@site/src/components/Breadcrumbs'; 
+import DynamicUrl from '@site/src/components/DynamicUrl'; 
+
+
+<Breadcrumbs/>
+
+
+
+### This is the code look like for this button
+
+```jsx
+import useDocusaurusContext from '@docusaurus/useDocusaurusContext'
+import React from 'react'
+import { Wrapper } from './element'
+
+const DynamicUrl = ({type="button", label="Click me"}) => {
+  const { siteConfig } = useDocusaurusContext()
+
+  return (
+    <Wrapper>
+      {type==="button"? 
+      <a href={`/${siteConfig.themeConfig.GLOBAL_URL}`} className="button">{label}</a>
+      : 
+      <a href={`/${siteConfig.themeConfig.GLOBAL_URL}`} className="text">{label}</a>
+      }
+    </Wrapper>
+  )
+}
+export default DynamicUrl
+
+```
+
+ 
+:::info 
+Everything you want to put global variable put it inside react component 
+and call it inside .MDX files
+
+:::
+
+### Examples
+
+<p>
+this link for example purpose only <DynamicUrl type="text" label="click here"/>
+</p>
+
+<p>
+this link for example purpose only <DynamicUrl type="button" label="click"/>
+
+</p>
+
+
+
+
+
