@@ -1,9 +1,9 @@
 import React from 'react'
 
 import {Wrapper, CardHeader, DownloadWrapper} from './element'
-import DownloadBlue from "@site/static/img/download-blue.svg"
+import ArrowIcon from "@site/static/img/arrow-right-blue.svg"
 
-const CardResource = (props) => {
+const CardResourceLink = (props) => {
   return (
     <>
     <Wrapper>
@@ -18,12 +18,12 @@ const CardResource = (props) => {
       </CardHeader>
       <p className='t14sm-t16lg font-gray-500'>{props.text}</p>
       <DownloadWrapper>
-        <DownloadBlue/>
         <p className='t16sm-t18lg bold font-blue-500 ml-2'>{props.linkText}</p>
+        <ArrowIcon/>
       </DownloadWrapper>
     </Wrapper>
     </>
   )
 }
 
-export default CardResource
+export default CardResourceLink

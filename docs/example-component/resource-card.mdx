@@ -10,6 +10,7 @@ custom_edit_url: null
 ---
 import Breadcrumbs from '@site/src/components/Breadcrumbs'
 import CardResource from '@site/src/components/CardResource'
+import CardResourceLink from '@site/src/components/CardResourceLink'
 
 import FileGray from '@site/static/img/file-gray.svg'
 import FileBlue from '@site/static/img/file-blue.svg'
@@ -51,7 +52,7 @@ Please find some of the contributed libraries from the community. If you wish to
     linkText="Download resources"
   />
 
-  <CardResource
+  <CardResourceLink
     image= {<ResourceIconGray />}
     imageHover= {<ResourceIconBlue />}
     title="Webhook simulator"
