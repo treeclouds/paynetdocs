@@ -1172,7 +1172,11 @@ export const Wrapper = styled.div`
   .sl-stack.sl-stack--vertical.sl-stack--5.sl-flex.sl-flex-col >
   div:nth-child(2) > div > div > div > div >
   .sl-stack.sl-stack--vertical.sl-stack--1.sl-flex.sl-flex-1.sl-flex-col > 
-  div:nth-child(2) > li > a > b {
+  div:nth-child(2) > li > a > b,
+  .sl-stack.sl-stack--vertical.sl-stack--5.sl-flex.sl-flex-col >
+  div:nth-child(2) > div > div > div > div > div >
+  .sl-stack.sl-stack--vertical.sl-stack--1.sl-flex.sl-flex-1.sl-flex-col > 
+  div:nth-child(2) > li > a > b  {
     color: #2179BE !important;
     font-size: 14px;
     font-style: normal;
@@ -1432,6 +1436,10 @@ export const Wrapper = styled.div`
   .sl-stack.sl-stack--vertical.sl-stack--8.sl-flex.sl-flex-col.sl-items-stretch.sl-pt-8 > 
   div:nth-child(3) > div > div > div:nth-child(3) > 
   div:nth-child(2) > div[data-test="schema-row"] > div:nth-child(2).sl-stack.sl-stack--vertical >
+  div:nth-child(1) > span:nth-child(3),
+  .sl-stack.sl-stack--vertical.sl-stack--8.sl-flex.sl-flex-col.sl-items-stretch.sl-pt-8 > 
+  div:nth-child(3) > div > div > div:nth-child(3) > 
+  div:nth-child(2) > div > div[data-test="schema-row"] > div:nth-child(2).sl-stack.sl-stack--vertical >
   div:nth-child(1) > span:nth-child(3) {
     color: #D92D20;
     font-size: 14px;
@@ -1487,6 +1495,10 @@ export const Wrapper = styled.div`
   .sl-stack.sl-stack--vertical.sl-stack--8.sl-flex.sl-flex-col.sl-items-stretch.sl-pt-8 > 
   div:nth-child(3) > div > div > div:nth-child(3) > 
   div:nth-child(2) > div[data-test="schema-row"] > div:nth-child(2).sl-stack.sl-stack--vertical >
+  div:nth-child(3) > span,
+  .sl-stack.sl-stack--vertical.sl-stack--8.sl-flex.sl-flex-col.sl-items-stretch.sl-pt-8 > 
+  div:nth-child(3) > div > div > div:nth-child(3) > 
+  div:nth-child(2) > div > div[data-test="schema-row"] > div:nth-child(2).sl-stack.sl-stack--vertical >
   div:nth-child(3) > span {
     padding: 2px 6px;
     border-radius: 6px;
@@ -1521,9 +1533,61 @@ export const Wrapper = styled.div`
   .sl-stack.sl-stack--vertical.sl-stack--8.sl-flex.sl-flex-col.sl-items-stretch.sl-pt-8 > 
   div:nth-child(3) > div > div > div:nth-child(3) > 
   div:nth-child(2) > div[data-test="schema-row"] > div:nth-child(2).sl-stack.sl-stack--vertical >
-  div:nth-child(1) > div:nth-child(2) > div {
+  div:nth-child(1) > div:nth-child(2) > div,
+  .sl-stack.sl-stack--vertical.sl-stack--8.sl-flex.sl-flex-col.sl-items-stretch.sl-pt-8 > 
+  div:nth-child(3) > div > div > div:nth-child(3) > 
+  div:nth-child(2) > div > div[data-test="schema-row"] > div:nth-child(2).sl-stack.sl-stack--vertical >
+  div:nth-child(1) > div:nth-child(1) > div {
     color: #475467;
     font-family: unset;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 150%;
+  }
+
+  .sl-stack.sl-stack--vertical.sl-stack--8.sl-flex.sl-flex-col.sl-items-stretch.sl-pt-8 > 
+  div:nth-child(3) > div > div > div:nth-child(3) > 
+  div:nth-child(2) > div > div[data-test="schema-row"] > div:nth-child(2).sl-stack.sl-stack--vertical >
+  div:nth-child(2) > p > span,
+  .sl-stack.sl-stack--vertical.sl-stack--8.sl-flex.sl-flex-col.sl-items-stretch.sl-pt-8 > 
+  div:nth-child(3) > div > div > div:nth-child(3) > 
+  div:nth-child(2) > div > div[data-test="schema-row"] > div:nth-child(2).sl-stack.sl-stack--vertical >
+  div:nth-child(4) > span,
+  .sl-stack.sl-stack--vertical.sl-stack--8.sl-flex.sl-flex-col.sl-items-stretch.sl-pt-8 > 
+  div:nth-child(3) > div > div > div:nth-child(3) > 
+  div:nth-child(2) > div > div[data-test="schema-row"] > div:nth-child(2).sl-stack.sl-stack--vertical >
+  div:nth-child(4) > div > span {
+    color: #475467;
+    font-family: unset;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 300;
+    line-height: 150%;
+  }
+
+  .sl-stack.sl-stack--vertical.sl-stack--8.sl-flex.sl-flex-col.sl-items-stretch.sl-pt-8 > 
+  div:nth-child(3) > div > div > div:nth-child(3) > 
+  div:nth-child(2) > div > div[data-test="schema-row"] > div:nth-child(2).sl-stack.sl-stack--vertical >
+  div:nth-child(3) > div > span {
+    padding: 2px 6px;
+    border-radius: 6px;
+    border: 1px solid #EAECF0;
+    background: #F9FAFB;
+    color: #344054;
+    text-align: center;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 150%;
+  }
+
+
+  .sl-stack.sl-stack--vertical.sl-stack--8.sl-flex.sl-flex-col.sl-items-stretch.sl-pt-8 > 
+  div:nth-child(3) > div > div > div:nth-child(3) > 
+  div:nth-child(2) > div > div[data-test="schema-row"] > div:nth-child(2).sl-stack.sl-stack--vertical >
+  div:nth-child(2) > P > a {
+    color: #2179BE!important;
     font-size: 14px;
     font-style: normal;
     font-weight: 700;
@@ -1533,12 +1597,23 @@ export const Wrapper = styled.div`
   .sl-stack.sl-stack--vertical.sl-stack--8.sl-flex.sl-flex-col.sl-items-stretch.sl-pt-8 > 
   div:nth-child(3) > div > div > div:nth-child(3) > 
   div:nth-child(2) > div[data-test="schema-row"] > div:nth-child(2).sl-stack.sl-stack--vertical >
-  div:nth-child(1) > div:nth-child(2) > span {
+  div:nth-child(1) > div:nth-child(2) > span,
+  .sl-stack.sl-stack--vertical.sl-stack--8.sl-flex.sl-flex-col.sl-items-stretch.sl-pt-8 > 
+  div:nth-child(3) > div > div > div:nth-child(3) > 
+  div:nth-child(2) > div > div[data-test="schema-row"] > div:nth-child(2).sl-stack.sl-stack--vertical >
+  div:nth-child(1) > div:nth-child(1) > span {
     color: #475467;
     font-size: 14px;
     font-style: normal;
     font-weight: 300;
     line-height: 150%;
+  }
+
+  .sl-stack.sl-stack--vertical.sl-stack--8.sl-flex.sl-flex-col.sl-items-stretch.sl-pt-8 > 
+  div:nth-child(3) > div > div > div:nth-child(3) > 
+  div:nth-child(2) > div > div[data-test="schema-row"] > div:nth-child(2).sl-stack.sl-stack--vertical >
+  div:nth-child(1) > div:nth-child(1) > span {
+    
   }
   
   .sl-stack.sl-stack--vertical.sl-stack--8.sl-flex.sl-flex-col.sl-items-stretch.sl-pt-8 > 
