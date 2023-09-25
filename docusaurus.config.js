@@ -9,7 +9,7 @@ const { ProvidePlugin } = require("webpack");
 const config = {
   title: "My Site",
   tagline: "Dinosaurs are cool",
-  favicon: "img/favicon.ico",
+  favicon: "img/fav_icon.svg",
 
   // Set the production url of your site here
   url: "https://paynet-docu.netlify.app/",
