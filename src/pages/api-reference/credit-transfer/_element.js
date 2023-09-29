@@ -1,6 +1,13 @@
 import styled from "styled-components";
 
 export const Wrapper = styled.div`
+  .sl-overflow-y-auto.sl-flex-1.sl-w-full.sl-px-24.sl-bg-canvas {
+    overflow: unset;
+  }
+  nav {
+    position: unset !important;
+  }
+
   button[aria-expanded="true"].navbar__toggle.clean-btn + div.sl-elements-api.sl-flex.sl-h-full>div:nth-child(1) {
     display: flex;
   }
@@ -172,11 +179,11 @@ export const Wrapper = styled.div`
   }
 
   //sidebar wrapper
-  @media (max-width: 768px) {
-    div.sl-elements-api.sl-flex.sl-h-full > div:nth-child(1) {
-      display: none;
-    }
-  }
+  // @media (max-width: 768px) {
+  //   div.sl-elements-api.sl-flex.sl-h-full > div:nth-child(1) {
+  //     display: none;
+  //   }
+  // }
   
   .sl-flex.sl-overflow-y-auto.sl-flex-col.sl-sticky.sl-inset-y-0.sl-bg-canvas-100.sl-border-r {
     padding: 24px 8px !important;
@@ -198,8 +205,9 @@ export const Wrapper = styled.div`
 
   //default badge state
   .ElementsTableOfContentsItem .sl-bg-canvas-100 div:nth-child(2) .sl-uppercase.sl-text-warning,
-  .ElementsTableOfContentsItem .sl-bg-canvas-100 div:nth-child(2) .sl-uppercase.sl-text-success ,
-  .ElementsTableOfContentsItem .sl-bg-canvas-100 div:nth-child(2) .sl-uppercase.sl-text-primary{
+  .ElementsTableOfContentsItem .sl-bg-canvas-100 div:nth-child(2) .sl-uppercase.sl-text-success,
+  .ElementsTableOfContentsItem .sl-bg-canvas-100 div:nth-child(2) .sl-uppercase.sl-text-primary,
+  .ElementsTableOfContentsItem .sl-bg-canvas-100 div:nth-child(2) .sl-uppercase.sl-text-danger{
     color: #344054 !important;
     text-align: center;
     font-size: 14px;
@@ -212,8 +220,8 @@ export const Wrapper = styled.div`
   .ElementsTableOfContentsItem .sl-bg-canvas-100 div:nth-child(2) .sl-uppercase.sl-text-warning {
     padding: 2px 6px !important;
     border-radius: 6px;
-    border: 1px solid #FECDCA;
-    background: #FEF3F2;
+    border: 1px solid #FEDF89;
+    background: #FFFAEB;
   }
 
   .ElementsTableOfContentsItem .sl-bg-canvas-100 div:nth-child(2) .sl-uppercase.sl-text-success {
@@ -230,10 +238,18 @@ export const Wrapper = styled.div`
     background: #E9F2F9;
   }
 
+  .ElementsTableOfContentsItem .sl-bg-canvas-100 div:nth-child(2) .sl-uppercase.sl-text-danger {
+    padding: 2px 6px !important;
+    border-radius: 6px;
+    border: 1px solid #FECDCA;
+    background: #FEF3F2;
+  }
+
   //highlighted badge state
   .ElementsTableOfContentsItem .sl-bg-primary-tint div:nth-child(2) .sl-uppercase.sl-text-warning,
   .ElementsTableOfContentsItem .sl-bg-primary-tint div:nth-child(2) .sl-uppercase.sl-text-success,
-  .ElementsTableOfContentsItem .sl-bg-primary-tint div:nth-child(2) .sl-uppercase.sl-text-primary {
+  .ElementsTableOfContentsItem .sl-bg-primary-tint div:nth-child(2) .sl-uppercase.sl-text-primary,
+  .ElementsTableOfContentsItem .sl-bg-primary-tint div:nth-child(2) .sl-uppercase.sl-text-danger {
     color: #344054 !important;
     text-align: center;
     font-size: 14px;
@@ -246,8 +262,8 @@ export const Wrapper = styled.div`
   .ElementsTableOfContentsItem .sl-bg-primary-tint div:nth-child(2) .sl-uppercase.sl-text-warning {
     padding: 2px 6px !important;
     border-radius: 6px;
-    border: 1px solid #FECDCA;
-    background: #FEF3F2;
+    border: 1px solid #FEDF89;
+    background: #FFFAEB;
   }
 
   .ElementsTableOfContentsItem .sl-bg-primary-tint div:nth-child(2) .sl-uppercase.sl-text-success {
@@ -262,6 +278,13 @@ export const Wrapper = styled.div`
     border-radius: 6px;
     border: 1px solid #A6C9E5;
     background: #E9F2F9;
+  }
+
+  .ElementsTableOfContentsItem .sl-bg-primary-tint div:nth-child(2) .sl-uppercase.sl-text-danger {
+    padding: 2px 6px !important;
+    border-radius: 6px;
+    border: 1px solid #FECDCA;
+    background: #FEF3F2;
   }
 
   // higlighted state link
@@ -407,6 +430,11 @@ export const Wrapper = styled.div`
     
   .sl-overflow-y-auto.sl-flex-1.sl-w-full.sl-px-24.sl-bg-canvas div.sl-py-16 {
     padding-top: 1rem;
+  }
+  @media (max-width: 768px) {
+    .sl-overflow-y-auto.sl-flex-1.sl-w-full.sl-px-24.sl-bg-canvas div.sl-py-16 {
+      max-width: 768px;
+    }
   }
   
   .sl-overflow-y-auto.sl-flex-1.sl-w-full.sl-px-24.sl-bg-canvas >
@@ -933,8 +961,8 @@ export const Wrapper = styled.div`
   .sl-relative .sl-stack.sl-stack--horizontal.sl-stack--3 .sl-text-lg.sl-bg-warning.sl-text-on-primary.sl-rounded-lg {
     padding: 2px 6px !important;
     border-radius: 6px;
-    border: 1px solid #FECDCA;
-    background: #FEF3F2;
+    border: 1px solid #FEDF89;
+    background: #FFFAEB;
 
     color: #344054 !important;
     text-transform: uppercase;
@@ -950,6 +978,21 @@ export const Wrapper = styled.div`
     border-radius: 6px;
     border: 1px solid #A6C9E5;
     background: #E9F2F9;
+
+    color: #344054 !important;
+    text-transform: uppercase;
+    text-align: center;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 150%
+  }
+
+  .sl-relative .sl-stack.sl-stack--horizontal.sl-stack--3 .sl-text-lg.sl-bg-danger.sl-text-on-primary.sl-rounded-lg {
+    padding: 2px 6px !important;
+    border-radius: 6px;
+    border: 1px solid #FECDCA;
+    background: #FEF3F2;
 
     color: #344054 !important;
     text-transform: uppercase;
@@ -1364,8 +1407,13 @@ export const Wrapper = styled.div`
   // Body data title wrapper
   .sl-stack.sl-stack--vertical.sl-stack--8.sl-flex.sl-flex-col.sl-items-stretch.sl-pt-8 > 
   div:nth-child(3) > div > div > div:nth-child(3) > 
-  div:nth-child(1) > div:nth-child(2) > div > div:nth-child(2) > div {
+  div[data-test="schema-row"] > div:nth-child(2) > div > div:nth-child(2) > div,
+  div[data-test="schema-row"] > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div,
+  div[data-test="schema-row"] > div:nth-child(2) > div:nth-child(2) > p > b,
+  div[data-test="schema-row"] > div:nth-child(2) > div > div:nth-child(2) > div,
+  div[data-test="schema-row"] > div:nth-child(1) > div:nth-child(2) > span {
     color: #475467;
+    font-family: unset;
     font-size: 14px;
     font-style: normal;
     font-weight: 700;
@@ -1374,8 +1422,36 @@ export const Wrapper = styled.div`
 
   .sl-stack.sl-stack--vertical.sl-stack--8.sl-flex.sl-flex-col.sl-items-stretch.sl-pt-8 > 
   div:nth-child(3) > div > div > div:nth-child(3) > 
-  div:nth-child(1) > div:nth-child(2) > div > div:nth-child(2) > span {
+  div[data-test="schema-row"] > div:nth-child(2) > div > div:nth-child(2) > span,
+  div[data-test="schema-row"] > div:nth-child(2) > div:nth-child(2) > p,
+  div[data-test="schema-row"] > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > span,
+  div[data-test="schema-row"] > div:nth-child(2) > div:nth-child(2) > li,
+  div[data-test="schema-row"] > div:nth-child(2) > div > div:nth-child(2) > span,
+  div[data-test="schema-row"] > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > span,
+  div[data-test="schema-row"] > div:nth-child(1) > div:nth-child(2) > p,
+  div[data-test="schema-row"] > div:nth-child(1) > div:nth-child(2) > p > span {
     color: #475467;
+    font-fammily: unset;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 300;
+    line-height: 150%;
+  }
+
+  div[data-test="schema-row"] > div:nth-child(1) > div:nth-child(2) > p > a {
+    color: #2179BE!important;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 150%;
+    letter-spacing: 0.32px;
+  }
+
+  .sl-stack.sl-stack--vertical.sl-stack--8.sl-flex.sl-flex-col.sl-items-stretch.sl-pt-8 > 
+  div:nth-child(3) > div > div > div:nth-child(3) > 
+  div[data-test="schema-row"] > div:nth-child(2) > div:nth-child(1) > span,
+  div[data-test="schema-row"] > div:nth-child(2) > div:nth-child(1) > span {
+    color: #D92D20;
     font-size: 14px;
     font-style: normal;
     font-weight: 300;
@@ -1384,11 +1460,19 @@ export const Wrapper = styled.div`
 
   .sl-stack.sl-stack--vertical.sl-stack--8.sl-flex.sl-flex-col.sl-items-stretch.sl-pt-8 > 
   div:nth-child(3) > div > div > div:nth-child(3) > 
-  div:nth-child(1) > div:nth-child(2) > div > span:nth-child(4).sl-text-warning {
-    color: #D92D20;
+  div[data-test="schema-row"] > div:nth-child(2) > div:nth-child(3) > span,
+  div[data-test="schema-row"] > div:nth-child(2) > div:nth-child(3) > span,
+  div[data-test="schema-row"] > div:nth-child(1) > div:nth-child(3) > span,
+  div[data-test="schema-row"] > div:nth-child(1) > div:nth-child(2) > div > span {
+    padding: 2px 6px;
+    border-radius: 6px;
+    border: 1px solid #EAECF0;
+    background: #F9FAFB;
+    color: #344054;
+    text-align: center;
     font-size: 14px;
     font-style: normal;
-    font-weight: 300;
+    font-weight: 400;
     line-height: 150%;
   }
   
@@ -1439,8 +1523,8 @@ export const Wrapper = styled.div`
   div:nth-child(1) > span:nth-child(3),
   .sl-stack.sl-stack--vertical.sl-stack--8.sl-flex.sl-flex-col.sl-items-stretch.sl-pt-8 > 
   div:nth-child(3) > div > div > div:nth-child(3) > 
-  div:nth-child(2) > div > div[data-test="schema-row"] > div:nth-child(2).sl-stack.sl-stack--vertical >
-  div:nth-child(1) > span:nth-child(3) {
+  div:nth-child(2) > div[data-test="schema-row"] > div:nth-child(2).sl-stack.sl-stack--vertical >
+  div:nth-child(1) > span:nth-child(4) {
     color: #D92D20;
     font-size: 14px;
     font-style: normal;
@@ -1534,7 +1618,7 @@ export const Wrapper = styled.div`
   div:nth-child(3) > div > div > div:nth-child(3) > 
   div:nth-child(2) > div[data-test="schema-row"] > div:nth-child(2).sl-stack.sl-stack--vertical >
   div:nth-child(1) > div:nth-child(2) > div,
-  .sl-stack.sl-stack--vertical.sl-stack--8.sl-flex.sl-flex-col.sl-items-stretch.sl-pt-8 > 
+  sl-stack.sl-stack--vertical.sl-stack--8.sl-flex.sl-flex-col.sl-items-stretch.sl-pt-8 > 
   div:nth-child(3) > div > div > div:nth-child(3) > 
   div:nth-child(2) > div > div[data-test="schema-row"] > div:nth-child(2).sl-stack.sl-stack--vertical >
   div:nth-child(1) > div:nth-child(1) > div {
@@ -1545,7 +1629,7 @@ export const Wrapper = styled.div`
     font-weight: 700;
     line-height: 150%;
   }
-
+  
   .sl-stack.sl-stack--vertical.sl-stack--8.sl-flex.sl-flex-col.sl-items-stretch.sl-pt-8 > 
   div:nth-child(3) > div > div > div:nth-child(3) > 
   div:nth-child(2) > div > div[data-test="schema-row"] > div:nth-child(2).sl-stack.sl-stack--vertical >
@@ -1593,7 +1677,7 @@ export const Wrapper = styled.div`
     font-weight: 700;
     line-height: 150%;
   }
-  
+
   .sl-stack.sl-stack--vertical.sl-stack--8.sl-flex.sl-flex-col.sl-items-stretch.sl-pt-8 > 
   div:nth-child(3) > div > div > div:nth-child(3) > 
   div:nth-child(2) > div[data-test="schema-row"] > div:nth-child(2).sl-stack.sl-stack--vertical >
@@ -1607,13 +1691,6 @@ export const Wrapper = styled.div`
     font-style: normal;
     font-weight: 300;
     line-height: 150%;
-  }
-
-  .sl-stack.sl-stack--vertical.sl-stack--8.sl-flex.sl-flex-col.sl-items-stretch.sl-pt-8 > 
-  div:nth-child(3) > div > div > div:nth-child(3) > 
-  div:nth-child(2) > div > div[data-test="schema-row"] > div:nth-child(2).sl-stack.sl-stack--vertical >
-  div:nth-child(1) > div:nth-child(1) > span {
-    
   }
   
   .sl-stack.sl-stack--vertical.sl-stack--8.sl-flex.sl-flex-col.sl-items-stretch.sl-pt-8 > 
